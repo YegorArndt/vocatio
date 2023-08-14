@@ -1,8 +1,7 @@
 import { useState, useEffect } from "react";
 
 import { endpoint } from "./constants";
-import { getVacancy } from "./utils";
-import type { RawVacancy, Vacancy } from "./types";
+import type { Vacancy } from "./types";
 
 export const useExtension = () => {
   const [data, setData] = useState<Vacancy | null>(null);
@@ -13,10 +12,6 @@ export const useExtension = () => {
     const fetchData = async () => {
       try {
         const response = await (await fetch(endpoint)).json();
-        const rawVacancy = JSON.parse(response.rawVacancy) as RawVacancy;
-        const vacancy = getVacancy(rawVacancy);
-        setData(vacancy);
-        setLoading(false);
       } catch (err) {
         console.error(err);
         setError(err as Error);

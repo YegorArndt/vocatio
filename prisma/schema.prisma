@@ -1,0 +1,53 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum Source {
+  LINKEDIN
+  INDEED
+  GLASSDOOR
+  HH
+  UNKNOWN
+  // More sources coming soon
+}
+
+model User {
+  id        String    @id @default(cuid())
+  createdAt DateTime  @default(now())
+}
+
+model Vacancy {
+  id              String   @id @default(cuid())
+  createdAt       DateTime @default(now())
+  createdBy       String
+  userId          String
+  companyName     String?
+  location        String?
+  age             String?
+  numApplicants   String?
+  salaryRange     String?
+  level           String?
+  jobTitle        String
+  requirements    String
+  isBase64Encoded Boolean  @default(false)
+  source          Source   @default(UNKNOWN)
+
+  @@index([userId])
+}
+
+model Resume {
+  id          String   @id @default(cuid())
+  createdAt   DateTime @default(now())
+  content     String
+  createdBy   String
+  userId      String
+  vacancyId   String
+
+  @@index([userId])
+  @@index([vacancyId])
+}

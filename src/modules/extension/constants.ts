@@ -1,1 +1,1 @@
-export const endpoint = "/api/getRequirements";
+export const endpoint = "/api/extensions/post";

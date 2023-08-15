@@ -13,3 +13,5 @@ export type RawVacancy = {
 export type Vacancy = Omit<RawVacancy, "requirementsBase64"> & {
   requirements: string;
 };
+
+// use prisma types instead

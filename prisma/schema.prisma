@@ -16,37 +16,61 @@ enum Source {
   // More sources coming soon
 }
 
+enum Seniority {
+  JUNIOR
+  MIDDLE
+  SENIOR
+  LEAD
+  UNKNOWN
+  // More seniority levels coming soon
+}
+
+enum WorkMode {
+  HYBRID
+  ON_SITE
+  REMOTE
+  UNKNOWN
+  // More work modes coming soon
+}
+
 model User {
-  id        String    @id @default(cuid())
-  createdAt DateTime  @default(now())
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
 }
 
 model Vacancy {
-  id              String   @id @default(cuid())
-  createdAt       DateTime @default(now())
-  createdBy       String
+  id              String    @id @default(cuid())
+  createdAt       DateTime  @default(now())
   userId          String
   companyName     String?
   location        String?
   age             String?
   numApplicants   String?
   salaryRange     String?
-  level           String?
+  seniority       Seniority @default(UNKNOWN)
   jobTitle        String
   requirements    String
-  isBase64Encoded Boolean  @default(false)
-  source          Source   @default(UNKNOWN)
+  isBase64Encoded Boolean   @default(false)
+  source          Source    @default(UNKNOWN)
 
   @@index([userId])
 }
 
 model Resume {
-  id          String   @id @default(cuid())
-  createdAt   DateTime @default(now())
-  content     String
-  createdBy   String
-  userId      String
-  vacancyId   String
+  id         String   @id @default(cuid())
+  createdAt  DateTime @default(now())
+  education  String
+  experience String
+  skills     String
+  name       String
+  jobTitle   String
+  languages  String
+  objective  String
+  image      String?
+  location   String?
+  workMode   WorkMode @default(REMOTE)
+  userId     String
+  vacancyId  String
 
   @@index([userId])
   @@index([vacancyId])

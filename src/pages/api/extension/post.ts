@@ -3,8 +3,8 @@ import jwt from "jsonwebtoken";
 
 //https://clerk.com/docs/request-authentication/validate-session-tokens?utm_source=www.google.com&utm_medium=referral&utm_campaign=none
 
-export default async function (req: NextApiRequest, res: NextApiResponse) {
-  const publicKey = process.env.CLERK_PEM_PUBLIC_KEY as string;
+export default function (req: NextApiRequest, res: NextApiResponse) {
+  const publicKey = process.env.CLERK_PEM_PUBLIC_KEY;
 
   /**
    * You can extract the token from the request cookies or headers.
@@ -20,7 +20,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
   }
 
   try {
-    if (token) {
+    if (token && publicKey) {
       const decoded = jwt.verify(token, publicKey);
       res.status(200).json({ sessToken: decoded });
       return;

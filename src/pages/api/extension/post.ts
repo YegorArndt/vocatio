@@ -9,7 +9,7 @@ type Err = {
   message: string;
 };
 
-export default async function (req: NextApiRequest, res: NextApiResponse) {
+export default function (req: NextApiRequest, res: NextApiResponse) {
   const token = req.headers.authorization?.split(" ")[1];
 
   if (!token) {

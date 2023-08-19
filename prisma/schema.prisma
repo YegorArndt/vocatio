@@ -25,12 +25,44 @@ enum Seniority {
   // More seniority levels coming soon
 }
 
-enum WorkMode {
+enum Remote {
   HYBRID
   ON_SITE
   REMOTE
   UNKNOWN
   // More work modes coming soon
+}
+
+enum EmploymentType {
+  FULL_TIME
+  PART_TIME
+  CONTRACT
+  UNKNOWN
+  // More work modes coming soon
+}
+
+enum ProfessionField {
+  FRONTEND
+  BACKEND
+  FULLSTACK
+  SECURITY
+  PROJECT_MANAGER
+  PRODUCT_MANAGER
+  DATA_SCIENTIST
+  DEVOPS
+  UX_DESIGNER
+  UI_DESIGNER
+  SYSTEM_ADMINISTRATOR
+  DATABASE_ADMINISTRATOR
+  MOBILE_DEVELOPER
+  EMBEDDED_DEVELOPER
+  QA
+  NETWORK_ENGINEER
+  CLOUD_ENGINEER
+  MACHINE_LEARNING_ENGINEER
+  ANALYST
+  SCRUM_MASTER
+  // ... add more professions as necessary
 }
 
 model User {
@@ -39,19 +71,21 @@ model User {
 }
 
 model Vacancy {
-  id              String    @id @default(cuid())
-  createdAt       DateTime  @default(now())
-  userId          String
-  companyName     String?
-  location        String?
-  age             String?
-  numApplicants   String?
-  salaryRange     String?
-  seniority       Seniority @default(UNKNOWN)
-  jobTitle        String
-  requirements    String
-  isBase64Encoded Boolean   @default(false)
-  source          Source    @default(UNKNOWN)
+  id            String    @id @default(cuid())
+  createdAt     DateTime  @default(now())
+  userId        String
+  companyName   String?
+  location      String?
+  country       String?
+  age           DateTime? // On the front end we'll want to compare it to now() and show the difference like "2 days ago"
+  numApplicants String?
+  salaryRange   String?
+  jobTitle      String
+  requirements  String
+  professionField ProfessionField
+  remote        Remote    @default(UNKNOWN)
+  seniority     Seniority @default(UNKNOWN)
+  source        Source    @default(UNKNOWN)
 
   @@index([userId])
 }
@@ -68,7 +102,7 @@ model Resume {
   objective  String
   image      String?
   location   String?
-  workMode   WorkMode @default(REMOTE)
+  remote     Remote   @default(UNKNOWN)
   userId     String
   vacancyId  String
 

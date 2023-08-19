@@ -1,34 +1,29 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import jwt from "jsonwebtoken";
+import fs from "fs";
 
-//https://clerk.com/docs/request-authentication/validate-session-tokens?utm_source=www.google.com&utm_medium=referral&utm_campaign=none
+const publicKey = fs.readFileSync("secret/public.pem", "utf8");
 
-export default function (req: NextApiRequest, res: NextApiResponse) {
-  const publicKey = process.env.CLERK_PEM_PUBLIC_KEY;
+type Err = {
+  name: string;
+  message: string;
+};
 
-  /**
-   * You can extract the token from the request cookies or headers.
-   */
-  // const cookies = new Cookies(req, res);
-  // const sessToken = cookies.get("__session"); // the same origin
-
-  const token = req.headers.authorization; // the extension origin
+export default async function (req: NextApiRequest, res: NextApiResponse) {
+  const token = req.headers.authorization?.split(" ")[1];
 
   if (!token) {
-    res.status(401).json({ error: "not signed in" });
-    return;
+    return res.status(401).json({ message: "Unauthorized" });
   }
 
+  /**
+   * Verify token
+   */
   try {
-    if (token && publicKey) {
-      const decoded = jwt.verify(token, publicKey);
-      res.status(200).json({ sessToken: decoded });
-      return;
-    }
+    if (!publicKey) throw new Error("Public key not found");
+    jwt.verify(token, publicKey);
+    res.status(200).json({ message: "Success" });
   } catch (error) {
-    res.status(400).json({
-      error: "Invalid Token",
-    });
-    return;
+    res.status(401).json({ message: (error as Err).message });
   }
 }

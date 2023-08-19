@@ -14,7 +14,7 @@ const MyApp: AppType = ({ Component, pageProps }) => {
           name="description"
           content="Keep your job applications organized"
         />
-        <link rel="icon" href="/favicon.png" />
+        <link rel="icon" href="/fav.webp" />
       </Head>
       <Component {...pageProps} />
     </ClerkProvider>

@@ -1,7 +1,21 @@
 import Link from "next/link";
 import { useState } from "react";
 
-import type { Vacancy } from "~/modules/extension/types";
+type RawVacancy = {
+  id: string;
+  companyName: string | null;
+  location: string | null;
+  age: string | null;
+  numApplicants: string | null;
+  salaryRange: string | null;
+  level: string | null;
+  jobTitle: string;
+  requirementsBase64: string;
+};
+
+type Vacancy = Omit<RawVacancy, "requirementsBase64"> & {
+  requirements: string;
+};
 
 export const VacancyCard: React.FC<Vacancy> = (props: Vacancy) => {
   const {

@@ -18,12 +18,14 @@
     "noUncheckedIndexedAccess": true,
     "baseUrl": ".",
     "paths": {
-      "~/*": ["./src/*"]
+      "~/*": ["./src/*"],
+      "~/utils": ["./src/utils/index.ts"]
     }
   },
   "include": [
     ".eslintrc.cjs",
     "next-env.d.ts",
+    "**/d.ts",
     "**/*.ts",
     "**/*.tsx",
     "**/*.cjs",

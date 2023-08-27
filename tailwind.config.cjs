@@ -29,6 +29,14 @@ const config = {
       md: { min: "540px", max: "912px" },
     },
     extend: {
+      fontSize: {
+        xl3: [
+          "1.5rem",
+          {
+            fontWeight: "bold",
+          },
+        ],
+      },
       colors: {
         red: "#F44A4A",
         "dark-red": "#330e20",
@@ -51,6 +59,15 @@ const config = {
         350: "350",
         450: "450",
         550: "550",
+      },
+      animation: {
+        pulse: "pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+      },
+      keyframes: {
+        pulse: {
+          "0%, 100%": { opacity: "0.5" },
+          "50%": { opacity: "1" },
+        },
       },
     },
   },

@@ -1,6 +1,10 @@
 import Head from "next/head";
+import { VacancyCard } from "~/components";
+import { api } from "~/utils/api";
 
 export default function Home() {
+  const { data, isLoading } = api.vacancies.getAll.useQuery();
+
   return (
     <>
       <Head>
@@ -11,7 +15,12 @@ export default function Home() {
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c]"></main>
+      <main className="grid grid-cols-2 gap-10 p-5">
+        {isLoading && <p>Loading...</p>}
+        {data?.map((vacancy) => (
+          <VacancyCard key={vacancy.id} vacancy={vacancy} />
+        ))}
+      </main>
     </>
   );
 }

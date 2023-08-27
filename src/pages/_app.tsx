@@ -1,8 +1,10 @@
 import { type AppType } from "next/app";
 import Head from "next/head";
 import { ClerkProvider } from "@clerk/nextjs";
+import { Inter } from "next/font/google";
+const inter = Inter({ subsets: ["latin"] });
 
-import { api } from "~/utils/api";
+import { api } from "~/utils";
 import "~/styles/globals.css";
 
 const MyApp: AppType = ({ Component, pageProps }) => {
@@ -16,7 +18,9 @@ const MyApp: AppType = ({ Component, pageProps }) => {
         />
         <link rel="icon" href="/fav.webp" />
       </Head>
-      <Component {...pageProps} />
+      <main className={inter.className}>
+        <Component {...pageProps} />
+      </main>
     </ClerkProvider>
   );
 };

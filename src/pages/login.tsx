@@ -1,18 +1,47 @@
 import type { NextPage } from "next";
 import Head from "next/head";
+import { useEffect } from "react";
 import { SignInButton, SignOutButton, useUser } from "@clerk/nextjs";
 import Cookies from "js-cookie";
-import { useEffect } from "react";
+import { api } from "~/utils";
 
 const LoginPage: NextPage = () => {
-  const { user, isSignedIn } = useUser();
+  const { user, isSignedIn, isLoaded } = useUser();
+
+  /**
+   * Get method to create a user
+   */
+  const { mutate: create, isLoading: isCreatingUser } =
+    api.users.create.useMutation({
+      onSuccess: () => {},
+      onError: (error) => {
+        const errorMessage = error.data?.zodError?.fieldErrors.content;
+
+        if (errorMessage?.[0]) {
+          // toast.error(errorMessage[0]);
+          return;
+        }
+
+        // toast.error("Something went wrong");
+      },
+    });
 
   useEffect(() => {
     if (user) {
       const sessionToken = Cookies.get("__session");
       if (sessionToken) {
         /**
-         * Send token directly to content script via postMessage
+         * Having the token means that Clerk has authenticated the user.
+         * Now we can create a user in our database.
+         */
+
+        create({
+          ownName: user.fullName || "Your name", //todo
+          ownImage: user.imageUrl,
+        });
+
+        /**
+         * Send token directly to content script via postMessage (extension).
          */
         window.postMessage(
           { type: "FROM_PAGE", token: sessionToken, userId: user.id },
@@ -29,7 +58,11 @@ const LoginPage: NextPage = () => {
       </Head>
       <section className="flex flex-col items-center gap-10 pt-40">
         <h1 className="text-[2rem]">
-          It&apos;s impossible to save your data without knowing you.
+          {isLoaded
+            ? isSignedIn
+              ? "Success! You can safely return to using the extension."
+              : "It&apos;s impossible to save your data without knowing you."
+            : "Wait a sec..."}
         </h1>
         <div className="flex-center min-w-[10rem] rounded-sm bg-red p-5">
           {isSignedIn ? (

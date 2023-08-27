@@ -7,6 +7,16 @@ await import("./src/env.mjs");
 /** @type {import("next").NextConfig} */
 const config = {
   reactStrictMode: true,
+  images: {
+    domains: ["img.clerk.com"],
+  },
+  webpack: (config, { isServer }) => {
+    if (!isServer) {
+      config.resolve.fallback.fs = false;
+      config.resolve.fallback.net = false;
+    }
+    return config;
+  },
 
   /**
    * If you are using `appDir` then you must comment the below `i18n` config out.

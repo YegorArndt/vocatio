@@ -45,7 +45,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
 
     if (existingVacancy) {
       /**
-       * If so, update the number of applicants - this is the ~only thing that can change
+       * Update the number of applicants - this is the ~only thing that can change
        */
       await prisma.vacancy.update({
         where: { id: existingVacancy.id },
@@ -62,7 +62,18 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
       /**
        * Create a new vacancy
        */
-      await prisma.vacancy.create({ data: vacancyFromExtension });
+      const { userId, ...rest } = vacancyFromExtension;
+
+      await prisma.vacancy.create({
+        data: {
+          ...rest,
+          user: {
+            connect: {
+              id: userId,
+            },
+          },
+        },
+      });
       res.status(200).json({ message: "You can navigate back to the app!" });
     }
   } catch (error) {

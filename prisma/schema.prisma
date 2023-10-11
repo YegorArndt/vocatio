@@ -56,259 +56,59 @@ enum ProfessionField {
   SCRUM_MASTER
 }
 
+enum LanguageLevel {
+  A1
+  A2
+  B1
+  B2
+  C1
+  C2
+}
+
 model User {
-  id                     String           @id @default(uuid())
-  createdAt              DateTime         @default(now())
-  updatedAt              DateTime         @updatedAt
-  ownName                String
-  ownImage               String
-  ownCountry             String?
-  linkedInUrl            String?
-  indeedUrl              String?
-  glassdoorUrl           String?
-  hhUrl                  String?
-  ownCity                String?
-  ownJobTitle            String?
-  ownEducation           String?
-  ownExperienceYears     Int?
-  ownStories             String?
-  ownSkills             UserSkill[]
-  ownLanguages           String?
-  ownObjective           String?
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Own user data
+  ownName            String
+  ownImage           String
+  ownCountry         String?
+  ownEmail           String
+  ownPhone           String?
+  ownCity            String?
+  ownJobTitle        String?
+  ownExperienceYears Int?
+  ownStories         Story[]
+  ownObjective       String?
+  ownProfessionField ProfessionField?
+  ownLanguages       LanguageLevel[]
+
+  // Social media links
+  linkedInUrl  String?
+  indeedUrl    String?
+  glassdoorUrl String?
+  hhUrl        String?
+  githubUrl    String?
+
+  // Desired job data
   desiredProfessionField ProfessionField?
   desiredRemote          Remote?
   desiredSalaryMin       Int?
   desiredSalaryMax       Int?
   desiredSeniority       Seniority?
   desiredEmploymentType  EmploymentType?
-  vacancies              Vacancy[]
-  cvs                    Cv[]
-  stories                Story[]
-}
 
-model Cv {
-  id              String          @id @default(uuid())
-  createdAt       DateTime        @default(now())
-  updatedAt       DateTime        @updatedAt
-  name            String
-  education       String
-  experienceYears Int
-  stories         String
-  jobTitle        String
-  languages       String
-  objective       String
-  image           String?
-  country         String?
-  city            String?
-  remote          Remote?
-  user            User            @relation(fields: [userId], references: [id])
-  userId          String
-  seniority       Seniority?
-  vacancy         Vacancy         @relation(fields: [vacancyId], references: [id])
-  vacancyId       String
-  sections        CvSection[]
-  generalSection  GeneralSection?
-  contactSection  ContactSection?
-  educationSections EducationSection[]
-  skillLabels     SkillLabel[]
-}
-
-
-model CvSection {
-  id        String    @id @default(uuid())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  heading   String // e.g., "Personal Information", "Languages", "Technologies"
-  order     Int // To determine the order of sections within the CV
-  fields    CvField[] // Fields within this section
-  cv        Cv        @relation(fields: [cvId], references: [id])
-  cvId      String
-}
-
-model CvField {
-  id        String    @id @default(uuid())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  name      String // e.g., "Name", "Language", "Technology"
-  label     String? // e.g., "Name", "Language", "Technology"
-  value     String? // The value/content of the field for this section
-  order     Int // To determine the order of fields within a section
-  section   CvSection @relation(fields: [sectionId], references: [id])
-  sectionId String
-}
-
-model GeneralSection {
-  id              String        @id @default(uuid())
-  createdAt       DateTime      @default(now())
-  updatedAt       DateTime      @updatedAt
-  experienceYears Int           // Predefined field for experience years
-  country         String        // Predefined field for country
-  cvId            String?       @unique
-  cv              Cv?           @relation(fields: [cvId], references: [id])
-  customFields    GeneralField[] // Custom fields added by the user
-}
-
-model ContactSection {
-  id              String        @id @default(uuid())
-  createdAt       DateTime      @default(now())
-  updatedAt       DateTime      @updatedAt
-  email           String?       // Email address
-  phonePrimary    String?       // Primary phone number
-  phoneSecondary  String?       // Secondary phone number (optional)
-  linkedIn        String?       // LinkedIn profile URL
-  github          String?       // GitHub profile URL
-  portfolio       String?       // Personal website or portfolio URL
-  address         String?       // Physical address
-  skype           String?       // Skype ID
-  twitter         String?       // Twitter handle
-  otherSocial     String?       // Other social media link
-  blog            String?       // Blog or Medium profile URL
-  calendly        String?       // Calendly or other scheduling tool link
-  cvId            String?       @unique
-  cv              Cv?           @relation(fields: [cvId], references: [id])
-  customFields    ContactField[] // Custom fields added by the user
-}
-
-model ContactField {
-  id              String        @id @default(uuid())
-  createdAt       DateTime      @default(now())
-  updatedAt       DateTime      @updatedAt
-  name            String        // e.g., "Behance", "Dribbble"
-  label           String        // Display label for the field
-  value           String?       // The value/content of the field
-  order           Int           // To determine the order of fields within the contact section
-  contactSection  ContactSection @relation(fields: [contactSectionId], references: [id])
-  contactSectionId String
-}
-
-
-model GeneralField {
-  id              String        @id @default(uuid())
-  createdAt       DateTime      @default(now())
-  updatedAt       DateTime      @updatedAt
-  name            String        // e.g., "Hobby", "Certification"
-  label           String        // Display label for the field
-  value           String?       // The value/content of the field
-  order           Int           // To determine the order of fields within the general section
-  generalSection  GeneralSection @relation(fields: [generalSectionId], references: [id])
-  generalSectionId String
-}
-
-model EducationSection {
-  id              String          @id @default(uuid())
-  createdAt       DateTime        @default(now())
-  updatedAt       DateTime        @updatedAt
-  cvId            String          @unique
-  cv              Cv              @relation(fields: [cvId], references: [id])
-  entries         EducationEntry[] // Multiple education entries for a CV
-}
- 
-model EducationEntry {
-  id              String        @id @default(uuid())
-  createdAt       DateTime      @default(now())
-  updatedAt       DateTime      @updatedAt
-  years           String        // Duration or year of study, e.g., "2015-2019"
-  degree          String        // e.g., "Bachelor of Science in Computer Science"
-  university      String        // e.g., "Harvard University"
-  educationSectionId String
-  educationSection EducationSection @relation(fields: [educationSectionId], references: [id])
-}
-
-model CustomSkill {
-  id          String       @id @default(uuid())
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
-  name        String       @unique
-  skillLabel  SkillLabel?  @relation(fields: [skillLabelId], references: [id])
-  skillLabelId String?
-  users       UserSkill[]
-}
-
-model PredefinedSkill {
-  id    String       @id @default(uuid())
-  name  String       @unique
-  users UserSkill[]
-}
-
-model SkillLabel {
-  id          String        @id @default(uuid())
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
-  label       String
-  cv          Cv            @relation(fields: [cvId], references: [id])
-  cvId        String
-  skills      CustomSkill[]
-}
-
-model UserSkill {
-  id                  String       @id @default(uuid())
-  createdAt           DateTime     @default(now())
-  updatedAt           DateTime     @updatedAt
-  skillName           String
-  user                User         @relation(fields: [userId], references: [id])
-  userId              String
-  predefinedSkill     PredefinedSkill? @relation(fields: [predefinedSkillId], references: [id])
-  predefinedSkillId   String?
-  customSkill         CustomSkill? @relation(fields: [customSkillId], references: [id]) // Added this line
-  customSkillId       String? // Added this line
-}
-
-
-model Vacancy {
-  id                String          @id @default(uuid())
-  createdAt         DateTime        @default(now())
-  updatedAt         DateTime        @updatedAt
-  user              User            @relation(fields: [userId], references: [id])
-  userId            String
-  companyName       String
-  location          String
-  country           String?
-  age               DateTime
-  numApplicants     Int
-  salaryMin         Int?
-  salaryMax         Int?
-  jobTitle          String
-  description       String          @db.Text
-  professionField   ProfessionField
-  requiredRemote    Remote?
-  requiredSeniority Seniority?
-  employmentType    EmploymentType?
-  requiredYears     Int?
-  requiredEducation String?
-  requiredLanguages String
-  requiredSkills    String
-  cvs               Cv[]
-  sources           VacancySource[]
-
-  @@unique([companyName, jobTitle])
-}
-
-// The Source model represents 
-// different platforms or places where a job vacancy can be found.
-model Source {
-  id        String          @id @default(uuid())
-  name      SourceName
-  vacancies VacancySource[]
-}
-
-// The VacancySource model captures the relationship between each Vacancy and its Source, 
-// and can also store additional data about that relationship, 
-// such as a link to the vacancy on that specific source.
-model VacancySource {
-  id        String  @id @default(uuid())
-  vacancy   Vacancy @relation(fields: [vacancyId], references: [id])
-  vacancyId String
-  source    Source  @relation(fields: [sourceId], references: [id])
-  sourceId  String
-  link      String?
-
-  @@unique([vacancyId, sourceId])
+  // Cv data
+  vacancies Vacancy[]
+  cvs       Cv[]
 }
 
 model Story {
   id                 String   @id @default(uuid())
   createdAt          DateTime @default(now())
   updatedAt          DateTime @updatedAt
+  order              Int
   periodOfEmployment String
   companyName        String
   jobTitle           String
@@ -317,14 +117,112 @@ model Story {
   userId             String
 }
 
-// TODO
-// Different CvSections for fixed sections like education / general / skills 
-// Different components for those sections
-// List of sections:
-// - General
-// - Education
-// - Skills
-// - Story
-// - Languages
-// - Contact
-// + default section allowing customization 
+model Vacancy {
+  id                String           @id @default(uuid())
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+  user              User             @relation(fields: [userId], references: [id])
+  userId            String
+  companyName       String?
+  location          String?
+  country           String?
+  age               DateTime?
+  numApplicants     Int?
+  salaryMin         Int?
+  salaryMax         Int?
+  jobTitle          String?
+  description       String?          @db.Text
+  professionField   ProfessionField?
+  requiredRemote    Remote?
+  requiredSeniority Seniority?
+  employmentType    EmploymentType?
+  requiredYears     Int?
+  requiredEducation String?
+  requiredLanguages String?
+  requiredSkills    String?
+  sourceUrl         String?
+  sourceName        SourceName?
+  cvs               Cv[]
+
+  @@unique([companyName, jobTitle])
+}
+
+enum ComponentName {
+  // Inputs & Textareas
+  TEXT
+  DATE
+  SELECT
+  PHONE_NUMBER
+  LOCATION
+  PHONE_NUMBER_WITH_LABEL
+  LOCATION_WITH_LABEL
+  TEXT_WITH_LABEL
+  DATE_WITH_LABEL
+  SELECT_WITH_LABEL
+  URL // Has label by default
+  LANGUAGE // Has label by default
+  // Headings
+  H1
+  H2
+  H3
+  H4
+  H5
+  H6
+  H1_WITH_DIVIDER
+  H2_WITH_DIVIDER
+  H3_WITH_DIVIDER
+  H4_WITH_DIVIDER
+  H5_WITH_DIVIDER
+}
+
+model Component {
+  id        String        @id @default(uuid())
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+  index     Int
+  component ComponentName
+  label     String
+  value     String
+  area      Area          @relation(fields: [areaId], references: [id])
+  areaId    String
+}
+
+model Area {
+  id         String      @id @default(uuid())
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+  index      Int
+  components Component[]
+  // Add more properties in the future like color, width, height, coords, etc.
+  cv         Cv          @relation(fields: [cvId], references: [id])
+  cvId       String
+}
+
+model Cv {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // General user data for easy access
+  name            String
+  experienceYears Int
+  stories         String
+  jobTitle        String
+  objective       String
+  image           String?
+  country         String?
+  city            String?
+  seniority       Seniority?
+  remote          Remote?
+  user            User       @relation(fields: [userId], references: [id])
+  userId          String
+  vacancy         Vacancy    @relation(fields: [vacancyId], references: [id])
+  vacancyId       String     @unique
+  areas           Area[]
+}
+
+model Url {
+  id        Int    @id @default(autoincrement())
+  original  String
+  shortCode String @unique
+}

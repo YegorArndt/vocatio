@@ -11,14 +11,16 @@ const LoginPage: NextPage = () => {
   /**
    * Get method to create a user
    */
-  const { mutate: create, isLoading: isCreatingUser } =
+  const { mutate: createUser, isLoading: isCreatingUser } =
     api.users.create.useMutation({
-      onSuccess: () => {},
+      onSuccess: () => {
+        console.info("Have a wonderful day!");
+      },
       onError: (error) => {
         const errorMessage = error.data?.zodError?.fieldErrors.content;
 
         if (errorMessage?.[0]) {
-          // toast.error(errorMessage[0]);
+          console.log(errorMessage[0]);
           return;
         }
 
@@ -31,22 +33,22 @@ const LoginPage: NextPage = () => {
       const sessionToken = Cookies.get("__session");
       if (sessionToken) {
         /**
-         * Having the token means that Clerk has authenticated the user.
-         * Now we can create a user in our database.
-         */
-
-        create({
-          ownName: user.fullName || "Your name", //todo
-          ownImage: user.imageUrl,
-        });
-
-        /**
          * Send token directly to content script via postMessage (extension).
          */
         window.postMessage(
           { type: "FROM_PAGE", token: sessionToken, userId: user.id },
           "*"
         );
+
+        /**
+         * Having the token means that Clerk has authenticated the user.
+         * Now we can create a user in our database.
+         */
+        createUser({
+          ownName: user.fullName || "Your name", //todo
+          ownImage: user.imageUrl,
+          ownEmail: user.emailAddresses[0]!.emailAddress,
+        });
       }
     }
   }, [user]);

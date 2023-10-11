@@ -2,17 +2,126 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  @apply overflow-y-scroll bg-black text-sm clr-white;
-  overscroll-behavior: none;
-  font-family: "Google Sans", Roboto, arial, sans-serif;
+:root {
+  --max-width: 68.75rem;
+  --blue: rgba(0, 118, 255, 0.9);
+  --gray: #eaeaea;
+  --green: #2da44e;
+  --red: #f44336;
+  --yellow: rgb(245, 184, 28);
+  --purple: #7928ca;
+}
+
+[data-theme="dark"] {
+  --bg-base: #000;
+  --clr-base: #fff;
+
+  --bg-primary: #000;
+  --clr-primary: #fff;
+  --bg-primary-hover: #333;
+
+  --bg-secondary: #111111;
+  --clr-secondary: #888;
+  --bg-secondary-hover: #333;
+
+  --select: #f81ce5;
+  --border-clr: #333;
+}
+
+[data-theme="light"] {
+  --bg-base: #fff;
+  --clr-base: #000;
+
+  --bg-primary: #fafafa;
+  --clr-primary: #666;
+
+  --bg-secondary: var(--gray);
+  --clr-secondary: #444;
+
+  --select: #79ffe1;
+  --border-clr: var(--gray);
+}
+
+@layer base {
+  body,
+  #__next {
+    min-height: 100%;
+    text-rendering: optimizeSpeed;
+    scroll-behavior: smooth;
+    @apply bg-primary text-base clr-primary;
+  }
+
+  ::selection {
+    background-color: var(--select);
+  }
+
+  h1 {
+    @apply h1;
+  }
+
+  h2 {
+    @apply h2;
+  }
+  h3 {
+    @apply h3;
+  }
+  h4 {
+    @apply h4;
+  }
+}
+
+@layer components {
 }
 
 @layer utilities {
   .container {
-    max-width: 40rem;
+    max-width: 78rem;
     margin-inline: auto;
     width: 100%;
+  }
+
+  .size-full {
+    @apply h-full w-full;
+  }
+
+  .large {
+    font-size: 3rem;
+  }
+
+  .palette-primary {
+    background-color: var(--bg-primary);
+    color: var(--clr-primary);
+  }
+
+  .palette-primary .hoverable:hover,
+  .palette-primary.hoverable:hover {
+    background-color: var(--bg-primary-hover);
+    color: var(--clr-base);
+  }
+
+  .palette-primary .active {
+    background-color: var(--bg-primary-hover);
+    color: var(--clr-primary);
+  }
+
+  .palette-secondary {
+    background-color: var(--bg-secondary);
+    color: var(--clr-secondary);
+  }
+
+  .palette-secondary .hoverable:hover {
+    background-color: var(--bg-secondary-hover);
+    color: var(--clr-base);
+  }
+
+  .palette-secondary .active {
+    background-color: var(--bg-secondary-hover);
+    color: var(--clr-secondary);
+  }
+
+  .darken.hoverable {
+    transition: background-color 0.2s ease-in-out;
+    filter: brightness(0.9);
   }
 
   .flex-center {
@@ -33,29 +142,24 @@ body {
     align-items: center;
   }
 
-  .b-active {
-    border: 1px solid;
-    @apply border-white;
+  .border {
+    border: 1px solid var(--border-clr);
+  }
+  .border-y {
+    border-top: 1px solid var(--border-clr);
+    border-bottom: 1px solid var(--border-clr);
   }
 
-  .b-b-active {
-    border-bottom: 1px solid;
-    @apply border-red;
+  .border-top {
+    border-top: 1px solid var(--border-clr);
   }
-
-  .b {
-    border: 1px solid white;
+  .border-bottom {
+    border-bottom: 1px solid var(--border-clr);
   }
-  .b-t {
-    border-top: 1px solid white;
+  .border-left {
+    border-left: 1px solid var(--border-clr);
   }
-  .b-r {
-    border-right: 1px solid white;
-  }
-  .b-b {
-    border-bottom: 1px solid white;
-  }
-  .b-l {
-    border-left: 1px solid white;
+  .border-right {
+    border-right: 1px solid var(--border-clr);
   }
 }

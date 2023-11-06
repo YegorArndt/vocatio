@@ -1,6 +1,7 @@
 import Head from "next/head";
 import { VacancyCard } from "~/components";
 import { LogoLoader } from "~/components/LogoLoader";
+import { Placeholder } from "~/components/Placeholder";
 import { Layout } from "~/components/layout/Layout";
 import { api } from "~/utils/api";
 
@@ -25,6 +26,12 @@ export const Vacancies = () => {
               <VacancyCard key={vacancy.id} vacancy={vacancy} />
             ))}
           </div>
+        )}
+        {!isLoading && !data && (
+          <Placeholder
+            title="No vacancies found"
+            text="Use the extension to add a new vacancy"
+          />
         )}
       </Layout>
     </>

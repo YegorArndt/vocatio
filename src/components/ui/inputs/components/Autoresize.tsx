@@ -78,8 +78,11 @@ export const Autoresize = (props: AutoresizeProps) => {
   }, [downloadFired]);
 
   useEffect(() => {
-    //@ts-ignore
-    localStorage.setItem(name, watch(name));
+    const value = watch(name);
+
+    if (typeof value !== "string") return;
+
+    localStorage.setItem(name, value);
   }, [watch(name)]);
 
   return (

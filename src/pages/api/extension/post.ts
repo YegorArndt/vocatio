@@ -1,10 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import jwt from "jsonwebtoken";
-import fs from "fs";
 import { PrismaClient, Vacancy } from "@prisma/client";
 
 const prisma = new PrismaClient();
-const publicKey = fs.readFileSync("secret/public.pem", "utf8");
+// const publicKey = fs.readFileSync("secret/public.pem", "utf8");
+const publicKey = process.env.CLERK_PEM_PUBLIC_KEY;
 
 type Err = {
   name: string;
@@ -64,20 +64,19 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
        */
       const { userId, ...rest } = vacancyFromExtension;
 
-      // await prisma.vacancy.create({
-      //   data: {
-      //     ...rest,
-      //     user: {
-      //       connect: {
-      //         id: userId,
-      //       },
-      //     },
-      //   },
-      // });
+      await prisma.vacancy.create({
+        data: {
+          ...rest,
+          user: {
+            connect: {
+              id: userId,
+            },
+          },
+        },
+      });
       res.status(200).json({ message: "You can navigate back to the app!" });
     }
   } catch (error) {
-    // res.status(401).json({ message: (error as Err).message });
-    res.status(401).json({ message: "Kek" });
+    res.status(401).json({ message: (error as Err).message });
   }
 }

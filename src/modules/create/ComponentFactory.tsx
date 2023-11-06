@@ -50,7 +50,7 @@ export const ComponentFactory = (props: ComponentFactoryProps) => {
               )
         }
       >
-        <Autoresize name={`${c.id}`} value={c.content} />
+        <Autoresize name={`${c.id}`} value={c.content as string} />
       </h3>
     );
   }
@@ -81,7 +81,7 @@ export const ComponentFactory = (props: ComponentFactoryProps) => {
   if (isH2) {
     return (
       <h3 className="text-[1rem]">
-        <Autoresize name={`${c.id}`} value={c.content} />
+        <Autoresize name={`${c.id}`} value={c.content as string} />
       </h3>
     );
   }
@@ -102,5 +102,5 @@ export const ComponentFactory = (props: ComponentFactoryProps) => {
 
   // End of H1
 
-  return <Autoresize name={`${c.id}`} value={c.content} />;
+  return <Autoresize name={`${c.id}`} value={c.content as string} />;
 };

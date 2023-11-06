@@ -1,4 +1,9 @@
-import { type RefObject, useRef, useEffect } from "react";
+import {
+  type RefObject,
+  useRef,
+  useEffect,
+  TextareaHTMLAttributes,
+} from "react";
 import cn from "classnames";
 
 import { useForm } from "react-hook-form";
@@ -33,7 +38,12 @@ const resize = (containerRef: RefObject<HTMLDivElement>) => {
   }
 };
 
-export type AutoresizeProps = any;
+export type AutoresizeProps = {
+  baseCn?: string;
+  className?: string;
+  name: string;
+  value: string;
+} & TextareaHTMLAttributes<HTMLTextAreaElement>;
 
 export const Autoresize = (props: AutoresizeProps) => {
   const { baseCn, className, name, value, ...other } = props;
@@ -92,7 +102,6 @@ export const Autoresize = (props: AutoresizeProps) => {
       ) : (
         <textarea
           {...other}
-          // @ts-ignore
           {...register(name)}
           data-text={watch(name)}
           placeholder={value}

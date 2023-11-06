@@ -1,32 +1,8 @@
-// pages/privacy-policy.js or pages/privacy.js
-
 import { useUser } from "@clerk/nextjs";
 import Head from "next/head";
 import { Header } from "~/components/layout/Header";
 import { UserPresentator } from "~/components/layout/UserPresentator";
 import { api } from "~/utils";
-
-const CopyToClipboardButton = ({ textToCopy }: { textToCopy: string }) => {
-  const handleCopyClick = () => {
-    // Asynchronously copy the text to the clipboard
-    navigator.clipboard
-      .writeText(textToCopy)
-      .then(() => {
-        // Success message (could trigger a UI update here if desired)
-        console.log("Text copied to clipboard");
-      })
-      .catch((err) => {
-        // Error handling
-        console.error("Failed to copy text to clipboard", err);
-      });
-  };
-
-  return (
-    <button onClick={handleCopyClick} className="reset inline">
-      {textToCopy}
-    </button>
-  );
-};
 
 const PrivacyPolicy = () => {
   const defaultUserData = useUser();

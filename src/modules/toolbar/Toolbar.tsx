@@ -90,6 +90,7 @@ export const Toolbar = (props: ToolbarProps) => {
   return (
     <div className="palette-secondary fixed left-[1rem] top-[10rem] grid grid-cols-2 items-center p-1">
       {tools.map((tool, index) => (
+        // @ts-ignore
         <Tool key={index} {...tool} />
       ))}
     </div>

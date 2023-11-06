@@ -47,10 +47,10 @@ const MyApp: AppType = ({ Component, pageProps }) => {
   return (
     <ClerkProvider {...pageProps}>
       <Head>
-        <title>chirp</title>
+        <title>Careerpilot</title>
         <meta
           name="description"
-          content="Keep your job applications organized"
+          content="Tailored CVs for your job applications. Organizer for your vacancies."
         />
         <link rel="icon" href="/fav.webp" />
       </Head>

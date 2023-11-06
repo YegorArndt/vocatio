@@ -64,16 +64,16 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
        */
       const { userId, ...rest } = vacancyFromExtension;
 
-      await prisma.vacancy.create({
-        data: {
-          ...rest,
-          user: {
-            connect: {
-              id: userId,
-            },
-          },
-        },
-      });
+      // await prisma.vacancy.create({
+      //   data: {
+      //     ...rest,
+      //     user: {
+      //       connect: {
+      //         id: userId,
+      //       },
+      //     },
+      //   },
+      // });
       res.status(200).json({ message: "You can navigate back to the app!" });
     }
   } catch (error) {

@@ -39,8 +39,6 @@ const LoginPage: NextPage = () => {
           "*"
         );
 
-        console.log(sessionToken);
-
         /**
          * Having the token means that Clerk has authenticated the user.
          * Now we can create a user in our database.
@@ -57,7 +55,7 @@ const LoginPage: NextPage = () => {
   return (
     <>
       <Head>
-        <title>Log into chirp</title>
+        <title>Log into Careerpilot</title>
       </Head>
       <section className="flex flex-col items-center gap-10 pt-40">
         <h1 className="text-[2rem]">

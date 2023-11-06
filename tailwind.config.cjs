@@ -1,4 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 const plugin = require("tailwindcss/plugin");
 
 /**
@@ -115,16 +114,11 @@ const config = {
   plugins: [
     plugin(function ({ addUtilities, theme }) {
       // Rewrite text color class prefix to "clr-":
-      const colors = theme("colors");
+      const colors = theme("colors") || {};
+
       const textColorClasses = {};
-      // output: { ".clr-base": { color: "var(--clr-base)" } }
-      // usage: <p className="clr-base">...</p>
-      // @ts-ignore
       for (const [name, color] of Object.entries(colors)) {
-        // @ts-ignore
-        textColorClasses[`.clr-${name}`] = {
-          color,
-        };
+        textColorClasses[`.clr-${name}`] = { color };
       }
 
       // Add heading classes
@@ -137,7 +131,6 @@ const config = {
       };
       Object.entries(headingFontSizeLetterSpacingMap).forEach(
         (entry, i) =>
-          // @ts-ignore
           (headingClasses[`.h${i + 1}`] = {
             fontSize: theme(`fontSize.${entry[0]}`),
             letterSpacing: entry[1],

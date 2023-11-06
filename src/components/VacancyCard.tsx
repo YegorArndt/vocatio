@@ -31,7 +31,8 @@ export const VacancyCard = (props: VacancyCardProps) => {
   const tiltRef = useRef(null);
 
   useEffect(() => {
-    // @ts-ignore
+    if (!tiltRef.current) return;
+
     VanillaTilt.init(tiltRef.current, {
       max: 5,
       speed: 100,

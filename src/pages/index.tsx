@@ -8,3 +8,5 @@ const Home = () => {
     void router.push("/vacancies");
   }, []);
 };
+
+export default Home;

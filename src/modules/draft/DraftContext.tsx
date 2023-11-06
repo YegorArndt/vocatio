@@ -191,7 +191,8 @@ export const DraftContext = (props: DraftContextInput) => {
   };
 
   return (
-    // @ts-ignore
-    <Context.Provider value={context}>{children(context)}</Context.Provider>
+    <Context.Provider value={context as DraftContext}>
+      {children(context as DraftContext)}
+    </Context.Provider>
   );
 };

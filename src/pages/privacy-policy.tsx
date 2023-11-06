@@ -28,8 +28,8 @@ const PrivacyPolicy = () => {
         <small>Last Updated: Tue Nov 07 2023</small>
         <h3>Introduction</h3>
         <div>
-          Welcome to the privacy policy for Careerpilot ("we", "us", or "our").
-          Our service, accessible from
+          Welcome to the privacy policy for Careerpilot (&quot;we&quot;,
+          &quot;us&quot;, or &quot;our&quot;). Our service, accessible from
           <a href="https://chirp-mu-rust-60.vercel.app" className="clr-blue">
             {" "}
             https://chirp-mu-rust-60.vercel.app
@@ -66,8 +66,8 @@ const PrivacyPolicy = () => {
         do not own or control or to people that we do not employ or manage. Our
         service may include links to third-party websites or services that are
         not operated by us. If you click on a third-party link, you will be
-        directed to that third party's site. We strongly advise you to review
-        the privacy policy of every site you visit.
+        directed to that third party&apos;s site. We strongly advise you to
+        review the privacy policy of every site you visit.
         <h3>Your Rights</h3>
         You have certain rights regarding the personal information we hold about
         you. These may include the rights to access, modify, or delete the
@@ -75,7 +75,7 @@ const PrivacyPolicy = () => {
         <h3>Changes to This Privacy Policy</h3>
         We may update our privacy policy from time to time. We will notify you
         of any changes by posting the new privacy policy on this page and
-        updating the "Last Updated" date.
+        updating the &quot;Last Updated&quot; date.
         <h3>Contact Us</h3>
         <div>
           If you have any questions about this privacy policy, please contact us

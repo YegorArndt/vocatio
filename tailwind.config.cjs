@@ -119,7 +119,9 @@ const config = {
       const textColorClasses = {};
       // output: { ".clr-base": { color: "var(--clr-base)" } }
       // usage: <p className="clr-base">...</p>
+      // @ts-ignore
       for (const [name, color] of Object.entries(colors)) {
+        // @ts-ignore
         textColorClasses[`.clr-${name}`] = {
           color,
         };
@@ -135,6 +137,7 @@ const config = {
       };
       Object.entries(headingFontSizeLetterSpacingMap).forEach(
         (entry, i) =>
+          // @ts-ignore
           (headingClasses[`.h${i + 1}`] = {
             fontSize: theme(`fontSize.${entry[0]}`),
             letterSpacing: entry[1],

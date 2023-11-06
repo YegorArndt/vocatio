@@ -1,5 +1,5 @@
 import NextLink from "next/link";
-import { memo, forwardRef, type PropsWithChildren, type Ref } from "react";
+import { forwardRef, type PropsWithChildren, type Ref } from "react";
 import cn from "classnames";
 import type { LinkProps as NextLinkProps } from "next/link";
 
@@ -13,8 +13,8 @@ export type LinkProps = PropsWithChildren<
   } & Omit<NextLinkProps, "href">
 >;
 
-export const Link = memo(
-  forwardRef((props: LinkProps, ref: Ref<HTMLAnchorElement>) => {
+export const Link = forwardRef(
+  (props: LinkProps, ref: Ref<HTMLAnchorElement>) => {
     const {
       to,
       newTab,
@@ -40,5 +40,5 @@ export const Link = memo(
         {children}
       </NextLink>
     );
-  })
+  }
 );

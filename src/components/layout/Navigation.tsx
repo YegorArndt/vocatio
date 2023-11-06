@@ -28,11 +28,13 @@ export const Navigation = () => {
 
   return (
     <Header className="flex flex-col gap-4">
-      {imageSrc && (
+      {imageSrc ? (
         <UserPresentator
           src={imageSrc}
           name={user?.ownName || defaultUserData.user?.fullName || "Welcome!"}
         />
+      ) : (
+        <div className="h-[50px] w-[50px]" />
       )}
       <nav className="pb-2">
         <div className="flex gap-3">

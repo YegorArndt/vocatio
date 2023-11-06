@@ -1,7 +1,9 @@
 import { useUser } from "@clerk/nextjs";
 import Head from "next/head";
+import { AiOutlineArrowLeft } from "react-icons/ai";
 import { Header } from "~/components/layout/Header";
 import { UserPresentator } from "~/components/layout/UserPresentator";
+import { Link } from "~/components/ui/buttons/Link";
 import { api } from "~/utils";
 
 const PrivacyPolicy = () => {
@@ -15,13 +17,16 @@ const PrivacyPolicy = () => {
       <Head>
         <title>Privacy Policy - Careerpilot</title>
       </Head>
-      <Header>
+      <Header className="flex flex-col gap-3 pb-3">
         {imageSrc && (
           <UserPresentator
             name={user?.ownName || defaultUserData.user?.fullName || ""}
             src={imageSrc}
           />
         )}
+        <Link to="/vacancies" className="sm !justify-start gap-3 clr-blue">
+          <AiOutlineArrowLeft /> Back to vacancies
+        </Link>
       </Header>
       <main className="container flex flex-col gap-3 pt-5">
         <h1>Privacy Policy for Careerpilot </h1>

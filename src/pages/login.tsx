@@ -62,15 +62,11 @@ const LoginPage: NextPage = () => {
           {isLoaded
             ? isSignedIn
               ? "Success! You can safely return to using the extension."
-              : "It&apos;s impossible to save your data without knowing you."
+              : "It's impossible to save your data without knowing you."
             : "Wait a sec..."}
         </h1>
         <div className="flex-center min-w-[10rem] rounded-sm bg-red p-5">
-          {isSignedIn ? (
-            <SignOutButton />
-          ) : (
-            <SignInButton redirectUrl="/login" mode="modal" />
-          )}
+          {isSignedIn ? <SignOutButton /> : <SignInButton mode="modal" />}
         </div>
       </section>
     </>

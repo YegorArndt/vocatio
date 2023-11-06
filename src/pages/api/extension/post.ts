@@ -77,6 +77,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
       res.status(200).json({ message: "You can navigate back to the app!" });
     }
   } catch (error) {
-    res.status(401).json({ message: (error as Err).message });
+    // res.status(401).json({ message: (error as Err).message });
+    res.status(401).json({ message: "Kek" });
   }
 }

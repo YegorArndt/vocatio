@@ -39,6 +39,8 @@ const LoginPage: NextPage = () => {
           "*"
         );
 
+        console.log(sessionToken);
+
         /**
          * Having the token means that Clerk has authenticated the user.
          * Now we can create a user in our database.

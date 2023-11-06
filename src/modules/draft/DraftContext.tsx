@@ -1,6 +1,6 @@
 import { createContext, useContext, useState } from "react";
 import type { UserResource } from "@clerk/types";
-import { Vacancy } from "@prisma/client";
+import { User, Vacancy } from "@prisma/client";
 
 export type Component = {
   type: "text" | "group" | "h1" | "h2" | "h3" | "h4" | "timeline";
@@ -14,7 +14,7 @@ export type Component = {
 type DraftContextInput = {
   defaultUserData: UserResource;
   vacancy: Vacancy;
-  user: any;
+  user: User;
   children: (props: DraftContext) => JSX.Element;
 };
 

@@ -16,7 +16,7 @@ type ToolbarProps = {
  */
 
 type ToolProps = {
-  icon: any;
+  icon: JSX.Element;
   onClick: () => void;
 };
 
@@ -84,7 +84,7 @@ export const Toolbar = (props: ToolbarProps) => {
     },
     {
       icon: <TfiLayersAlt />,
-      onClick: () => {},
+      onClick: () => null,
     },
   ];
 

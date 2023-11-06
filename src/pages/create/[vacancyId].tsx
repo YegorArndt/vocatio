@@ -1,5 +1,5 @@
 import { useUser } from "@clerk/nextjs";
-import { GetStaticProps, InferGetStaticPropsType } from "next";
+import { GetStaticProps } from "next";
 import { useEffect, useRef } from "react";
 
 import { api } from "~/utils";
@@ -10,7 +10,11 @@ import { LogoLoader } from "~/components/LogoLoader";
 import { Area } from "~/modules/create/Area";
 import { DraftContext } from "~/modules/draft/DraftContext";
 
-const CVBuilder = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
+type CVBuilderProps = {
+  vacancyId: string;
+};
+
+const CVBuilder = (props: CVBuilderProps) => {
   const { vacancyId } = props;
 
   const a4Ref = useRef(null);

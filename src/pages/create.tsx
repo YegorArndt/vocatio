@@ -23,7 +23,7 @@ export const Create = () => {
     const lastEditedVacancyId = localStorage.getItem("last-edited-vacancy");
     if (lastEditedVacancyId) setLastEditedVacancyId(lastEditedVacancyId);
 
-    if (data) router.push(`/create/${lastEditedVacancyId}`);
+    if (data) void router.push(`/create/${lastEditedVacancyId}`);
     else setPlaceholderShown(true);
   }, [isLoading]);
 

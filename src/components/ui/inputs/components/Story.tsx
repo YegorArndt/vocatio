@@ -1,5 +1,4 @@
 import { type Story as StoryType } from "@prisma/client";
-import { memo } from "react";
 import { getRandomCompanyName } from "~/modules/cv-creation-wizard/utils";
 import { Input } from "./Input";
 import { Autoresize } from "./Autoresize";
@@ -25,7 +24,7 @@ const Line = () => (
  * @param {number} index - The index of the story to generate the date of employment.
  */
 
-export const Story = memo((props: StoryProps) => {
+export const Story = (props: StoryProps) => {
   const { story, jobTitle, index } = props;
 
   const companyName = getRandomCompanyName();
@@ -72,4 +71,4 @@ export const Story = memo((props: StoryProps) => {
       </div>
     </div>
   );
-});
+};

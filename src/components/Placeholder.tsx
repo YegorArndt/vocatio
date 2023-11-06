@@ -13,8 +13,8 @@ export const Placeholder = (props: PlaceholderProps) => {
     title = "Nothing yet 🐈",
     text = (
       <>
-        Click "Get CV" under a vacancy <br /> or just drag and drop it into
-        "Create" tab.
+        Click &quot;Get CV&quot; under a vacancy <br /> or just drag and drop it
+        into &quot;Create&quot; tab.
       </>
     ),
     to = "vacancies",

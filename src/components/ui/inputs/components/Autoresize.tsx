@@ -52,7 +52,7 @@ export const Autoresize = (props: AutoresizeProps) => {
 
   const { register, watch } = useForm({
     defaultValues: {
-      [name]: localStorage.getItem(name) || value,
+      [name]: localStorage.getItem(name) ?? value,
     },
   });
 

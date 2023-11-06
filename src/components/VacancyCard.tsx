@@ -60,7 +60,8 @@ export const VacancyCard = (props: VacancyCardProps) => {
             {
               icon: <FaDollarSign />,
               text:
-                salaryMin || salaryMax
+                // prettier-ignore
+                (salaryMin || salaryMax)
                   ? getSalaryRange(salaryMin, salaryMax)
                   : "Unknown salary",
             },

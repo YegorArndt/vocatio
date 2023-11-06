@@ -38,8 +38,8 @@ const getStoriesFromLocalStorage = (vacancyId: string) => {
 
   for (let i = 0; i < localStorage.length; i++) {
     const key = localStorage.key(i);
-    if (storyKeyRegex.test(key as string)) {
-      const story = localStorage.getItem(key as string);
+    if (typeof key === "string" && storyKeyRegex.test(key)) {
+      const story = localStorage.getItem(key);
       if (story) {
         matchingStories.push(story);
       }

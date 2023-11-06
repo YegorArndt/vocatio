@@ -7,6 +7,7 @@ export type Component = {
   content: string | { label: string; value: string };
   id: string;
   order: number;
+  props?: Record<string, unknown>;
   className?: string;
 };
 

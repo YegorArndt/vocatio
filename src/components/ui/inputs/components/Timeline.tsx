@@ -1,7 +1,7 @@
 import { useStories } from "~/modules/cv-creation-wizard/useStories";
 import { Story } from "./Story";
 
-type TimelineProps = {
+export type TimelineProps = {
   jobDescription: string;
   jobTitle: string;
   vacancyId: string;

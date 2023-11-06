@@ -3,7 +3,10 @@ import cn from "classnames";
 
 import { Input } from "~/components/ui/inputs/components/Input";
 import { Autoresize } from "~/components/ui/inputs/components/Autoresize";
-import { Timeline } from "~/components/ui/inputs/components/Timeline";
+import {
+  Timeline,
+  type TimelineProps,
+} from "~/components/ui/inputs/components/Timeline";
 
 type ComponentFactoryProps = {
   component: Component;
@@ -15,8 +18,8 @@ export const ComponentFactory = (props: ComponentFactoryProps) => {
 
   const isTimeline = c.type === "timeline";
 
-  // @ts-ignore
-  if (isTimeline) return <Timeline {...c.props} />;
+  if (isTimeline && c.props)
+    return <Timeline {...(c.props as TimelineProps)} />;
 
   const isGroup = c.type === "group";
 

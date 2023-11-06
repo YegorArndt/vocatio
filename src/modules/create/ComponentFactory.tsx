@@ -1,46 +1,106 @@
-import { Textarea } from "~/components/ui";
-import { H3WithDivider } from "~/components/ui/h/H3WithDivider";
-import { PhoneInput } from "~/components/ui/inputs/components/PhoneInput";
-import { TextareaWithLabel } from "~/components/ui/inputs/components/TextareaWithLabel";
-import { UrlInput } from "~/components/ui/inputs/components/UrlInput";
-import type { DraftComponent } from "../draft/types";
+import { type Component, useDraftContext } from "../draft/DraftContext";
+import cn from "classnames";
 
-const componentMapping = {
-  TEXT: Textarea,
-  DATE: Textarea,
-  SELECT: Textarea,
-  PHONE_NUMBER: PhoneInput,
-  PHONE_NUMBER_WITH_LABEL: TextareaWithLabel,
-  TEXT_WITH_LABEL: TextareaWithLabel,
-  DATE_WITH_LABEL: TextareaWithLabel,
-  SELECT_WITH_LABEL: TextareaWithLabel,
-  URL: UrlInput,
-
-  // TODO:
-  LOCATION: Textarea,
-  LOCATION_WITH_LABEL: TextareaWithLabel,
-  LANGUAGE: Textarea,
-  H1: Textarea,
-  H2: Textarea,
-  H3: Textarea,
-  H4: Textarea,
-  H5: Textarea,
-  H6: Textarea,
-  H1_WITH_DIVIDER: H3WithDivider,
-  H2_WITH_DIVIDER: H3WithDivider,
-  H3_WITH_DIVIDER: H3WithDivider,
-  H4_WITH_DIVIDER: H3WithDivider,
-  H5_WITH_DIVIDER: H3WithDivider,
-};
+import { Input } from "~/components/ui/inputs/components/Input";
+import { Autoresize } from "~/components/ui/inputs/components/Autoresize";
+import { Timeline } from "~/components/ui/inputs/components/Timeline";
 
 type ComponentFactoryProps = {
-  component: DraftComponent;
+  component: Component;
 } & Record<string, unknown>;
 
 export const ComponentFactory = (props: ComponentFactoryProps) => {
   const { component: c } = props;
+  const { downloadFired } = useDraftContext();
 
-  const ResultComponent = componentMapping[c.component] || Textarea;
+  const isTimeline = c.type === "timeline";
 
-  return <ResultComponent {...c} />;
+  // @ts-ignore
+  if (isTimeline) return <Timeline {...c.props} />;
+
+  const isGroup = c.type === "group";
+
+  if (isGroup) {
+    const { label, value } = c.content as { label: string; value: string };
+    return (
+      <div className="grid grid-cols-[1fr,170px]">
+        <Autoresize name={`label-${c.id}`} value={label} />
+        <Autoresize name={`value-${c.id}`} value={value} />
+      </div>
+    );
+  }
+
+  // H4
+
+  const isH4 = c.type === "h4";
+
+  if (isH4) {
+    return (
+      <h3
+        style={{ borderBottom: "2px solid currentColor" }}
+        className={
+          c.className
+            ? c.className
+            : cn(
+                "mb-2 mt-2",
+                {
+                  "pb-3": downloadFired,
+                },
+                c.className
+              )
+        }
+      >
+        <Autoresize name={`${c.id}`} value={c.content} />
+      </h3>
+    );
+  }
+
+  // End of H4
+
+  // H3
+  const isH3 = c.type === "h3";
+
+  if (isH3) {
+    return (
+      <div className="w-full text-[1.3rem] tracking-wider">
+        <Input
+          name={`${c.id}`}
+          value={c.content as string}
+          className="tracking-wider"
+        />
+      </div>
+    );
+  }
+
+  // End of H3
+
+  // H2
+
+  const isH2 = c.type === "h2";
+
+  if (isH2) {
+    return (
+      <h3 className="text-[1rem]">
+        <Autoresize name={`${c.id}`} value={c.content} />
+      </h3>
+    );
+  }
+
+  // End of H2
+
+  // H1
+
+  const isH1 = c.type === "h1";
+
+  if (isH1) {
+    return (
+      <div className="text-[50px] font-bold text-[#323B4C]">
+        <Input name={`${c.id}`} value={c.content as string} />
+      </div>
+    );
+  }
+
+  // End of H1
+
+  return <Autoresize name={`${c.id}`} value={c.content} />;
 };

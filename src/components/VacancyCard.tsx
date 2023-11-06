@@ -24,12 +24,14 @@ export const VacancyCard = (props: VacancyCardProps) => {
     country,
     age,
     createdAt,
+    jobTitle,
   } = vacancy;
   const [isExpanded, setIsExpanded] = useState(false);
 
   const tiltRef = useRef(null);
 
   useEffect(() => {
+    // @ts-ignore
     VanillaTilt.init(tiltRef.current, {
       max: 5,
       speed: 100,
@@ -39,14 +41,18 @@ export const VacancyCard = (props: VacancyCardProps) => {
   }, []);
 
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-col gap-5">
       <div
         ref={tiltRef}
         className="tilt relative rounded-md border bg-primary shadow-md [&>*]:p-4"
       >
-        <header className="border-bottom">
+        <header className="border-bottom flex flex-col gap-2">
           <h3 className="text-xl font-bold">{companyName}</h3>
-          <small>Added to your vacancies: {createdAt.toDateString()}</small>
+          <span className="italic">{jobTitle}</span>
+          <small>
+            Added to your vacancies: <br />
+            {createdAt.toDateString()}
+          </small>
         </header>
         <ul className="flex flex-col gap-3">
           {[
@@ -71,10 +77,6 @@ export const VacancyCard = (props: VacancyCardProps) => {
               icon: <FaClock />,
               text: age ? `Posted: ${age.toDateString()}` : "Unknown post date",
             },
-            // {
-            //   icon: <FaClock />,
-            //   text:
-            // },
           ].map(({ icon, text }, index) => (
             <li key={index} className="flex items-center gap-2">
               {icon}
@@ -89,7 +91,14 @@ export const VacancyCard = (props: VacancyCardProps) => {
           ))}
         </ul>
       </div>
-      <Link text="Get CV" to={`create/${vacancy.id}`} />
+      <div className="grid grid-cols-1 gap-4">
+        <Link
+          text="Get CV"
+          className="primary sm"
+          to={`create/${vacancy.id}`}
+        />
+        {/* <Button text="Start thread" className="primary sm" disabled /> */}
+      </div>
     </div>
   );
 };

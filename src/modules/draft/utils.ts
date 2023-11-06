@@ -1,43 +1,32 @@
 import { isNil } from "lodash-es";
 import { type KeyboardEvent } from "react";
-import { Inputs } from "~/types/utils";
+import type { LsComponent } from "./types";
 
-const lsPath = (vacancyId: string, name: string) =>
-  `draft-${name}-${vacancyId}`;
+const lsPath = (vacancyId: string, label: string) =>
+  `draft-${label}-${vacancyId}`;
 
-export const writeToLocalStorage = (
+export const commit = (vacancyId: string) => (component: LsComponent) => {
+  localStorage.setItem(
+    lsPath(vacancyId, component.label),
+    JSON.stringify(component)
+  );
+};
+
+export const readFromLocalStorage = (
   vacancyId: string,
-  name: string,
-  value: string
+  label: string,
+  fallback?: LsComponent
 ) => {
-  localStorage.setItem(lsPath(vacancyId, name), value);
-};
-
-export const readFromLocalStorage =
-  (vacancyId: string) => (name: string, fallback?: string) => {
-    const value = localStorage.getItem(lsPath(vacancyId, name));
-    return isNil(value) ? fallback : value;
-  };
-
-const isMatchingPattern = (key: string, vacancyId: string) => {
-  const pattern = `draft-`;
-  return key.startsWith(pattern) && key.endsWith(`-${vacancyId}`);
-};
-
-export const restoreToDefaults = (vacancyId: string) => {
-  for (let i = localStorage.length - 1; i >= 0; i--) {
-    const key = localStorage.key(i);
-    if (key && isMatchingPattern(key, vacancyId)) {
-      localStorage.removeItem(key);
-    }
-  }
+  const component = localStorage.getItem(lsPath(vacancyId, label));
+  return isNil(component) ? fallback : JSON.parse(component);
 };
 
 export const tabAutocomplete = (
-  event: KeyboardEvent<Inputs>,
+  event: KeyboardEvent<HTMLInputElement>,
+  component: LsComponent,
   vacancyId: string
 ) => {
-  const { placeholder, name } = event.currentTarget;
+  const { placeholder } = event.currentTarget;
 
   if (!placeholder) return;
 
@@ -46,7 +35,6 @@ export const tabAutocomplete = (
 
   if (isTabPressedAndFieldFocused) {
     event.preventDefault();
-    event.currentTarget.value = placeholder;
-    writeToLocalStorage(vacancyId, name, placeholder);
+    commit(vacancyId)({ ...component, value: placeholder });
   }
 };

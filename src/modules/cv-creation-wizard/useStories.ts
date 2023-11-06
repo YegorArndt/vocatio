@@ -32,13 +32,14 @@ export const stubbyStories = [
   remained a preferred choice in the ever-evolving crypto advertising landscape.`,
 ];
 
-const getStoriesFromLocalStorage = () => {
+const getStoriesFromLocalStorage = (vacancyId: string) => {
   const matchingStories = [];
+  const storyKeyRegex = new RegExp(`draft-story-${vacancyId}-\\d+`);
 
   for (let i = 0; i < localStorage.length; i++) {
     const key = localStorage.key(i);
-    if (/draft-story-\d+/.test(key)) {
-      const story = localStorage.getItem(key);
+    if (storyKeyRegex.test(key as string)) {
+      const story = localStorage.getItem(key as string);
       if (story) {
         matchingStories.push(story);
       }
@@ -48,7 +49,17 @@ const getStoriesFromLocalStorage = () => {
   return matchingStories;
 };
 
-export const useStories = (description: Falsy<string>) => {
+const setStoriesToLocalStorage = (stories: string[], vacancyId: string) => {
+  stories.forEach((story, index) => {
+    localStorage.setItem(`draft-story-${vacancyId}-${index}`, story);
+  });
+};
+
+export const useStories = (
+  description: Falsy<string>,
+  jobTitle: string,
+  vacancyId: string
+) => {
   const [stories, setStories] = useState<string[]>([]);
   const {
     mutate: getStory,
@@ -66,7 +77,7 @@ export const useStories = (description: Falsy<string>) => {
     /**
      * If not = first load, try to get them from local storage.
      */
-    const ls = getStoriesFromLocalStorage();
+    const ls = getStoriesFromLocalStorage(vacancyId);
     if (ls.length) {
       setStories(ls);
       return;
@@ -84,6 +95,7 @@ export const useStories = (description: Falsy<string>) => {
     if (!story) {
       return getStory({
         description,
+        jobTitle,
       });
     }
 
@@ -92,6 +104,7 @@ export const useStories = (description: Falsy<string>) => {
      */
     const { content } = story;
     const resultStories = content ? [content] : stubbyStories;
+    setStoriesToLocalStorage(resultStories, vacancyId);
     setStories(resultStories);
   }, [story]);
 

@@ -4,15 +4,15 @@ import { useEffect, useRef } from "react";
 
 import { api } from "~/utils";
 import { generateSSGHelper } from "~/server/api/utils/generateSSGHelper";
-import { DraftProvider } from "~/modules/draft/DraftProvider";
 import { Toolbar } from "~/modules/toolbar/Toolbar";
 import { Layout } from "~/components/layout/Layout";
 import { LogoLoader } from "~/components/LogoLoader";
 import { Area } from "~/modules/create/Area";
-import { LEFT_HALF, leftHalfComponents } from "~/modules/draft/predefinedAreas";
+import { DraftContext } from "~/modules/draft/DraftContext";
 
 const CVBuilder = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { vacancyId } = props;
+
   const a4Ref = useRef(null);
 
   useEffect(() => {
@@ -42,39 +42,32 @@ const CVBuilder = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
       <div className="flex-center relative pt-[4rem]">
         {(userLoading || vacancyLoading) && <LogoLoader />}
         {vacancy && user && defaultUserData && (
-          <DraftProvider
-            initialDraft={{
-              vacancyId: vacancy.id,
-              image: user.ownImage || defaultUserData.imageUrl,
-              name: user.ownName || defaultUserData.fullName || "John Doe",
-              jobTitle: user.ownJobTitle || vacancy.jobTitle || "Engineer",
-              objective: user.ownObjective || "Todo",
-            }}
-            rawData={{
-              vacancy,
-              user,
-              defaultUserData,
-            }}
+          <DraftContext
+            defaultUserData={defaultUserData}
+            vacancy={vacancy}
+            user={user}
           >
-            <Toolbar a4Ref={a4Ref} />
-            <div
-              ref={a4Ref}
-              className="dark-frame grid h-[1122px] !max-h-[1122px] w-[795px] max-w-[795px] grid-cols-[300px_1fr] bg-white"
-            >
-              <Area
-                id={LEFT_HALF}
-                className="flex h-full flex-col items-center bg-[#323B4C] py-7 pl-5 clr-white"
-                components={leftHalfComponents}
-                index={0}
-              />
-              {/* <Area
-                id="right-half"
-                className="bg-white px-[2rem] py-[5rem] clr-black"
-                components={[]}
-                index={1}
-              /> */}
-            </div>
-          </DraftProvider>
+            {({ leftComponents, rightComponents }) => (
+              <>
+                <Toolbar a4Ref={a4Ref} />
+                <div
+                  ref={a4Ref}
+                  className="dark-frame grid h-[1122px] w-[795px] min-w-[795px] max-w-[795px] grid-cols-[300px_1fr] bg-white"
+                >
+                  <Area
+                    id="left"
+                    className="flex h-full flex-col items-center bg-[#323B4C] px-5 py-7 clr-white"
+                    components={leftComponents}
+                  />
+                  <Area
+                    id="right"
+                    className="bg-white px-[2rem] py-[3rem] clr-black"
+                    components={rightComponents}
+                  />
+                </div>
+              </>
+            )}
+          </DraftContext>
         )}
       </div>
     </Layout>

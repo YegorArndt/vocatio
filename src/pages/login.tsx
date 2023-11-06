@@ -20,7 +20,6 @@ const LoginPage: NextPage = () => {
         const errorMessage = error.data?.zodError?.fieldErrors.content;
 
         if (errorMessage?.[0]) {
-          console.log(errorMessage[0]);
           return;
         }
 

@@ -2,9 +2,8 @@ import Image from "next/image";
 import { useUser } from "@clerk/nextjs";
 
 import { api } from "~/utils";
-import cn from "classnames";
 import { NavigationLink } from "../ui/buttons/NavigationLink";
-import { Logo } from "../Logo";
+import { Header } from "./Header";
 
 type NavigationLinkProps = {
   text: string;
@@ -26,28 +25,21 @@ const navigationLinks = [
 const ACTIVE_BEFORE =
   "relative before:absolute before:h-0 before:w-[75%] before:left-[50%] before:right-[50%] before:transform before:-translate-x-1/2 before:bottom-[-0.5rem] before:border-b-2 !clr-base";
 
-const HEADER_POSITION = "sticky left-0 top-0 z-50";
-
-const HEADER_COLORS = "px-5 backdrop-blur-md clr-base border-bottom";
-
-const HEADER_DISPLAY = "flex flex-col items-start justify-between gap-2";
-
 const UserPresentator = (props: UserPresentatorProps) => {
   const { src, name } = props;
 
   return (
     <div className="flex w-full items-center justify-normal gap-4 pl-3 pt-5">
-      <Logo />
+      {/* <Logo /> */}
+      <span>Welcome to Careerpilot Beta 😉</span>
       <div className="h-[30px] w-[0.5px] rotate-[30deg] transform bg-base-reversed" />
-      {src && (
-        <Image
-          src={src}
-          height={25}
-          width={25}
-          className="rounded-full"
-          alt={name || "Welcome!"}
-        />
-      )}
+      <Image
+        src={src}
+        height={25}
+        width={25}
+        className="rounded-full"
+        alt={name || "Welcome!"}
+      />
       <span>{name || "Loading..."}</span>
     </div>
   );
@@ -57,12 +49,16 @@ export const Navigation = () => {
   const defaultUserData = useUser();
   const { data: user } = api.users.get.useQuery();
 
+  const imageSrc = user?.ownImage || defaultUserData.user?.imageUrl;
+
   return (
-    <header className={cn(HEADER_POSITION, HEADER_COLORS, HEADER_DISPLAY)}>
-      <UserPresentator
-        src={user?.ownImage || defaultUserData.user?.imageUrl}
-        name={user?.ownName || defaultUserData.user?.fullName || "Welcome!"}
-      />
+    <Header className="flex flex-col gap-4">
+      {imageSrc && (
+        <UserPresentator
+          src={imageSrc}
+          name={user?.ownName || defaultUserData.user?.fullName || "Welcome!"}
+        />
+      )}
       <nav className="pb-2">
         <div className="flex gap-3">
           {navigationLinks.map(({ text, to }, i) => (
@@ -75,6 +71,6 @@ export const Navigation = () => {
           ))}
         </div>
       </nav>
-    </header>
+    </Header>
   );
 };

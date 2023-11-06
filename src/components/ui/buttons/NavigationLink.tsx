@@ -11,6 +11,7 @@ type NavigationLinkProps = {
 
 export const NavigationLink = (props: NavigationLinkProps) => {
   const { to, className, activeCn = "", ...linkProps } = props;
+
   const router = useRouter();
   const { pathname } = router;
   const isActive = pathname.includes(to);
@@ -18,8 +19,9 @@ export const NavigationLink = (props: NavigationLinkProps) => {
   return (
     <Link
       to={to}
-      variant="tertiary"
-      className={cn(className, { [activeCn]: isActive })}
+      className={cn("navigation sm", className, {
+        [activeCn]: isActive,
+      })}
       {...linkProps}
     />
   );

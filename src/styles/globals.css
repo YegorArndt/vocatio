@@ -10,6 +10,8 @@
   --red: #f44336;
   --yellow: rgb(245, 184, 28);
   --purple: #7928ca;
+  --white: #fff;
+  --cyan: #79ffe1;
 }
 
 [data-theme="dark"] {
@@ -26,6 +28,10 @@
 
   --select: #f81ce5;
   --border-clr: #333;
+  --border-hover-clr: #888;
+
+  --scrollbar-track-color: #333;
+  --scrollbar-thumb-color: #888;
 }
 
 [data-theme="light"] {
@@ -33,13 +39,18 @@
   --clr-base: #000;
 
   --bg-primary: #fafafa;
-  --clr-primary: #666;
+  --clr-primary: #0a0a0a;
+  --bg-primary-hover: #ccc;
 
   --bg-secondary: var(--gray);
   --clr-secondary: #444;
 
   --select: #79ffe1;
   --border-clr: var(--gray);
+  --border-hover-clr: #444;
+
+  --scrollbar-track-color: lightgray;
+  --scrollbar-thumb-color: darkgray;
 }
 
 @layer base {
@@ -48,7 +59,8 @@
     min-height: 100%;
     text-rendering: optimizeSpeed;
     scroll-behavior: smooth;
-    @apply bg-primary text-base clr-primary;
+    overscroll-behavior-y: contain;
+    @apply bg-primary text-default clr-primary;
   }
 
   ::selection {
@@ -68,9 +80,63 @@
   h4 {
     @apply h4;
   }
+  /* For WebKit browsers */
+  ::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--scrollbar-track-color, lightgray);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: var(--scrollbar-thumb-color, darkgray);
+    border-radius: 6px;
+    border: 3px solid var(--scrollbar-track-color, lightgray);
+
+    /* For Firefox */
+    * {
+      scrollbar-width: thin;
+      scrollbar-color: var(--scrollbar-thumb-color, darkgray)
+        var(--scrollbar-track-color, lightgray);
+    }
+  }
 }
 
 @layer components {
+  /* Buttons  */
+
+  /* 1. Reverse theme colors for buttons and links  */
+  [data-theme="dark"] .primary:is(button, a) {
+    --bg-base: #fff;
+    --clr-base: #000;
+
+    --bg-primary: #fafafa;
+    --clr-primary: #666;
+    --bg-primary-hover: #ccc;
+
+    --bg-secondary: var(--gray);
+    --clr-secondary: #444;
+
+    --select: #79ffe1;
+    --border-clr: var(--gray);
+  }
+
+  /**
+    2. Create primary, secondary classes and apply them directly to components.
+    Instead of introducing unnecessary "variant" prop.
+  */
+  .primary:is(button, a) {
+    @apply bg-primary clr-base;
+  }
+  .primary:is(button, a):hover {
+    background-color: #ccc;
+  }
+
+  .navigation:is(button, a) {
+    @apply bg-transparent clr-secondary hover:bg-secondary-hover hover:clr-base;
+  }
 }
 
 @layer utilities {
@@ -80,48 +146,44 @@
     width: 100%;
   }
 
+  .grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  }
+
   .size-full {
     @apply h-full w-full;
   }
 
-  .large {
-    font-size: 3rem;
+  .reset {
+    @apply m-0 w-full border-0 bg-transparent p-0 outline-none;
   }
 
-  .palette-primary {
-    background-color: var(--bg-primary);
-    color: var(--clr-primary);
+  .content {
+    @apply inline-block overflow-ellipsis whitespace-nowrap;
   }
 
-  .palette-primary .hoverable:hover,
-  .palette-primary.hoverable:hover {
-    background-color: var(--bg-primary-hover);
-    color: var(--clr-base);
+  :is(button, a)[class^="bg-"]:hover,
+  :is(button, a)[class*=" bg-"]:hover {
+    filter: brightness(1.1);
   }
 
-  .palette-primary .active {
-    background-color: var(--bg-primary-hover);
-    color: var(--clr-primary);
+  .common:is(button, a) {
+    transition-property: border-color, background, color, transform, box-shadow,
+      filter;
+    transition-duration: 0.15s;
+    transition-timing-function: ease;
+    max-width: 18.75rem;
+    cursor: pointer;
+    @apply flex items-center justify-center rounded-md;
   }
 
-  .palette-secondary {
-    background-color: var(--bg-secondary);
-    color: var(--clr-secondary);
+  .lg:is(button, a) {
+    @apply h-10 px-3 text-medium leading-6;
   }
 
-  .palette-secondary .hoverable:hover {
-    background-color: var(--bg-secondary-hover);
-    color: var(--clr-base);
-  }
-
-  .palette-secondary .active {
-    background-color: var(--bg-secondary-hover);
-    color: var(--clr-secondary);
-  }
-
-  .darken.hoverable {
-    transition: background-color 0.2s ease-in-out;
-    filter: brightness(0.9);
+  .sm:is(button, a) {
+    @apply h-8 px-3 text-default leading-5;
   }
 
   .flex-center {

@@ -23,18 +23,16 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import cn from "classnames";
-import type { Area as DbArea } from "@prisma/client";
 import { ComponentFactory } from "./ComponentFactory";
-import { useDraftContext } from "../draft/DraftProvider";
-import { DraftComponent } from "../draft/types";
+import { type Component } from "~/modules/draft/DraftContext";
 
 const onDragEnd = (
   event: DragEndEvent,
-  setComponents: Dispatch<SetStateAction<DraftComponent[]>>
+  setComponents: Dispatch<SetStateAction<Component[]>>
 ) => {
   const { active, over } = event;
   if (over && active?.id !== over?.id) {
-    setComponents((components: DraftComponent[]) => {
+    setComponents((components: Component[]) => {
       const oldIndex = components.findIndex((c) => c.id === active.id);
       const newIndex = components.findIndex((c) => c.id === over.id);
 
@@ -51,17 +49,11 @@ const onDragEnd = (
   }
 };
 
-const SortableItem = (
-  props: PropsWithChildren<{ component: DraftComponent }>
-) => {
+const SortableItem = (props: PropsWithChildren<{ component: Component }>) => {
   const { component: c, children } = props;
 
-  const {
-    state: { isRearranging },
-  } = useDraftContext();
-
   const { attributes, listeners, setNodeRef, transform, transition } =
-    useSortable({ id: c.id, data: c, disabled: !isRearranging });
+    useSortable({ id: c.id, data: c, disabled: true });
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -79,12 +71,14 @@ const SortableItem = (
 
 type AreaProps = {
   className?: string;
-  components: DraftComponent[];
-} & DbArea;
+  components: Component[];
+  id: string;
+};
 
 /**
  * Area represents a CV zone within which components can be interacted with.
  * eg. left half of the CV.
+ * You can't drag components from one area to another.
  */
 export const Area = (props: AreaProps) => {
   const { id, className, components: initialComponents } = props;
@@ -113,7 +107,7 @@ export const Area = (props: AreaProps) => {
           strategy={verticalListSortingStrategy}
         >
           {components.map((c) => (
-            <SortableItem key={c.name} component={c}>
+            <SortableItem key={c.id} component={c}>
               <ComponentFactory component={c} />
             </SortableItem>
           ))}

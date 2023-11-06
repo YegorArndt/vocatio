@@ -19,9 +19,8 @@ export const Vacancies = () => {
       </Head>
       <Layout>
         {isLoading && <LogoLoader />}
-
         {data && (
-          <div className="container flex gap-10 pt-[5rem]">
+          <div className="grid-container container gap-x-[2rem] gap-y-[3rem] pt-[5rem]">
             {data?.map((vacancy) => (
               <VacancyCard key={vacancy.id} vacancy={vacancy} />
             ))}

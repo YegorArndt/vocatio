@@ -1,20 +1,23 @@
-import cn from "classnames";
-import Image from "next/image";
+import classNames from "classnames";
+import { Roboto } from "next/font/google";
 
 type LogoProps = {
   className?: string;
 };
 
+const roboto = Roboto({
+  weight: ["400", "700"],
+  style: ["normal", "italic"],
+  subsets: ["latin"],
+  display: "swap",
+});
+
 export const Logo = (props: LogoProps) => {
   const { className } = props;
 
   return (
-    <Image
-      src="/vercel-icon-light.png"
-      alt="Chirp Logo"
-      width={25}
-      height={25}
-      className={cn("rotate-180 transform", className)}
-    />
+    <span className={classNames("text-[1.2rem]", roboto.className)}>
+      Careerpilot
+    </span>
   );
 };

@@ -39,6 +39,7 @@ const config = {
         yellow: "var(--yellow)",
         blue: "var(--blue)",
         purple: "var(--purple)",
+        white: "var(--white)",
       },
       backgroundColor: {
         base: "var(--bg-base)",
@@ -49,7 +50,8 @@ const config = {
         green: "var(--green)",
       },
       fontSize: {
-        base: "clamp(0.75rem, 0.7232rem + 0.1429vw, 0.875rem)",
+        default: "clamp(0.75rem, 0.7232rem + 0.1429vw, 0.875rem)",
+        medium: "clamp(0.875rem, 0.8310rem + 0.2167vw, 1rem);",
       },
       zIndex: {
         layout: "100",

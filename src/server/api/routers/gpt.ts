@@ -5,27 +5,25 @@ import { Configuration, OpenAIApi } from "openai";
 
 // TODO take into account the fact that the user can also write texts for chatgpt. Might be a security issue.
 
-const getContent = (
-  description: string
-) => `Given the requirements and objectives of a software company specializing in web application development for the banking sector, please generate a timeline text that outlines the professional contributions made during employment at the company. The text should mention:
-1. Projects led or participated in
-2. Technologies used
-3. Very short about impact on the company in terms of team collaboration, customer satisfaction, client retention, process optimization, and decision-making insights.
+const optimization =
+  "Output one sentence stating the topic and the position assertion. Output one sentence stating the evidence and explanation.";
 
-The requirements for the company are ${description}.
-
-Please use max. 1000 symbols and follow the example structure: "During my tenure at the company, I led and participated in the development of several high-impact projects..."
-`;
+const getContent = (description: string, jobTitle: string) =>
+  `Write a brief paragraph summarizing a significant contribution in your career as a ${jobTitle}, relevant to the requirements: ${description}. Your summary should:
+- Contextualize your role and responsibilities in line with your experience level.
+- Mention how you utilized the specified technology or method.
+- Describe the positive outcome of your contribution on the business, such as process enhancements or customer engagement improvements.
+Ensure the summary is realistic for the job title and within four sentences for conciseness.`;
 
 const configuration = new Configuration({
   apiKey: process.env.OPENAI_API_KEY,
 });
 const openai = new OpenAIApi(configuration);
 
-export const getGptReply = async (description: string) => {
+export const getGptReply = async (content: string) => {
   const response = await openai.createChatCompletion({
     model: "gpt-3.5-turbo-16k",
-    messages: [{ role: "user", content: getContent(description) }],
+    messages: [{ role: "user", content }],
     temperature: 0.7,
   });
 
@@ -37,11 +35,12 @@ export const gptRouter = createTRPCRouter({
     .input(
       z.object({
         description: z.string(),
+        jobTitle: z.string(),
       })
     )
     .mutation(async ({ input }) => {
-      const { description } = input;
-      const gptReply = await getGptReply(description);
+      const { description, jobTitle } = input;
+      const gptReply = await getGptReply(getContent(description, jobTitle));
 
       if (!gptReply)
         throw new TRPCError({

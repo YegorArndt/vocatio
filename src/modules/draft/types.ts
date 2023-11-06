@@ -1,10 +1,10 @@
-import { type Dispatch } from "react";
-import { useForm } from "react-hook-form";
 import { useUser } from "@clerk/nextjs";
 import type { Vacancy, User, Cv, Component } from "@prisma/client";
 
-import { readFromLocalStorage } from "./utils";
-import * as actions from "./actions";
+export type LsComponent = Pick<
+  Component,
+  "areaId" | "component" | "index" | "label" | "value"
+>;
 
 /**
  * When creating CV from scratch, we need to provide an initial ID for DND.
@@ -13,18 +13,7 @@ import * as actions from "./actions";
 export type DraftComponent = Pick<
   Component,
   "areaId" | "component" | "index" | "label"
-> & { id: string; name: string; defaultValue: string; placeholder: string };
-
-export type ActionType = (typeof actions)[keyof typeof actions];
-
-export type DraftState = {
-  isRearranging: boolean;
-};
-
-export type Action = {
-  type: ActionType;
-  payload: Partial<DraftState>;
-};
+> & { id: string; defaultValue: string; placeholder: string };
 
 export type RawData = {
   defaultUserData: ReturnType<typeof useUser>["user"];
@@ -39,8 +28,6 @@ export type DraftContextInput = {
 
 export type DraftContextOutput = {
   currentDraft: Cv;
-  state: DraftState;
   rawData: RawData;
-  dispatch: Dispatch<Action>;
-  getDefaultValue: ReturnType<typeof readFromLocalStorage>;
-} & ReturnType<typeof useForm>;
+  commit: (component: LsComponent) => void;
+};

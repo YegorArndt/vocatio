@@ -1,10 +1,11 @@
-import { type RefObject, useEffect, useRef } from "react";
+import { type RefObject, useRef, useEffect } from "react";
 import cn from "classnames";
 
-import { reset } from "../../constants";
+import { useForm } from "react-hook-form";
+import { useDraftContext } from "~/modules/draft/DraftContext";
 
 const lineHeightMultiplier = 1.5;
-const averageCharMultiplier = 0.58;
+const averageCharMultiplier = 0.48;
 
 const hasContentWrapped = (textarea: HTMLTextAreaElement, fontSize: number) => {
   const averageCharWidth = fontSize * averageCharMultiplier;
@@ -35,14 +36,21 @@ const resize = (containerRef: RefObject<HTMLDivElement>) => {
 export type AutoresizeProps = any;
 
 export const Autoresize = (props: AutoresizeProps) => {
-  const { baseCn, className, ...other } = props;
+  const { baseCn, className, name, value, ...other } = props;
+
+  const { downloadFired } = useDraftContext();
+
+  const { register, watch } = useForm({
+    defaultValues: {
+      [name]: localStorage.getItem(name) || value,
+    },
+  });
 
   const containerRef = useRef<HTMLDivElement>(null);
 
-  /**
-   * Both effects handle auto-resizing the textarea.
-   */
   useEffect(() => {
+    if (downloadFired) return;
+
     resize(containerRef);
 
     const { current: container } = containerRef;
@@ -67,20 +75,32 @@ export const Autoresize = (props: AutoresizeProps) => {
         });
       };
     }
-  }, []);
+  }, [downloadFired]);
+
+  useEffect(() => {
+    //@ts-ignore
+    localStorage.setItem(name, watch(name));
+  }, [watch(name)]);
 
   return (
-    <div ref={containerRef} className={cn("flex w-full")}>
-      <textarea
-        {...other}
-        className={cn(
-          "size-full resize-none overflow-hidden",
-          reset,
-          baseCn,
-          className
-        )}
-        suppressHydrationWarning
-      />
+    <div ref={containerRef} className="break-words">
+      {downloadFired ? (
+        watch(name)
+      ) : (
+        <textarea
+          {...other}
+          // @ts-ignore
+          {...register(name)}
+          data-text={watch(name)}
+          placeholder={value}
+          className={cn(
+            "hack reset resize-none overflow-hidden",
+            baseCn,
+            className
+          )}
+          suppressHydrationWarning
+        />
+      )}
     </div>
   );
 };

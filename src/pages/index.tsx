@@ -5,6 +5,6 @@ const Home = () => {
   const router = useRouter();
 
   useEffect(() => {
-    router.push("/vacancies");
+    void router.push("/vacancies");
   }, []);
 };

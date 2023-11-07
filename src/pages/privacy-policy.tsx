@@ -67,7 +67,7 @@ const PrivacyPolicy = () => {
               <li>
                 <strong>Clerk:</strong> We use Clerk as our authentication
                 provider. Your login credentials are managed by Clerk and we
-                never have access to your passwords. You can view Clerk's
+                never have access to your passwords. You can view Clerk&apos;s
                 privacy policy at{" "}
                 <a
                   href="https://clerk.com/privacy?utm_source=www.google.com&utm_medium=referral&utm_campaign=none"
@@ -82,8 +82,8 @@ const PrivacyPolicy = () => {
               <li>
                 <strong>Supabase:</strong> We use Supabase for database
                 management. Data related to your account and CVs is stored
-                securely in Supabase. For more information on Supabase’s data
-                practices, please refer to{" "}
+                securely in Supabase. For more information on Supabase&apos;s
+                data practices, please refer to{" "}
                 <a
                   href="https://supabase.com/privacy"
                   className="inline clr-blue"

@@ -50,7 +50,7 @@ const MyApp: AppType = ({ Component, pageProps }) => {
         <title>Careerpilot</title>
         <meta
           name="description"
-          content="Tailored CVs for your job applications. Organizer for your vacancies."
+          content="Tailored CVs for your job applications. Tracker for your vacancies."
         />
         <link rel="icon" href="/fav.webp" />
       </Head>

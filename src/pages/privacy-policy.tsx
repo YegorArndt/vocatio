@@ -3,13 +3,12 @@ import Head from "next/head";
 import { AiOutlineArrowLeft } from "react-icons/ai";
 import { Header } from "~/components/layout/Header";
 import { UserPresentator } from "~/components/layout/UserPresentator";
-import { Link } from "~/components/ui/buttons/Link";
 import { api } from "~/utils";
+import { Link } from "~/components/ui/buttons/Link";
 
 const PrivacyPolicy = () => {
   const defaultUserData = useUser();
   const { data: user } = api.users.get.useQuery();
-
   const imageSrc = user?.ownImage || defaultUserData.user?.imageUrl;
 
   return (
@@ -17,7 +16,7 @@ const PrivacyPolicy = () => {
       <Head>
         <title>Privacy Policy - Careerpilot</title>
       </Head>
-      <Header className="flex flex-col gap-3 pb-3">
+      <Header className="flex flex-col gap-3 py-3">
         {imageSrc && (
           <UserPresentator
             name={user?.ownName || defaultUserData.user?.fullName || ""}
@@ -25,7 +24,7 @@ const PrivacyPolicy = () => {
           />
         )}
         <Link to="/vacancies" className="sm !justify-start gap-3 clr-blue">
-          <AiOutlineArrowLeft /> Back to vacancies
+          <AiOutlineArrowLeft /> Back to dashboard
         </Link>
       </Header>
       <main className="container flex flex-col gap-3 pt-5">

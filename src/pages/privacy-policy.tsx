@@ -105,8 +105,8 @@ const PrivacyPolicy = () => {
               listing.
             </li>
             <li>
-              Options for user data opt-out and an "offline mode" are available
-              within the extension&apos;s settings.
+              Options for user data opt-out and an &quot;offline mode&quot; are
+              available within the extension&apos;s settings.
             </li>
           </ul>
         </section>

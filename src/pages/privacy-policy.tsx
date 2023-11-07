@@ -89,14 +89,14 @@ const PrivacyPolicy = () => {
           <p>
             Our Service includes a Google Chrome extension that interacts with
             LinkedIn to scan and store vacancies. In full compliance with
-            Google's User Data Privacy policy, particularly the Limited Use of
-            User Data policy, we ensure the following:
+            Google&apos;s User Data Privacy policy, particularly the Limited Use
+            of User Data policy, we ensure the following:
           </p>
           <ul className="list-disc pl-6">
             <li>
-              We only collect data that directly supports the extension's single
-              purpose of scanning and storing job vacancies and generating
-              tailored CVs.
+              We only collect data that directly supports the extension&apos;s
+              single purpose of scanning and storing job vacancies and
+              generating tailored CVs.
             </li>
             <li>User consent is obtained before any data collection occurs.</li>
             <li>
@@ -106,7 +106,7 @@ const PrivacyPolicy = () => {
             </li>
             <li>
               Options for user data opt-out and an "offline mode" are available
-              within the extension's settings.
+              within the extension&apos;s settings.
             </li>
           </ul>
         </section>
@@ -136,8 +136,8 @@ const PrivacyPolicy = () => {
             and any associated services, including authentication through Clerk
             and database services through Supabase, are subject to rigorous
             security measures to ensure the confidentiality, integrity, and
-            availability of your personal information. Clerk's privacy policy
-            can be found{" "}
+            availability of your personal information. Clerk&apos;s privacy
+            policy can be found{" "}
             <a
               href="https://clerk.com/privacy?utm_source=www.google.com&utm_medium=referral&utm_campaign=none"
               className="clr-blue"
@@ -146,7 +146,7 @@ const PrivacyPolicy = () => {
             >
               here
             </a>
-            . Supabase's privacy policy can be found{" "}
+            . Supabase&apos;s privacy policy can be found{" "}
             <a
               href="https://supabase.com/privacy"
               className="clr-blue"
@@ -171,11 +171,11 @@ const PrivacyPolicy = () => {
           <p>
             Our Service is hosted by Vercel, which provides us with the online
             platform that allows us to offer our Service to you. Your data may
-            be stored through Vercel's data storage, databases, and general
+            be stored through Vercel&apos;s data storage, databases, and general
             applications. They store your data on secure servers behind a
             firewall.
           </p>
-          Vercel's privacy policy can be found{" "}
+          Vercel&apos;s privacy policy can be found{" "}
           <a
             href="https://vercel.com/legal/privacy-policy"
             className="clr-blue"
@@ -189,13 +189,13 @@ const PrivacyPolicy = () => {
 
         <section className="my-4">
           <h2 className="mb-2 font-semibold text-gray-900">
-            8. Compliance with Google's User Data Policy
+            8. Compliance with Google&apos;s User Data Policy
           </h2>
           <p>
-            We adhere to all the requirements set forth by Google's User Data
-            Policy, ensuring that the collection and use of your data via our
-            Google Chrome extension are transparent, secure, and within the
-            scope of the extension's purpose.
+            We adhere to all the requirements set forth by Google&apos;s User
+            Data Policy, ensuring that the collection and use of your data via
+            our Google Chrome extension are transparent, secure, and within the
+            scope of the extension&apos;s purpose.
           </p>
           <p>
             For any additional questions or concerns about our privacy practices
@@ -228,7 +228,7 @@ const PrivacyPolicy = () => {
           </h2>
           <p>
             You have the right to withdraw your consent at any time. To do so,
-            please adjust your preferences in the extension's settings or
+            please adjust your preferences in the extension&apos;s settings or
             contact us directly.
           </p>
         </section>

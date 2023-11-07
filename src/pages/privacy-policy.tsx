@@ -54,17 +54,65 @@ const PrivacyPolicy = () => {
         for example, informing you about updates to our service or customer
         support.
         <h3>Data Sharing</h3>
-        We may share your data with third parties under the following
-        circumstances: Service Providers: We may share your data with
-        third-party companies that perform services on our behalf, such as
-        hosting, data analysis, payment processing, order fulfillment,
-        information technology and related infrastructure, customer service,
-        email delivery, and auditing services. Legal Requirements: If required
-        to do so by law or in response to valid requests by public authorities
-        (e.g., a court or a government agency). Business Transfers: As we
-        develop our business, we might sell or buy businesses or assets. In the
-        event of a corporate sale, merger, reorganization, dissolution, or
-        similar event, personal data may be part of the transferred assets.
+        <p>
+          We may share your data with third parties under the following
+          circumstances:
+        </p>
+        <ul>
+          <li>
+            <strong>Service Providers:</strong> We may share your data with
+            third-party companies that perform services on our behalf,
+            including:
+            <ul>
+              <li>
+                <strong>Clerk:</strong> We use Clerk as our authentication
+                provider. Your login credentials are managed by Clerk and we
+                never have access to your passwords. You can view Clerk's
+                privacy policy at{" "}
+                <a
+                  href="https://clerk.com/privacy?utm_source=www.google.com&utm_medium=referral&utm_campaign=none"
+                  className="inline clr-blue"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Clerk Privacy Policy URL
+                </a>
+                .
+              </li>
+              <li>
+                <strong>Supabase:</strong> We use Supabase for database
+                management. Data related to your account and CVs is stored
+                securely in Supabase. For more information on Supabase’s data
+                practices, please refer to{" "}
+                <a
+                  href="https://supabase.com/privacy"
+                  className="inline clr-blue"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Supabase Privacy Policy URL
+                </a>
+              </li>
+              <li>
+                Hosting, data analysis, payment processing (when applicable),
+                order fulfillment, information technology and related
+                infrastructure, customer service, email delivery, and auditing
+                services.
+              </li>
+            </ul>
+          </li>
+          <li>
+            <strong>Legal Requirements:</strong> If required to do so by law or
+            in response to valid requests by public authorities (e.g., a court
+            or a government agency).
+          </li>
+          <li>
+            <strong>Business Transfers:</strong> As we develop our business, we
+            might sell or buy businesses or assets. In the event of a corporate
+            sale, merger, reorganization, dissolution, or similar event,
+            personal data may be part of the transferred assets.
+          </li>
+        </ul>
         <h3>Third-Party Privacy Policies</h3>
         This privacy policy does not apply to the practices of companies that we
         do not own or control or to people that we do not employ or manage. Our

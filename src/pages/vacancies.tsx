@@ -11,10 +11,10 @@ export const Vacancies = () => {
   return (
     <>
       <Head>
-        <title>chirp</title>
+        <title>Careerpilot</title>
         <meta
           name="description"
-          content="Keep your job applications organized"
+          content="Free CV AI builder. Generate CVs tailored to the job you want."
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>

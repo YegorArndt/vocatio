@@ -1,17 +1,27 @@
 import { useEffect, useRef, useState } from "react";
 import VanillaTilt from "vanilla-tilt";
-import { FaClock, FaDollarSign, FaGlobe, FaUsers } from "react-icons/fa";
+import {
+  FaClock,
+  FaDollarSign,
+  FaGlobe,
+  FaLinkedin,
+  FaUsers,
+} from "react-icons/fa";
 
 import type { Falsy } from "~/types/utils";
-import type { Vacancy } from "@prisma/client";
+import type { SourceName, Vacancy } from "@prisma/client";
 import { Link } from "./ui/buttons/Link";
 import classNames from "classnames";
+
+type VacancyCardProps = {
+  vacancy: Vacancy;
+};
 
 const getSalaryRange = (min: Falsy<number>, max: Falsy<number>) =>
   min && max ? `${min} - ${max}` : "N/A";
 
-type VacancyCardProps = {
-  vacancy: Vacancy;
+const sourceIcons: Partial<Record<SourceName, JSX.Element>> = {
+  LINKEDIN: <FaLinkedin />,
 };
 
 export const VacancyCard = (props: VacancyCardProps) => {
@@ -25,6 +35,8 @@ export const VacancyCard = (props: VacancyCardProps) => {
     age,
     createdAt,
     jobTitle,
+    sourceName,
+    sourceUrl,
   } = vacancy;
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -91,6 +103,17 @@ export const VacancyCard = (props: VacancyCardProps) => {
               </span>
             </li>
           ))}
+          {sourceUrl && (
+            <li className="flex items-center gap-3">
+              {sourceName && sourceIcons[sourceName]}
+              <Link
+                text="View source"
+                className="clr-blue"
+                to={sourceUrl}
+                newTab
+              />
+            </li>
+          )}
         </ul>
       </div>
       <div className="grid grid-cols-1 gap-4">

@@ -22,7 +22,7 @@ export const Placeholder = (props: PlaceholderProps) => {
   } = props;
 
   return (
-    <div className="flex-center h-full min-h-[50vh]">
+    <div className="flex-center h-full">
       <div className="flex h-1/3 w-1/3 flex-col justify-center gap-5 rounded-md border bg-primary p-5 text-center">
         <span className="flex flex-col gap-1">
           <span className="h4">{title}</span>

@@ -39,6 +39,9 @@ const config = {
         blue: "var(--blue)",
         purple: "var(--purple)",
         white: "var(--white)",
+        orange: "var(--orange)",
+        cyan: "var(--cyan)",
+        gray: "var(--gray)",
       },
       backgroundColor: {
         base: "var(--bg-base)",

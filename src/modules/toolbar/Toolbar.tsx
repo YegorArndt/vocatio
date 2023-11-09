@@ -1,9 +1,12 @@
 import { RefObject } from "react";
-import { AiOutlineCheck } from "react-icons/ai";
-import { TfiLayersAlt } from "react-icons/tfi";
-
+import Image from "next/image";
+import { snakeCase } from "lodash-es";
+import cn from "classnames";
+import type { User, Vacancy } from "@prisma/client";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
+import { Tooltip } from "react-tooltip";
+
 import { useDraftContext } from "../draft/DraftContext";
 import { Button } from "~/components/ui/buttons/Button";
 
@@ -16,11 +19,18 @@ type ToolbarProps = {
  */
 
 type ToolProps = {
-  icon: JSX.Element;
+  src: string;
   onClick: () => void;
+  isActive: boolean | undefined;
+  tooltip: string;
+  tooltipOnActive: string;
 };
 
-const getPdf = async (a4Ref: RefObject<HTMLDivElement>) => {
+const getPdf = async (
+  a4Ref: RefObject<HTMLDivElement>,
+  userName: User["ownName"],
+  companyName: Vacancy["companyName"] = "CV"
+) => {
   const a4 = a4Ref.current;
 
   if (!a4) return;
@@ -52,18 +62,35 @@ const getPdf = async (a4Ref: RefObject<HTMLDivElement>) => {
   /**
    * Save PDF
    */
-  pdf.save("download.pdf");
+  pdf.save(`${snakeCase(userName)}_${companyName}.pdf`);
 };
 
 const Tool = (props: ToolProps) => {
-  const { icon, onClick } = props;
+  const { src, onClick, isActive, tooltip, tooltipOnActive } = props;
 
   return (
     <Button
-      baseCn="p-5 transition transform hover:-translate-y-1 motion-reduce:transition-none"
+      baseCn="p-1 navigation transition transform hover:-translate-y-1 motion-reduce:transition-none"
+      className={cn({
+        "-translate-y-1 transform !bg-secondary-hover transition": isActive,
+      })}
       onClick={onClick}
+      data-tooltip-id={src}
     >
-      {icon}
+      <Image
+        src={`/${src}.png`}
+        height={50}
+        width={50}
+        alt={src}
+        className="rounded-lg"
+      />
+      <Tooltip id={src} place="bottom" content={tooltip} />
+      <Tooltip
+        id={src}
+        place="bottom"
+        content={tooltipOnActive}
+        isOpen={isActive}
+      />
     </Button>
   );
 };
@@ -71,25 +98,29 @@ const Tool = (props: ToolProps) => {
 export const Toolbar = (props: ToolbarProps) => {
   const { a4Ref } = props;
 
-  const { setDownloadFired } = useDraftContext();
+  const {
+    user: { ownName },
+    vacancy: { companyName },
+    draftState: { REARRANGING_FIRED, DOWNLOAD_FIRED },
+    dispatchers: { setDownloadFired, setRearrangeFired },
+  } = useDraftContext();
 
-  const tools = [
+  const tools: ToolProps[] = [
     {
-      icon: <AiOutlineCheck />,
+      src: "download",
       onClick: async () => {
         setDownloadFired(true);
-        await getPdf(a4Ref);
+        await getPdf(a4Ref, ownName, companyName);
         setDownloadFired(false);
       },
-    },
-    {
-      icon: <TfiLayersAlt />,
-      onClick: () => null,
+      isActive: DOWNLOAD_FIRED,
+      tooltip: "Download",
+      tooltipOnActive: "Downloading...",
     },
   ];
 
   return (
-    <div className="palette-secondary fixed left-[1rem] top-[10rem] grid grid-cols-2 items-center p-1">
+    <div className="fixed left-[1rem] top-[10rem] grid grid-cols-2 items-center gap-1 rounded-md border p-2">
       {tools.map((tool, index) => (
         <Tool key={index} {...tool} />
       ))}

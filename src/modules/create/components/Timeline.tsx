@@ -1,4 +1,4 @@
-import { useStories } from "~/modules/cv-creation-wizard/useStories";
+import { useStories } from "~/modules/create/useStories";
 import { Story } from "./Story";
 
 export type TimelineProps = {

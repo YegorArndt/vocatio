@@ -40,6 +40,7 @@
     "react-icons": "^4.11.0",
     "react-phone-input-2": "^2.15.1",
     "react-textarea-autosize": "^8.5.3",
+    "react-tooltip": "^5.22.0",
     "superjson": "^1.13.1",
     "uuid": "^9.0.0",
     "vanilla-tilt": "^1.8.1",

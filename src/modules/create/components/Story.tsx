@@ -1,7 +1,7 @@
 import { type Story as StoryType } from "@prisma/client";
-import { getRandomCompanyName } from "~/modules/cv-creation-wizard/utils";
-import { Input } from "./Input";
-import { Autoresize } from "./Autoresize";
+import { getRandomCompanyName } from "~/modules/create/utils";
+import { Input } from "../../../components/ui/inputs/components/Input";
+import { Autoresize } from "../../../components/ui/inputs/components/Autoresize";
 
 type StoryProps = {
   story: StoryType["story"];

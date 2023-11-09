@@ -1,35 +1,98 @@
-import { createContext, useContext, useState } from "react";
+import {
+  CSSProperties,
+  PropsWithChildren,
+  createContext,
+  useContext,
+  useReducer,
+  useState,
+} from "react";
 import type { UserResource } from "@clerk/types";
-import { User, Vacancy } from "@prisma/client";
+import type { User, Vacancy } from "@prisma/client";
 
-export type Component = {
-  type: "text" | "group" | "h1" | "h2" | "h3" | "h4" | "timeline";
-  content: string | { label: string; value: string };
+import * as actions from "./actions";
+
+export type DraftComponent = {
   id: string;
   order: number;
-  props?: Record<string, unknown>;
-  className?: string;
+  type: "text" | "group" | "heading" | "timeline";
+  sectionId: string;
+  props: {
+    name: string;
+    value: string;
+    label: string | null;
+    className?: string;
+    style?: CSSProperties;
+  };
 };
 
-type DraftContextInput = {
+export type Sections = {
+  [name: string]: {
+    id: string;
+    order: number;
+    components: DraftComponent[];
+    className: string;
+  };
+};
+
+export type Design = {
+  id: string;
+  name: string;
+  sections: Sections;
+};
+
+type DraftContextInput = PropsWithChildren<{
   defaultUserData: UserResource;
   vacancy: Vacancy;
   user: User;
-  children: (props: DraftContext) => JSX.Element;
-};
+}>;
+
+type DraftState = Partial<Record<keyof typeof actions, boolean>>;
+type Dispatchers = Record<
+  "setDownloadFired" | "setRearrangeFired",
+  (payload?: boolean) => void
+>;
 
 type DraftContext = {
-  downloadFired: boolean;
-  setDownloadFired: (downloadFired: boolean) => void;
-  leftComponents: Component[];
-  rightComponents: Component[];
+  design: Design;
+  updateDesign: (updateFn: (design: Design) => Design) => void;
+  draftState: DraftState;
+  dispatchers: Dispatchers;
+  user: User;
+  vacancy: Vacancy;
+  defaultUserData: UserResource;
 };
 
-const getLs = (key: string, fallback: string) => {
-  if (typeof window !== "undefined") {
-    return localStorage.getItem(key);
+const initialArg = {
+  [actions.DOWNLOAD_FIRED]: false,
+  [actions.REARRANGING_FIRED]: false,
+};
+
+const reducer = (
+  state: DraftState,
+  action: {
+    type: keyof typeof actions;
+    payload?: boolean;
   }
-  return fallback;
+): DraftState => {
+  const { type, payload } = action;
+  const newValue = typeof payload === "boolean" ? payload : !state[type];
+
+  if (!actions[type]) return state;
+
+  const newState = {};
+
+  /**
+   * Set all other actions to false.
+   */
+  Object.keys(state).forEach((key) => {
+    if (key !== type) {
+      newState[key] = false;
+    } else {
+      newState[key] = newValue;
+    }
+  });
+
+  return newState;
 };
 
 const Context = createContext({} as DraftContext);
@@ -41,158 +104,261 @@ export const useDraftContext = () => {
 
 export const DraftContext = (props: DraftContextInput) => {
   const { children, defaultUserData, vacancy, user } = props;
-  const [downloadFired, setDownloadFired] = useState(false);
+  const [state, dispatch] = useReducer(reducer, initialArg);
 
   const leftComponents = [
     {
-      type: "h4",
-      content: "General",
+      type: "heading",
       id: "general",
+      props: {
+        name: "general",
+        value: "General",
+        label: null,
+        className: "h3 heading-border",
+      },
     },
     {
       type: "group",
-      content: {
-        label: "Experience",
-        value: vacancy.requiredYears || "3 years",
-      },
       id: "group-experience",
+      props: {
+        name: "experience",
+        value: user.ownExperienceYears || vacancy.requiredYears || "3 years",
+        label: "Experience",
+      },
     },
     {
       type: "group",
-      content: {
-        label: "Country",
-        value: "USA",
-      },
       id: "group-country",
+      props: {
+        name: "country",
+        value: "USA",
+        label: "Country",
+      },
     },
     {
-      type: "h4",
-      content: "Contact",
+      type: "heading",
       id: "contact",
+      props: {
+        name: "contact",
+        value: "Contact",
+        label: null,
+        className: "h3 heading-border",
+      },
     },
     {
       type: "group",
-      content: {
-        label: "Email",
-        value: defaultUserData.emailAddresses[0]?.emailAddress,
-      },
       id: "group-email",
+      props: {
+        name: "email",
+        value: defaultUserData.emailAddresses[0]?.emailAddress,
+        label: "Email",
+      },
     },
     {
       type: "group",
-      content: {
-        label: "LinkedIn",
-        value: "https://www.linkedin.com/in/alexander-ivanov-123456789/",
-      },
       id: "group-linkedin",
-    },
-    {
-      type: "group",
-      content: {
-        label: "Github",
+      props: {
+        name: "linkedin",
         value: "https://www.linkedin.com/in/alexander-ivanov-123456789/",
+        label: "LinkedIn",
       },
+    },
+    {
+      type: "group",
       id: "group-github",
+      props: {
+        name: "github",
+        value: "https://www.linkedin.com/in/alexander-ivanov-123456789/",
+        label: "Github",
+      },
     },
     {
       type: "group",
-      content: {
-        label: "Address",
-        value: "Baker Street, 221B",
-      },
       id: "group-address",
+      props: {
+        name: "address",
+        value: "Baker Street, 221B",
+        label: "Address",
+      },
     },
     {
-      type: "h4",
-      content: "Education",
+      type: "heading",
       id: "education",
+      props: {
+        name: "education",
+        value: "Education",
+        label: null,
+        className: "h3 heading-border",
+      },
     },
     {
       type: "text",
-      content: "2016-2020",
       id: "education-duration",
+      props: {
+        name: "education-duration",
+        value: "2016-2020",
+        label: null,
+      },
     },
     {
       type: "text",
-      content: "Master degree",
       id: "education-degree",
+      props: {
+        name: "education-degree",
+        value: "Master degree",
+        label: null,
+      },
     },
     {
       type: "text",
-      content: "MSU, Computer Science",
       id: "education-university",
+      props: {
+        name: "education-university",
+        value: "MSU, Computer Science",
+        label: null,
+      },
     },
     {
-      type: "h4",
-      content: "Skills",
+      type: "heading",
       id: "skills",
+      props: {
+        name: "skills",
+        value: "Skills",
+        label: null,
+        className: "h3 heading-border",
+      },
     },
     {
       type: "text",
-      content: "React, Node.js, TypeScript, GraphQL, MongoDB, PostgreSQL",
       id: "skills-list",
+      props: {
+        name: "skills-list",
+        value: "React, Node.js, TypeScript, GraphQL, MongoDB, PostgreSQL",
+        label: null,
+      },
     },
     {
-      type: "h4",
-      content: "Languages",
+      type: "heading",
       id: "languages",
+      props: {
+        name: "languages",
+        value: "Languages",
+        label: null,
+        className: "h3 heading-border",
+      },
     },
     {
       type: "group",
-      content: {
-        label: "English",
-        value: "C1",
-      },
       id: "group-english",
+      props: {
+        name: "english",
+        value: "C1",
+        label: "English",
+      },
     },
     {
       type: "group",
-      content: {
-        label: "Russian",
-        value: "Native",
-      },
       id: "group-russian",
+      props: {
+        name: "russian",
+        value: "Native",
+        label: "Russian",
+      },
     },
-  ].map((c, order) => ({ ...c, order: order + 1 }));
+  ].map((c, order) => ({
+    ...c,
+    order: order + 1,
+    sectionId: "left",
+  })) as DraftComponent[];
 
   const rightComponents = [
     {
-      type: "h1",
-      content: defaultUserData.fullName,
+      type: "heading",
       id: "name",
-    },
-    {
-      type: "h3",
-      content: vacancy.jobTitle,
-      id: "job-title",
-    },
-    {
-      type: "h4",
-      content: "Experience",
-      className: "text-[#323B4C] border-bottom mt-8",
-      id: "experience",
-    },
-    {
-      type: "timeline",
       props: {
-        jobDescription: vacancy.description,
-        jobTitle: vacancy.jobTitle,
-        vacancyId: vacancy.id,
+        name: "name",
+        value: defaultUserData.fullName,
+        label: null,
+        className: "text-[50px] font-bold text-[#323B4C]",
       },
-      id: "timeline",
     },
-  ].map((c, order) => ({ ...c, order: order + 1 }));
+    {
+      type: "heading",
+      id: "job-title",
+      props: {
+        name: "job-title",
+        value: vacancy.jobTitle,
+        label: null,
+        className: "text-[1rem]",
+      },
+    },
+    {
+      type: "heading",
+      id: "experience",
+      props: {
+        name: "experience",
+        value: "Experience",
+        label: null,
+        className: "text-[#323B4C] border-border mt-8",
+      },
+    },
+  ].map((c, order) => ({
+    ...c,
+    order: order + 1,
+  })) as DraftComponent[];
 
-  const context = {
-    downloadFired,
-    setDownloadFired,
-    leftComponents,
-    rightComponents,
+  const timeline = {
+    type: "timeline",
+    id: "timeline",
+    props: {
+      name: "timeline",
+      jobDescription: vacancy.description,
+      jobTitle: vacancy.jobTitle,
+      vacancyId: vacancy.id,
+    },
+    order: 3,
+  } as unknown as DraftComponent;
+
+  const baseDesign = {
+    id: vacancy.id,
+    name: "Base design",
+    sections: {
+      left: {
+        id: "left",
+        order: 0,
+        components: leftComponents,
+        className:
+          "flex h-full flex-col items-center bg-[#323B4C] px-5 py-7 clr-white",
+      },
+      right: {
+        id: "right",
+        order: 1,
+        components: [...rightComponents, timeline],
+        className: "bg-white px-[2rem] py-[3rem] clr-black",
+      },
+    },
   };
 
-  return (
-    <Context.Provider value={context as DraftContext}>
-      {children(context as DraftContext)}
-    </Context.Provider>
-  );
+  const [design, setDesign] = useState<Design>(baseDesign);
+
+  const updateDesign = (updateFn: (design: Design) => Design) => {
+    setDesign((prev) => updateFn(prev));
+  };
+
+  const context: DraftContext = {
+    draftState: state,
+    dispatchers: {
+      setDownloadFired: (payload) =>
+        dispatch({ type: actions.DOWNLOAD_FIRED, payload }),
+      setRearrangeFired: (payload) =>
+        dispatch({ type: actions.REARRANGING_FIRED, payload }),
+    },
+    design,
+    updateDesign,
+    user,
+    vacancy,
+    defaultUserData,
+  };
+
+  return <Context.Provider value={context}>{children}</Context.Provider>;
 };

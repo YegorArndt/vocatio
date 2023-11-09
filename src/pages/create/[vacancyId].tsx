@@ -1,5 +1,5 @@
 import { useUser } from "@clerk/nextjs";
-import { GetStaticProps } from "next";
+import { type GetStaticProps } from "next";
 import { useEffect, useRef } from "react";
 
 import { api } from "~/utils";
@@ -7,8 +7,8 @@ import { generateSSGHelper } from "~/server/api/utils/generateSSGHelper";
 import { Toolbar } from "~/modules/toolbar/Toolbar";
 import { Layout } from "~/components/layout/Layout";
 import { LogoLoader } from "~/components/LogoLoader";
-import { Area } from "~/modules/create/Area";
 import { DraftContext } from "~/modules/draft/DraftContext";
+import { DndProvider } from "~/modules/create/DndProvider";
 
 type CVBuilderProps = {
   vacancyId: string;
@@ -51,26 +51,10 @@ const CVBuilder = (props: CVBuilderProps) => {
             vacancy={vacancy}
             user={user}
           >
-            {({ leftComponents, rightComponents }) => (
-              <>
-                <Toolbar a4Ref={a4Ref} />
-                <div
-                  ref={a4Ref}
-                  className="dark-frame grid h-[1122px] w-[795px] min-w-[795px] max-w-[795px] grid-cols-[300px_1fr] bg-white"
-                >
-                  <Area
-                    id="left"
-                    className="flex h-full flex-col items-center bg-[#323B4C] px-5 py-7 clr-white"
-                    components={leftComponents}
-                  />
-                  <Area
-                    id="right"
-                    className="bg-white px-[2rem] py-[3rem] clr-black"
-                    components={rightComponents}
-                  />
-                </div>
-              </>
-            )}
+            <Toolbar a4Ref={a4Ref} />
+            <div ref={a4Ref} className="a4">
+              <DndProvider />
+            </div>
           </DraftContext>
         )}
       </div>

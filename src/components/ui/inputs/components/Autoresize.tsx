@@ -9,11 +9,18 @@ import cn from "classnames";
 import { useForm } from "react-hook-form";
 import { useDraftContext } from "~/modules/draft/DraftContext";
 
-const lineHeightMultiplier = 1.5;
-const averageCharMultiplier = 0.48;
+export type AutoresizeProps = {
+  baseCn?: string;
+  className?: string;
+  name: string;
+  value: string;
+} & TextareaHTMLAttributes<HTMLTextAreaElement>;
+
+const LINE_HEIGHT_MULTIPLIER = 1.5;
+const AVERAGE_CHAR_MULTIPLIER = 0.48;
 
 const hasContentWrapped = (textarea: HTMLTextAreaElement, fontSize: number) => {
-  const averageCharWidth = fontSize * averageCharMultiplier;
+  const averageCharWidth = fontSize * AVERAGE_CHAR_MULTIPLIER;
   const contentWidth = averageCharWidth * textarea.value.length;
   return contentWidth > textarea.clientWidth;
 };
@@ -26,7 +33,7 @@ const resize = (containerRef: RefObject<HTMLDivElement>) => {
 
   const fontSize = parseInt(window.getComputedStyle(textarea).fontSize, 10);
 
-  const lineHeight = fontSize * lineHeightMultiplier;
+  const lineHeight = fontSize * LINE_HEIGHT_MULTIPLIER;
 
   textarea.style.height = "auto";
 
@@ -38,17 +45,12 @@ const resize = (containerRef: RefObject<HTMLDivElement>) => {
   }
 };
 
-export type AutoresizeProps = {
-  baseCn?: string;
-  className?: string;
-  name: string;
-  value: string;
-} & TextareaHTMLAttributes<HTMLTextAreaElement>;
-
 export const Autoresize = (props: AutoresizeProps) => {
   const { baseCn, className, name, value, ...other } = props;
 
-  const { downloadFired } = useDraftContext();
+  const {
+    draftState: { DOWNLOAD_FIRED },
+  } = useDraftContext();
 
   const { register, watch } = useForm({
     defaultValues: {
@@ -59,7 +61,7 @@ export const Autoresize = (props: AutoresizeProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (downloadFired) return;
+    if (DOWNLOAD_FIRED) return;
 
     resize(containerRef);
 
@@ -85,7 +87,7 @@ export const Autoresize = (props: AutoresizeProps) => {
         });
       };
     }
-  }, [downloadFired]);
+  }, [DOWNLOAD_FIRED]);
 
   useEffect(() => {
     const value = watch(name);
@@ -97,19 +99,14 @@ export const Autoresize = (props: AutoresizeProps) => {
 
   return (
     <div ref={containerRef} className="break-words">
-      {downloadFired ? (
+      {DOWNLOAD_FIRED ? (
         watch(name)
       ) : (
         <textarea
           {...other}
           {...register(name)}
-          data-text={watch(name)}
           placeholder={value}
-          className={cn(
-            "hack reset resize-none overflow-hidden",
-            baseCn,
-            className
-          )}
+          className={cn("reset resize-none overflow-hidden", baseCn, className)}
           suppressHydrationWarning
         />
       )}

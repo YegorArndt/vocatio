@@ -25,6 +25,7 @@
   --bg-secondary: #111111;
   --clr-secondary: #888;
   --bg-secondary-hover: #333;
+  --clr-secondary-hover: #fff;
 
   --select: #f81ce5;
   --border-clr: #333;
@@ -105,6 +106,11 @@
 }
 
 @layer components {
+  /* A4 */
+  .a4 {
+    @apply grid h-[1122px] w-[795px] min-w-[795px] max-w-[795px] grid-cols-[300px_1fr] bg-white;
+  }
+
   /* Buttons  */
 
   /* 1. Reverse theme colors for buttons and links  */
@@ -123,17 +129,13 @@
     --border-clr: var(--gray);
   }
 
-  /**
-    2. Create primary, secondary classes and apply them directly to components.
-    Instead of introducing unnecessary "variant" prop.
-  */
+  /* Variants */
   .primary:is(button, a) {
     @apply bg-primary clr-base;
   }
   .primary:is(button, a):hover {
     background-color: #ccc;
   }
-
   .navigation:is(button, a) {
     @apply bg-transparent clr-secondary hover:bg-secondary-hover hover:clr-base;
   }
@@ -160,7 +162,7 @@
   }
 
   .content {
-    @apply inline-block overflow-ellipsis whitespace-nowrap;
+    @apply flex items-center gap-2 overflow-ellipsis whitespace-nowrap;
   }
 
   :is(button, a)[class^="bg-"]:hover,
@@ -223,5 +225,10 @@
   }
   .border-right {
     border-right: 1px solid var(--border-clr);
+  }
+
+  .heading-border {
+    padding-bottom: 2%;
+    border-bottom: 2px solid currentColor;
   }
 }

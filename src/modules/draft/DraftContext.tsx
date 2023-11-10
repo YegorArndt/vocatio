@@ -50,9 +50,6 @@ export const DraftContext = (props: DraftContextInput) => {
   const { children, defaultUserData, vacancy, user } = props;
   const [state, dispatch] = useReducer(reducer, initialArg);
 
-  const leftHeading =
-    "text-2xl tracking-[-0.029375rem] pb-[2%] border-b-[2px] border-solid border-current";
-
   const leftComponents = [
     {
       type: "heading 2",
@@ -61,7 +58,15 @@ export const DraftContext = (props: DraftContextInput) => {
         name: "general",
         value: "General",
         label: "",
-        className: leftHeading,
+      },
+    },
+    {
+      type: "divider",
+      id: "general-divider",
+      props: {
+        name: "general",
+        value: "General",
+        label: "",
       },
     },
     {
@@ -89,7 +94,15 @@ export const DraftContext = (props: DraftContextInput) => {
         name: "contact",
         value: "Contact",
         label: "",
-        className: leftHeading,
+      },
+    },
+    {
+      type: "divider",
+      id: "contact-divider",
+      props: {
+        name: "general",
+        value: "General",
+        label: "",
       },
     },
     {
@@ -135,7 +148,15 @@ export const DraftContext = (props: DraftContextInput) => {
         name: "education",
         value: "Education",
         label: "",
-        className: leftHeading,
+      },
+    },
+    {
+      type: "divider",
+      id: "education-divider",
+      props: {
+        name: "general",
+        value: "General",
+        label: "",
       },
     },
     {
@@ -172,7 +193,15 @@ export const DraftContext = (props: DraftContextInput) => {
         name: "skills",
         value: "Skills",
         label: "",
-        className: leftHeading,
+      },
+    },
+    {
+      type: "divider",
+      id: "skills-divider",
+      props: {
+        name: "general",
+        value: "General",
+        label: "",
       },
     },
     {
@@ -191,7 +220,15 @@ export const DraftContext = (props: DraftContextInput) => {
         name: "languages",
         value: "Languages",
         label: "",
-        className: leftHeading,
+      },
+    },
+    {
+      type: "divider",
+      id: "languages-divider",
+      props: {
+        name: "general",
+        value: "General",
+        label: "",
       },
     },
     {
@@ -246,6 +283,15 @@ export const DraftContext = (props: DraftContextInput) => {
         label: "",
       },
     },
+    {
+      type: "divider",
+      id: "experience-divider",
+      props: {
+        name: "general",
+        value: "General",
+        label: "",
+      },
+    },
   ].map((c, order) => ({
     ...c,
     order: order + 1,
@@ -282,12 +328,12 @@ export const DraftContext = (props: DraftContextInput) => {
     },
     components: {
       "heading 1": "text-[50px] font-bold text-[#323B4C]",
-      "heading 2":
-        "text-[2rem] pb-[2%] my-[2%] border-current border-solid border-b-[2px] font-bold",
+      "heading 2": "text-[2rem] tracking-[-0.029375rem] font-bold mt-2",
       "heading 3": "text-[1rem] mb-[2%]",
       text: "",
       group: "grid grid-cols-[1fr,170px]",
       timeline: "",
+      divider: "border-current border-solid border-b-[2px] mb-2",
     },
   };
 

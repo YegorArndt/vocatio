@@ -9,7 +9,8 @@ export type TypeOfComponent =
   | "heading 3"
   | "text"
   | "group"
-  | "timeline";
+  | "timeline"
+  | "divider";
 
 export type DraftComponent = {
   id: string;

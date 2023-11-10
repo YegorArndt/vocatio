@@ -4,6 +4,7 @@ import { Timeline, TimelineProps } from "~/modules/create/components/Timeline";
 import { Heading } from "./components/Heading";
 import { Group } from "./components/Group";
 import type { DraftComponent } from "../draft/types";
+import { Divider } from "./components/Divider";
 
 type ComponentFactoryProps = {
   component: DraftComponent;
@@ -21,6 +22,7 @@ export const ComponentFactory = (props: ComponentFactoryProps) => {
   if (c.type.includes("heading")) Component = Heading;
   if (c.type === "group") Component = Group;
   if (c.type === "text") Component = Autoresize;
+  if (c.type === "divider") Component = Divider;
 
   if (Component) return <Component {...c.props} className={designClassNames} />;
 

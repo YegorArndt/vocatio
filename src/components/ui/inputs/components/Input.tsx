@@ -23,7 +23,7 @@ export const Input = (props: InputProps) => {
   });
 
   return (
-    <div>
+    <>
       {DOWNLOAD_FIRED ? (
         watch(name)
       ) : (
@@ -34,6 +34,6 @@ export const Input = (props: InputProps) => {
           {...rest}
         />
       )}
-    </div>
+    </>
   );
 };

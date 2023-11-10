@@ -43,7 +43,7 @@ const CVBuilder = (props: CVBuilderProps) => {
 
   return (
     <Layout>
-      <div className="flex-center relative pt-[4rem]">
+      <div className="flex-center relative overflow-hidden pt-[4rem]">
         {(userLoading || vacancyLoading) && <LogoLoader />}
         {vacancy && user && defaultUserData && (
           <DraftContext

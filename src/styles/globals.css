@@ -108,7 +108,21 @@
 @layer components {
   /* A4 */
   .a4 {
-    @apply grid h-[1122px] w-[795px] min-w-[795px] max-w-[795px] grid-cols-[300px_1fr] bg-white;
+    @apply grid grid-cols-[300px_1fr] bg-white;
+    height: 1122px;
+    width: 795px;
+    min-width: 795px;
+    max-width: 795px;
+  }
+
+  .toolbar {
+    @apply fixed grid grid-cols-2 items-center gap-1 rounded-md border p-2;
+    left: 1rem;
+    top: 10rem;
+  }
+
+  .danger-zone {
+    background-color: rgba(255, 0, 0, 0.17);
   }
 
   /* Buttons  */
@@ -138,6 +152,9 @@
   }
   .navigation:is(button, a) {
     @apply bg-transparent clr-secondary hover:bg-secondary-hover hover:clr-base;
+  }
+  *:disabled:is(button, a) {
+    @apply cursor-not-allowed opacity-40;
   }
 }
 
@@ -225,10 +242,5 @@
   }
   .border-right {
     border-right: 1px solid var(--border-clr);
-  }
-
-  .heading-border {
-    padding-bottom: 2%;
-    border-bottom: 2px solid currentColor;
   }
 }

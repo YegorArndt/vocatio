@@ -69,7 +69,7 @@ export const updateCn = (
 export const updateType = (
   design: Design,
   componentId: string,
-  newType: string
+  newType: "baseHeading" | "baseText" | "baseGroup"
 ) => {
   const { sections } = design;
 
@@ -83,6 +83,10 @@ export const updateType = (
         return {
           ...component,
           type: newType,
+          props: {
+            ...component.props,
+            className: design[newType],
+          },
         };
       }
 

@@ -6,9 +6,11 @@ import type { User, Vacancy } from "@prisma/client";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import { Tooltip } from "react-tooltip";
+import { v4 as uuidv4 } from "uuid";
 
-import { useDraftContext } from "../draft/DraftContext";
+import { DraftComponent, useDraftContext } from "../draft/DraftContext";
 import { Button } from "~/components/ui/buttons/Button";
+import { Menu, MenuButton, MenuItem, MenuProps } from "@szhsin/react-menu";
 
 type ToolbarProps = {
   a4Ref: RefObject<HTMLDivElement>;
@@ -23,7 +25,8 @@ type ToolProps = {
   onClick: () => void;
   isActive: boolean | undefined;
   tooltip: string;
-  tooltipOnActive: string;
+  tooltipOnActive?: string;
+  children?: React.ReactNode;
 };
 
 const getPdf = async (
@@ -66,7 +69,7 @@ const getPdf = async (
 };
 
 const Tool = (props: ToolProps) => {
-  const { src, onClick, isActive, tooltip, tooltipOnActive } = props;
+  const { src, onClick, isActive, tooltip, tooltipOnActive, children } = props;
 
   return (
     <Button
@@ -91,6 +94,7 @@ const Tool = (props: ToolProps) => {
         content={tooltipOnActive}
         isOpen={isActive}
       />
+      {children}
     </Button>
   );
 };
@@ -101,8 +105,10 @@ export const Toolbar = (props: ToolbarProps) => {
   const {
     user: { ownName },
     vacancy: { companyName },
-    draftState: { REARRANGING_FIRED, DOWNLOAD_FIRED },
-    dispatchers: { setDownloadFired, setRearrangeFired },
+    draftState: { DOWNLOAD_FIRED },
+    dispatchers: { setDownloadFired },
+    design,
+    updateDesign,
   } = useDraftContext();
 
   const tools: ToolProps[] = [
@@ -119,11 +125,71 @@ export const Toolbar = (props: ToolbarProps) => {
     },
   ];
 
+  type a = MenuProps;
+
   return (
-    <div className="fixed left-[1rem] top-[10rem] grid grid-cols-2 items-center gap-1 rounded-md border p-2">
+    <aside className="toolbar">
       {tools.map((tool, index) => (
-        <Tool key={index} {...tool} />
+        <Tool key={index} {...tool}>
+          {tool.children}
+        </Tool>
       ))}
-    </div>
+      <Menu
+        menuButton={
+          <MenuButton
+            className="navigation common transform p-1 transition hover:-translate-y-1 motion-reduce:transition-none"
+            data-tooltip-id="add"
+          >
+            <Image
+              src="/add.png"
+              height={50}
+              width={50}
+              alt="add"
+              className="rounded-lg"
+            />
+            <Tooltip id="add" place="bottom" content="Add item" />
+          </MenuButton>
+        }
+        direction="right"
+      >
+        {Object.keys(design.components).map((componentType) => (
+          <MenuItem
+            key={componentType}
+            onClick={() => {
+              // We grab the first section of our design and simply insert a new component with raw data.
+              const { sections } = design;
+              const firstKey = Object.keys(sections)[0];
+              const section = sections[firstKey];
+
+              const newComponent: DraftComponent = {
+                id: uuidv4(),
+                order: 0,
+                type: componentType,
+                sectionId: section.id,
+                props: {
+                  name: "Sample text",
+                  value: "Sample text",
+                  label: "Sample text",
+                },
+              };
+
+              // We update the design with the new component.
+              updateDesign((design) => ({
+                ...design,
+                sections: {
+                  ...sections,
+                  [firstKey]: {
+                    ...section,
+                    components: [newComponent, ...section.components],
+                  },
+                },
+              }));
+            }}
+          >
+            {componentType}
+          </MenuItem>
+        ))}
+      </Menu>
+    </aside>
   );
 };

@@ -2,7 +2,6 @@ import { type DraggableAttributes } from "@dnd-kit/core";
 import { type SyntheticListenerMap } from "@dnd-kit/core/dist/hooks/utilities";
 import { type HTMLAttributes, type PropsWithChildren } from "react";
 import { Tooltip } from "react-tooltip";
-import { IoHandLeftSharp } from "react-icons/io5";
 import { BiChevronDown, BiDotsHorizontalRounded, BiText } from "react-icons/bi";
 import { ImBold } from "react-icons/im";
 import { BsTypeItalic } from "react-icons/bs";
@@ -11,6 +10,7 @@ import {
   AiOutlineCopy,
   AiOutlineUnderline,
 } from "react-icons/ai";
+import { IoHandLeftSharp } from "react-icons/io5";
 import { LuUngroup } from "react-icons/lu";
 import cn from "classnames";
 import { Menu, MenuButton, MenuItem, SubMenu } from "@szhsin/react-menu";
@@ -98,27 +98,30 @@ export const EditorTooltip = (props: EditorTooltipProps) => {
                     </MenuButton>
                   }
                 >
-                  {"black white gray blue green red yellow purple cyan"
-                    .split(" ")
-                    .map((color) => (
-                      <MenuItem
-                        key={color}
-                        onClick={() => {
-                          updateDesign((design) => {
-                            return updateCn(
-                              design,
-                              id,
-                              `clr-${color}`,
-                              /clr-.*$/
-                            );
-                          });
-                        }}
-                      >
-                        <ColorCube color={color} />
-                        {color}
-                      </MenuItem>
-                    ))}
+                  {"black white blue".split(" ").map((color) => (
+                    <MenuItem
+                      key={color}
+                      onClick={() => {
+                        updateDesign((design) => {
+                          return updateCn(
+                            design,
+                            id,
+                            `clr-${color}`,
+                            /clr-.*$/
+                          );
+                        });
+                      }}
+                    >
+                      <ColorCube color={color} />
+                      {color}
+                    </MenuItem>
+                  ))}
                 </Menu>
+              </li>
+              <li {...listeners} {...attributes}>
+                <Button className="navigation sm gap-2">
+                  <IoHandLeftSharp /> Drag
+                </Button>
               </li>
               {Object.entries(quickActions).map(
                 ([key, { content, updateFn }]) => (
@@ -138,11 +141,6 @@ export const EditorTooltip = (props: EditorTooltipProps) => {
                   </li>
                 )
               )}
-              <li {...listeners} {...attributes}>
-                <Button className="navigation sm gap-2">
-                  <IoHandLeftSharp /> Drag
-                </Button>
-              </li>
               <li>
                 <Menu
                   menuButton={
@@ -159,10 +157,10 @@ export const EditorTooltip = (props: EditorTooltipProps) => {
                   ))}
                   <SubMenu
                     label={
-                      <span className="flex items-center gap-2">
+                      <Button className="flex items-center gap-2" disabled>
                         <FaUndo />
                         Turn into
-                      </span>
+                      </Button>
                     }
                   >
                     {[
@@ -175,7 +173,7 @@ export const EditorTooltip = (props: EditorTooltipProps) => {
                         ),
                         onClick: () =>
                           updateDesign((design) =>
-                            updateType(design, id, "text")
+                            updateType(design, id, "baseText")
                           ),
                       },
                       {
@@ -187,7 +185,7 @@ export const EditorTooltip = (props: EditorTooltipProps) => {
                         ),
                         onClick: () =>
                           updateDesign((design) =>
-                            updateType(design, id, "heading")
+                            updateType(design, id, "baseHeading")
                           ),
                       },
                       {
@@ -199,12 +197,12 @@ export const EditorTooltip = (props: EditorTooltipProps) => {
                         ),
                         onClick: () =>
                           updateDesign((design) =>
-                            updateType(design, id, "group")
+                            updateType(design, id, "baseGroup")
                           ),
                       },
                     ].map(({ content }, index) => (
                       <MenuItem key={index} className="flex items-center gap-2">
-                        {content}
+                        <Button disabled>{content}</Button>
                       </MenuItem>
                     ))}
                   </SubMenu>
@@ -214,7 +212,7 @@ export const EditorTooltip = (props: EditorTooltipProps) => {
           );
         }}
         clickable
-        delayShow={600}
+        delayShow={400}
         delayHide={200}
       />
     </div>

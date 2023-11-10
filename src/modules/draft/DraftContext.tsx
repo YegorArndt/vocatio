@@ -14,7 +14,7 @@ import * as actions from "./actions";
 export type DraftComponent = {
   id: string;
   order: number;
-  type: "text" | "group" | "heading" | "timeline";
+  type: "heading 1" | "heading 2" | "heading 3" | "text" | "group" | "timeline";
   sectionId: string;
   props: {
     name: string;
@@ -38,6 +38,13 @@ export type Design = {
   id: string;
   name: string;
   sections: Sections;
+  components: {
+    "heading 1": string;
+    "heading 2": string;
+    "heading 3": string;
+    text: string;
+    group: string;
+  };
 };
 
 type DraftContextInput = PropsWithChildren<{
@@ -106,15 +113,18 @@ export const DraftContext = (props: DraftContextInput) => {
   const { children, defaultUserData, vacancy, user } = props;
   const [state, dispatch] = useReducer(reducer, initialArg);
 
+  const leftHeading =
+    "text-2xl tracking-[-0.029375rem] pb-[2%] border-b-[2px] border-solid border-current";
+
   const leftComponents = [
     {
-      type: "heading",
+      type: "heading 2",
       id: "general",
       props: {
         name: "general",
         value: "General",
         label: null,
-        className: "h3 heading-border",
+        className: leftHeading,
       },
     },
     {
@@ -136,13 +146,13 @@ export const DraftContext = (props: DraftContextInput) => {
       },
     },
     {
-      type: "heading",
+      type: "heading 2",
       id: "contact",
       props: {
         name: "contact",
         value: "Contact",
         label: null,
-        className: "h3 heading-border",
+        className: leftHeading,
       },
     },
     {
@@ -182,13 +192,13 @@ export const DraftContext = (props: DraftContextInput) => {
       },
     },
     {
-      type: "heading",
+      type: "heading 2",
       id: "education",
       props: {
         name: "education",
         value: "Education",
         label: null,
-        className: "h3 heading-border",
+        className: leftHeading,
       },
     },
     {
@@ -219,13 +229,13 @@ export const DraftContext = (props: DraftContextInput) => {
       },
     },
     {
-      type: "heading",
+      type: "heading 2",
       id: "skills",
       props: {
         name: "skills",
         value: "Skills",
         label: null,
-        className: "h3 heading-border",
+        className: leftHeading,
       },
     },
     {
@@ -238,13 +248,13 @@ export const DraftContext = (props: DraftContextInput) => {
       },
     },
     {
-      type: "heading",
+      type: "heading 2",
       id: "languages",
       props: {
         name: "languages",
         value: "Languages",
         label: null,
-        className: "h3 heading-border",
+        className: leftHeading,
       },
     },
     {
@@ -273,33 +283,30 @@ export const DraftContext = (props: DraftContextInput) => {
 
   const rightComponents = [
     {
-      type: "heading",
+      type: "heading 1",
       id: "name",
       props: {
         name: "name",
         value: defaultUserData.fullName,
         label: null,
-        className: "text-[50px] font-bold text-[#323B4C]",
       },
     },
     {
-      type: "heading",
+      type: "heading 3",
       id: "job-title",
       props: {
         name: "job-title",
         value: vacancy.jobTitle,
         label: null,
-        className: "text-[1rem]",
       },
     },
     {
-      type: "heading",
+      type: "heading 2",
       id: "experience",
       props: {
         name: "experience",
         value: "Experience",
         label: null,
-        className: "text-[#323B4C] border-border mt-8",
       },
     },
   ].map((c, order) => ({
@@ -336,6 +343,14 @@ export const DraftContext = (props: DraftContextInput) => {
         components: [...rightComponents, timeline],
         className: "bg-white px-[2rem] py-[3rem] clr-black",
       },
+    },
+    components: {
+      "heading 1": "text-[50px] font-bold text-[#323B4C]",
+      "heading 2":
+        "text-[2rem] pb-[2%] my-[2%] border-current border-solid border-b-[2px] font-bold",
+      "heading 3": "text-[1rem] mb-[2%]",
+      text: "",
+      group: "grid grid-cols-[1fr,170px]",
     },
   };
 

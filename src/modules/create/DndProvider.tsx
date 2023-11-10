@@ -19,6 +19,7 @@ import {
 } from "@dnd-kit/sortable";
 import { type PropsWithChildren, useState } from "react";
 import { CSS } from "@dnd-kit/utilities";
+import { FaTrashAlt } from "react-icons/fa";
 
 import { ComponentFactory } from "./ComponentFactory";
 import {
@@ -27,6 +28,8 @@ import {
   useDraftContext,
 } from "../draft/DraftContext";
 import { EditorTooltip } from "./components/editor-tooltip";
+import cn from "classnames";
+import { Tooltip } from "react-tooltip";
 
 type SectionProps = {
   id: string;
@@ -114,9 +117,58 @@ const Section = (props: SectionProps) => {
   );
 };
 
+const Garbage = (props: Pick<SectionProps, "components">) => {
+  const { components } = props;
+  const [tooltipShown, setTooltipShown] = useState(false);
+
+  const id = "garbage";
+
+  const { setNodeRef, isOver, over, active } = useDroppable({
+    id,
+  });
+
+  return (
+    <SortableContext
+      id={id}
+      items={components}
+      strategy={verticalListSortingStrategy}
+    >
+      <div
+        ref={setNodeRef}
+        className={cn("fixed right-0 top-[110px] h-screen w-[20vw]", {
+          "danger-zone": isOver,
+        })}
+      >
+        <div
+          className="flex-center size-full"
+          onMouseEnter={() => setTooltipShown(true)}
+          onMouseLeave={() => setTooltipShown(false)}
+          data-tooltip-id={id}
+        >
+          <FaTrashAlt size={25} id={`${id}-bucket`} />
+          {components.map((c) => (
+            <SortableItem key={c.id} component={c}>
+              <ComponentFactory component={c} />
+            </SortableItem>
+          ))}
+        </div>
+        <Tooltip
+          anchorSelect={`#${id}-bucket`}
+          isOpen={Boolean(active && tooltipShown)}
+          place="top"
+          opacity={1}
+          content="Move to Trash"
+          variant="error"
+        />
+      </div>
+    </SortableContext>
+  );
+};
+
 export const DndProvider = () => {
   const { design, updateDesign } = useDraftContext();
   const [activeId, setActiveId] = useState<null | string>(null);
+  const [deleted, setDeleted] = useState<DraftComponent[]>([]);
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -188,6 +240,25 @@ export const DndProvider = () => {
       over?.id as string
     );
 
+    if (overSectionId === undefined) {
+      // Delete the component
+      updateDesign((currentDesign) => {
+        const newSections = { ...currentDesign.sections };
+
+        Object.keys(newSections).forEach((sectionId) => {
+          newSections[sectionId].components = newSections[
+            sectionId
+          ].components.filter((c) => c.id !== active.id);
+        });
+
+        return { ...currentDesign, sections: newSections };
+      });
+
+      setActiveId(null);
+      // setDeleted((deleted) => [...(deleted ?? []), active.data.current]);
+      return;
+    }
+
     if (
       !activeSectionId ||
       !overSectionId ||
@@ -234,6 +305,7 @@ export const DndProvider = () => {
       {Object.keys(design.sections).map((name) => (
         <Section key={name} {...design.sections[name]} />
       ))}
+      <Garbage components={deleted} />
     </DndContext>
   );
 };

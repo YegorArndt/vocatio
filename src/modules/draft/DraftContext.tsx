@@ -1,77 +1,17 @@
-import {
-  CSSProperties,
-  PropsWithChildren,
-  createContext,
-  useContext,
-  useReducer,
-  useState,
-} from "react";
-import type { UserResource } from "@clerk/types";
-import type { User, Vacancy } from "@prisma/client";
-
+import { createContext, useContext, useReducer, useState } from "react";
+import type {
+  DraftState,
+  DraftContextInput,
+  DraftComponent,
+  Design,
+  DraftContext as DraftContextType,
+  NewComponent,
+} from "./types";
 import * as actions from "./actions";
-
-export type DraftComponent = {
-  id: string;
-  order: number;
-  type: "heading 1" | "heading 2" | "heading 3" | "text" | "group" | "timeline";
-  sectionId: string;
-  props: {
-    name: string;
-    value: string;
-    label: string | null;
-    className?: string;
-    style?: CSSProperties;
-  };
-};
-
-export type Sections = {
-  [name: string]: {
-    id: string;
-    order: number;
-    components: DraftComponent[];
-    className: string;
-  };
-};
-
-export type Design = {
-  id: string;
-  name: string;
-  sections: Sections;
-  components: {
-    "heading 1": string;
-    "heading 2": string;
-    "heading 3": string;
-    text: string;
-    group: string;
-  };
-};
-
-type DraftContextInput = PropsWithChildren<{
-  defaultUserData: UserResource;
-  vacancy: Vacancy;
-  user: User;
-}>;
-
-type DraftState = Partial<Record<keyof typeof actions, boolean>>;
-type Dispatchers = Record<
-  "setDownloadFired" | "setRearrangeFired",
-  (payload?: boolean) => void
->;
-
-type DraftContext = {
-  design: Design;
-  updateDesign: (updateFn: (design: Design) => Design) => void;
-  draftState: DraftState;
-  dispatchers: Dispatchers;
-  user: User;
-  vacancy: Vacancy;
-  defaultUserData: UserResource;
-};
+import { addNewComponent } from "./utils";
 
 const initialArg = {
   [actions.DOWNLOAD_FIRED]: false,
-  [actions.REARRANGING_FIRED]: false,
 };
 
 const reducer = (
@@ -86,23 +26,20 @@ const reducer = (
 
   if (!actions[type]) return state;
 
-  const newState = {};
+  const newState = { ...state };
 
   /**
    * Set all other actions to false.
    */
   Object.keys(state).forEach((key) => {
-    if (key !== type) {
-      newState[key] = false;
-    } else {
-      newState[key] = newValue;
-    }
+    if (key !== type) newState[key as keyof typeof actions] = false;
+    else newState[key] = newValue;
   });
 
   return newState;
 };
 
-const Context = createContext({} as DraftContext);
+const Context = createContext({} as DraftContextType);
 
 export const useDraftContext = () => {
   const draft = useContext(Context);
@@ -351,6 +288,7 @@ export const DraftContext = (props: DraftContextInput) => {
       "heading 3": "text-[1rem] mb-[2%]",
       text: "",
       group: "grid grid-cols-[1fr,170px]",
+      timeline: "",
     },
   };
 
@@ -360,16 +298,18 @@ export const DraftContext = (props: DraftContextInput) => {
     setDesign((prev) => updateFn(prev));
   };
 
-  const context: DraftContext = {
+  const addComponent = (component: NewComponent) =>
+    setDesign((prev) => addNewComponent(prev, component));
+
+  const context: DraftContextType = {
     draftState: state,
     dispatchers: {
       setDownloadFired: (payload) =>
         dispatch({ type: actions.DOWNLOAD_FIRED, payload }),
-      setRearrangeFired: (payload) =>
-        dispatch({ type: actions.REARRANGING_FIRED, payload }),
     },
     design,
     updateDesign,
+    addComponent,
     user,
     vacancy,
     defaultUserData,

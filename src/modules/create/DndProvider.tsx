@@ -22,21 +22,11 @@ import { CSS } from "@dnd-kit/utilities";
 import { FaTrashAlt } from "react-icons/fa";
 
 import { ComponentFactory } from "./ComponentFactory";
-import {
-  type DraftComponent,
-  type Sections,
-  useDraftContext,
-} from "../draft/DraftContext";
+import { useDraftContext } from "../draft/DraftContext";
 import { EditorTooltip } from "./components/editor-tooltip";
 import cn from "classnames";
 import { Tooltip } from "react-tooltip";
-
-type SectionProps = {
-  id: string;
-  order: number;
-  components: DraftComponent[];
-  className: string;
-};
+import type { DraftComponent, Section, Sections } from "../draft/types";
 
 export const getSectionIdByComponentId = (
   sections: Sections,
@@ -49,7 +39,7 @@ export const getSectionIdByComponentId = (
 
     if (!section) return null;
 
-    return section.components.find((c) => c.id === componentId);
+    return section.components.find((c: DraftComponent) => c.id === componentId);
   });
 
   return sectionId;
@@ -59,9 +49,6 @@ const SortableItem = (
   props: PropsWithChildren<{ component: DraftComponent }>
 ) => {
   const { component: c, children } = props;
-  const {
-    draftState: { REARRANGING_FIRED },
-  } = useDraftContext();
 
   const {
     attributes,
@@ -93,7 +80,7 @@ const SortableItem = (
   );
 };
 
-const Section = (props: SectionProps) => {
+const Section = (props: Section) => {
   const { id, components, className } = props;
 
   const { setNodeRef } = useDroppable({
@@ -117,13 +104,13 @@ const Section = (props: SectionProps) => {
   );
 };
 
-const Garbage = (props: Pick<SectionProps, "components">) => {
+const id = "garbage";
+
+const Garbage = (props: Pick<Section, "components">) => {
   const { components } = props;
   const [tooltipShown, setTooltipShown] = useState(false);
 
-  const id = "garbage";
-
-  const { setNodeRef, isOver, over, active } = useDroppable({
+  const { setNodeRef, isOver, active } = useDroppable({
     id,
   });
 
@@ -145,7 +132,11 @@ const Garbage = (props: Pick<SectionProps, "components">) => {
           onMouseLeave={() => setTooltipShown(false)}
           data-tooltip-id={id}
         >
-          <FaTrashAlt size={25} id={`${id}-bucket`} />
+          <FaTrashAlt
+            size={25}
+            id={`${id}-bucket`}
+            className="pointer-events-none"
+          />
           {components.map((c) => (
             <SortableItem key={c.id} component={c}>
               <ComponentFactory component={c} />
@@ -215,16 +206,16 @@ export const DndProvider = () => {
       let newSections = { ...currentDesign.sections };
 
       // Remove the active item from its original section
-      newSections[activeSectionId].components = activeItems.filter(
+      (newSections[activeSectionId] as Section).components = activeItems.filter(
         (item) => item.id !== active.id
       );
 
       // Insert the active item into the new section at the correct position
-      newSections[overSectionId].components = [
+      (newSections[overSectionId] as Section).components = [
         ...overItems.slice(0, overIndex),
         activeItems[activeIndex],
         ...overItems.slice(overIndex),
-      ];
+      ] as DraftComponent[];
 
       return { ...currentDesign, sections: newSections };
     });
@@ -246,9 +237,9 @@ export const DndProvider = () => {
         const newSections = { ...currentDesign.sections };
 
         Object.keys(newSections).forEach((sectionId) => {
-          newSections[sectionId].components = newSections[
-            sectionId
-          ].components.filter((c) => c.id !== active.id);
+          (newSections[sectionId] as Section).components = (
+            newSections[sectionId] as Section
+          ).components.filter((c) => c.id !== active.id);
         });
 
         return { ...currentDesign, sections: newSections };
@@ -279,10 +270,10 @@ export const DndProvider = () => {
         let newSections = { ...currentDesign.sections };
 
         // Move the active item within its section to the new position
-        newSections[overSectionId].components = arrayMove(
-          newSections[overSectionId].components,
-          activeIndex,
-          overIndex
+        (newSections[overSectionId] as Section).components = arrayMove(
+          (newSections[overSectionId] as Section).components,
+          activeIndex as number,
+          overIndex as number
         );
 
         return { ...currentDesign, sections: newSections };
@@ -303,6 +294,9 @@ export const DndProvider = () => {
       onDragEnd={handleDragEnd}
     >
       {Object.keys(design.sections).map((name) => (
+        // @ts-ignore
+        // eslint-disable-next-line
+        // Wtf is this? todo
         <Section key={name} {...design.sections[name]} />
       ))}
       <Garbage components={deleted} />

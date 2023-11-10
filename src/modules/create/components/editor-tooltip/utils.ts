@@ -1,4 +1,4 @@
-import { type Design } from "~/modules/draft/DraftContext";
+import type { Design } from "~/modules/draft/types";
 
 const toggleCn = (classNames: string, newClassName: string) => {
   const classNamesArray = classNames.split(" ");

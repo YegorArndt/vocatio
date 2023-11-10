@@ -73,7 +73,7 @@ export const Download = (props: { a4Ref: RefObject<HTMLDivElement> }) => {
         "-translate-y-1 transform !bg-secondary-hover transition":
           DOWNLOAD_FIRED,
       })}
-      onClick={void onClick}
+      onClick={() => void onClick()}
       data-tooltip-id={src}
     >
       <Image

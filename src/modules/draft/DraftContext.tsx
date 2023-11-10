@@ -60,7 +60,7 @@ export const DraftContext = (props: DraftContextInput) => {
       props: {
         name: "general",
         value: "General",
-        label: null,
+        label: "",
         className: leftHeading,
       },
     },
@@ -88,7 +88,7 @@ export const DraftContext = (props: DraftContextInput) => {
       props: {
         name: "contact",
         value: "Contact",
-        label: null,
+        label: "",
         className: leftHeading,
       },
     },
@@ -134,7 +134,7 @@ export const DraftContext = (props: DraftContextInput) => {
       props: {
         name: "education",
         value: "Education",
-        label: null,
+        label: "",
         className: leftHeading,
       },
     },
@@ -144,7 +144,7 @@ export const DraftContext = (props: DraftContextInput) => {
       props: {
         name: "education-duration",
         value: "2016-2020",
-        label: null,
+        label: "",
       },
     },
     {
@@ -153,7 +153,7 @@ export const DraftContext = (props: DraftContextInput) => {
       props: {
         name: "education-degree",
         value: "Master degree",
-        label: null,
+        label: "",
       },
     },
     {
@@ -162,7 +162,7 @@ export const DraftContext = (props: DraftContextInput) => {
       props: {
         name: "education-university",
         value: "MSU, Computer Science",
-        label: null,
+        label: "",
       },
     },
     {
@@ -171,7 +171,7 @@ export const DraftContext = (props: DraftContextInput) => {
       props: {
         name: "skills",
         value: "Skills",
-        label: null,
+        label: "",
         className: leftHeading,
       },
     },
@@ -181,7 +181,7 @@ export const DraftContext = (props: DraftContextInput) => {
       props: {
         name: "skills-list",
         value: "React, Node.js, TypeScript, GraphQL, MongoDB, PostgreSQL",
-        label: null,
+        label: "",
       },
     },
     {
@@ -190,7 +190,7 @@ export const DraftContext = (props: DraftContextInput) => {
       props: {
         name: "languages",
         value: "Languages",
-        label: null,
+        label: "",
         className: leftHeading,
       },
     },
@@ -225,7 +225,7 @@ export const DraftContext = (props: DraftContextInput) => {
       props: {
         name: "name",
         value: defaultUserData.fullName,
-        label: null,
+        label: "",
       },
     },
     {
@@ -234,7 +234,7 @@ export const DraftContext = (props: DraftContextInput) => {
       props: {
         name: "job-title",
         value: vacancy.jobTitle,
-        label: null,
+        label: "",
       },
     },
     {
@@ -243,7 +243,7 @@ export const DraftContext = (props: DraftContextInput) => {
       props: {
         name: "experience",
         value: "Experience",
-        label: null,
+        label: "",
       },
     },
   ].map((c, order) => ({
@@ -255,7 +255,6 @@ export const DraftContext = (props: DraftContextInput) => {
     type: "timeline",
     id: "timeline",
     props: {
-      name: "timeline",
       jobDescription: vacancy.description,
       jobTitle: vacancy.jobTitle,
       vacancyId: vacancy.id,

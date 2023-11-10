@@ -1,9 +1,9 @@
-import { useDraftContext, type DraftComponent } from "../draft/DraftContext";
-
+import { useDraftContext } from "../draft/DraftContext";
 import { Autoresize } from "~/components/ui/inputs/components/Autoresize";
-import { Timeline } from "~/modules/create/components/Timeline";
+import { Timeline, TimelineProps } from "~/modules/create/components/Timeline";
 import { Heading } from "./components/Heading";
 import { Group } from "./components/Group";
+import type { DraftComponent } from "../draft/types";
 
 type ComponentFactoryProps = {
   component: DraftComponent;
@@ -13,20 +13,16 @@ export const ComponentFactory = (props: ComponentFactoryProps) => {
   const { component: c } = props;
   const { design } = useDraftContext();
 
-  let Component:
-    | typeof Heading
-    | typeof Group
-    | typeof Autoresize
-    | typeof Timeline = Autoresize;
+  let Component: typeof Heading | typeof Group | typeof Autoresize | null =
+    null;
 
-  const classNames =
-    design.components[c.type as keyof typeof design.components];
+  const designClassNames = design.components[c.type];
 
   if (c.type.includes("heading")) Component = Heading;
-
   if (c.type === "group") Component = Group;
+  if (c.type === "text") Component = Autoresize;
 
-  if (c.type === "timeline") Component = Timeline;
+  if (Component) return <Component {...c.props} className={designClassNames} />;
 
-  return <Component {...c.props} className={classNames} />;
+  return <Timeline {...(c.props as unknown as TimelineProps)} />;
 };

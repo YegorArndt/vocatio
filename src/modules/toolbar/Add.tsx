@@ -3,6 +3,7 @@ import { Menu, MenuButton, MenuItem } from "@szhsin/react-menu";
 import { Tooltip } from "react-tooltip";
 
 import { useDraftContext } from "../draft/DraftContext";
+import { TypeOfComponent } from "../draft/types";
 
 const src = "/add.png";
 
@@ -32,10 +33,7 @@ export const Add = () => {
         <MenuItem
           key={componentType}
           onClick={() => {
-            // @ts-ignore
-            // eslint-disable-next-line
-            // Wtf is this? todo
-            addComponent({ type: componentType });
+            addComponent({ type: componentType as TypeOfComponent });
           }}
         >
           {componentType}

@@ -60,6 +60,12 @@ export const Download = (props: { a4Ref: RefObject<HTMLDivElement> }) => {
     dispatchers: { setDownloadFired },
   } = useDraftContext();
 
+  const onClick = async () => {
+    setDownloadFired(true);
+    await getPdf(a4Ref, ownName, companyName);
+    setDownloadFired(false);
+  };
+
   return (
     <Button
       baseCn="p-1 navigation transition transform hover:-translate-y-1 motion-reduce:transition-none"
@@ -67,11 +73,7 @@ export const Download = (props: { a4Ref: RefObject<HTMLDivElement> }) => {
         "-translate-y-1 transform !bg-secondary-hover transition":
           DOWNLOAD_FIRED,
       })}
-      onClick={async () => {
-        setDownloadFired(true);
-        await getPdf(a4Ref, ownName, companyName);
-        setDownloadFired(false);
-      }}
+      onClick={void onClick}
       data-tooltip-id={src}
     >
       <Image

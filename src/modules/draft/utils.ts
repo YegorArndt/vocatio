@@ -34,8 +34,6 @@ export const addNewComponent = (
   } as DraftComponent;
   const newComponents = [newComponent, ...components];
 
-  console.log(newComponent);
-
   const newSection = {
     ...firstSection,
     components: newComponents,

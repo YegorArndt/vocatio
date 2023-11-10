@@ -19,7 +19,7 @@ export type DraftComponent = {
   props: {
     name: string;
     value: string;
-    label: string | null;
+    label: string;
     className?: string;
     style?: CSSProperties;
   };
@@ -32,9 +32,7 @@ export type Section = {
   className: string;
 };
 
-export type Sections = {
-  [name: string]: Section;
-};
+export type Sections = Record<string, Section>;
 
 export type Design = {
   id: string;
@@ -58,7 +56,7 @@ export type Dispatchers = Record<
 export type DraftContext = {
   design: Design;
   updateDesign: (updateFn: (design: Design) => Design) => void;
-  addComponent: (component: DraftComponent) => void;
+  addComponent: (component: NewComponent) => void;
   draftState: DraftState;
   dispatchers: Dispatchers;
   user: User;
@@ -66,6 +64,6 @@ export type DraftContext = {
   defaultUserData: UserResource;
 };
 
-export type NewComponent = {
+export type NewComponent = Partial<DraftComponent> & {
   type: TypeOfComponent;
-} & Partial<DraftComponent>;
+};

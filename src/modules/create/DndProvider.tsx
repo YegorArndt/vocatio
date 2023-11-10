@@ -203,15 +203,15 @@ export const DndProvider = () => {
       );
       const overIndex = overItems.findIndex((item) => item.id === over?.id);
 
-      let newSections = { ...currentDesign.sections };
+      const newSections = { ...currentDesign.sections };
 
       // Remove the active item from its original section
-      (newSections[activeSectionId] as Section).components = activeItems.filter(
+      newSections[activeSectionId]!.components = activeItems.filter(
         (item) => item.id !== active.id
       );
 
       // Insert the active item into the new section at the correct position
-      (newSections[overSectionId] as Section).components = [
+      newSections[overSectionId]!.components = [
         ...overItems.slice(0, overIndex),
         activeItems[activeIndex],
         ...overItems.slice(overIndex),
@@ -237,9 +237,9 @@ export const DndProvider = () => {
         const newSections = { ...currentDesign.sections };
 
         Object.keys(newSections).forEach((sectionId) => {
-          (newSections[sectionId] as Section).components = (
-            newSections[sectionId] as Section
-          ).components.filter((c) => c.id !== active.id);
+          newSections[sectionId]!.components = newSections[
+            sectionId
+          ]!.components.filter((c) => c.id !== active.id);
         });
 
         return { ...currentDesign, sections: newSections };
@@ -267,13 +267,13 @@ export const DndProvider = () => {
       ]?.components.findIndex((c) => c.id === over?.id);
 
       if (activeIndex !== overIndex) {
-        let newSections = { ...currentDesign.sections };
+        const newSections = { ...currentDesign.sections };
 
         // Move the active item within its section to the new position
-        (newSections[overSectionId] as Section).components = arrayMove(
-          (newSections[overSectionId] as Section).components,
-          activeIndex as number,
-          overIndex as number
+        newSections[overSectionId]!.components = arrayMove(
+          newSections[overSectionId]!.components,
+          activeIndex!,
+          overIndex!
         );
 
         return { ...currentDesign, sections: newSections };
@@ -294,10 +294,7 @@ export const DndProvider = () => {
       onDragEnd={handleDragEnd}
     >
       {Object.keys(design.sections).map((name) => (
-        // @ts-ignore
-        // eslint-disable-next-line
-        // Wtf is this? todo
-        <Section key={name} {...design.sections[name]} />
+        <Section key={name} {...design.sections[name]!} />
       ))}
       <Garbage components={deleted} />
     </DndContext>

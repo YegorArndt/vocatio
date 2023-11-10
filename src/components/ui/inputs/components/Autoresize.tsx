@@ -98,7 +98,7 @@ export const Autoresize = (props: AutoresizeProps) => {
   }, [watch(name)]);
 
   return (
-    <div ref={containerRef} className="break-words">
+    <div ref={containerRef} className={cn("break-words")}>
       {DOWNLOAD_FIRED ? (
         watch(name)
       ) : (

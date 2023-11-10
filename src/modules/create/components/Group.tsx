@@ -18,7 +18,7 @@ export const Group = (props: GroupProps) => {
   const valueName = `value-${name}`;
 
   return (
-    <div className={cn("grid grid-cols-[1fr,170px]", className)}>
+    <div className={cn(className)}>
       <Autoresize name={labelName} value={label} />
       <Autoresize name={valueName} value={value} />
     </div>

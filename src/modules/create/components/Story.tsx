@@ -19,7 +19,7 @@ const Line = () => (
 
 /**
  * Handles date of employment & company name.
- * @param {string} story - The story of the user.
+ * @param {string} story - The story of employment.
  * @param {string} jobTitle - The job title of the user.
  * @param {number} index - The index of the story to generate the date of employment.
  */

@@ -42,6 +42,7 @@ const config = {
         orange: "var(--orange)",
         cyan: "var(--cyan)",
         gray: "var(--gray)",
+        skeleton: "var(--skeleton)",
       },
       backgroundColor: {
         base: "var(--bg-base)",
@@ -50,6 +51,7 @@ const config = {
         secondary: "var(--bg-secondary)",
         "secondary-hover": "var(--bg-secondary-hover)",
         green: "var(--green)",
+        skeleton: "var(--skeleton)",
       },
       fontSize: {
         default: "clamp(0.75rem, 0.7232rem + 0.1429vw, 0.875rem)",

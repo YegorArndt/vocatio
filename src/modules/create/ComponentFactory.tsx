@@ -14,8 +14,12 @@ export const ComponentFactory = (props: ComponentFactoryProps) => {
   const { component: c } = props;
   const { design } = useDraftContext();
 
-  let Component: typeof Heading | typeof Group | typeof Autoresize | null =
-    null;
+  let Component:
+    | typeof Heading
+    | typeof Group
+    | typeof Autoresize
+    | typeof Divider
+    | null = null;
 
   const designClassNames = design.components[c.type];
 

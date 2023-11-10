@@ -33,6 +33,7 @@
 
   --scrollbar-track-color: #333;
   --scrollbar-thumb-color: #888;
+  --skeleton: rgba(255, 255, 255, 0.13);
 }
 
 [data-theme="light"] {

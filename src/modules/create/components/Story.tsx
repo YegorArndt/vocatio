@@ -51,7 +51,7 @@ export const Story = (props: StoryProps) => {
         <Autoresize
           className="w-full text-[1rem] font-bold"
           name={`companyName-${index}`}
-          value={companyName}
+          value={companyName!}
           placeholder={companyName}
         />
         <Autoresize

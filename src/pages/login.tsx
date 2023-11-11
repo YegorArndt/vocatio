@@ -66,13 +66,15 @@ const LoginPage: NextPage = () => {
               : "It's impossible to save your data without knowing you."
             : "Wait a sec..."}
         </h1>
-        <div className="flex-center min-w-[10rem] rounded-sm bg-red p-5">
-          {isSignedIn ? (
-            <Link text="Dashboard" to="/vacancies" />
-          ) : (
-            <SignInButton mode="modal" />
-          )}
-        </div>
+        {isSignedIn ? (
+          <Link
+            text="Take me to dashboard"
+            to="/vacancies"
+            className="primary lg"
+          />
+        ) : (
+          <SignInButton mode="modal" />
+        )}
       </section>
     </>
   );

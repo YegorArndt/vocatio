@@ -6,7 +6,7 @@ import {
 } from "~/components/ui/inputs/components/Autoresize";
 import { useDraftContext } from "~/modules/draft/DraftContext";
 
-type HeadingProps = AutoresizeProps & {};
+type HeadingProps = AutoresizeProps;
 
 export const Heading = (props: AutoresizeProps) => {
   const { className, ...rest } = props;
@@ -17,7 +17,7 @@ export const Heading = (props: AutoresizeProps) => {
   return (
     <Autoresize
       className={cn(className, {
-        "pb-2": DOWNLOAD_FIRED,
+        "pb-2": DOWNLOAD_FIRED, // todo: remove that hack
       })}
       {...rest}
     />

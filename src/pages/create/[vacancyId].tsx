@@ -6,9 +6,9 @@ import { api } from "~/utils";
 import { generateSSGHelper } from "~/server/api/utils/generateSSGHelper";
 import { Toolbar } from "~/modules/toolbar/Toolbar";
 import { Layout } from "~/components/layout/Layout";
-import { LogoLoader } from "~/components/LogoLoader";
 import { DraftContext } from "~/modules/draft/DraftContext";
 import { DndProvider } from "~/modules/create/DndProvider";
+import { CreatePageSkeleton } from "~/components/loaders/CreatePageSkeleton";
 
 type CVBuilderProps = {
   vacancyId: string;
@@ -44,7 +44,7 @@ const CVBuilder = (props: CVBuilderProps) => {
   return (
     <Layout>
       <div className="flex-center relative overflow-hidden pt-[4rem]">
-        {(userLoading || vacancyLoading) && <LogoLoader />}
+        {(userLoading || vacancyLoading) && <CreatePageSkeleton />}
         {vacancy && user && defaultUserData && (
           <DraftContext
             defaultUserData={defaultUserData}

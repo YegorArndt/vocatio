@@ -20,7 +20,7 @@ type VacancyCardProps = {
 };
 
 const getSalaryRange = (min: Falsy<number>, max: Falsy<number>) =>
-  min && max ? `${min} - ${max}` : "N/A";
+  min && max ? `${min} - ${max} (annually or monthly)` : "N/A";
 
 const sourceIcons: Partial<Record<SourceName, JSX.Element>> = {
   LINKEDIN: <FaLinkedin />,
@@ -81,10 +81,7 @@ export const VacancyCard = (props: VacancyCardProps) => {
         <header className="border-bottom flex flex-col gap-2">
           <h3 className="text-xl font-bold">{companyName}</h3>
           <span className="italic">{jobTitle}</span>
-          <small>
-            Added to your vacancies: <br />
-            {createdAt.toDateString()}
-          </small>
+          <small>Added to your vacancies: {createdAt.toDateString()}</small>
         </header>
         <ul className="flex flex-col gap-3">
           {[

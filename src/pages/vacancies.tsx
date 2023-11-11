@@ -31,7 +31,10 @@ export const Vacancies = () => {
         {!isLoading && !data && (
           <Placeholder
             title="No vacancies found"
-            text="Use the extension to add a new vacancy"
+            text="Use our Google Extension to add a new vacancy"
+            linkText="Get Extension"
+            to="https://chrome.google.com/webstore/detail/careerpilot/bknmlolcaccbfcedimgmpnfcjadfelbn"
+            newTab
           />
         )}
       </Layout>

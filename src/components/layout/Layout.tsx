@@ -14,13 +14,15 @@ export const Layout = (props: LayoutProps) => {
     <>
       <Navigation />
       {children}
-      <footer className="flex-center border-top mt-[80px] h-[80px] max-h-[80px] w-full gap-2">
-        Learn about our
-        <Link
-          text="Privacy Policy"
-          to="/privacy-policy"
-          className="underline clr-blue"
-        />
+      <footer className="mt-[5rem] flex w-screen grow items-end justify-center">
+        <div className="border-top flex-center w-full gap-2 py-5">
+          Learn about our
+          <Link
+            text="Privacy Policy"
+            to="/privacy-policy"
+            className="underline clr-blue"
+          />
+        </div>
       </footer>
     </>
   );

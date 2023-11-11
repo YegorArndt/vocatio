@@ -9,6 +9,7 @@ import "@szhsin/react-menu/dist/transitions/slide.css";
 
 import { api } from "~/utils";
 import "~/styles/globals.css";
+import { RouteGuard } from "~/components/RouteGuard";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -46,16 +47,17 @@ const MyApp: AppType = ({ Component, pageProps }) => {
 
   return (
     <ClerkProvider {...pageProps}>
-      <Head>
-        <title>Careerpilot</title>
-        <meta
-          name="description"
-          content="Tailored CVs for your job applications. Tracker for your vacancies."
-        />
-        <link rel="icon" href="/fav.webp" />
-      </Head>
-
-      <Component {...pageProps} />
+      <RouteGuard>
+        <Head>
+          <title>Careerpilot</title>
+          <meta
+            name="description"
+            content="Tailored CVs for your job applications. Tracker for your vacancies."
+          />
+          <link rel="icon" href="/fav.webp" />
+        </Head>
+        <Component {...pageProps} />
+      </RouteGuard>
     </ClerkProvider>
   );
 };

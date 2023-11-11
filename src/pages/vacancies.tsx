@@ -8,6 +8,8 @@ import { api } from "~/utils/api";
 export const Vacancies = () => {
   const { data, isLoading } = api.vacancies.getAll.useQuery();
 
+  console.log(data);
+
   return (
     <>
       <Head>
@@ -19,16 +21,18 @@ export const Vacancies = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Layout>
-        <div className="grid-container container gap-x-[2rem] gap-y-[3rem] pt-[5rem]">
-          {isLoading &&
-            Array.from({ length: 6 }, (_, i) => (
-              <VacancyCardSkeleton key={i} />
+        {Boolean(isLoading || data?.length) && (
+          <div className="grid-container container gap-x-[2rem] gap-y-[3rem] pt-[5rem]">
+            {isLoading &&
+              Array.from({ length: 6 }, (_, i) => (
+                <VacancyCardSkeleton key={i} />
+              ))}
+            {data?.map((vacancy) => (
+              <VacancyCard key={vacancy.id} vacancy={vacancy} />
             ))}
-          {data?.map((vacancy) => (
-            <VacancyCard key={vacancy.id} vacancy={vacancy} />
-          ))}
-        </div>
-        {!isLoading && !data && (
+          </div>
+        )}
+        {Boolean(!isLoading && !data?.length) && (
           <Placeholder
             title="No vacancies found"
             text="Use our Google Extension to add a new vacancy"

@@ -1,27 +1,25 @@
-import classNames from "classnames";
+import cn from "classnames";
+
 import {
-  Input,
-  type InputProps,
-} from "~/components/ui/inputs/components/Input";
+  Autoresize,
+  AutoresizeProps,
+} from "~/components/ui/inputs/components/Autoresize";
 import { useDraftContext } from "~/modules/draft/DraftContext";
 
-type HeadingProps = InputProps;
+type HeadingProps = AutoresizeProps & {};
 
-export const Heading = (props: HeadingProps) => {
-  const { className, name, value } = props;
-
+export const Heading = (props: AutoresizeProps) => {
+  const { className, ...rest } = props;
   const {
     draftState: { DOWNLOAD_FIRED },
   } = useDraftContext();
 
   return (
-    <div
-      className={classNames(className, {
-        // TODO: Unclear why this problem occurs.
-        "pb-[1rem]": DOWNLOAD_FIRED,
+    <Autoresize
+      className={cn(className, {
+        "pb-2": DOWNLOAD_FIRED,
       })}
-    >
-      <Input name={name} value={value} />
-    </div>
+      {...rest}
+    />
   );
 };

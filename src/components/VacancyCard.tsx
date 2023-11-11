@@ -12,6 +12,8 @@ import type { Falsy } from "~/types/utils";
 import type { SourceName, Vacancy } from "@prisma/client";
 import { Link } from "./ui/buttons/Link";
 import classNames from "classnames";
+import { Button } from "./ui/buttons/Button";
+import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 
 type VacancyCardProps = {
   vacancy: Vacancy;
@@ -37,8 +39,25 @@ export const VacancyCard = (props: VacancyCardProps) => {
     jobTitle,
     sourceName,
     sourceUrl,
+    requiredEducation,
+    requiredLanguages,
+    requiredRemote,
+    requiredSeniority,
+    requiredSkills,
+    requiredYears,
   } = vacancy;
   const [isExpanded, setIsExpanded] = useState(false);
+
+  const req = {
+    education: requiredEducation,
+    languages: requiredLanguages,
+    remote: requiredRemote,
+    seniority: requiredSeniority,
+    skills: requiredSkills,
+    years: requiredYears,
+  };
+
+  const hasRequirements = Object.values(req).some((value) => value);
 
   const tiltRef = useRef(null);
 
@@ -103,15 +122,40 @@ export const VacancyCard = (props: VacancyCardProps) => {
               </span>
             </li>
           ))}
-          {sourceUrl && (
-            <li className="flex items-center gap-3">
-              {sourceName && sourceIcons[sourceName]}
-              <Link
-                text="View source"
-                className="clr-blue"
-                to={sourceUrl}
-                newTab
-              />
+          <li className="flex-between">
+            {sourceUrl && (
+              <div className="flex items-center gap-3">
+                {sourceName && sourceIcons[sourceName]}
+                <Link
+                  text="View source"
+                  className="clr-blue"
+                  to={sourceUrl}
+                  newTab
+                />
+              </div>
+            )}
+            {hasRequirements && (
+              <Button onClick={() => setIsExpanded(!isExpanded)}>
+                {isExpanded ? <AiFillEyeInvisible /> : <AiFillEye />}
+                <span className="clr-blue">
+                  {isExpanded ? "Hide requirements" : "View requirements"}
+                </span>
+              </Button>
+            )}
+          </li>
+          {isExpanded && (
+            <li className="border-top flex flex-col gap-2 pt-3">
+              <h4>Requirements</h4>
+              <ul className="flex flex-col gap-1">
+                {Object.entries(req).map(
+                  ([key, value]) =>
+                    value && (
+                      <li key={key}>
+                        <span className="font-bold">{key}</span>: {value}
+                      </li>
+                    )
+                )}
+              </ul>
             </li>
           )}
         </ul>

@@ -128,7 +128,7 @@
 
   /* Buttons  */
 
-  /* 1. Reverse theme colors for buttons and links  */
+  /* Reverse theme colors for buttons and links  */
   [data-theme="dark"] .primary:is(button, a) {
     --bg-base: #fff;
     --clr-base: #000;
@@ -157,6 +157,12 @@
   *:disabled:is(button, a) {
     @apply cursor-not-allowed opacity-40;
   }
+
+  /* Content editable div */
+  [contentEditable="true"]:empty:before {
+    content: attr(data-placeholder);
+    @apply pointer-events-none select-none clr-secondary;
+  }
 }
 
 @layer utilities {
@@ -176,7 +182,7 @@
   }
 
   .reset {
-    @apply w-full border-0 bg-transparent outline-none;
+    @apply w-full outline-none;
   }
 
   .content {

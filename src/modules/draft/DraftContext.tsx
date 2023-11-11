@@ -267,9 +267,9 @@ export const DraftContext = (props: DraftContextInput) => {
     },
     {
       type: "heading 3",
-      id: "job-title",
+      id: `job-title-${vacancy.id}`,
       props: {
-        name: "job-title",
+        name: `job-title-${vacancy.id}`,
         value: vacancy.jobTitle,
         label: "",
       },
@@ -331,7 +331,7 @@ export const DraftContext = (props: DraftContextInput) => {
       "heading 2": "text-[2rem] tracking-[-0.029375rem] font-bold mt-2",
       "heading 3": "text-[1rem] mb-[2%]",
       text: "",
-      group: "grid grid-cols-[1fr,170px]",
+      group: "grid grid-cols-[100px,160px] gap-2",
       timeline: "",
       divider: "border-current border-solid border-b-[2px] mb-2",
     },

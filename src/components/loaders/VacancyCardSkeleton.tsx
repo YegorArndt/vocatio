@@ -22,7 +22,7 @@ export const VacancyCardSkeleton = () => {
           </header>
           <section className="flex flex-col gap-5 pt-2">
             {Array.from({ length: 5 }).map((_, i) => (
-              <div key={i} className="h-[11px] w-full rounded bg-skeleton" />
+              <div key={i} className="h-[11px] w-[250px] rounded bg-skeleton" />
             ))}
           </section>
         </div>

@@ -5,9 +5,6 @@ import { Configuration, OpenAIApi } from "openai";
 
 // TODO take into account the fact that the user can also write texts for chatgpt. Might be a security issue.
 
-const optimization =
-  "Output one sentence stating the topic and the position assertion. Output one sentence stating the evidence and explanation.";
-
 const getContent = (description: string, jobTitle: string) =>
   `Write a brief paragraph summarizing a significant contribution in your career as a ${jobTitle}, relevant to the requirements: ${description}. Your summary should:
 - Contextualize your role and responsibilities in line with your experience level.
@@ -22,7 +19,7 @@ const openai = new OpenAIApi(configuration);
 
 export const getGptReply = async (content: string) => {
   const response = await openai.createChatCompletion({
-    model: "gpt-3.5-turbo-16k",
+    model: "gpt-4",
     messages: [{ role: "user", content }],
     temperature: 0.7,
   });
@@ -36,18 +33,33 @@ export const gptRouter = createTRPCRouter({
       z.object({
         description: z.string(),
         jobTitle: z.string(),
+        howMany: z.number().max(3),
       })
     )
     .mutation(async ({ input }) => {
-      const { description, jobTitle } = input;
-      const gptReply = await getGptReply(getContent(description, jobTitle));
+      const { description, jobTitle, howMany } = input;
 
-      if (!gptReply)
+      if (!description || !jobTitle || !Boolean(howMany))
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message:
+            "Missing description, jobTitle or something wrong with howMany.",
+        });
+
+      const stories = [];
+
+      while (stories.length < howMany) {
+        const story = await getGptReply(getContent(description, jobTitle));
+
+        if (story) stories.push(story);
+      }
+
+      if (!stories.length)
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: "Failed to get completion from OpenAI.",
         });
 
-      return gptReply;
+      return stories;
     }),
 });

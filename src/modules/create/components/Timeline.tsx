@@ -12,7 +12,8 @@ export const Timeline = (props: TimelineProps) => {
   const { stories, isLoading } = useStories(
     jobDescription,
     jobTitle,
-    vacancyId
+    vacancyId,
+    2
   );
 
   if (isLoading) {

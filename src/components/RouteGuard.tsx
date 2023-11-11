@@ -3,7 +3,9 @@ import { type PropsWithChildren } from "react";
 
 import { api } from "~/utils";
 
-export const RouteGuard = (props: PropsWithChildren<{}>) => {
+export const RouteGuard = (
+  props: PropsWithChildren<Record<string, unknown>>
+) => {
   const { children } = props;
   const router = useRouter();
   const user = api.users.get.useQuery();

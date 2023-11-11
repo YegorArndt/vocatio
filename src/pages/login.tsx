@@ -1,9 +1,10 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import { useEffect } from "react";
-import { SignInButton, SignOutButton, useUser } from "@clerk/nextjs";
+import { SignInButton, useUser } from "@clerk/nextjs";
 import Cookies from "js-cookie";
 import { api } from "~/utils";
+import { Link } from "~/components/ui/buttons/Link";
 
 const LoginPage: NextPage = () => {
   const { user, isSignedIn, isLoaded } = useUser();
@@ -61,12 +62,16 @@ const LoginPage: NextPage = () => {
         <h1 className="text-[2rem]">
           {isLoaded
             ? isSignedIn
-              ? "Success! You can safely return to using the extension."
+              ? "Success! You can safely go back."
               : "It's impossible to save your data without knowing you."
             : "Wait a sec..."}
         </h1>
         <div className="flex-center min-w-[10rem] rounded-sm bg-red p-5">
-          {isSignedIn ? <SignOutButton /> : <SignInButton mode="modal" />}
+          {isSignedIn ? (
+            <Link text="Dashboard" to="/vacancies" />
+          ) : (
+            <SignInButton mode="modal" />
+          )}
         </div>
       </section>
     </>

@@ -59,7 +59,7 @@ export const useStories = (
   description: Falsy<string>,
   jobTitle: string,
   vacancyId: string,
-  howMany: number = 0
+  howMany = 0
 ) => {
   const [stories, setStories] = useState<string[]>([]);
   const {

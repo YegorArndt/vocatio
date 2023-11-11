@@ -50,8 +50,8 @@ export const gptRouter = createTRPCRouter({
 
       while (stories.length < howMany) {
         const story = await getGptReply(getContent(description, jobTitle));
-
         if (story) stories.push(story);
+        else break;
       }
 
       if (!stories.length)

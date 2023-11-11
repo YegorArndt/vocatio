@@ -58,8 +58,7 @@ const setStoriesToLocalStorage = (stories: string[], vacancyId: string) => {
 export const useStories = (
   description: Falsy<string>,
   jobTitle: string,
-  vacancyId: string,
-  howMany = 0
+  vacancyId: string
 ) => {
   const [stories, setStories] = useState<string[]>([]);
   const {
@@ -73,7 +72,7 @@ export const useStories = (
     /**
      * No need to run if stories are already set.
      */
-    if (stories.length || howMany === 0) return;
+    if (stories.length) return;
 
     /**
      * If not = first load, try to get them from local storage.
@@ -97,21 +96,16 @@ export const useStories = (
       return getStories({
         description,
         jobTitle,
-        howMany,
       });
     }
 
     /**
      * 2 effect iteration - story is fetched, so we need to set it.
      */
-    const gptStories = data.map((story) => story.content);
-    const filtered = gptStories.filter(Boolean);
-    const resultStories = (
-      filtered.length ? filtered : stubbyStories
-    ) as string[];
+    const story = data.content ? [data.content] : stubbyStories;
 
-    setStoriesToLocalStorage(resultStories, vacancyId);
-    setStories(resultStories);
+    setStoriesToLocalStorage(story, vacancyId);
+    setStories(story);
   }, [data]);
 
   return {

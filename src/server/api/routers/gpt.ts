@@ -33,33 +33,26 @@ export const gptRouter = createTRPCRouter({
       z.object({
         description: z.string(),
         jobTitle: z.string(),
-        howMany: z.number().max(3),
       })
     )
     .mutation(async ({ input }) => {
-      const { description, jobTitle, howMany } = input;
+      const { description, jobTitle } = input;
 
-      if (!description || !jobTitle || !Boolean(howMany))
+      if (!description || !jobTitle)
         throw new TRPCError({
           code: "BAD_REQUEST",
           message:
             "Missing description, jobTitle or something wrong with howMany.",
         });
 
-      const stories = [];
+      const story = await getGptReply(getContent(description, jobTitle));
 
-      while (stories.length < howMany) {
-        const story = await getGptReply(getContent(description, jobTitle));
-        if (story) stories.push(story);
-        else break;
-      }
-
-      if (!stories.length)
+      if (!story)
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: "Failed to get completion from OpenAI.",
         });
 
-      return stories;
+      return story;
     }),
 });

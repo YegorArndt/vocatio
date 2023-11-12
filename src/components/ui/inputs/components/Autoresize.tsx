@@ -3,13 +3,14 @@ import {
   type SyntheticEvent,
   type TextareaHTMLAttributes,
   useRef,
+  useEffect,
 } from "react";
 
 export type AutoresizeProps = {
   baseCn?: string;
   className?: string;
   name: string;
-  value: string;
+  value: string | undefined;
 } & TextareaHTMLAttributes<HTMLTextAreaElement>;
 
 export const Autoresize = (props: AutoresizeProps) => {
@@ -22,12 +23,16 @@ export const Autoresize = (props: AutoresizeProps) => {
     localStorage.setItem(name, newValue);
   };
 
+  useEffect(() => {
+    if (_value.current) localStorage.setItem(name, _value.current);
+  }, []);
+
   return (
     <div
       contentEditable
-      className={cn("reset", className)}
+      className={cn("reset max-w-[430px] break-words", className)}
       onInput={onInput}
-      data-placeholder={value}
+      data-placeholder={value ?? _value.current}
     >
       {_value.current}
     </div>

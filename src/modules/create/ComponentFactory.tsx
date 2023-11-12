@@ -1,6 +1,6 @@
 import { useDraftContext } from "../draft/DraftContext";
 import { Autoresize } from "~/components/ui/inputs/components/Autoresize";
-import { Timeline, TimelineProps } from "~/modules/create/components/Timeline";
+import { Timeline, TimelineProps } from "~/modules/create/timeline";
 import { Group } from "./components/Group";
 import type { DraftComponent } from "../draft/types";
 import { Divider } from "./components/Divider";

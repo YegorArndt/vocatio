@@ -28,13 +28,9 @@ const getEmploymentDate = (index: number) => {
   return `${startYear} - ${endYear}`;
 };
 
-const Ball = () => (
-  <div className="absolute left-0 top-2 z-1 h-3 w-3 rounded-full border-2 border-solid border-black bg-white" />
-);
+const Ball = (props: { className: string }) => <div {...props} />;
 
-const Line = () => (
-  <div className="absolute left-[.36rem] top-2 h-full w-[0.5px] bg-black" />
-);
+const Line = (props: { className: string }) => <div {...props} />;
 
 export const Story = (props: StoryProps) => {
   const { jobTitle, id, story, index, styles } = props;
@@ -47,33 +43,30 @@ export const Story = (props: StoryProps) => {
     dateOfEmploymentClassNames,
     companyNameClassNames,
     jobTitleClassNames,
+    ballClassNames,
+    lineClassNames,
   } = styles;
 
   return (
     <div className={storyClassNames}>
-      <Ball />
-      <Line />
-      <div className="ml-12 flex flex-col gap-1">
-        <Autoresize
-          id={`dateOfEmployment-${id}`}
-          className={dateOfEmploymentClassNames}
-          value={dateOfEmployment}
-          placeholder={dateOfEmployment}
-        />
-        <Autoresize
-          id={`companyName-${id}`}
-          className={companyNameClassNames}
-          value={companyName}
-          placeholder={companyName}
-        />
-        <Autoresize
-          id={`jobTitle-${id}`}
-          className={jobTitleClassNames}
-          value={jobTitle}
-          placeholder={jobTitle}
-        />
-        <Autoresize id={id} value={story} className={storyClassNames} />
-      </div>
+      <Ball className={ballClassNames} />
+      <Line className={lineClassNames} />
+      <Autoresize
+        id={`dateOfEmployment-${id}`}
+        className={dateOfEmploymentClassNames}
+        value={dateOfEmployment}
+      />
+      <Autoresize
+        id={`companyName-${id}`}
+        className={companyNameClassNames}
+        value={companyName}
+      />
+      <Autoresize
+        id={`jobTitle-${id}`}
+        className={jobTitleClassNames}
+        value={jobTitle}
+      />
+      <Autoresize id={id} value={story} className={storyClassNames} />
     </div>
   );
 };

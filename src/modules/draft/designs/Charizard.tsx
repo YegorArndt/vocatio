@@ -178,10 +178,13 @@ export const Charizard: Design = {
     timeline: {
       styles: {
         timelineClassNames: "",
-        storyClassNames: "relative pb-4 first:mt-4",
-        dateOfEmploymentClassNames: "w-full text-[1rem] font-bold",
-        companyNameClassNames: "w-full text-[1rem] font-bold",
-        jobTitleClassNames: "w-full italic",
+        storyClassNames: "relative pb-4 first:mt-4 flex flex-col order-3",
+        dateOfEmploymentClassNames:
+          "uppercase text-[#808080] tracking-wider order-2",
+        companyNameClassNames: "w-full text-[1rem] font-bold order-1",
+        jobTitleClassNames: "hidden",
+        ballClassNames: "hidden",
+        lineClassNames: "hidden",
       },
       jobDescription: "",
       jobTitle: "",

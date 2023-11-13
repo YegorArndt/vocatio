@@ -11,6 +11,7 @@ import { CreatePageSkeleton } from "~/components/loaders/CreatePageSkeleton";
 import cn from "classnames";
 import { Layout } from "~/components/layout/Layout";
 import { DesignViewer } from "~/components/DesignViewer";
+import { InfoBox } from "~/components/InfoBox";
 
 type CVBuilderProps = {
   vacancyId: string;
@@ -66,6 +67,12 @@ const CVBuilder = (props: CVBuilderProps) => {
                 <DndProvider />
               </div>
               {changingDesign && <DesignViewer />}
+              {!changingDesign && (
+                <InfoBox
+                  text="Jump to next field by pressing tab. Restore its initial value by pressing shift. 🐈✨"
+                  className="fixed bottom-[5rem] left-[1rem] max-w-[350px]"
+                />
+              )}
             </div>
           )}
         </DraftContext>

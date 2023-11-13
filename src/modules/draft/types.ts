@@ -41,6 +41,8 @@ export type Timeline = {
     dateOfEmploymentClassNames: string;
     companyNameClassNames: string;
     jobTitleClassNames: string;
+    ballClassNames: string;
+    lineClassNames: string;
   };
   jobDescription: string;
   jobTitle: string;

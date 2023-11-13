@@ -1,4 +1,4 @@
-import { AiFillCheckCircle, AiOutlineInfoCircle } from "react-icons/ai";
+import { AiFillCheckCircle } from "react-icons/ai";
 import { TiCancel } from "react-icons/ti";
 
 import { Button } from "./ui/buttons/Button";
@@ -6,6 +6,7 @@ import { useDraftContext } from "~/modules/draft/DraftContext";
 import { Venusaur } from "~/modules/draft/designs/Venusaur";
 import { Charizard } from "~/modules/draft/designs/Charizard";
 import { BlurImage } from "./BlurImage";
+import { InfoBox } from "./InfoBox";
 
 const designs = [Venusaur, Charizard];
 
@@ -44,14 +45,11 @@ export const DesignViewer = () => {
         />
         <span>You&apos;re viewing: {design.name} design</span>
       </div>
-      <span className="flex items-center gap-5 rounded-md border p-3">
-        <AiOutlineInfoCircle size={50} />
-        <div>
-          We&apos;ll try to minimize data loss when switching between designs.
+      <InfoBox
+        text="We'll try to minimize data loss when switching between designs.
           In the future before switching designs, you will be able to save your
-          current design without downloading it.
-        </div>
-      </span>
+          current design without downloading it."
+      />
     </div>
   );
 };

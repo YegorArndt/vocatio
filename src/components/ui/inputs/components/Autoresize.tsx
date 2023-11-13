@@ -2,6 +2,7 @@ import cn from "classnames";
 import {
   type SyntheticEvent,
   type TextareaHTMLAttributes,
+  type KeyboardEvent,
   useRef,
   useEffect,
 } from "react";
@@ -14,13 +15,30 @@ export type AutoresizeProps = {
 } & TextareaHTMLAttributes<HTMLTextAreaElement>;
 
 export const Autoresize = (props: AutoresizeProps) => {
-  const { baseCn, className, id, value, ...other } = props;
+  const { className, id, value } = props;
   const _value = useRef(localStorage.getItem(id) ?? value);
+  const contentEditableRef = useRef<HTMLDivElement>(null);
+
+  const setValue = (newValue: string) => {
+    _value.current = newValue;
+    localStorage.setItem(id, newValue);
+  };
 
   const onInput = (e: SyntheticEvent) => {
     const newValue = e.currentTarget.textContent ?? "";
-    _value.current = newValue;
-    localStorage.setItem(id, newValue);
+    setValue(newValue);
+  };
+
+  const onKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === "Shift") {
+      e.preventDefault();
+      if (contentEditableRef.current) {
+        contentEditableRef.current.textContent =
+          contentEditableRef.current.getAttribute("data-placeholder");
+        const newValue = contentEditableRef.current.textContent;
+        setValue(newValue);
+      }
+    }
   };
 
   useEffect(() => {
@@ -30,9 +48,11 @@ export const Autoresize = (props: AutoresizeProps) => {
   return (
     <div
       contentEditable
-      className={cn("reset max-w-[430px] break-words", className)}
+      className={cn("reset max-w-[400px] break-words", className)}
       onInput={onInput}
+      onKeyDown={onKeyDown}
       data-placeholder={value ?? _value.current}
+      ref={contentEditableRef}
     >
       {_value.current}
     </div>

@@ -120,6 +120,10 @@ export const getEditableDesign = (args: GetEditableDesign): Design => {
     timeline: newTimeline,
   };
 
+  console.log("utils/newComponents", newComponents);
+  console.log("utils/newSections", newSections);
+  console.log("utils/newTimeline", newTimeline);
+
   return {
     ...design,
     components: newComponents,

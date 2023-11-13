@@ -30,6 +30,8 @@ export const Timeline = (props: TimelineProps) => {
     getStoriesFromLs(vacancyId)
   );
 
+  console.log("timeline", stories);
+
   const { mutate, data, isLoading } = api.gpt.getCompletion.useMutation();
 
   const {

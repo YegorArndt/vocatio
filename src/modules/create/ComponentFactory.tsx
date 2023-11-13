@@ -16,6 +16,7 @@ export const ComponentFactory = (props: ComponentFactoryProps) => {
 
   if (c.type === "timeline") {
     const timelineProps = { ...design.components.timeline, ...c.props };
+    console.log("factory", timelineProps);
     return <Timeline {...timelineProps} />;
   }
 

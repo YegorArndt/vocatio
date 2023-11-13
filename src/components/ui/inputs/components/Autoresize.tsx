@@ -36,7 +36,7 @@ export const Autoresize = (props: AutoresizeProps) => {
         contentEditableRef.current.textContent =
           contentEditableRef.current.getAttribute("data-placeholder");
         const newValue = contentEditableRef.current.textContent;
-        setValue(newValue);
+        setValue(newValue!);
       }
     }
   };

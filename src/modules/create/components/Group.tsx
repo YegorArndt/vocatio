@@ -6,21 +6,20 @@ import {
 } from "~/components/ui/inputs/components/Autoresize";
 
 type GroupProps = {
-  name: string;
   label: string;
   value: string;
 } & AutoresizeProps;
 
 export const Group = (props: GroupProps) => {
-  const { name, label, value, className, ...rest } = props;
+  const { id, label, value, className, ...rest } = props;
 
-  const labelName = `label-${name}`;
-  const valueName = `value-${name}`;
+  const labelId = `label-${id}`;
+  const valueId = `value-${id}`;
 
   return (
     <div className={cn(className)}>
-      <Autoresize name={labelName} value={label} />
-      <Autoresize name={valueName} value={value} />
+      <Autoresize id={labelId} value={label} />
+      <Autoresize id={valueId} value={value} />
     </div>
   );
 };

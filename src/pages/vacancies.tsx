@@ -8,8 +8,6 @@ import { api } from "~/utils/api";
 export const Vacancies = () => {
   const { data, isLoading } = api.vacancies.getAll.useQuery();
 
-  console.log(data);
-
   return (
     <>
       <Head>

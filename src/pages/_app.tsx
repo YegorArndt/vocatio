@@ -8,8 +8,8 @@ import "@szhsin/react-menu/dist/index.css";
 import "@szhsin/react-menu/dist/transitions/slide.css";
 
 import { api } from "~/utils";
-import "~/styles/globals.css";
 import { RouteGuard } from "~/components/RouteGuard";
+import "~/styles/globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
 

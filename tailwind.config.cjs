@@ -57,6 +57,7 @@ const config = {
         default: "clamp(0.75rem, 0.7232rem + 0.1429vw, 0.875rem)",
         medium: "clamp(0.875rem, 0.8310rem + 0.2167vw, 1rem);",
       },
+      fontFamily: {},
       zIndex: {
         layout: "100",
         dropdown: "200",

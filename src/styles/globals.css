@@ -111,7 +111,6 @@
 @layer components {
   /* A4 */
   .a4 {
-    @apply grid grid-cols-[300px_1fr] bg-white;
     height: 1122px;
     width: 795px;
     min-width: 795px;
@@ -158,6 +157,12 @@
   }
   *:disabled:is(button, a) {
     @apply cursor-not-allowed opacity-40;
+  }
+  .outlined:is(button, a) {
+    @apply border bg-transparent;
+  }
+  .outlined:is(button, a):hover {
+    background-color: hsla(0, 0%, 12%, 1);
   }
 
   /* Content editable div */

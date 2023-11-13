@@ -157,7 +157,11 @@ const Garbage = (props: Pick<Section, "components">) => {
 };
 
 export const DndProvider = () => {
-  const { design, updateDesign } = useDraftContext();
+  const {
+    design,
+    updateDesign,
+    draftState: { CHANGE_DESIGN_FIRED },
+  } = useDraftContext();
   const [activeId, setActiveId] = useState<null | string>(null);
   const [deleted, setDeleted] = useState<DraftComponent[]>([]);
 
@@ -296,7 +300,7 @@ export const DndProvider = () => {
       {Object.keys(design.sections).map((name) => (
         <Section key={name} {...design.sections[name]!} />
       ))}
-      <Garbage components={deleted} />
+      {!CHANGE_DESIGN_FIRED && <Garbage components={deleted} />}
     </DndContext>
   );
 };

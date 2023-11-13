@@ -7,24 +7,24 @@ import {
 } from "react";
 
 export type AutoresizeProps = {
+  id: string;
+  value: string | undefined;
   baseCn?: string;
   className?: string;
-  name: string;
-  value: string | undefined;
 } & TextareaHTMLAttributes<HTMLTextAreaElement>;
 
 export const Autoresize = (props: AutoresizeProps) => {
-  const { baseCn, className, name, value, ...other } = props;
-  const _value = useRef(localStorage.getItem(name) ?? value);
+  const { baseCn, className, id, value, ...other } = props;
+  const _value = useRef(localStorage.getItem(id) ?? value);
 
   const onInput = (e: SyntheticEvent) => {
     const newValue = e.currentTarget.textContent ?? "";
     _value.current = newValue;
-    localStorage.setItem(name, newValue);
+    localStorage.setItem(id, newValue);
   };
 
   useEffect(() => {
-    if (_value.current) localStorage.setItem(name, _value.current);
+    if (_value.current) localStorage.setItem(id, _value.current);
   }, []);
 
   return (

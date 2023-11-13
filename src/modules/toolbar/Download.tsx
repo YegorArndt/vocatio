@@ -83,10 +83,10 @@ export const Download = (props: { a4Ref: RefObject<HTMLDivElement> }) => {
         alt={src}
         className="rounded-lg"
       />
-      <Tooltip id={src} place="bottom" content="Download" />
+      <Tooltip id={src} place="top" content="Download" />
       <Tooltip
         id={src}
-        place="bottom"
+        place="top"
         content="Downloading..."
         isOpen={DOWNLOAD_FIRED}
       />

@@ -1,10 +1,14 @@
 import { Autoresize } from "~/components/ui/inputs/components/Autoresize";
 import { getRandomCompanyName } from "../utils";
+import { Timeline } from "~/modules/draft/types";
+
+type Styles = Omit<Timeline["styles"], "timelineClassNames">;
 
 export type StoryProps = {
   id: string;
   index: number;
   story: string;
+  styles: Styles;
   jobTitle?: string;
   dateOfEmployment?: string;
 };
@@ -33,35 +37,42 @@ const Line = () => (
 );
 
 export const Story = (props: StoryProps) => {
-  const { jobTitle, id, story, index } = props;
+  const { jobTitle, id, story, index, styles } = props;
 
   const dateOfEmployment = getEmploymentDate(index);
   const companyName = getCompanyName(id);
 
+  const {
+    storyClassNames,
+    dateOfEmploymentClassNames,
+    companyNameClassNames,
+    jobTitleClassNames,
+  } = styles;
+
   return (
-    <div className="relative pb-4 first:mt-4">
+    <div className={storyClassNames}>
       <Ball />
       <Line />
       <div className="ml-12 flex flex-col gap-1">
         <Autoresize
-          className="w-full text-[1rem] font-bold"
-          name={`dateOfEmployment-${id}`}
+          className={dateOfEmploymentClassNames}
+          id={`dateOfEmployment-${id}`}
           value={dateOfEmployment}
           placeholder={dateOfEmployment}
         />
         <Autoresize
-          className="w-full text-[1rem] font-bold"
-          name={`companyName-${id}`}
+          className={companyNameClassNames}
+          id={`companyName-${id}`}
           value={companyName}
           placeholder={companyName}
         />
         <Autoresize
-          className="w-full italic"
-          name={`jobTitle-${id}`}
+          className={jobTitleClassNames}
+          id={`jobTitle-${id}`}
           value={jobTitle}
           placeholder={jobTitle}
         />
-        <Autoresize name={id} value={story} />
+        <Autoresize id={id} value={story} className={storyClassNames} />
       </div>
     </div>
   );

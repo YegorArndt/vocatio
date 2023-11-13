@@ -37,7 +37,7 @@ export const Link = forwardRef(
         {...rest}
         {...shouldNewTab}
       >
-        {children}
+        <span className="content">{children}</span>
       </NextLink>
     );
   }

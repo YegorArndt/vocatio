@@ -5,10 +5,12 @@ import { useEffect, useRef } from "react";
 import { api } from "~/utils";
 import { generateSSGHelper } from "~/server/api/utils/generateSSGHelper";
 import { Toolbar } from "~/modules/toolbar/Toolbar";
-import { Layout } from "~/components/layout/Layout";
 import { DraftContext } from "~/modules/draft/DraftContext";
 import { DndProvider } from "~/modules/create/DndProvider";
 import { CreatePageSkeleton } from "~/components/loaders/CreatePageSkeleton";
+import cn from "classnames";
+import { Layout } from "~/components/layout/Layout";
+import { DesignViewer } from "~/components/DesignViewer";
 
 type CVBuilderProps = {
   vacancyId: string;
@@ -43,21 +45,31 @@ const CVBuilder = (props: CVBuilderProps) => {
 
   return (
     <Layout>
-      <div className="flex-center relative overflow-hidden pt-[4rem]">
-        {(userLoading || vacancyLoading) && <CreatePageSkeleton />}
-        {vacancy && user && defaultUserData && (
-          <DraftContext
-            defaultUserData={defaultUserData}
-            vacancy={vacancy}
-            user={user}
-          >
-            <Toolbar a4Ref={a4Ref} />
-            <div ref={a4Ref} className="a4">
-              <DndProvider />
+      {(userLoading || vacancyLoading) && (
+        <CreatePageSkeleton className="pt-[4rem]" />
+      )}
+      {vacancy && user && defaultUserData && (
+        <DraftContext
+          defaultUserData={defaultUserData}
+          vacancy={vacancy}
+          user={user}
+        >
+          {(a4Classes, changingDesign) => (
+            <div
+              className={cn("relative overflow-hidden pt-[4rem]", {
+                "mx-auto flex max-w-[90rem] gap-8": changingDesign,
+                "flex-center": !changingDesign,
+              })}
+            >
+              {!changingDesign && <Toolbar a4Ref={a4Ref} />}
+              <div ref={a4Ref} className={cn("a4", a4Classes)}>
+                <DndProvider />
+              </div>
+              {changingDesign && <DesignViewer />}
             </div>
-          </DraftContext>
-        )}
-      </div>
+          )}
+        </DraftContext>
+      )}
     </Layout>
   );
 };

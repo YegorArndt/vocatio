@@ -1,6 +1,6 @@
 import { useDraftContext } from "../draft/DraftContext";
 import { Autoresize } from "~/components/ui/inputs/components/Autoresize";
-import { Timeline, TimelineProps } from "~/modules/create/timeline";
+import { Timeline } from "~/modules/create/timeline";
 import { Group } from "./components/Group";
 import type { DraftComponent } from "../draft/types";
 import { Divider } from "./components/Divider";
@@ -14,6 +14,11 @@ export const ComponentFactory = (props: ComponentFactoryProps) => {
   const { component: c } = props;
   const { design } = useDraftContext();
 
+  if (c.type === "timeline") {
+    const timelineProps = { ...design.components.timeline, ...c.props };
+    return <Timeline {...timelineProps} />;
+  }
+
   let Component:
     | typeof Group
     | typeof Autoresize
@@ -22,13 +27,15 @@ export const ComponentFactory = (props: ComponentFactoryProps) => {
     | null = null;
 
   const designClassNames = design.components[c.type];
+  const componentClassNames = c.props.className;
+  const merged = [designClassNames, componentClassNames].join(" ");
 
   if (c.type.includes("heading")) Component = Heading;
   if (c.type === "text") Component = Autoresize;
   if (c.type === "group") Component = Group;
   if (c.type === "divider") Component = Divider;
 
-  if (Component) return <Component {...c.props} className={designClassNames} />;
+  if (Component) return <Component id={c.id} {...c.props} className={merged} />;
 
-  return <Timeline {...(c.props as unknown as TimelineProps)} />;
+  return null;
 };

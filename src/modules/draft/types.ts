@@ -1,5 +1,5 @@
 import { Vacancy, User } from "@prisma/client";
-import { CSSProperties, PropsWithChildren } from "react";
+import { CSSProperties, ReactNode } from "react";
 import * as actions from "./actions";
 import type { UserResource } from "@clerk/types";
 
@@ -18,7 +18,6 @@ export type DraftComponent = {
   type: TypeOfComponent;
   sectionId: string;
   props: {
-    name: string;
     value: string;
     label: string;
     className?: string;
@@ -35,22 +34,46 @@ export type Section = {
 
 export type Sections = Record<string, Section>;
 
+export type Timeline = {
+  styles: {
+    timelineClassNames: string;
+    storyClassNames: string;
+    dateOfEmploymentClassNames: string;
+    companyNameClassNames: string;
+    jobTitleClassNames: string;
+  };
+  jobDescription: string;
+  jobTitle: string;
+  vacancyId: string;
+};
+
+export type Components = Omit<
+  Record<DraftComponent["type"], string>,
+  "timeline"
+> & {
+  timeline: Timeline;
+};
+
 export type Design = {
   id: string;
   name: string;
   sections: Sections;
-  components: Record<DraftComponent["type"], string>;
+  components: Components;
+  a4: string;
+  font: string;
+  image: string;
 };
 
-export type DraftContextInput = PropsWithChildren<{
+export type DraftContextInput = {
   defaultUserData: UserResource;
   vacancy: Vacancy;
   user: User;
-}>;
+  children: (a4: string, changingDesign: boolean) => ReactNode;
+};
 
 export type DraftState = Partial<Record<keyof typeof actions, boolean>>;
 export type Dispatchers = Record<
-  "setDownloadFired",
+  "setDownloadFired" | "setChangeDesignFired",
   (payload?: boolean) => void
 >;
 
@@ -58,6 +81,7 @@ export type DraftContext = {
   design: Design;
   updateDesign: (updateFn: (design: Design) => Design) => void;
   addComponent: (component: NewComponent) => void;
+  changeDesign: (design: Design) => void;
   draftState: DraftState;
   dispatchers: Dispatchers;
   user: User;

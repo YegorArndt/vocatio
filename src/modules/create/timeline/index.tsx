@@ -3,21 +3,16 @@ import { api } from "~/utils";
 import { Story } from "./Story";
 import { Button } from "~/components/ui/buttons/Button";
 import { useDraftContext } from "~/modules/draft/DraftContext";
+import { Timeline as TimelineProps } from "~/modules/draft/types";
 
-export type TimelineProps = {
-  jobDescription: string;
-  jobTitle: string;
-  vacancyId: string;
-};
-
-type _Stories = {
+type LsStories = {
   id: string;
   story: string;
 };
 
-const getStoryIdsFromLs = (vacancyId: string) => {
+const getStoriesFromLs = (vacancyId: string) => {
   const storyKeyRegex = new RegExp(`^draft-story-${vacancyId}-(?!\\d+$).+`);
-  const stories: _Stories[] = [];
+  const stories: LsStories[] = [];
 
   for (let i = 0; i < localStorage.length; i++) {
     const key = localStorage.key(i);
@@ -30,9 +25,9 @@ const getStoryIdsFromLs = (vacancyId: string) => {
 };
 
 export const Timeline = (props: TimelineProps) => {
-  const { jobDescription, jobTitle, vacancyId } = props;
-  const [stories, setStories] = useState<{ id: string; story: string }[]>(
-    getStoryIdsFromLs(vacancyId)
+  const { jobDescription, jobTitle, vacancyId, styles } = props;
+  const [stories, setStories] = useState<LsStories[]>(
+    getStoriesFromLs(vacancyId)
   );
 
   const { mutate, data, isLoading } = api.gpt.getCompletion.useMutation();
@@ -55,8 +50,10 @@ export const Timeline = (props: TimelineProps) => {
     ]);
   }, [data]);
 
+  const { timelineClassNames, ...storyStyles } = styles;
+
   return (
-    <div>
+    <div className={timelineClassNames}>
       {stories.map(({ story, id }, index) => (
         <Story
           key={id}
@@ -64,6 +61,7 @@ export const Timeline = (props: TimelineProps) => {
           story={story}
           index={index}
           jobTitle={jobTitle}
+          styles={storyStyles}
         />
       ))}
       {!DOWNLOAD_FIRED && (

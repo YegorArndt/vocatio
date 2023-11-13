@@ -24,7 +24,7 @@ export const Add = () => {
             alt="add"
             className="rounded-lg"
           />
-          <Tooltip id={src} place="bottom" content="Add item" />
+          <Tooltip id={src} place="top" content="Add item" />
         </MenuButton>
       }
       direction="right"

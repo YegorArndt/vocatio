@@ -7,7 +7,7 @@ import { useDraftContext } from "~/modules/draft/DraftContext";
 import { Venusaur } from "~/modules/draft/designs/Venusaur";
 import { Charizard } from "~/modules/draft/designs/Charizard";
 
-const designs = [Charizard, Venusaur];
+const designs = [Venusaur, Charizard];
 
 export const DesignViewer = () => {
   const {

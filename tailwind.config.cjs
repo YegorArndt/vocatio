@@ -146,6 +146,7 @@ const config = {
 
       addUtilities({ ...textColorClasses, ...headingClasses });
     }),
+    require("@tailwindcss/aspect-ratio"),
   ],
 };
 

@@ -1,9 +1,10 @@
 import cn from "classnames";
-import { ButtonHTMLAttributes, PropsWithChildren } from "react";
+import type { ButtonHTMLAttributes, PropsWithChildren, ReactNode } from "react";
 
 export type ButtonProps = {
   text?: string;
   baseCn?: string;
+  frontIcon?: ReactNode;
 } & ButtonHTMLAttributes<HTMLButtonElement>;
 
 export const Button = (props: PropsWithChildren<ButtonProps>) => {
@@ -13,12 +14,14 @@ export const Button = (props: PropsWithChildren<ButtonProps>) => {
     children = text,
     baseCn,
     className,
+    frontIcon,
     ...rest
   } = props;
 
   return (
     <button type={type} className={cn("common", baseCn, className)} {...rest}>
-      <span className="content">{children}</span>
+      {frontIcon && <span className="mr-2">{frontIcon}</span>}
+      {children}
     </button>
   );
 };

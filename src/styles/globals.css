@@ -192,10 +192,6 @@
     @apply w-full outline-none;
   }
 
-  .content {
-    @apply flex items-center gap-2 overflow-ellipsis whitespace-nowrap;
-  }
-
   :is(button, a)[class^="bg-"]:hover,
   :is(button, a)[class*=" bg-"]:hover {
     filter: brightness(1.1);

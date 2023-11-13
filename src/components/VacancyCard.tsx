@@ -13,7 +13,7 @@ import type { SourceName, Vacancy } from "@prisma/client";
 import { Link } from "./ui/buttons/Link";
 import classNames from "classnames";
 import { Button } from "./ui/buttons/Button";
-import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
+import { AiFillEyeInvisible, AiFillEye } from "react-icons/ai";
 
 type VacancyCardProps = {
   vacancy: Vacancy;
@@ -132,8 +132,10 @@ export const VacancyCard = (props: VacancyCardProps) => {
               </div>
             )}
             {hasRequirements && (
-              <Button onClick={() => setIsExpanded(!isExpanded)}>
-                {isExpanded ? <AiFillEyeInvisible /> : <AiFillEye />}
+              <Button
+                frontIcon={isExpanded ? <AiFillEyeInvisible /> : <AiFillEye />}
+                onClick={() => setIsExpanded(!isExpanded)}
+              >
                 <span className="clr-blue">
                   {isExpanded ? "Hide requirements" : "View requirements"}
                 </span>

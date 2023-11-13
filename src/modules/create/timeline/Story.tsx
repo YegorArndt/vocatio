@@ -55,20 +55,20 @@ export const Story = (props: StoryProps) => {
       <Line />
       <div className="ml-12 flex flex-col gap-1">
         <Autoresize
-          className={dateOfEmploymentClassNames}
           id={`dateOfEmployment-${id}`}
+          className={dateOfEmploymentClassNames}
           value={dateOfEmployment}
           placeholder={dateOfEmployment}
         />
         <Autoresize
-          className={companyNameClassNames}
           id={`companyName-${id}`}
+          className={companyNameClassNames}
           value={companyName}
           placeholder={companyName}
         />
         <Autoresize
-          className={jobTitleClassNames}
           id={`jobTitle-${id}`}
+          className={jobTitleClassNames}
           value={jobTitle}
           placeholder={jobTitle}
         />

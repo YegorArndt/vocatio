@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from "uuid";
 import type { DraftComponent, Design } from "../types";
 
-const baseDesignId = uuidv4();
+const VenusaurId = uuidv4();
 
 const leftComponents = [
   {
@@ -231,7 +231,7 @@ const rightComponents = [
 })) as DraftComponent[];
 
 export const Venusaur: Design = {
-  id: baseDesignId,
+  id: VenusaurId,
   name: "Venusaur",
   a4: "grid grid-cols-[300px_1fr] bg-white",
   sections: {

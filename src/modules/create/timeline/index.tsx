@@ -21,7 +21,7 @@ const getStoriesFromLs = (vacancyId: string) => {
     }
   }
 
-  return stories.reverse();
+  return stories;
 };
 
 export const Timeline = (props: TimelineProps) => {

@@ -71,7 +71,6 @@ export const DraftContext = (props: DraftContextInput) => {
     "german-level": vacancy.requiredLanguages,
     "spanish-level": vacancy.requiredLanguages,
     city: user.ownCity || vacancy.country,
-    // "english-level", "german-level", "russian-level", "spanish-level"
   };
 
   const toEditableDesign = (design: Design) => {

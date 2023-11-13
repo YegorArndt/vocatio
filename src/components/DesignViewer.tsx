@@ -1,11 +1,13 @@
 import Image from "next/image";
-
-import { Button } from "./ui/buttons/Button";
 import { AiFillCheckCircle, AiOutlineInfoCircle } from "react-icons/ai";
 import { TiCancel } from "react-icons/ti";
+
+import { Button } from "./ui/buttons/Button";
 import { useDraftContext } from "~/modules/draft/DraftContext";
 import { Venusaur } from "~/modules/draft/designs/Venusaur";
 import { Charizard } from "~/modules/draft/designs/Charizard";
+
+const designs = [Charizard, Venusaur];
 
 export const DesignViewer = () => {
   const {
@@ -17,7 +19,7 @@ export const DesignViewer = () => {
   return (
     <div className="flex flex-col gap-6">
       <div className="grid max-h-[550px] grid-cols-2 gap-4 overflow-auto ">
-        {[Venusaur, Charizard].map((d) => (
+        {designs.map((d) => (
           <Button
             key={d.name}
             className="h-full w-full transform transition hover:-translate-y-1 motion-reduce:transition-none"

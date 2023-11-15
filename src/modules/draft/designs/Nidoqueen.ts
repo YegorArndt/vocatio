@@ -20,7 +20,7 @@ const left: RawDraftComponent[] = [
     props: {
       value:
         "I am a frontend developer with 3 years of experience. I am looking for a job in a company with a friendly team and interesting projects.",
-      className: "text-center max-w-[15em] px-5 !mb-4",
+      className: "text-center px-5 !mb-4 w-[200px]",
     },
   },
   {
@@ -207,6 +207,9 @@ const leftImage =
     .map((c) => "[&_.image]:" + c)
     .join(" ");
 
+const leftHeading4 =
+  "[&_.heading-4]:w-[120%] [&_.heading-4]:my-4 [&_.heading-4]:max-w-[20rem]";
+
 export const Nidoqueen: Design = {
   id: NidoqueenId,
   name: "Nidoqueen",
@@ -216,7 +219,7 @@ export const Nidoqueen: Design = {
       id: "left",
       order: 0,
       components: toDraftComponents(left, "left"),
-      className: `flex items-center flex-col [&_.heading-2]:mt-5 [&_.heading-1]:text-[30px] [&_.heading-1]:text-black [&_.heading-4]:w-[130%] [&_.heading-4]:my-4 [&_.text]:my-1 ${leftImage} [&>*]:z-1 relative`,
+      className: `flex items-center flex-col [&_.heading-2]:mt-5 [&_.heading-1]:text-[30px] [&_.heading-1]:text-black [&_.text]:my-1 ${leftImage} [&>*]:z-1 relative ${leftHeading4}`,
     },
     right: {
       id: "right",

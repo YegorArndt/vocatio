@@ -63,14 +63,15 @@ export const DraftContext = (props: DraftContextInput) => {
     phone: user.ownPhone || defaultUserData.phoneNumbers[0]?.phoneNumber,
     linkedin: user.linkedInUrl,
     github: user.githubUrl,
-    "education-duration": vacancy.requiredEducation,
-    "education-degree": vacancy.requiredEducation,
-    "education-university": vacancy.requiredEducation,
-    "english-level": vacancy.requiredLanguages,
-    "russian-level": vacancy.requiredLanguages,
-    "german-level": vacancy.requiredLanguages,
-    "spanish-level": vacancy.requiredLanguages,
+    "education-duration": "2016-2020",
+    "education-degree": "Master degree",
+    "education-university": "MSU, Computer Science",
+    "english-level": "C1",
+    "russian-level": "C1",
+    "german-level": "C1",
+    "spanish-level": "C1",
     city: user.ownCity || vacancy.country,
+    "user-image": user.ownImage || defaultUserData.imageUrl,
   };
 
   const toEditableDesign = (design: Design) => {

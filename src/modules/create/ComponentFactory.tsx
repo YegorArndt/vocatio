@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 import { useDraftContext } from "../draft/DraftContext";
 import { Autoresize } from "~/components/ui/inputs/components/Autoresize";
 import { Timeline } from "~/modules/create/timeline";
@@ -5,6 +7,7 @@ import { Group } from "./components/Group";
 import type { DraftComponent } from "../draft/types";
 import { Divider } from "./components/Divider";
 import { Heading } from "./components/Heading";
+import { UserImage } from "./components/UserImage";
 
 type ComponentFactoryProps = {
   component: DraftComponent;
@@ -13,29 +16,39 @@ type ComponentFactoryProps = {
 export const ComponentFactory = (props: ComponentFactoryProps) => {
   const { component: c } = props;
   const { design } = useDraftContext();
-
-  if (c.type === "timeline") {
-    const timelineProps = { ...design.components.timeline, ...c.props };
-    return <Timeline {...timelineProps} />;
-  }
+  const { type, id, props: componentProps } = c;
 
   let Component:
     | typeof Group
     | typeof Autoresize
     | typeof Divider
     | typeof Heading
+    | typeof Image
+    | typeof Timeline
     | null = null;
 
-  const designClassNames = design.components[c.type];
-  const componentClassNames = c.props.className;
-  const merged = [designClassNames, componentClassNames].join(" ");
+  const { className, ...designPropsWithoutClassName } = design.components[type];
+  const { className: componentClassName, ...componentPropsWithoutClassName } =
+    componentProps;
 
-  if (c.type.includes("heading")) Component = Heading;
-  if (c.type === "text") Component = Autoresize;
-  if (c.type === "group") Component = Group;
-  if (c.type === "divider") Component = Divider;
+  const mergedClassNames = [className, componentClassName, type]
+    .filter(Boolean)
+    .join(" ");
 
-  if (Component) return <Component id={c.id} {...c.props} className={merged} />;
+  const merged = {
+    ...designPropsWithoutClassName,
+    ...componentPropsWithoutClassName,
+    className: mergedClassNames,
+  };
+
+  if (type.includes("heading")) Component = Heading;
+  if (type === "text") Component = Autoresize;
+  if (type === "group") Component = Group;
+  if (type === "divider") Component = Divider;
+  if (type === "timeline") Component = Timeline;
+  if (type === "image") Component = UserImage;
+
+  if (Component) return <Component id={id} {...merged} />;
 
   return null;
 };

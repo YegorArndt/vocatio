@@ -1,28 +1,41 @@
-import { Vacancy, User } from "@prisma/client";
-import { CSSProperties, ReactNode } from "react";
+import type { Vacancy, User } from "@prisma/client";
+import type { CSSProperties, ReactNode } from "react";
 import * as actions from "./actions";
 import type { UserResource } from "@clerk/types";
 
+export type SectionId = "top" | "left" | "right" | "bottom";
+
 export type TypeOfComponent =
-  | "heading 1"
-  | "heading 2"
-  | "heading 3"
+  | `heading-${number}`
   | "text"
   | "group"
+  | "divider"
+  | "list"
+  | "url"
+  | "image"
   | "timeline"
-  | "divider";
+  | "skills"
+  | "education"
+  | "languages";
 
 export type DraftComponent = {
   id: string;
   order: number;
   type: TypeOfComponent;
-  sectionId: string;
+  sectionId: SectionId;
   props: {
+    innerHTML: string;
     value: string;
     label: string;
-    className?: string;
-    style?: CSSProperties;
+    className: string;
+    style: CSSProperties;
   };
+  modifierId?: string;
+  modifier?: (value: string) => string;
+};
+
+export type RawDraftComponent = Omit<Partial<DraftComponent>, "props"> & {
+  props?: Partial<DraftComponent["props"]>;
 };
 
 export type Section = {
@@ -30,9 +43,10 @@ export type Section = {
   order: number;
   components: DraftComponent[];
   className: string;
+  sections?: Sections;
 };
 
-export type Sections = Record<string, Section>;
+export type Sections = Partial<Record<SectionId, Section>>;
 
 export type Timeline = {
   styles: {
@@ -49,12 +63,22 @@ export type Timeline = {
   vacancyId: string;
 };
 
-export type Components = Omit<
-  Record<DraftComponent["type"], string>,
-  "timeline"
-> & {
-  timeline: Timeline;
-};
+export type Components =
+  | Partial<
+      Omit<
+        Record<
+          DraftComponent["type"],
+          {
+            className?: string;
+            style?: CSSProperties;
+            [key: string]: unknown;
+          }
+        >,
+        "timeline"
+      >
+    > & {
+      timeline: Timeline;
+    };
 
 export type Design = {
   id: string;
@@ -64,6 +88,7 @@ export type Design = {
   a4: string;
   font: string;
   image: string;
+  pokemonImage: string;
 };
 
 export type DraftContextInput = {

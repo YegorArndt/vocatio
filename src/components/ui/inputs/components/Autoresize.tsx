@@ -2,7 +2,6 @@ import cn from "classnames";
 import {
   type SyntheticEvent,
   type TextareaHTMLAttributes,
-  type KeyboardEvent,
   useRef,
   useEffect,
 } from "react";
@@ -29,18 +28,6 @@ export const Autoresize = (props: AutoresizeProps) => {
     setValue(newValue);
   };
 
-  const onKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
-    if (e.key === "Shift") {
-      e.preventDefault();
-      if (contentEditableRef.current) {
-        contentEditableRef.current.textContent =
-          contentEditableRef.current.getAttribute("data-placeholder");
-        const newValue = contentEditableRef.current.textContent;
-        setValue(newValue!);
-      }
-    }
-  };
-
   useEffect(() => {
     if (_value.current) localStorage.setItem(id, _value.current);
   }, []);
@@ -48,9 +35,8 @@ export const Autoresize = (props: AutoresizeProps) => {
   return (
     <div
       contentEditable
-      className={cn("reset max-w-[400px] break-words", className)}
+      className={cn("max-w-[400px] break-words outline-none", className)}
       onInput={onInput}
-      onKeyDown={onKeyDown}
       data-placeholder={value ?? _value.current}
       ref={contentEditableRef}
     >

@@ -27,7 +27,8 @@
   --bg-secondary-hover: #333;
   --clr-secondary-hover: #fff;
 
-  --select: #f81ce5;
+  /* --select: #f81ce5; */
+  --select: #79ffe1;
   --border-clr: #333;
   --border-hover-clr: #888;
 
@@ -115,6 +116,7 @@
     width: 795px;
     min-width: 795px;
     max-width: 795px;
+    overflow: hidden;
   }
 
   .toolbar {
@@ -252,5 +254,22 @@
   }
   .border-right {
     border-right: 1px solid var(--border-clr);
+  }
+
+  .dashed-bg {
+    background-image: repeating-linear-gradient(
+        0deg,
+        #26374c 0,
+        #26374c 2px,
+        transparent 2px,
+        transparent 4px
+      ),
+      repeating-linear-gradient(
+        90deg,
+        #26374c 0,
+        #26374c 2px,
+        transparent 2px,
+        transparent 4px
+      );
   }
 }

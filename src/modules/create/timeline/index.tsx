@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react";
+import cn from "classnames";
+
 import { api } from "~/utils";
 import { Story } from "./Story";
 import { Button } from "~/components/ui/buttons/Button";
 import { useDraftContext } from "~/modules/draft/DraftContext";
 import { Timeline as TimelineProps } from "~/modules/draft/types";
+import { baseStories } from "./constants";
 
 type LsStories = {
   id: string;
@@ -12,7 +15,7 @@ type LsStories = {
 
 const getStoriesFromLs = (vacancyId: string) => {
   const storyKeyRegex = new RegExp(`^draft-story-${vacancyId}-(?!\\d+$).+`);
-  const stories: LsStories[] = [];
+  let stories: LsStories[] = [];
 
   for (let i = 0; i < localStorage.length; i++) {
     const key = localStorage.key(i);
@@ -20,6 +23,8 @@ const getStoriesFromLs = (vacancyId: string) => {
       stories.push({ id: key, story: localStorage.getItem(key) ?? "" });
     }
   }
+
+  stories = stories.length ? stories : baseStories;
 
   return stories;
 };
@@ -33,7 +38,7 @@ export const Timeline = (props: TimelineProps) => {
   const { mutate, data, isLoading } = api.gpt.getCompletion.useMutation();
 
   const {
-    draftState: { DOWNLOAD_FIRED },
+    draftState: { DOWNLOAD_FIRED, CHANGE_DESIGN_FIRED },
   } = useDraftContext();
 
   useEffect(() => {
@@ -53,7 +58,7 @@ export const Timeline = (props: TimelineProps) => {
   const { timelineClassNames, ...storyStyles } = styles;
 
   return (
-    <div className={timelineClassNames}>
+    <div className={cn(timelineClassNames, "mb-5")}>
       {stories.map(({ story, id }, index) => (
         <Story
           key={id}
@@ -64,7 +69,7 @@ export const Timeline = (props: TimelineProps) => {
           styles={storyStyles}
         />
       ))}
-      {!DOWNLOAD_FIRED && (
+      {!DOWNLOAD_FIRED && !CHANGE_DESIGN_FIRED && (
         <footer className="mt-2">
           {stories.length < 2 ? (
             <Button

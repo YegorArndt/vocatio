@@ -5,7 +5,14 @@ const CharizardId = uuidv4();
 
 const leftComponents = [
   {
-    type: "heading 1",
+    type: "image",
+    id: "user-image",
+    props: {
+      className: "mx-auto",
+    },
+  },
+  {
+    type: "heading-1",
     id: "user-name",
     props: {
       value: "",
@@ -31,7 +38,23 @@ const leftComponents = [
     },
   },
   {
-    type: "heading 2",
+    type: "heading-2",
+    id: "experience-title",
+    props: {
+      value: "Experience",
+      label: "",
+    },
+  },
+  {
+    type: "text",
+    id: "experience",
+    props: {
+      value: "",
+      label: "",
+    },
+  },
+  {
+    type: "heading-2",
     id: "details-title",
     props: {
       value: "Details",
@@ -71,7 +94,7 @@ const leftComponents = [
     },
   },
   {
-    type: "heading 2",
+    type: "heading-2",
     id: "skills-title",
     props: {
       value: "Skills",
@@ -113,11 +136,12 @@ const leftComponents = [
 ].map((c, order) => ({
   ...c,
   order: order + 1,
+  sectionId: "left",
 })) as DraftComponent[];
 
 const rightComponents = [
   {
-    type: "heading 2",
+    type: "heading-2",
     id: "profile-title",
     props: {
       value: "Profile",
@@ -134,7 +158,7 @@ const rightComponents = [
     },
   },
   {
-    type: "heading 2",
+    type: "heading-2",
     id: "employment-history-title",
     props: {
       value: "Employment History",
@@ -149,6 +173,7 @@ const rightComponents = [
 ].map((c, order) => ({
   ...c,
   order: order + 1,
+  sectionId: "right",
 })) as DraftComponent[];
 
 export const Charizard: Design = {
@@ -170,17 +195,25 @@ export const Charizard: Design = {
     },
   },
   components: {
-    "heading 1": "text-[30px] font-bold",
-    "heading 2": "text-[1.3rem] font-bold my-[4%]",
-    "heading 3": "text-[1rem] font-bold mb-[2%]",
-    text: "",
-    group: "grid grid-cols-[100px,160px] gap-2", // not using yet
+    "heading-1": {
+      className: "text-[30px] font-bold",
+    },
+    "heading-2": {
+      className: "text-[1.3rem] font-bold my-[4%]",
+    },
+    "heading-3": {
+      className: "text-[1rem] font-bold mb-[2%]",
+    },
+    text: {},
+    group: {
+      className: "grid grid-cols-[100px,160px] gap-2",
+    }, // not using yet
     timeline: {
       styles: {
         timelineClassNames: "",
         storyClassNames: "relative pb-4 first:mt-4 flex flex-col order-3",
         dateOfEmploymentClassNames:
-          "uppercase text-[#808080] tracking-wider order-2",
+          "uppercase text-[#808080] tracking-wider order-2 my-2",
         companyNameClassNames: "w-full text-[1rem] font-bold order-1",
         jobTitleClassNames: "hidden",
         ballClassNames: "hidden",
@@ -190,9 +223,17 @@ export const Charizard: Design = {
       jobTitle: "",
       vacancyId: "",
     },
-    divider:
-      "border-current border-solid border-b-[0.5px] w-[2rem] mx-auto my-2",
+    divider: {
+      className:
+        "border-current border-solid border-b-[0.5px] w-[2rem] mx-auto my-2",
+    },
+    image: {
+      className: "rounded-full mb-5",
+      height: 100,
+      width: 100,
+    },
   },
   font: "Arial",
-  image: "/download.png",
+  image: "/charizard.png",
+  pokemonImage: "/charizard-pokemon.png",
 };

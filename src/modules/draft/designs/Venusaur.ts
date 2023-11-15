@@ -1,15 +1,20 @@
 import { v4 as uuidv4 } from "uuid";
-import type { DraftComponent, Design } from "../types";
+
+import type { Design, RawDraftComponent } from "../types";
+import { toDraftComponents } from "../utils";
 
 const VenusaurId = uuidv4();
 
-const leftComponents = [
+const leftComponents: RawDraftComponent[] = [
   {
-    type: "heading 2",
+    type: "image",
+    id: "user-image",
+  },
+  {
+    type: "heading-2",
     id: "general-title",
     props: {
       value: "General",
-      label: "",
     },
   },
   {
@@ -17,7 +22,6 @@ const leftComponents = [
     id: "general-divider",
     props: {
       value: "General",
-      label: "",
     },
   },
   {
@@ -37,11 +41,10 @@ const leftComponents = [
     },
   },
   {
-    type: "heading 2",
+    type: "heading-2",
     id: "contact-title",
     props: {
       value: "Contact",
-      label: "",
     },
   },
   {
@@ -49,14 +52,12 @@ const leftComponents = [
     id: "contact-divider",
     props: {
       value: "General",
-      label: "",
     },
   },
   {
     type: "group",
     id: "email",
     props: {
-      value: "perfect-candidate@gmail.com",
       label: "Email",
     },
   },
@@ -85,20 +86,15 @@ const leftComponents = [
     },
   },
   {
-    type: "heading 2",
+    type: "heading-2",
     id: "education-title",
     props: {
       value: "Education",
-      label: "",
     },
   },
   {
     type: "divider",
     id: "education-divider",
-    props: {
-      value: "General",
-      label: "",
-    },
   },
   {
     type: "text",
@@ -112,7 +108,6 @@ const leftComponents = [
     type: "text",
     id: "education-degree",
     props: {
-      name: "education-degree",
       value: "Master degree",
       label: "Degree",
     },
@@ -126,44 +121,34 @@ const leftComponents = [
     },
   },
   {
-    type: "heading 2",
+    type: "heading-2",
     id: "skills-title",
     props: {
       value: "Skills",
-      label: "",
     },
   },
   {
     type: "divider",
     id: "skills-divider",
-    props: {
-      value: "General",
-      label: "",
-    },
   },
   {
     type: "text",
     id: "skills-list",
     props: {
       value: "React, Node.js, TypeScript, GraphQL, MongoDB, PostgreSQL",
-      label: "",
+      label: "My skills",
     },
   },
   {
-    type: "heading 2",
+    type: "heading-2",
     id: "languages-title",
     props: {
       value: "Languages",
-      label: "",
     },
   },
   {
     type: "divider",
     id: "languages-divider",
-    props: {
-      value: "General",
-      label: "",
-    },
   },
   {
     type: "group",
@@ -181,80 +166,76 @@ const leftComponents = [
       label: "Russian",
     },
   },
-].map((c, order) => ({
-  ...c,
-  order: order + 1,
-  sectionId: "left",
-})) as DraftComponent[];
+];
 
-const rightComponents = [
+const rightComponents: RawDraftComponent[] = [
   {
-    type: "heading 1",
+    type: "heading-1",
     id: "user-name",
     props: {
       value: "Alexander Ivanov",
-      label: "",
+      label: "Name",
     },
   },
   {
-    type: "heading 3",
+    type: "heading-3",
     id: "job-title",
     props: {
       value: "Frontend developer",
-      label: "",
+      label: "Job title",
     },
   },
   {
-    type: "heading 2",
+    type: "heading-2",
     id: "employment-history-title",
     props: {
       value: "Experience",
-      label: "",
     },
   },
   {
     type: "divider",
     id: "experience-divider",
-    props: {
-      value: "General",
-      label: "",
-    },
   },
   {
     type: "timeline",
     id: "timeline",
-    props: {},
   },
-].map((c, order) => ({
-  ...c,
-  order: order + 1,
-})) as DraftComponent[];
+];
 
 export const Venusaur: Design = {
   id: VenusaurId,
   name: "Venusaur",
-  a4: "grid grid-cols-[300px_1fr] bg-white",
+  a4: "grid grid-cols-[300px_1fr] bg-white [&_.group]:mb-2",
   sections: {
     left: {
       id: "left",
       order: 0,
-      components: leftComponents,
+      components: toDraftComponents(leftComponents, "left"),
       className:
-        "flex h-full flex-col items-center bg-[#323B4C] px-5 py-7 clr-white",
+        "flex h-full flex-col items-center bg-[#323B4C] px-5 py-7 clr-white [&_.image]:mx-auto",
     },
     right: {
       id: "right",
       order: 1,
-      components: rightComponents,
-      className: "bg-white px-[2rem] py-[3rem] clr-black",
+      components: toDraftComponents(rightComponents, "right"),
+      className:
+        "bg-white px-[2rem] py-[3rem] clr-black [&_.heading-1]:text-[#323B4C]",
     },
   },
   components: {
-    "heading 1": "text-[50px] font-bold text-[#323B4C]",
-    "heading 2": "text-[2rem] tracking-[-0.029375rem] font-bold mt-2",
-    "heading 3": "text-[1rem] mb-[2%]",
-    text: "",
-    group: "grid grid-cols-[100px,160px] gap-2",
+    "heading-1": {
+      className: "text-[50px] font-bold leading-[120%]",
+    },
+    "heading-2": {
+      className: "text-[2rem] tracking-[-0.029375rem] font-bold mt-4",
+    },
+    "heading-3": {
+      className: "text-[1rem]",
+    },
+    text: {},
+    group: {
+      className: "grid grid-cols-[90px,160px] gap-2",
+    },
     timeline: {
       styles: {
         timelineClassNames: "",
@@ -271,8 +252,16 @@ export const Venusaur: Design = {
       jobTitle: "",
       vacancyId: "",
     },
-    divider: "border-current border-solid border-b-[2px] mb-2",
+    divider: {
+      className: "border-current border-solid border-b-[2px] mb-2",
+    },
+    image: {
+      height: 150,
+      width: 150,
+      // className: "rounded-full mb-3",
+    },
   },
   font: "Inter",
-  image: "/add.png",
+  image: "/venusaur.png",
+  pokemonImage: "/venusaur-pokemon.png",
 };

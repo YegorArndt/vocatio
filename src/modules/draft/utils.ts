@@ -1,17 +1,42 @@
 import { v4 as uuidv4 } from "uuid";
 
-import type { Design, DraftComponent, NewComponent, Timeline } from "./types";
+import type {
+  Design,
+  DraftComponent,
+  NewComponent,
+  RawDraftComponent,
+  SectionId,
+  Timeline,
+} from "./types";
 import { DBIds } from "./constants";
 
 // In future utilize the fact that component has reference to its section in it.
-
 const rawComponent = {
   order: 0,
   props: {
-    name: "Sample text",
+    innerHTML: "",
     value: "Sample text",
     label: "Sample text",
+    className: "",
+    style: {},
   },
+};
+
+export const toDraftComponents = (
+  components: RawDraftComponent[],
+  sectionId: SectionId
+) => {
+  const draftComponents = components.map((c, i) => {
+    const normalized = { ...c };
+
+    if (!normalized.order) normalized.order = i;
+    if (!normalized.sectionId) normalized.sectionId = sectionId;
+    normalized.props = { ...rawComponent.props, ...normalized.props };
+
+    return normalized;
+  });
+
+  return draftComponents as DraftComponent[];
 };
 
 export const addNewComponent = (
@@ -81,6 +106,20 @@ export const getEditableDesign = (args: GetEditableDesign): Design => {
         const newProps = {
           ...c.props,
           value: newValue.toString(),
+        };
+
+        newComponent = {
+          ...c,
+          props: newProps,
+        };
+      }
+
+      if (c.modifierId && c.modifierId in DBIds) {
+        const newValue = fields[c.modifierId as keyof typeof DBIds] || "";
+
+        const newProps = {
+          ...c.props,
+          value: c.modifier!(newValue.toString()),
         };
 
         newComponent = {

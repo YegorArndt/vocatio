@@ -62,6 +62,7 @@ export const DBIds = {
   "german-level": "german-level",
   "russian-level": "russian-level",
   "spanish-level": "spanish-level",
+  "user-image": "user-image",
 };
 
 /**
@@ -83,3 +84,8 @@ export const LSIds = {
  * 3. If nothing found, we'll try to find something in the DB.
  * 4. If nothing found, we'll use the default data.
  */
+
+/**
+ * Dummy data for the user's designs.
+ */
+// As a Cyber Intel Analyst at Yandex, I was heavily involved in open-source methodologies and dark web research, where I was responsible for identifying and analyzing virtual currency transactions. I was successful in enhancing our security measures by leveraging my technical acumen to recognize information that could be used in leads to enable remote operation. This action-oriented approach led to significant improvements in our defense against cyber attacks, thereby amplifying customer trust and engagement. Also, my consistent communication of complex concepts and findings to the team helped streamline our procedures, reinforcing our position in the competitive landscape.

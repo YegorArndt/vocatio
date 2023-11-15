@@ -7,8 +7,9 @@ import { Venusaur } from "~/modules/draft/designs/Venusaur";
 import { Charizard } from "~/modules/draft/designs/Charizard";
 import { BlurImage } from "./BlurImage";
 import { InfoBox } from "./InfoBox";
+import { Nidoqueen } from "~/modules/draft/designs/Nidoqueen";
 
-const designs = [Venusaur, Charizard];
+const designs = [Venusaur, Charizard, Nidoqueen];
 
 export const DesignViewer = () => {
   const {
@@ -26,7 +27,13 @@ export const DesignViewer = () => {
             className="transform transition hover:-translate-y-1 motion-reduce:transition-none"
             onClick={() => changeDesign(d)}
           >
-            <BlurImage key={d.name} src={d.image} alt={d.name} />
+            <BlurImage
+              key={d.name}
+              src={d.image}
+              height={300}
+              width={300}
+              alt={d.name}
+            />
           </Button>
         ))}
       </div>
@@ -43,7 +50,15 @@ export const DesignViewer = () => {
           className="outlined lg"
           onClick={() => setChangeDesignFired(false)}
         />
-        <span>You&apos;re viewing: {design.name} design</span>
+        <span className="flex items-center gap-3">
+          You&apos;re viewing: {design.name} design
+          <BlurImage
+            src={design.pokemonImage}
+            alt={design.name}
+            height={50}
+            width={50}
+          />
+        </span>
       </div>
       <InfoBox
         text="We'll try to minimize data loss when switching between designs.

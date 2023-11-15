@@ -14,12 +14,11 @@ export const Group = (props: GroupProps) => {
   const { id, label, value, className, ...rest } = props;
 
   const labelId = `label-${id}`;
-  const valueId = `value-${id}`;
 
   return (
     <div className={cn(className)}>
       <Autoresize id={labelId} value={label} />
-      <Autoresize id={valueId} value={value} />
+      <Autoresize id={id} value={value} />
     </div>
   );
 };

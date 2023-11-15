@@ -63,7 +63,6 @@ const SortableItem = (
     transform: CSS.Transform.toString(transform),
     transition,
     width: "100%",
-    marginBottom: "4px",
     opacity: isDragging ? 0.5 : 1,
   };
 
@@ -81,7 +80,7 @@ const SortableItem = (
 };
 
 const Section = (props: Section) => {
-  const { id, components, className } = props;
+  const { id, components, className, sections } = props;
 
   const { setNodeRef } = useDroppable({
     id,
@@ -93,13 +92,13 @@ const Section = (props: Section) => {
       items={components}
       strategy={verticalListSortingStrategy}
     >
-      <div ref={setNodeRef} className={className}>
+      <section ref={setNodeRef} className={className}>
         {components.map((c) => (
           <SortableItem key={c.id} component={c}>
             <ComponentFactory component={c} />
           </SortableItem>
         ))}
-      </div>
+      </section>
     </SortableContext>
   );
 };
@@ -127,7 +126,7 @@ const Garbage = (props: Pick<Section, "components">) => {
         })}
       >
         <div
-          className="flex-center size-full"
+          className="size-full flex justify-center pt-[90%]"
           onMouseEnter={() => setTooltipShown(true)}
           onMouseLeave={() => setTooltipShown(false)}
           data-tooltip-id={id}
@@ -135,7 +134,7 @@ const Garbage = (props: Pick<Section, "components">) => {
           <FaTrashAlt
             size={25}
             id={`${id}-bucket`}
-            className="pointer-events-none"
+            className="pointer-events-none clr-base"
           />
           {components.map((c) => (
             <SortableItem key={c.id} component={c}>

@@ -6,8 +6,6 @@ import {
 } from "~/components/ui/inputs/components/Autoresize";
 import { useDraftContext } from "~/modules/draft/DraftContext";
 
-type HeadingProps = AutoresizeProps;
-
 export const Heading = (props: AutoresizeProps) => {
   const { className, ...rest } = props;
   const {

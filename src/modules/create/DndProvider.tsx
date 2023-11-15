@@ -26,7 +26,12 @@ import { useDraftContext } from "../draft/DraftContext";
 import { EditorTooltip } from "./components/editor-tooltip";
 import cn from "classnames";
 import { Tooltip } from "react-tooltip";
-import type { DraftComponent, Section, Sections } from "../draft/types";
+import type {
+  DraftComponent,
+  Section,
+  SectionId,
+  Sections,
+} from "../draft/types";
 
 export const getSectionIdByComponentId = (
   sections: Sections,
@@ -35,7 +40,7 @@ export const getSectionIdByComponentId = (
   if (componentId in sections) return componentId;
 
   const sectionId = Object.keys(sections).find((name) => {
-    const section = sections[name];
+    const section = sections[name as SectionId];
 
     if (!section) return null;
 
@@ -194,8 +199,10 @@ export const DndProvider = () => {
     }
 
     updateDesign((currentDesign) => {
-      const activeItems = currentDesign.sections[activeSectionId]?.components;
-      const overItems = currentDesign.sections[overSectionId]?.components;
+      const activeItems =
+        currentDesign.sections[activeSectionId as SectionId]?.components;
+      const overItems =
+        currentDesign.sections[overSectionId as SectionId]?.components;
 
       if (!activeItems || !overItems) {
         return currentDesign;
@@ -209,12 +216,11 @@ export const DndProvider = () => {
       const newSections = { ...currentDesign.sections };
 
       // Remove the active item from its original section
-      newSections[activeSectionId]!.components = activeItems.filter(
-        (item) => item.id !== active.id
-      );
+      newSections[activeSectionId as SectionId]!.components =
+        activeItems.filter((item) => item.id !== active.id);
 
       // Insert the active item into the new section at the correct position
-      newSections[overSectionId]!.components = [
+      newSections[overSectionId as SectionId]!.components = [
         ...overItems.slice(0, overIndex),
         activeItems[activeIndex],
         ...overItems.slice(overIndex),
@@ -240,8 +246,8 @@ export const DndProvider = () => {
         const newSections = { ...currentDesign.sections };
 
         Object.keys(newSections).forEach((sectionId) => {
-          newSections[sectionId]!.components = newSections[
-            sectionId
+          newSections[sectionId as SectionId]!.components = newSections[
+            sectionId as SectionId
           ]!.components.filter((c) => c.id !== active.id);
         });
 
@@ -263,18 +269,18 @@ export const DndProvider = () => {
 
     updateDesign((currentDesign) => {
       const activeIndex = currentDesign.sections[
-        activeSectionId
+        activeSectionId as SectionId
       ]?.components.findIndex((c) => c.id === active.id);
       const overIndex = currentDesign.sections[
-        overSectionId
+        overSectionId as SectionId
       ]?.components.findIndex((c) => c.id === over?.id);
 
       if (activeIndex !== overIndex) {
         const newSections = { ...currentDesign.sections };
 
         // Move the active item within its section to the new position
-        newSections[overSectionId]!.components = arrayMove(
-          newSections[overSectionId]!.components,
+        newSections[overSectionId as SectionId]!.components = arrayMove(
+          newSections[overSectionId as SectionId]!.components,
           activeIndex!,
           overIndex!
         );
@@ -297,7 +303,7 @@ export const DndProvider = () => {
       onDragEnd={handleDragEnd}
     >
       {Object.keys(design.sections).map((name) => (
-        <Section key={name} {...design.sections[name]!} />
+        <Section key={name} {...design.sections[name as SectionId]!} />
       ))}
       {!CHANGE_DESIGN_FIRED && <Garbage components={deleted} />}
     </DndContext>

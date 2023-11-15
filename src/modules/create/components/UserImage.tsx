@@ -5,8 +5,8 @@ import { api } from "~/utils";
 import { useState } from "react";
 
 type UserImageProps = {
-  height: number;
-  width: number;
+  height?: number;
+  width?: number;
   className?: string;
 };
 

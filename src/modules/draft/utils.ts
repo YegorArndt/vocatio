@@ -48,7 +48,7 @@ export const addNewComponent = (
 
   if (!firstKey) return design;
 
-  const firstSection = sections[firstKey];
+  const firstSection = sections[firstKey as SectionId];
 
   if (!firstSection) return design;
 
@@ -94,7 +94,10 @@ export const getEditableDesign = (args: GetEditableDesign): Design => {
   const newSections = { ...sections };
 
   Object.keys(newSections).forEach((sectionKey) => {
-    const section = newSections[sectionKey]!;
+    const section = newSections[sectionKey as SectionId];
+
+    if (!section) return;
+
     const { components } = section;
     const newComponents: DraftComponent[] = [];
 
@@ -138,7 +141,7 @@ export const getEditableDesign = (args: GetEditableDesign): Design => {
       newComponents.push({ ...newComponent });
     });
 
-    newSections[sectionKey] = {
+    newSections[sectionKey as SectionId] = {
       ...section,
       components: newComponents,
     };

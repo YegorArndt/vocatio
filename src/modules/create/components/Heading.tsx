@@ -2,7 +2,7 @@ import cn from "classnames";
 
 import {
   Autoresize,
-  AutoresizeProps,
+  type AutoresizeProps,
 } from "~/components/ui/inputs/components/Autoresize";
 import { useDraftContext } from "~/modules/draft/DraftContext";
 

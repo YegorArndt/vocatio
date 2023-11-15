@@ -209,16 +209,7 @@ export const Charizard: Design = {
       className: "grid grid-cols-[100px,160px] gap-2",
     }, // not using yet
     timeline: {
-      styles: {
-        timelineClassNames: "",
-        storyClassNames: "relative pb-4 first:mt-4 flex flex-col order-3",
-        dateOfEmploymentClassNames:
-          "uppercase text-[#808080] tracking-wider order-2 my-2",
-        companyNameClassNames: "w-full text-[1rem] font-bold order-1",
-        jobTitleClassNames: "hidden",
-        ballClassNames: "hidden",
-        lineClassNames: "hidden",
-      },
+      storyType: 2,
       jobDescription: "",
       jobTitle: "",
       vacancyId: "",

@@ -30,7 +30,7 @@ const getStoriesFromLs = (vacancyId: string) => {
 };
 
 export const Timeline = (props: TimelineProps) => {
-  const { jobDescription, jobTitle, vacancyId, styles } = props;
+  const { jobDescription, jobTitle, vacancyId, storyType, className } = props;
   const [stories, setStories] = useState<LsStories[]>(
     getStoriesFromLs(vacancyId)
   );
@@ -55,10 +55,8 @@ export const Timeline = (props: TimelineProps) => {
     ]);
   }, [data]);
 
-  const { timelineClassNames, ...storyStyles } = styles;
-
   return (
-    <div className={cn(timelineClassNames, "mb-5")}>
+    <div className={cn(className, "mb-5")}>
       {stories.map(({ story, id }, index) => (
         <Story
           key={id}
@@ -66,7 +64,7 @@ export const Timeline = (props: TimelineProps) => {
           story={story}
           index={index}
           jobTitle={jobTitle}
-          styles={storyStyles}
+          storyType={storyType}
         />
       ))}
       {!DOWNLOAD_FIRED && !CHANGE_DESIGN_FIRED && (
@@ -84,9 +82,7 @@ export const Timeline = (props: TimelineProps) => {
             >
               {isLoading ? "🐈 Loading..." : "✨✨✨ Generate ✨✨✨"}
             </Button>
-          ) : (
-            "Maximum 2 stories"
-          )}
+          ) : null}
         </footer>
       )}
     </div>

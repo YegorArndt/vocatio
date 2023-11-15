@@ -1,16 +1,19 @@
-import { Autoresize } from "~/components/ui/inputs/components/Autoresize";
 import { getRandomCompanyName } from "../utils";
-import { Timeline } from "~/modules/draft/types";
-
-type Styles = Omit<Timeline["styles"], "timelineClassNames">;
+import type { StoryType } from "~/modules/draft/types";
+import { _1 } from "./stories/1";
+import { _2 } from "./stories/2";
 
 export type StoryProps = {
   id: string;
   index: number;
   story: string;
-  styles: Styles;
+  storyType: StoryType;
   jobTitle?: string;
   dateOfEmployment?: string;
+};
+
+export type StoryComponentProps = Omit<StoryProps, "storyType" | "index"> & {
+  companyName: string;
 };
 
 const getCompanyName = (id: string) => {
@@ -18,6 +21,11 @@ const getCompanyName = (id: string) => {
 
   if (parts.length >= 3) return parts[parts.length - 1];
   return getRandomCompanyName();
+};
+
+const stories = {
+  1: _1,
+  2: _2,
 };
 
 const getEmploymentDate = (index: number) => {
@@ -28,45 +36,21 @@ const getEmploymentDate = (index: number) => {
   return `${startYear} - ${endYear}`;
 };
 
-const Ball = (props: { className: string }) => <div {...props} />;
-
-const Line = (props: { className: string }) => <div {...props} />;
-
 export const Story = (props: StoryProps) => {
-  const { jobTitle, id, story, index, styles } = props;
+  const { jobTitle, id, story, index, storyType } = props;
 
   const dateOfEmployment = getEmploymentDate(index);
   const companyName = getCompanyName(id);
 
-  const {
-    storyClassNames,
-    dateOfEmploymentClassNames,
-    companyNameClassNames,
-    jobTitleClassNames,
-    ballClassNames,
-    lineClassNames,
-  } = styles;
+  const StoryComponent = stories[storyType];
 
   return (
-    <div className={storyClassNames}>
-      <Ball className={ballClassNames} />
-      <Line className={lineClassNames} />
-      <Autoresize
-        id={`dateOfEmployment-${id}`}
-        className={dateOfEmploymentClassNames}
-        value={dateOfEmployment}
-      />
-      <Autoresize
-        id={`companyName-${id}`}
-        className={companyNameClassNames}
-        value={companyName}
-      />
-      <Autoresize
-        id={`jobTitle-${id}`}
-        className={jobTitleClassNames}
-        value={jobTitle}
-      />
-      <Autoresize id={id} value={story} className={storyClassNames} />
-    </div>
+    <StoryComponent
+      id={id}
+      jobTitle={jobTitle}
+      story={story}
+      dateOfEmployment={dateOfEmployment}
+      companyName={companyName!}
+    />
   );
 };

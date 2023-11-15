@@ -5,7 +5,7 @@ import { toDraftComponents } from "../utils";
 
 const VenusaurId = uuidv4();
 
-const leftComponents: RawDraftComponent[] = [
+const left: RawDraftComponent[] = [
   {
     type: "image",
     id: "user-image",
@@ -168,7 +168,7 @@ const leftComponents: RawDraftComponent[] = [
   },
 ];
 
-const rightComponents: RawDraftComponent[] = [
+const right: RawDraftComponent[] = [
   {
     type: "heading-1",
     id: "user-name",
@@ -183,6 +183,7 @@ const rightComponents: RawDraftComponent[] = [
     props: {
       value: "Frontend developer",
       label: "Job title",
+      className: "italic mt-2",
     },
   },
   {
@@ -210,14 +211,14 @@ export const Venusaur: Design = {
     left: {
       id: "left",
       order: 0,
-      components: toDraftComponents(leftComponents, "left"),
+      components: toDraftComponents(left, "left"),
       className:
         "flex h-full flex-col items-center bg-[#323B4C] px-5 py-7 clr-white [&_.image]:mx-auto",
     },
     right: {
       id: "right",
       order: 1,
-      components: toDraftComponents(rightComponents, "right"),
+      components: toDraftComponents(right, "right"),
       className:
         "bg-white px-[2rem] py-[3rem] clr-black [&_.heading-1]:text-[#323B4C]",
     },
@@ -237,17 +238,7 @@ export const Venusaur: Design = {
       className: "grid grid-cols-[90px,160px] gap-2",
     },
     timeline: {
-      styles: {
-        timelineClassNames: "",
-        storyClassNames: "relative pb-4 first:mt-4 flex flex-col gap-1 pl-6",
-        dateOfEmploymentClassNames: "text-[1rem] font-bold pl-6",
-        companyNameClassNames: "text-[1rem] font-bold pl-6",
-        jobTitleClassNames: "italic pl-6",
-        ballClassNames:
-          "absolute left-0 top-2 z-1 h-3 w-3 rounded-full border-2 border-solid border-black bg-white",
-        lineClassNames:
-          "absolute left-[.36rem] top-2 h-full w-[0.5px] bg-black",
-      },
+      storyType: 1,
       jobDescription: "",
       jobTitle: "",
       vacancyId: "",
@@ -258,7 +249,6 @@ export const Venusaur: Design = {
     image: {
       height: 150,
       width: 150,
-      // className: "rounded-full mb-3",
     },
   },
   font: "Inter",

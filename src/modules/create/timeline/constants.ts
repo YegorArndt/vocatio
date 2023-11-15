@@ -49,3 +49,16 @@ export const baseStories = [
   //   provided valuable insights for decision-making.`,
   // },
 ];
+
+export const storyTypes = {
+  1: {
+    timelineClassNames: "",
+    storyClassNames: "relative pb-4 first:mt-4 flex flex-col gap-1 pl-6",
+    dateOfEmploymentClassNames: "text-[1rem] font-bold pl-6",
+    companyNameClassNames: "text-[1rem] font-bold pl-6",
+    jobTitleClassNames: "italic pl-6",
+    ballClassNames:
+      "absolute left-0 top-2 z-1 h-3 w-3 rounded-full border-2 border-solid border-black bg-white",
+    lineClassNames: "absolute left-[.36rem] top-2 h-full w-[0.5px] bg-black",
+  },
+};

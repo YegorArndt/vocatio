@@ -12,7 +12,7 @@ const left: RawDraftComponent[] = [
   {
     type: "heading-2",
     id: "about-me-title",
-    props: { value: "About Me", className: "text-center" },
+    props: { value: "About Me", className: "text-center w-[230px]" },
   },
   {
     type: "text",
@@ -20,7 +20,7 @@ const left: RawDraftComponent[] = [
     props: {
       value:
         "I am a frontend developer with 3 years of experience. I am looking for a job in a company with a friendly team and interesting projects.",
-      className: "text-center px-5 !mb-4 w-[200px]",
+      className: "text-center px-5 !mb-4 w-[230px]",
     },
   },
   {
@@ -219,7 +219,7 @@ export const Nidoqueen: Design = {
       id: "left",
       order: 0,
       components: toDraftComponents(left, "left"),
-      className: `flex items-center flex-col [&_.heading-2]:mt-5 [&_.heading-1]:text-[30px] [&_.heading-1]:text-black [&_.text]:my-1 ${leftImage} [&>*]:z-1 relative ${leftHeading4}`,
+      className: `flex items-center flex-col [&_.heading-2]:mt-5 [&_.heading-1]:text-[30px] [&_.heading-1]:text-black [&_.text]:my-1 ${leftImage} [&>*]:z-1 relative ${leftHeading4} [&_.text]:max-w-[300px] [&_.group]:max-w-[300px]`,
     },
     right: {
       id: "right",
@@ -241,31 +241,19 @@ export const Nidoqueen: Design = {
     },
     "heading-4": {
       className:
-        "text-[1rem] my-5 py-[8px] w-full bg-[#27384B] clr-white text-center uppercase rounded-[5px]",
+        "text-[1rem] py-[8px] w-full bg-[#27384B] clr-white text-center uppercase rounded-[5px]",
     },
     text: {},
-    // group: {
-    //   className: "grid grid-cols-[100px,160px] gap-2",
-    // },
+    group: {
+      className: "grid grid-cols-[100px,160px] gap-2",
+    },
     timeline: {
-      styles: {
-        timelineClassNames: "ml-[5rem]",
-        storyClassNames: "relative pb-4 first:mt-4 flex flex-col gap-1 pl-6",
-        dateOfEmploymentClassNames: "text-[1rem] font-bold pl-6",
-        companyNameClassNames: "text-[1rem] font-bold pl-6",
-        jobTitleClassNames: "italic pl-6",
-        ballClassNames:
-          "absolute left-0 top-2 z-1 h-3 w-3 rounded-full border-2 border-solid border-black bg-white",
-        lineClassNames:
-          "absolute left-[.36rem] top-2 h-full w-[0.5px] bg-black",
-      },
+      storyType: 2,
+      className: "pl-8 ml-12",
       jobDescription: "",
       jobTitle: "",
       vacancyId: "",
     },
-    // divider: {
-    //   className: "border-current border-solid border-b-[2px] mb-2",
-    // },
     image: {
       height: 200,
       width: 200,

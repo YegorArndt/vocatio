@@ -8,6 +8,8 @@ import { Charizard } from "~/modules/draft/designs/Charizard";
 import { BlurImage } from "./BlurImage";
 import { InfoBox } from "./InfoBox";
 import { Nidoqueen } from "~/modules/draft/designs/Nidoqueen";
+import { useEffect, useRef } from "react";
+import { Design } from "~/modules/draft/types";
 
 const designs = [Venusaur, Charizard, Nidoqueen];
 
@@ -17,6 +19,12 @@ export const DesignViewer = () => {
     changeDesign,
     design,
   } = useDraftContext();
+
+  const initialDesign = useRef<Design | null>(null);
+
+  useEffect(() => {
+    initialDesign.current = design;
+  }, []);
 
   return (
     <div className="flex flex-col gap-6">
@@ -48,7 +56,10 @@ export const DesignViewer = () => {
           frontIcon={<TiCancel />}
           text="Cancel"
           className="outlined lg"
-          onClick={() => setChangeDesignFired(false)}
+          onClick={() => {
+            changeDesign(initialDesign.current!);
+            setChangeDesignFired(false);
+          }}
         />
         <span className="flex items-center gap-3">
           You&apos;re viewing: {design.name} design

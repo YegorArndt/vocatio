@@ -4,6 +4,7 @@ import * as actions from "./actions";
 import type { UserResource } from "@clerk/types";
 
 export type SectionId = "top" | "left" | "right" | "bottom";
+export type StoryType = 1 | 2;
 
 export type TypeOfComponent =
   | `heading-${number}`
@@ -49,18 +50,11 @@ export type Section = {
 export type Sections = Partial<Record<SectionId, Section>>;
 
 export type Timeline = {
-  styles: {
-    timelineClassNames: string;
-    storyClassNames: string;
-    dateOfEmploymentClassNames: string;
-    companyNameClassNames: string;
-    jobTitleClassNames: string;
-    ballClassNames: string;
-    lineClassNames: string;
-  };
+  storyType: StoryType;
   jobDescription: string;
   jobTitle: string;
   vacancyId: string;
+  className?: string;
 };
 
 export type Components =

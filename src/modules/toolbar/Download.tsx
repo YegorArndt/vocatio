@@ -10,6 +10,8 @@ import cn from "classnames";
 import { Button } from "~/components/ui/buttons/Button";
 import { useDraftContext } from "../draft/DraftContext";
 
+const src = "/download.png";
+
 const getPdf = async (
   a4Ref: RefObject<HTMLDivElement>,
   userName: User["ownName"],
@@ -30,8 +32,8 @@ const getPdf = async (
    * Initialize jsPDF
    */
   const pdf = new jsPDF({
-    unit: "px",
     format: "a4",
+    unit: "px",
   });
 
   const width = pdf.internal.pageSize.getWidth();
@@ -48,8 +50,6 @@ const getPdf = async (
    */
   pdf.save(`${snakeCase(userName)}_${companyName}.pdf`);
 };
-
-const src = "/download.png";
 
 export const Download = (props: { a4Ref: RefObject<HTMLDivElement> }) => {
   const { a4Ref } = props;

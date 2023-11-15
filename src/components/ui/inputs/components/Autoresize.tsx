@@ -15,7 +15,7 @@ export type AutoresizeProps = {
 
 export const Autoresize = (props: AutoresizeProps) => {
   const { className, id, value } = props;
-  const _value = useRef(localStorage.getItem(id) ?? value);
+  const _value = useRef(localStorage.getItem(id) || value);
   const contentEditableRef = useRef<HTMLDivElement>(null);
 
   const setValue = (newValue: string) => {

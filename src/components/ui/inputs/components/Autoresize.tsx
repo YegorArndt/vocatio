@@ -5,16 +5,18 @@ import {
   useRef,
   useEffect,
 } from "react";
+import { SectionId } from "~/modules/draft/types";
 
 export type AutoresizeProps = {
   id: string;
   value: string | undefined;
-  baseCn?: string;
+  sectionId: SectionId;
   className?: string;
 } & TextareaHTMLAttributes<HTMLTextAreaElement>;
 
 export const Autoresize = (props: AutoresizeProps) => {
   const { className, id, value } = props;
+
   const _value = useRef(localStorage.getItem(id) || value);
   const contentEditableRef = useRef<HTMLDivElement>(null);
 
@@ -40,7 +42,7 @@ export const Autoresize = (props: AutoresizeProps) => {
       data-placeholder={value ?? _value.current}
       ref={contentEditableRef}
     >
-      {_value.current}
+      {value ?? _value.current}
     </div>
   );
 };

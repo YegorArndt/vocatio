@@ -8,7 +8,7 @@ const src = "/change-design.png";
 export const ChangeDesign = () => {
   const {
     dispatchers: { setChangeDesignFired },
-    draftState: { CHANGE_DESIGN_FIRED },
+    draftState: { CHANGE_DESIGN_FIRED, DOWNLOAD_FIRED },
   } = useDraftContext();
 
   return (
@@ -16,6 +16,7 @@ export const ChangeDesign = () => {
       className="navigation common transform p-1 transition hover:-translate-y-1 motion-reduce:transition-none"
       data-tooltip-id={src}
       onClick={() => setChangeDesignFired(!CHANGE_DESIGN_FIRED)}
+      disabled={DOWNLOAD_FIRED}
     >
       <Image
         src={src}

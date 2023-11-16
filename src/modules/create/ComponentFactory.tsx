@@ -2,14 +2,11 @@ import { useDraftContext } from "../draft/DraftContext";
 import { Autoresize } from "~/components/ui/inputs/components/Autoresize";
 import { Timeline } from "~/modules/create/timeline";
 import { Group } from "./components/Group";
-import type { DraftComponent, Timeline as TimelineType } from "../draft/types";
+import type { Timeline as TimelineType } from "../draft/types";
 import { Divider } from "./components/Divider";
 import { Heading } from "./components/Heading";
 import { UserImage } from "./components/UserImage";
-
-type ComponentFactoryProps = {
-  component: DraftComponent;
-};
+import { useComponentContext } from "./useComponentContext";
 
 let Component:
   | typeof Group
@@ -20,10 +17,10 @@ let Component:
   | typeof Timeline
   | null = null;
 
-export const ComponentFactory = (props: ComponentFactoryProps) => {
-  const { component: c } = props;
+export const ComponentFactory = () => {
   const { design } = useDraftContext();
-  const { type, id, props: componentProps } = c;
+  const c = useComponentContext();
+  const { type, id, props: componentProps, sectionId } = c;
 
   const { className, ...designPropsWithoutClassName } =
     design.components[type]!;
@@ -38,6 +35,7 @@ export const ComponentFactory = (props: ComponentFactoryProps) => {
     ...designPropsWithoutClassName,
     ...componentPropsWithoutClassName,
     className: mergedClassNames,
+    sectionId,
   };
 
   if (type.includes("heading")) Component = Heading;

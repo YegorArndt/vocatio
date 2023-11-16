@@ -5,9 +5,14 @@ import type {
   Design,
   DraftContext as DraftContextType,
   NewComponent,
+  DraftComponent,
 } from "./types";
 import * as actions from "./actions";
-import { addNewComponent, getEditableDesign } from "./utils";
+import {
+  addNewComponent,
+  getEditableDesign,
+  toggleClassName as toggleCn,
+} from "./utils";
 import { Venusaur } from "./designs/Venusaur";
 
 const initialArg = {
@@ -97,6 +102,9 @@ export const DraftContext = (props: DraftContextInput) => {
   const addComponent = (component: NewComponent) =>
     setDesign((prev) => addNewComponent(prev, component));
 
+  const toggleClassName = (component: DraftComponent, className: string) =>
+    setDesign((prev) => toggleCn(prev, component, className));
+
   const context: DraftContextType = {
     draftState: state,
     dispatchers: {
@@ -108,6 +116,7 @@ export const DraftContext = (props: DraftContextInput) => {
     design,
     updateDesign,
     addComponent,
+    toggleClassName,
     changeDesign,
     user,
     vacancy,

@@ -32,6 +32,7 @@ import type {
   SectionId,
   Sections,
 } from "../draft/types";
+import { ComponentContext, useComponentContext } from "./useComponentContext";
 
 export const getSectionIdByComponentId = (
   sections: Sections,
@@ -50,10 +51,9 @@ export const getSectionIdByComponentId = (
   return sectionId;
 };
 
-const SortableItem = (
-  props: PropsWithChildren<{ component: DraftComponent }>
-) => {
-  const { component: c, children } = props;
+const SortableItem = (props: PropsWithChildren<Record<string, unknown>>) => {
+  const { children } = props;
+  const c = useComponentContext();
 
   const {
     attributes,
@@ -77,7 +77,6 @@ const SortableItem = (
       listeners={listeners}
       attributes={attributes}
       style={style}
-      component={c}
     >
       {children}
     </EditorTooltip>
@@ -99,9 +98,11 @@ const Section = (props: Section) => {
     >
       <section ref={setNodeRef} className={className}>
         {components.map((c) => (
-          <SortableItem key={c.id} component={c}>
-            <ComponentFactory component={c} />
-          </SortableItem>
+          <ComponentContext.Provider key={c.id} value={c}>
+            <SortableItem>
+              <ComponentFactory />
+            </SortableItem>
+          </ComponentContext.Provider>
         ))}
       </section>
     </SortableContext>
@@ -141,11 +142,6 @@ const Garbage = (props: Pick<Section, "components">) => {
             id={`${id}-bucket`}
             className="pointer-events-none clr-base"
           />
-          {components.map((c) => (
-            <SortableItem key={c.id} component={c}>
-              <ComponentFactory component={c} />
-            </SortableItem>
-          ))}
         </div>
         <Tooltip
           anchorSelect={`#${id}-bucket`}

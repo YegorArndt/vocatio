@@ -25,7 +25,6 @@ export type DraftComponent = {
   type: TypeOfComponent;
   sectionId: SectionId;
   props: {
-    innerHTML: string;
     value: string;
     label: string;
     className: string;
@@ -103,6 +102,7 @@ export type DraftContext = {
   updateDesign: (updateFn: (design: Design) => Design) => void;
   addComponent: (component: NewComponent) => void;
   changeDesign: (design: Design) => void;
+  toggleClassName: (component: DraftComponent, className: string) => void;
   draftState: DraftState;
   dispatchers: Dispatchers;
   user: User;

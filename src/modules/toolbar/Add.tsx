@@ -8,7 +8,11 @@ import { TypeOfComponent } from "../draft/types";
 const src = "/add.png";
 
 export const Add = () => {
-  const { design, addComponent } = useDraftContext();
+  const {
+    design,
+    addComponent,
+    draftState: { DOWNLOAD_FIRED },
+  } = useDraftContext();
 
   return (
     <Menu
@@ -16,6 +20,7 @@ export const Add = () => {
         <MenuButton
           className="navigation common transform p-1 transition hover:-translate-y-1 motion-reduce:transition-none"
           data-tooltip-id={src}
+          disabled={DOWNLOAD_FIRED}
         >
           <Image
             src={src}

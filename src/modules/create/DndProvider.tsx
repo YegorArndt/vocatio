@@ -23,7 +23,7 @@ import { FaTrashAlt } from "react-icons/fa";
 
 import { ComponentFactory } from "./ComponentFactory";
 import { useDraftContext } from "../draft/DraftContext";
-import { EditorTooltip } from "./components/editor-tooltip";
+import { EditorTooltip } from "./components/EditorTooltip";
 import cn from "classnames";
 import { Tooltip } from "react-tooltip";
 import type {
@@ -32,7 +32,7 @@ import type {
   SectionId,
   Sections,
 } from "../draft/types";
-import { ComponentContext, useComponentContext } from "./useComponentContext";
+import { ComponentContext, useComponentContext } from "./ComponentContext";
 
 export const getSectionIdByComponentId = (
   sections: Sections,

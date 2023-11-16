@@ -11,7 +11,7 @@ import { IoHandLeftSharp } from "react-icons/io5";
 
 import { Button } from "~/components/ui/buttons/Button";
 import { useDraftContext } from "~/modules/draft/DraftContext";
-import { useComponentContext } from "../../useComponentContext";
+import { useComponentContext } from "../ComponentContext";
 import { Menu, MenuButton, MenuItem } from "@szhsin/react-menu";
 import { TypeOfComponent } from "~/modules/draft/types";
 
@@ -138,7 +138,7 @@ export const EditorTooltip = (props: EditorTooltipProps) => {
             );
           }}
           clickable
-          delayShow={400}
+          delayShow={600}
           delayHide={200}
         />
       )}

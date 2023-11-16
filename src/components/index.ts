@@ -1,1 +1,1 @@
-export { VacancyCard } from "./VacancyCard";
+export { VacancyCard } from "../modules/vacancy/VacancyCard";

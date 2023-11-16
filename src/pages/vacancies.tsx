@@ -2,7 +2,7 @@ import Head from "next/head";
 import { VacancyCard } from "~/components";
 import { Placeholder } from "~/components/Placeholder";
 import { Layout } from "~/components/layout/Layout";
-import { VacancyCardSkeleton } from "~/components/loaders/VacancyCardSkeleton";
+import { VacancyCardSkeleton } from "~/modules/vacancy/VacancyCardSkeleton";
 import { api } from "~/utils/api";
 
 export const Vacancies = () => {

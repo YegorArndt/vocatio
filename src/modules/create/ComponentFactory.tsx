@@ -6,7 +6,7 @@ import type { Timeline as TimelineType } from "../draft/types";
 import { Divider } from "./components/Divider";
 import { Heading } from "./components/Heading";
 import { UserImage } from "./components/UserImage";
-import { useComponentContext } from "./useComponentContext";
+import { useComponentContext } from "./ComponentContext";
 
 let Component:
   | typeof Group

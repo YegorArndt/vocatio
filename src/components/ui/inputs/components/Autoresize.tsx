@@ -40,7 +40,7 @@ export const Autoresize = (props: AutoresizeProps) => {
       data-placeholder={value ?? _value.current}
       ref={contentEditableRef}
     >
-      {value ?? _value.current}
+      {_value.current}
     </div>
   );
 };

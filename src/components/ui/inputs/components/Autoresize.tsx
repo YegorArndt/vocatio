@@ -5,12 +5,10 @@ import {
   useRef,
   useEffect,
 } from "react";
-import { SectionId } from "~/modules/draft/types";
 
 export type AutoresizeProps = {
   id: string;
   value: string | undefined;
-  sectionId: SectionId;
   className?: string;
 } & TextareaHTMLAttributes<HTMLTextAreaElement>;
 

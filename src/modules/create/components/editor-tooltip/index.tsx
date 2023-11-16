@@ -34,7 +34,7 @@ const classNames = [
   },
 ];
 
-const isActive = "-translate-y-1 transform !bg-secondary-hover transition";
+const isActive = "!bg-secondary-hover transition";
 
 export const EditorTooltip = (props: EditorTooltipProps) => {
   const { dndRef, listeners, attributes, children, ...rest } = props;

@@ -2,6 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: "logo"; /* Give a name to your font */
+  src: url("/logo.ttf") format("truetype"); /* URL to the font file */
+  font-weight: normal;
+  font-style: normal;
+}
+
 :root {
   --max-width: 68.75rem;
   --blue: rgba(0, 118, 255, 0.9);
@@ -167,6 +174,11 @@
     background-color: hsla(0, 0%, 12%, 1);
   }
 
+  /* Chips  */
+  .chip {
+    @apply flex items-center justify-center rounded-lg;
+  }
+
   /* Content editable div */
   [contentEditable="true"]:empty:before {
     content: attr(data-placeholder);
@@ -194,6 +206,8 @@
     @apply w-full outline-none;
   }
 
+  /* Buttons  */
+
   :is(button, a)[class^="bg-"]:hover,
   :is(button, a)[class*=" bg-"]:hover {
     filter: brightness(1.1);
@@ -214,7 +228,18 @@
   }
 
   .sm:is(button, a) {
-    @apply h-8 px-3 text-default leading-5;
+    @apply h-8 px-2 text-default leading-5;
+  }
+
+  /* Chips  */
+
+  .lg:is(.chip) {
+    @apply h-10 p-2 text-medium leading-6;
+  }
+
+  .sm:is(.chip) {
+    height: 1.25rem;
+    @apply px-3 text-small;
   }
 
   .flex-center {

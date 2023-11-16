@@ -54,6 +54,7 @@ const config = {
         skeleton: "var(--skeleton)",
       },
       fontSize: {
+        small: "clamp(0.625rem, 0.5946rem + 0.0833vw, 0.75rem)",
         default: "clamp(0.75rem, 0.7232rem + 0.1429vw, 0.875rem)",
         medium: "clamp(0.875rem, 0.8310rem + 0.2167vw, 1rem);",
       },
@@ -114,6 +115,9 @@ const config = {
           "0%": { transform: "rotate(0deg)" },
           "100%": { transform: "rotate(360deg)" },
         },
+      },
+      fontFamily: {
+        logo: ["logo", "sans-serif"],
       },
     },
   },

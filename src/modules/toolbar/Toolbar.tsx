@@ -1,7 +1,6 @@
 import { RefObject } from "react";
 
 import { Download } from "./Download";
-import { Add } from "./Add";
 import { ChangeDesign } from "./ChangeDesign";
 
 type ToolbarProps = {
@@ -14,7 +13,6 @@ export const Toolbar = (props: ToolbarProps) => {
   return (
     <aside className="toolbar">
       <Download a4Ref={a4Ref} />
-      <Add />
       <ChangeDesign />
     </aside>
   );

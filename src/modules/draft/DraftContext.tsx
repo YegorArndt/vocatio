@@ -99,8 +99,8 @@ export const DraftContext = (props: DraftContextInput) => {
 
   const changeDesign = (design: Design) => setDesign(toEditableDesign(design));
 
-  const addComponent = (component: NewComponent) =>
-    setDesign((prev) => addNewComponent(prev, component));
+  const addComponent = (nc: NewComponent, clickedComponent: DraftComponent) =>
+    setDesign((prev) => addNewComponent(prev, nc, clickedComponent));
 
   const toggleClassName = (component: DraftComponent, className: string) =>
     setDesign((prev) => toggleCn(prev, component, className));

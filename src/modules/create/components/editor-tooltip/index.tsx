@@ -2,15 +2,18 @@ import { type DraggableAttributes } from "@dnd-kit/core";
 import { type SyntheticListenerMap } from "@dnd-kit/core/dist/hooks/utilities";
 import { type HTMLAttributes, type PropsWithChildren } from "react";
 import { Tooltip } from "react-tooltip";
-import { IoHandLeftSharp } from "react-icons/io5";
 import { FaBold } from "react-icons/fa6";
 import { FaItalic } from "react-icons/fa";
 import cn from "classnames";
 import { FaUnderline } from "react-icons/fa6";
+import { FaChevronDown } from "react-icons/fa6";
+import { IoHandLeftSharp } from "react-icons/io5";
 
 import { Button } from "~/components/ui/buttons/Button";
 import { useDraftContext } from "~/modules/draft/DraftContext";
 import { useComponentContext } from "../../useComponentContext";
+import { Menu, MenuButton, MenuItem } from "@szhsin/react-menu";
+import { TypeOfComponent } from "~/modules/draft/types";
 
 type EditorTooltipProps = PropsWithChildren<{
   dndRef: (node: HTMLElement | null) => void;
@@ -40,9 +43,13 @@ export const EditorTooltip = (props: EditorTooltipProps) => {
   const { dndRef, listeners, attributes, children, ...rest } = props;
   const c = useComponentContext();
   const {
+    design,
     draftState: { CHANGE_DESIGN_FIRED },
     toggleClassName,
+    addComponent,
   } = useDraftContext();
+
+  const { components } = design;
 
   return (
     <div ref={dndRef} data-tooltip-id={c.id} {...rest}>
@@ -57,11 +64,6 @@ export const EditorTooltip = (props: EditorTooltipProps) => {
           render={() => {
             return (
               <ul className="flex-center [&>li+li]:border-left w-full gap-3 rounded-md [&>li+li]:pl-3">
-                <li {...listeners} {...attributes}>
-                  <Button baseCn="navigation sm gap-2">
-                    <IoHandLeftSharp /> Drag
-                  </Button>
-                </li>
                 {classNames.map(({ label, className }) => {
                   return (
                     <li key={className}>
@@ -77,6 +79,37 @@ export const EditorTooltip = (props: EditorTooltipProps) => {
                     </li>
                   );
                 })}
+                <li {...listeners} {...attributes}>
+                  <Button baseCn="navigation sm gap-2">
+                    <IoHandLeftSharp /> Drag
+                  </Button>
+                </li>
+                <li>
+                  <Menu
+                    menuButton={
+                      <MenuButton className="navigation sm common gap-2">
+                        Add component below <FaChevronDown />
+                      </MenuButton>
+                    }
+                  >
+                    {Object.keys(components).map((typeOfComponent) => (
+                      <MenuItem
+                        key={typeOfComponent}
+                        onClick={() =>
+                          addComponent(
+                            {
+                              type: typeOfComponent as TypeOfComponent,
+                              ...components[typeOfComponent as TypeOfComponent],
+                            },
+                            c
+                          )
+                        }
+                      >
+                        {typeOfComponent}
+                      </MenuItem>
+                    ))}
+                  </Menu>
+                </li>
               </ul>
             );
           }}

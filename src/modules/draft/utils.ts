@@ -40,39 +40,39 @@ export const toDraftComponents = (
 
 export const addNewComponent = (
   design: Design,
-  component: NewComponent
+  newComponent: NewComponent,
+  clickedComponent: DraftComponent
 ): Design => {
-  const { sections } = design;
-  const firstKey = Object.keys(sections)[0];
+  const sections = { ...design.sections };
+  const targetSection = sections[clickedComponent.sectionId];
 
-  if (!firstKey) return design;
+  if (!targetSection) return design;
 
-  const firstSection = sections[firstKey as SectionId];
-
-  if (!firstSection) return design;
-
-  const { components } = firstSection;
-
-  const newComponent = {
+  const order = clickedComponent.order + 1;
+  const draftComponent = {
     ...rawComponent,
+    ...newComponent,
     id: uuidv4(),
-    ...component,
+    order,
+    sectionId: targetSection.id,
   } as DraftComponent;
-  const newComponents = [newComponent, ...components];
 
-  const newSection = {
-    ...firstSection,
-    components: newComponents,
-  };
+  targetSection.components = [...targetSection.components, draftComponent].sort(
+    (a, b) => a.order - b.order
+  );
 
-  const newSections = {
-    ...design.sections,
-    [firstKey]: newSection,
-  };
+  targetSection.components.forEach((comp, index) => {
+    if (comp.id !== draftComponent.id && comp.order >= order) {
+      comp.order = index + 1;
+    }
+  });
 
   return {
     ...design,
-    sections: newSections,
+    sections: {
+      ...sections,
+      [targetSection.id]: targetSection,
+    },
   };
 };
 

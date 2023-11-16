@@ -1,56 +1,46 @@
 import { v4 as uuidv4 } from "uuid";
-import type { DraftComponent, Design } from "../types";
+import type { Design, RawDraftComponent } from "../types";
+import { toDraftComponents } from "../utils";
 
 const CharizardId = uuidv4();
 
-const leftComponents = [
+const leftComponents: RawDraftComponent[] = [
   {
     type: "image",
     id: "user-image",
-    props: {
-      className: "mx-auto",
-    },
   },
   {
     type: "heading-1",
     id: "user-name",
     props: {
-      value: "",
-      label: "",
       className: "text-center",
     },
   },
   {
     type: "divider",
     id: "name-divider",
-    props: {
-      value: "",
-      label: "",
-    },
   },
   {
     type: "text",
     id: "job-title",
     props: {
       value: "Fullstack engineer",
-      label: "",
+      label: "Job title",
       className: "text-center tracking-tighter uppercase font-thin",
     },
   },
   {
     type: "heading-2",
-    id: "experience-title",
+    id: "charizard-experience-title",
     props: {
       value: "Experience",
-      label: "",
     },
   },
   {
     type: "text",
     id: "experience",
     props: {
-      value: "",
-      label: "",
+      value: "6 years",
     },
   },
   {
@@ -58,7 +48,6 @@ const leftComponents = [
     id: "details-title",
     props: {
       value: "Details",
-      label: "",
     },
   },
   {
@@ -66,7 +55,6 @@ const leftComponents = [
     id: "address",
     props: {
       value: "Baker Street, 221B",
-      label: "",
     },
   },
   {
@@ -74,7 +62,6 @@ const leftComponents = [
     id: "country",
     props: {
       value: "British Empire",
-      label: "",
     },
   },
   {
@@ -82,7 +69,6 @@ const leftComponents = [
     id: "phone",
     props: {
       value: "+7 999 999 99 99",
-      label: "",
     },
   },
   {
@@ -90,7 +76,6 @@ const leftComponents = [
     id: "email",
     props: {
       value: "fullstack@gmail.com",
-      label: "",
     },
   },
   {
@@ -98,7 +83,6 @@ const leftComponents = [
     id: "skills-title",
     props: {
       value: "Skills",
-      label: "",
     },
   },
   {
@@ -106,7 +90,6 @@ const leftComponents = [
     id: "skill 2",
     props: {
       value: "• first skill",
-      label: "",
     },
   },
   {
@@ -114,7 +97,6 @@ const leftComponents = [
     id: "skill 3",
     props: {
       value: "• second skill",
-      label: "",
     },
   },
   {
@@ -122,7 +104,6 @@ const leftComponents = [
     id: "skill 4",
     props: {
       value: "• third skill",
-      label: "",
     },
   },
   {
@@ -130,22 +111,16 @@ const leftComponents = [
     id: "skill 5",
     props: {
       value: "• fourth skill",
-      label: "",
     },
   },
-].map((c, order) => ({
-  ...c,
-  order: order + 1,
-  sectionId: "left",
-})) as DraftComponent[];
+];
 
-const rightComponents = [
+const rightComponents: RawDraftComponent[] = [
   {
     type: "heading-2",
-    id: "profile-title",
+    id: "charizard-profile-title",
     props: {
       value: "Profile",
-      label: "",
     },
   },
   {
@@ -154,27 +129,20 @@ const rightComponents = [
     props: {
       value:
         "I am a frontend developer with 3 years of experience. I am looking for a job in a company with a friendly team and interesting projects.",
-      label: "",
     },
   },
   {
     type: "heading-2",
-    id: "employment-history-title",
+    id: "charizard-employment-history-title",
     props: {
       value: "Employment History",
-      label: "",
     },
   },
   {
     type: "timeline",
     id: "timeline",
-    props: {},
   },
-].map((c, order) => ({
-  ...c,
-  order: order + 1,
-  sectionId: "right",
-})) as DraftComponent[];
+];
 
 export const Charizard: Design = {
   id: CharizardId,
@@ -184,13 +152,13 @@ export const Charizard: Design = {
     left: {
       id: "left",
       order: 0,
-      components: leftComponents,
+      components: toDraftComponents(leftComponents, "left"),
       className: "flex items-center h-full flex-col bg-[#064C40] p-8 clr-white",
     },
     right: {
       id: "right",
       order: 1,
-      components: rightComponents,
+      components: toDraftComponents(rightComponents, "right"),
       className: "bg-white p-[2rem] clr-black",
     },
   },

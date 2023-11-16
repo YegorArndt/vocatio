@@ -100,7 +100,7 @@ export type Dispatchers = Record<
 export type DraftContext = {
   design: Design;
   updateDesign: (updateFn: (design: Design) => Design) => void;
-  addComponent: (component: NewComponent) => void;
+  addComponent: (nc: NewComponent, clickedComponent: DraftComponent) => void;
   changeDesign: (design: Design) => void;
   toggleClassName: (component: DraftComponent, className: string) => void;
   draftState: DraftState;

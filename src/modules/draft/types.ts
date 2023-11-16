@@ -60,7 +60,7 @@ export type Components =
   | Partial<
       Omit<
         Record<
-          DraftComponent["type"],
+          TypeOfComponent,
           {
             className?: string;
             style?: CSSProperties;
@@ -103,6 +103,10 @@ export type DraftContext = {
   addComponent: (nc: NewComponent, clickedComponent: DraftComponent) => void;
   changeDesign: (design: Design) => void;
   toggleClassName: (component: DraftComponent, className: string) => void;
+  changeComponentType: (
+    componentToChange: DraftComponent,
+    type: TypeOfComponent
+  ) => void;
   draftState: DraftState;
   dispatchers: Dispatchers;
   user: User;

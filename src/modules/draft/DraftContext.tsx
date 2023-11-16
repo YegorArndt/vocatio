@@ -6,11 +6,13 @@ import type {
   DraftContext as DraftContextType,
   NewComponent,
   DraftComponent,
+  TypeOfComponent,
 } from "./types";
 import * as actions from "./actions";
 import {
   addNewComponent,
   getEditableDesign,
+  changeComponentType as changeType,
   toggleClassName as toggleCn,
 } from "./utils";
 import { Venusaur } from "./designs/Venusaur";
@@ -105,6 +107,11 @@ export const DraftContext = (props: DraftContextInput) => {
   const toggleClassName = (component: DraftComponent, className: string) =>
     setDesign((prev) => toggleCn(prev, component, className));
 
+  const changeComponentType = (
+    componentToChange: DraftComponent,
+    newType: TypeOfComponent
+  ) => setDesign((prev) => changeType(prev, componentToChange, newType));
+
   const context: DraftContextType = {
     draftState: state,
     dispatchers: {
@@ -117,6 +124,7 @@ export const DraftContext = (props: DraftContextInput) => {
     updateDesign,
     addComponent,
     toggleClassName,
+    changeComponentType,
     changeDesign,
     user,
     vacancy,

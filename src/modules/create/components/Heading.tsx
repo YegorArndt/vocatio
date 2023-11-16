@@ -15,7 +15,7 @@ export const Heading = (props: AutoresizeProps) => {
   return (
     <Autoresize
       className={cn(className, {
-        "pb-2": DOWNLOAD_FIRED, // todo: remove that hack
+        // "pb-2": DOWNLOAD_FIRED, // todo: remove that hack
       })}
       {...rest}
     />

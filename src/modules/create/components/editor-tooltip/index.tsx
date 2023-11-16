@@ -47,6 +47,7 @@ export const EditorTooltip = (props: EditorTooltipProps) => {
     draftState: { CHANGE_DESIGN_FIRED },
     toggleClassName,
     addComponent,
+    changeComponentType,
   } = useDraftContext();
 
   const { components } = design;
@@ -102,6 +103,29 @@ export const EditorTooltip = (props: EditorTooltipProps) => {
                               ...components[typeOfComponent as TypeOfComponent],
                             },
                             c
+                          )
+                        }
+                      >
+                        {typeOfComponent}
+                      </MenuItem>
+                    ))}
+                  </Menu>
+                </li>
+                <li>
+                  <Menu
+                    menuButton={
+                      <MenuButton className="navigation sm common gap-2">
+                        Turn into <FaChevronDown />
+                      </MenuButton>
+                    }
+                  >
+                    {Object.keys(components).map((typeOfComponent) => (
+                      <MenuItem
+                        key={typeOfComponent}
+                        onClick={() =>
+                          changeComponentType(
+                            c,
+                            typeOfComponent as TypeOfComponent
                           )
                         }
                       >

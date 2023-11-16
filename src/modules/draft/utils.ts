@@ -7,6 +7,7 @@ import type {
   RawDraftComponent,
   SectionId,
   Timeline,
+  TypeOfComponent,
 } from "./types";
 import { DBIds } from "./constants";
 
@@ -132,6 +133,40 @@ export const toggleClassName = (
         components: newComponents,
       },
     },
+  };
+};
+
+export const changeComponentType = (
+  design: Design,
+  componentToChange: DraftComponent,
+  newType: TypeOfComponent
+): Design => {
+  const sections = { ...design.sections };
+  const sectionId = componentToChange.sectionId;
+
+  const targetSection = sections[sectionId];
+  if (!targetSection) return design;
+
+  const newComponents = targetSection.components.map((component) => {
+    if (component.id === componentToChange.id) {
+      return {
+        ...component,
+        type: newType,
+      };
+    }
+    return component;
+  });
+
+  // Update the section with the modified components
+  sections[sectionId] = {
+    ...targetSection,
+    components: newComponents,
+  };
+
+  // Return the updated design
+  return {
+    ...design,
+    sections: sections,
   };
 };
 

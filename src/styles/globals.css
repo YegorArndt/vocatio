@@ -75,7 +75,7 @@
   /* SUPER IMPORTANT
     This helps prevent cv texts from shifting down
   */
-  img:not(.divider) {
+  img:not([class*="divider"]) {
     @apply inline-block;
   }
 

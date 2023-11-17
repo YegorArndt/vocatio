@@ -1,6 +1,7 @@
 import { useUser } from "@clerk/nextjs";
 import { type GetStaticProps } from "next";
 import { useEffect, useRef } from "react";
+import Head from "next/head";
 
 import { api } from "~/utils";
 import { generateSSGHelper } from "~/server/api/utils/generateSSGHelper";
@@ -44,33 +45,43 @@ const CVBuilder = (props: CVBuilderProps) => {
   const { data: user, isLoading: userLoading } = api.users.get.useQuery();
 
   return (
-    <Layout>
-      {(userLoading || vacancyLoading) && (
-        <CreatePageSkeleton className="pt-[4rem]" />
-      )}
-      {vacancy && user && defaultUserData && (
-        <DraftContext
-          defaultUserData={defaultUserData}
-          vacancy={vacancy}
-          user={user}
-        >
-          {(a4Classes, changingDesign) => (
-            <div
-              className={cn("relative overflow-hidden pt-[4rem]", {
-                "mx-auto flex max-w-[90rem] gap-8": changingDesign,
-                "flex-center": !changingDesign,
-              })}
-            >
-              {!changingDesign && <Toolbar a4Ref={a4Ref} />}
-              <div ref={a4Ref} className={cn("a4", a4Classes)}>
-                <DndProvider />
+    <>
+      <Head>
+        <title>Create a CV - Vocatio</title>
+        <meta
+          name="description"
+          content="Free CV AI builder. Generate CVs tailored to the job you want."
+        />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+      <Layout>
+        {(userLoading || vacancyLoading) && (
+          <CreatePageSkeleton className="pt-[4rem]" />
+        )}
+        {vacancy && user && defaultUserData && (
+          <DraftContext
+            defaultUserData={defaultUserData}
+            vacancy={vacancy}
+            user={user}
+          >
+            {(a4Classes, changingDesign) => (
+              <div
+                className={cn("relative overflow-hidden pt-[4rem]", {
+                  "mx-auto flex max-w-[90rem] gap-8": changingDesign,
+                  "flex-center": !changingDesign,
+                })}
+              >
+                {!changingDesign && <Toolbar a4Ref={a4Ref} />}
+                <div ref={a4Ref} className={cn("a4", a4Classes)}>
+                  <DndProvider />
+                </div>
+                {changingDesign && <DesignViewer />}
               </div>
-              {changingDesign && <DesignViewer />}
-            </div>
-          )}
-        </DraftContext>
-      )}
-    </Layout>
+            )}
+          </DraftContext>
+        )}
+      </Layout>
+    </>
   );
 };
 

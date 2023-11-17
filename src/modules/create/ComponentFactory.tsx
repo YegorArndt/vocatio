@@ -1,12 +1,13 @@
 import { useDraftContext } from "../draft/DraftContext";
 import { Autoresize } from "~/components/ui/inputs/components/Autoresize";
-import { Timeline } from "~/modules/create/timeline";
 import { Group } from "./components/Group";
 import { Divider } from "./components/Divider";
 import { Heading } from "./components/Heading";
 import { UserImage } from "./components/UserImage";
 import { useComponentContext } from "./ComponentContext";
 import { CSSProperties } from "react";
+import { Timeline } from "./timeline";
+import { DraftComponent, Timeline as TimelineProps } from "../draft/types";
 
 interface ComponentConfig {
   className?: string;
@@ -56,7 +57,10 @@ export const ComponentFactory = () => {
     ? Heading
     : componentMapping[type as keyof typeof componentMapping];
 
-  return (
-    Component ? <Component id={id} {...(mergedProps as any)} /> : null
-  ) as JSX.Element | null;
+  return Component ? (
+    <Component
+      id={id}
+      {...(mergedProps as TimelineProps & DraftComponent["props"])}
+    />
+  ) : null;
 };

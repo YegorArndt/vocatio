@@ -2,60 +2,59 @@ import { useDraftContext } from "../draft/DraftContext";
 import { Autoresize } from "~/components/ui/inputs/components/Autoresize";
 import { Timeline } from "~/modules/create/timeline";
 import { Group } from "./components/Group";
-import type { Timeline as TimelineType } from "../draft/types";
 import { Divider } from "./components/Divider";
 import { Heading } from "./components/Heading";
 import { UserImage } from "./components/UserImage";
 import { useComponentContext } from "./ComponentContext";
+import { CSSProperties } from "react";
 
-let Component:
-  | typeof Group
-  | typeof Autoresize
-  | typeof Divider
-  | typeof Heading
-  | typeof UserImage
-  | typeof Timeline
-  | null = null;
+interface ComponentConfig {
+  className?: string;
+  style?: CSSProperties;
+  [key: string]: unknown;
+}
+
+const componentMapping = {
+  text: Autoresize,
+  group: Group,
+  divider: Divider,
+  timeline: Timeline,
+  image: UserImage,
+};
+
+const mergeClassNames = (...classNames: (string | undefined)[]) =>
+  classNames.filter(Boolean).join(" ");
+
+const mergeStyles = (...styles: (CSSProperties | undefined)[]) =>
+  Object.assign({}, ...styles);
 
 export const ComponentFactory = () => {
   const { design } = useDraftContext();
   const c = useComponentContext();
-  const { type, id, props: componentProps, sectionId } = c;
+  const { type, id, props: componentProps } = c;
 
-  const { className, style, ...designPropsWithoutClassName } =
-    design.components[type]!;
+  const componentConfig = (design.components[type] || {}) as ComponentConfig;
+  const { className, style, ...designPropsWithoutClassName } = componentConfig;
+
   const {
     className: componentClassName,
     style: componentStyle,
     ...componentPropsWithoutClassName
   } = componentProps;
 
-  const mergedClassNames = [className, componentClassName, type]
-    .filter(Boolean)
-    .join(" ");
+  const mergedClassNames = mergeClassNames(className, componentClassName, type);
+  const mergedStyles = mergeStyles(style, componentStyle);
 
-  const mergedStyles = {
-    ...style,
-    ...componentStyle,
-  };
-
-  const merged = {
+  const mergedProps = {
     ...designPropsWithoutClassName,
     ...componentPropsWithoutClassName,
     style: mergedStyles,
     className: mergedClassNames,
-    sectionId,
   };
 
-  if (type.includes("heading")) Component = Heading;
-  if (type === "text") Component = Autoresize;
-  if (type === "group") Component = Group;
-  if (type === "divider") Component = Divider;
-  if (type === "timeline") Component = Timeline;
-  if (type === "image") Component = UserImage;
+  const Component = type.includes("heading")
+    ? Heading
+    : componentMapping[type as keyof typeof componentMapping];
 
-  if (Component)
-    return <Component id={id} {...(merged as typeof merged & TimelineType)} />;
-
-  return null;
+  return Component ? <Component id={id} {...(mergedProps as any)} /> : null;
 };

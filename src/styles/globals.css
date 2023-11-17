@@ -34,8 +34,6 @@
   --bg-secondary-hover: #333;
   --clr-secondary-hover: #fff;
 
-  /* --select: #f81ce5; */
-  --select: #79ffe1;
   --border-clr: #333;
   --border-hover-clr: #888;
 
@@ -55,7 +53,6 @@
   --bg-secondary: var(--gray);
   --clr-secondary: #444;
 
-  --select: #79ffe1;
   --border-clr: var(--gray);
   --border-hover-clr: #444;
 
@@ -80,10 +77,6 @@
   */
   img {
     @apply inline-block;
-  }
-
-  ::selection {
-    background-color: var(--select);
   }
 
   h1 {

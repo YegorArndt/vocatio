@@ -1,11 +1,12 @@
 import NextLink from "next/link";
-import { forwardRef, type PropsWithChildren, type Ref } from "react";
+import { forwardRef, ReactNode, type PropsWithChildren, type Ref } from "react";
 import cn from "classnames";
 import type { LinkProps as NextLinkProps } from "next/link";
 
 export type LinkProps = PropsWithChildren<
   {
     to: NextLinkProps["href"];
+    frontIcon?: ReactNode;
     newTab?: boolean;
     text?: string;
     baseCn?: string;
@@ -17,6 +18,7 @@ export const Link = forwardRef(
   (props: LinkProps, ref: Ref<HTMLAnchorElement>) => {
     const {
       to,
+      frontIcon,
       newTab,
       text,
       children = text,
@@ -37,7 +39,8 @@ export const Link = forwardRef(
         {...rest}
         {...shouldNewTab}
       >
-        <span className="content">{children}</span>
+        {frontIcon && <span className="mr-2">{frontIcon}</span>}
+        {children}
       </NextLink>
     );
   }

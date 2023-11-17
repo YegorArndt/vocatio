@@ -10,7 +10,7 @@ export const UserPresentator = () => {
 
   return (
     <div className="flex w-full items-center justify-normal gap-4 pl-3 pt-5">
-      <span className="font-logo text-[40px]">Vocatio</span>
+      <span className="font-logo text-[30px]">Vocatio</span>
       <div className="h-[30px] w-[0.5px] rotate-[30deg] transform bg-base-reversed" />
       <Menu
         menuButton={

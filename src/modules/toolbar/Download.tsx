@@ -31,7 +31,11 @@ const getPdf = async (
   /**
    * Initialize jsPDF
    */
-  const pdf = new jsPDF("p", "mm", "a4");
+  const pdf = new jsPDF({
+    format: "a4",
+    orientation: "portrait",
+    unit: "px",
+  });
 
   const width = pdf.internal.pageSize.getWidth();
   const height = pdf.internal.pageSize.getHeight();

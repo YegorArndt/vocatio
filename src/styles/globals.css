@@ -75,6 +75,13 @@
     @apply bg-primary text-default clr-primary;
   }
 
+  /* SUPER IMPORTANT
+    This helps prevent cv texts from shifting down
+  */
+  img {
+    @apply inline-block;
+  }
+
   ::selection {
     background-color: var(--select);
   }
@@ -124,6 +131,10 @@
     min-width: 795px;
     max-width: 795px;
     overflow: hidden;
+  }
+
+  .a4 * {
+    box-sizing: border-box;
   }
 
   .toolbar {

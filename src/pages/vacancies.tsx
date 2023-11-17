@@ -11,7 +11,7 @@ export const Vacancies = () => {
   return (
     <>
       <Head>
-        <title>Careerpilot</title>
+        <title>Vocatio</title>
         <meta
           name="description"
           content="Free CV AI builder. Generate CVs tailored to the job you want."
@@ -35,7 +35,7 @@ export const Vacancies = () => {
             title="No vacancies found"
             text="Use our Google Extension to add a new vacancy"
             linkText="Get Extension"
-            to="https://chrome.google.com/webstore/detail/careerpilot/bknmlolcaccbfcedimgmpnfcjadfelbn"
+            to="https://chrome.google.com/webstore/detail/Vocatio/bknmlolcaccbfcedimgmpnfcjadfelbn"
             newTab
           />
         )}

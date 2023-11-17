@@ -13,10 +13,9 @@ export type AutoresizeProps = {
 } & TextareaHTMLAttributes<HTMLTextAreaElement>;
 
 export const Autoresize = (props: AutoresizeProps) => {
-  const { className, id, value } = props;
+  const { className, id, value, style } = props;
 
   const _value = useRef(localStorage.getItem(id) || value);
-  const contentEditableRef = useRef<HTMLDivElement>(null);
 
   const setValue = (newValue: string) => {
     _value.current = newValue;
@@ -35,10 +34,10 @@ export const Autoresize = (props: AutoresizeProps) => {
   return (
     <div
       contentEditable
-      className={cn("max-w-[400px] break-words outline-none", className)}
+      className={cn("max-w-[400px] break-words", className, {})}
       onInput={onInput}
       data-placeholder={value ?? _value.current}
-      ref={contentEditableRef}
+      style={style}
     >
       {_value.current}
     </div>

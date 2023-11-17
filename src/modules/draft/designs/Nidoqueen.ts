@@ -241,7 +241,7 @@ export const Nidoqueen: Design = {
     },
     "heading-4": {
       className:
-        "text-[1rem] py-[8px] w-full bg-[#27384B] clr-white text-center uppercase rounded-[5px]",
+        "text-[1rem] py-[8px] w-full bg-[#27384B] text-white flex-center uppercase rounded-[5px] box-border",
     },
     text: {},
     group: {

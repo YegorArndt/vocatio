@@ -22,6 +22,7 @@ export const UserPresentator = () => {
           </MenuButton>
         }
         direction="right"
+        gap={15}
       >
         <MenuItem>
           <SignOutButton>Log out</SignOutButton>

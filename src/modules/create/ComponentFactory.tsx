@@ -22,18 +22,27 @@ export const ComponentFactory = () => {
   const c = useComponentContext();
   const { type, id, props: componentProps, sectionId } = c;
 
-  const { className, ...designPropsWithoutClassName } =
+  const { className, style, ...designPropsWithoutClassName } =
     design.components[type]!;
-  const { className: componentClassName, ...componentPropsWithoutClassName } =
-    componentProps;
+  const {
+    className: componentClassName,
+    style: componentStyle,
+    ...componentPropsWithoutClassName
+  } = componentProps;
 
   const mergedClassNames = [className, componentClassName, type]
     .filter(Boolean)
     .join(" ");
 
+  const mergedStyles = {
+    ...style,
+    ...componentStyle,
+  };
+
   const merged = {
     ...designPropsWithoutClassName,
     ...componentPropsWithoutClassName,
+    style: mergedStyles,
     className: mergedClassNames,
     sectionId,
   };

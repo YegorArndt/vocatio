@@ -42,106 +42,104 @@ const isActive = "!bg-secondary-hover transition";
 export const EditorTooltip = (props: EditorTooltipProps) => {
   const { dndRef, listeners, attributes, children, ...rest } = props;
   const c = useComponentContext();
-  const {
-    design,
-    draftState: { CHANGE_DESIGN_FIRED },
-    toggleClassName,
-    addComponent,
-    changeComponentType,
-  } = useDraftContext();
+  const { design, toggleClassName, addComponent, changeComponentType } =
+    useDraftContext();
 
   const { components } = design;
 
   return (
     <div ref={dndRef} data-tooltip-id={c.id} {...rest}>
       {children}
-      {!CHANGE_DESIGN_FIRED && (
-        <Tooltip
-          id={c.id}
-          place="top"
-          opacity={1}
-          style={{ paddingInline: 10, zIndex: 9999 }}
-          globalCloseEvents={{ scroll: true, clickOutsideAnchor: true }}
-          render={() => {
-            return (
-              <ul className="flex-center [&>li+li]:border-left w-full gap-3 rounded-md [&>li+li]:pl-3">
-                {classNames.map(({ label, className }) => {
-                  return (
-                    <li key={className}>
-                      <Button
-                        baseCn="navigation sm gap-2"
-                        className={cn({
-                          [isActive]: c.props.className.includes(className),
-                        })}
-                        onClick={() => toggleClassName(c, className)}
-                      >
-                        {label}
-                      </Button>
-                    </li>
-                  );
-                })}
-                <li {...listeners} {...attributes}>
-                  <Button baseCn="navigation sm gap-2">
-                    <IoHandLeftSharp /> Drag
-                  </Button>
-                </li>
-                <li>
-                  <Menu
-                    menuButton={
-                      <MenuButton className="navigation sm common gap-2">
-                        Add component below <FaChevronDown />
-                      </MenuButton>
-                    }
-                  >
-                    {Object.keys(components).map((typeOfComponent) => (
-                      <MenuItem
-                        key={typeOfComponent}
-                        onClick={() =>
-                          addComponent(
-                            {
-                              type: typeOfComponent as TypeOfComponent,
-                              ...components[typeOfComponent as TypeOfComponent],
-                            },
-                            c
-                          )
-                        }
-                      >
-                        {typeOfComponent}
-                      </MenuItem>
-                    ))}
-                  </Menu>
-                </li>
-                <li>
-                  <Menu
-                    menuButton={
-                      <MenuButton className="navigation sm common gap-2">
-                        Turn into <FaChevronDown />
-                      </MenuButton>
-                    }
-                  >
-                    {Object.keys(components).map((typeOfComponent) => (
-                      <MenuItem
-                        key={typeOfComponent}
-                        onClick={() =>
-                          changeComponentType(
-                            c,
-                            typeOfComponent as TypeOfComponent
-                          )
-                        }
-                      >
-                        {typeOfComponent}
-                      </MenuItem>
-                    ))}
-                  </Menu>
-                </li>
-              </ul>
-            );
-          }}
-          clickable
-          delayShow={600}
-          delayHide={200}
-        />
-      )}
+      <Tooltip
+        id={c.id}
+        place="top"
+        opacity={1}
+        style={{ paddingInline: 10, zIndex: 9999 }}
+        globalCloseEvents={{ scroll: true, clickOutsideAnchor: true }}
+        render={() => {
+          return (
+            <ul
+              className="flex-center [&>li+li]:border-left w-full gap-3 rounded-md [&>li+li]:pl-3"
+              data-html2canvas-ignore
+            >
+              {classNames.map(({ label, className }) => {
+                return (
+                  <li key={className}>
+                    <Button
+                      baseCn="navigation sm gap-2"
+                      className={cn({
+                        [isActive]: c.props.className.includes(className),
+                      })}
+                      onClick={() => toggleClassName(c, className)}
+                    >
+                      {label}
+                    </Button>
+                  </li>
+                );
+              })}
+              <li {...listeners} {...attributes}>
+                <Button baseCn="navigation sm gap-2">
+                  <IoHandLeftSharp /> Drag
+                </Button>
+              </li>
+              <li>
+                <Menu
+                  menuButton={
+                    <MenuButton className="navigation sm common gap-2">
+                      Add component below <FaChevronDown />
+                    </MenuButton>
+                  }
+                  gap={5}
+                >
+                  {Object.keys(components).map((typeOfComponent) => (
+                    <MenuItem
+                      key={typeOfComponent}
+                      onClick={() =>
+                        addComponent(
+                          {
+                            type: typeOfComponent as TypeOfComponent,
+                            ...components[typeOfComponent as TypeOfComponent],
+                          },
+                          c
+                        )
+                      }
+                    >
+                      {typeOfComponent}
+                    </MenuItem>
+                  ))}
+                </Menu>
+              </li>
+              <li>
+                <Menu
+                  menuButton={
+                    <MenuButton className="navigation sm common gap-2">
+                      Turn into <FaChevronDown />
+                    </MenuButton>
+                  }
+                  gap={5}
+                >
+                  {Object.keys(components).map((typeOfComponent) => (
+                    <MenuItem
+                      key={typeOfComponent}
+                      onClick={() =>
+                        changeComponentType(
+                          c,
+                          typeOfComponent as TypeOfComponent
+                        )
+                      }
+                    >
+                      {typeOfComponent}
+                    </MenuItem>
+                  ))}
+                </Menu>
+              </li>
+            </ul>
+          );
+        }}
+        clickable
+        delayShow={600}
+        delayHide={200}
+      />
     </div>
   );
 };

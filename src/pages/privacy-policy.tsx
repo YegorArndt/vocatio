@@ -7,7 +7,7 @@ const PrivacyPolicy = () => {
   return (
     <>
       <Head>
-        <title>Privacy Policy - Careerpilot</title>
+        <title>Privacy Policy - Vocatio</title>
       </Head>
       <Header className="py-5">
         <Link to="/vacancies" className="gap-3 clr-blue">
@@ -16,15 +16,15 @@ const PrivacyPolicy = () => {
         </Link>
       </Header>
       <main className="container mx-auto my-6 rounded-md bg-white p-6 shadow-xl clr-secondary">
-        <h1 className="text-xl font-semibold text-gray-900">
-          Privacy Policy - Careerpilot
+        <h1 className="text-gray-900 text-xl font-semibold">
+          Privacy Policy - Vocatio
         </h1>
-        <p className="mt-2 text-gray-600">Effective date: Tue 7 Nov 2023</p>
+        <p className="text-gray-600 mt-2">Effective date: Tue 7 Nov 2023</p>
 
         <section className="my-4">
-          <h2 className="mb-2 font-semibold text-gray-900">1. Introduction</h2>
+          <h2 className="text-gray-900 mb-2 font-semibold">1. Introduction</h2>
           <p>
-            Careerpilot (&quot;we&quot;, &quot;us&quot;, or &quot;our&quot;)
+            Vocatio (&quot;we&quot;, &quot;us&quot;, or &quot;our&quot;)
             operates the website accessible from{" "}
             <a href="https://chirp-mu-rust-60.vercel.app" className="clr-blue">
               https://chirp-mu-rust-60.vercel.app
@@ -39,7 +39,7 @@ const PrivacyPolicy = () => {
         </section>
 
         <section className="my-4">
-          <h2 className="font-semibold text-gray-900">
+          <h2 className="text-gray-900 font-semibold">
             2. Information Collection and Use
           </h2>
           <p>
@@ -49,10 +49,10 @@ const PrivacyPolicy = () => {
         </section>
 
         <section className="my-4">
-          <h2 className="mb-2 font-semibold text-gray-900">
+          <h2 className="text-gray-900 mb-2 font-semibold">
             3. Types of Data Collected
           </h2>
-          <h3 className="text-md font-semibold text-gray-900">Personal Data</h3>
+          <h3 className="text-md text-gray-900 font-semibold">Personal Data</h3>
           <p>
             While using our Service, we may ask you to provide us with certain
             personally identifiable information that can be used to contact or
@@ -72,7 +72,7 @@ const PrivacyPolicy = () => {
         </section>
 
         <section className="my-4">
-          <h3 className="text-md font-semibold text-gray-900">Usage Data</h3>
+          <h3 className="text-md text-gray-900 font-semibold">Usage Data</h3>
           <p>
             We may also collect information on how the Service is accessed and
             used (&quot;Usage Data&quot;). This Usage Data may include
@@ -83,7 +83,7 @@ const PrivacyPolicy = () => {
           </p>
         </section>
         <section className="my-4">
-          <h2 className="mb-2 font-semibold text-gray-900">
+          <h2 className="text-gray-900 mb-2 font-semibold">
             4. Data Use Compliance
           </h2>
           <p>
@@ -112,7 +112,7 @@ const PrivacyPolicy = () => {
         </section>
 
         <section className="my-4">
-          <h2 className="mb-2 font-semibold text-gray-900">
+          <h2 className="text-gray-900 mb-2 font-semibold">
             5. Data Collection Consent
           </h2>
           <p>
@@ -128,7 +128,7 @@ const PrivacyPolicy = () => {
         </section>
 
         <section className="my-4">
-          <h2 className="mb-2 font-semibold text-gray-900">
+          <h2 className="text-gray-900 mb-2 font-semibold">
             6. Data Handling and Security
           </h2>
           <p>
@@ -165,7 +165,7 @@ const PrivacyPolicy = () => {
         </section>
 
         <section className="my-4">
-          <h2 className="mb-2 font-semibold text-gray-900">
+          <h2 className="text-gray-900 mb-2 font-semibold">
             7. Hosting and Data Transfer
           </h2>
           <p>
@@ -188,7 +188,7 @@ const PrivacyPolicy = () => {
         </section>
 
         <section className="my-4">
-          <h2 className="mb-2 font-semibold text-gray-900">
+          <h2 className="text-gray-900 mb-2 font-semibold">
             8. Compliance with Google&apos;s User Data Policy
           </h2>
           <p>
@@ -208,7 +208,7 @@ const PrivacyPolicy = () => {
         </section>
 
         <section className="my-4">
-          <h2 className="mb-2 font-semibold text-gray-900">
+          <h2 className="text-gray-900 mb-2 font-semibold">
             9. Changes to This Privacy Policy
           </h2>
           <p>
@@ -223,7 +223,7 @@ const PrivacyPolicy = () => {
         </section>
 
         <section className="my-4">
-          <h2 className="mb-2 font-semibold text-gray-900">
+          <h2 className="text-gray-900 mb-2 font-semibold">
             10. Consent Withdrawal
           </h2>
           <p>

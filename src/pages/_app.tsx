@@ -49,7 +49,7 @@ const MyApp: AppType = ({ Component, pageProps }) => {
     <ClerkProvider {...pageProps}>
       <RouteGuard>
         <Head>
-          <title>Careerpilot</title>
+          <title>Vocatio</title>
           <meta
             name="description"
             content="Tailored CVs for your job applications. Tracker for your vacancies."

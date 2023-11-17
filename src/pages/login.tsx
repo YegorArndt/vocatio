@@ -56,7 +56,7 @@ const LoginPage: NextPage = () => {
   return (
     <>
       <Head>
-        <title>Log into Careerpilot</title>
+        <title>Log into Vocatio</title>
       </Head>
       <section className="flex flex-col items-center gap-10 pt-40">
         <h1 className="text-[2rem]">

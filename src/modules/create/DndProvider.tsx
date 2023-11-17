@@ -68,6 +68,7 @@ const SortableItem = (props: PropsWithChildren<Record<string, unknown>>) => {
     transform: CSS.Transform.toString(transform),
     transition,
     width: "100%",
+
     opacity: isDragging ? 0.5 : 1,
   };
 

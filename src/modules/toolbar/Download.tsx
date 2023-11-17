@@ -2,13 +2,13 @@ import Image from "next/image";
 import type { User, Vacancy } from "@prisma/client";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
-import { snakeCase } from "lodash-es";
 import { type RefObject } from "react";
 import { Tooltip } from "react-tooltip";
 import cn from "classnames";
 
 import { Button } from "~/components/ui/buttons/Button";
 import { useDraftContext } from "../draft/DraftContext";
+import { snakeCase } from "lodash-es";
 
 const src = "/download.png";
 
@@ -31,10 +31,7 @@ const getPdf = async (
   /**
    * Initialize jsPDF
    */
-  const pdf = new jsPDF({
-    format: "a4",
-    unit: "px",
-  });
+  const pdf = new jsPDF("p", "mm", "a4");
 
   const width = pdf.internal.pageSize.getWidth();
   const height = pdf.internal.pageSize.getHeight();

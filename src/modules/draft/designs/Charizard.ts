@@ -153,7 +153,8 @@ export const Charizard: Design = {
       id: "left",
       order: 0,
       components: toDraftComponents(leftComponents, "left"),
-      className: "flex items-center h-full flex-col bg-[#064C40] p-8 clr-white",
+      className:
+        "flex items-center h-full flex-col bg-[#064C40] p-8 clr-white [&_.image]:mx-auto",
     },
     right: {
       id: "right",

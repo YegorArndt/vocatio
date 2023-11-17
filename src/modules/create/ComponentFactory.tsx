@@ -26,7 +26,7 @@ const mergeClassNames = (...classNames: (string | undefined)[]) =>
   classNames.filter(Boolean).join(" ");
 
 const mergeStyles = (...styles: (CSSProperties | undefined)[]) =>
-  Object.assign({}, ...styles);
+  Object.assign({}, ...styles) as CSSProperties;
 
 export const ComponentFactory = () => {
   const { design } = useDraftContext();
@@ -56,5 +56,7 @@ export const ComponentFactory = () => {
     ? Heading
     : componentMapping[type as keyof typeof componentMapping];
 
-  return Component ? <Component id={id} {...(mergedProps as any)} /> : null;
+  return (
+    Component ? <Component id={id} {...(mergedProps as any)} /> : null
+  ) as JSX.Element | null;
 };

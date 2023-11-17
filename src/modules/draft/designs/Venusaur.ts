@@ -244,7 +244,7 @@ export const Venusaur: Design = {
       vacancyId: "",
     },
     divider: {
-      className: "border-current border-solid border-b-[2px] mb-2",
+      className: "border-current block border-solid border-b-[2px] mb-2",
     },
     image: {
       height: 150,

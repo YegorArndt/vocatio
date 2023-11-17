@@ -185,7 +185,7 @@ export const Charizard: Design = {
     },
     divider: {
       className:
-        "border-current border-solid border-b-[0.5px] w-[2rem] mx-auto my-2",
+        "border-current border-solid border-b-[0.5px] w-[2rem] mx-auto my-2 !block",
     },
     image: {
       className: "rounded-full mb-5",

@@ -133,7 +133,7 @@
   .toolbar {
     @apply fixed grid grid-cols-2 items-center gap-1 rounded-md border p-2;
     left: 1rem;
-    top: 10rem;
+    top: 12rem;
   }
 
   .danger-zone {

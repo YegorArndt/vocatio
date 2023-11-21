@@ -1,4 +1,3 @@
-import Image from "next/image";
 import type { User, Vacancy } from "@prisma/client";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
@@ -9,6 +8,7 @@ import cn from "classnames";
 import { Button } from "~/components/ui/buttons/Button";
 import { useDraftContext } from "../draft/DraftContext";
 import { snakeCase } from "lodash-es";
+import { BlurImage } from "~/components/BlurImage";
 
 const src = "/download.png";
 
@@ -77,7 +77,7 @@ export const Download = (props: { a4Ref: RefObject<HTMLDivElement> }) => {
       onClick={() => void onClick()}
       data-tooltip-id={src}
     >
-      <Image
+      <BlurImage
         src={src}
         height={50}
         width={50}

@@ -2,12 +2,6 @@ import { NavigationLink } from "../ui/buttons/NavigationLink";
 import { Header } from "./Header";
 import { UserPresentator } from "./UserPresentator";
 
-type NavigationLinkProps = {
-  text: string;
-  to: string;
-  pathname: string;
-};
-
 const navigationLinks = [
   { text: "My vacancies", to: "/vacancies" },
   { text: "Create", to: "/create" },
@@ -19,19 +13,17 @@ const ACTIVE_BEFORE =
 
 export const Navigation = () => {
   return (
-    <Header className="flex flex-col gap-4">
+    <Header className="flex flex-col gap-2">
       <UserPresentator />
-      <nav className="pb-2">
-        <div className="flex gap-3">
-          {navigationLinks.map(({ text, to }, i) => (
-            <NavigationLink
-              key={text}
-              text={text}
-              to={to}
-              activeCn={ACTIVE_BEFORE}
-            />
-          ))}
-        </div>
+      <nav className="flex gap-3 py-2">
+        {navigationLinks.map(({ text, to }, i) => (
+          <NavigationLink
+            key={text}
+            text={text}
+            to={to}
+            activeCn={ACTIVE_BEFORE}
+          />
+        ))}
       </nav>
     </Header>
   );

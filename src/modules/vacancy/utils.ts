@@ -1,5 +1,4 @@
 import type { Vacancy } from "@prisma/client";
-import type { Falsy } from "~/types/utils";
 import { vacancyUI } from "./constants";
 
 type Item = {
@@ -7,6 +6,8 @@ type Item = {
   icon: JSX.Element | undefined;
   value: string | number | Date | null;
 };
+
+export type Falsy<T> = T | null | undefined;
 
 const getSalaryRange = (min: Falsy<number>, max: Falsy<number>) =>
   min && max ? `${min} - ${max} (annually or monthly)` : null;

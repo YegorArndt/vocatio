@@ -8,12 +8,14 @@ import cn from "classnames";
 import { FaUnderline } from "react-icons/fa6";
 import { FaChevronDown } from "react-icons/fa6";
 import { IoHandLeftSharp } from "react-icons/io5";
+import { IoAddCircleSharp } from "react-icons/io5";
+import { Menu, MenuButton, MenuItem } from "@szhsin/react-menu";
+import { RiDeleteBin6Line } from "react-icons/ri";
 
 import { Button } from "~/components/ui/buttons/Button";
 import { useDraftContext } from "~/modules/draft/DraftContext";
 import { useComponentContext } from "../ComponentContext";
-import { Menu, MenuButton, MenuItem } from "@szhsin/react-menu";
-import { TypeOfComponent } from "~/modules/draft/types";
+import { typedKeys } from "~/modules/draft/utils/common";
 
 type EditorTooltipProps = PropsWithChildren<{
   dndRef: (node: HTMLElement | null) => void;
@@ -37,109 +39,126 @@ const classNames = [
   },
 ];
 
-const isActive = "!bg-secondary-hover transition";
+const SmChevron = () => <FaChevronDown size={8} />;
+
+const active = "!bg-secondary-hover transition";
 
 export const EditorTooltip = (props: EditorTooltipProps) => {
   const { dndRef, listeners, attributes, children, ...rest } = props;
-  const c = useComponentContext();
-  const { design, toggleClassName, addComponent, changeComponentType } =
-    useDraftContext();
 
-  const { components } = design;
+  const c = useComponentContext();
+  const {
+    design,
+    toggleClassName,
+    add,
+    changeType,
+    remove,
+    draftState: { CHANGE_DESIGN_FIRED },
+  } = useDraftContext();
+  const { intrinsic } = design;
 
   return (
     <div ref={dndRef} data-tooltip-id={c.id} {...rest}>
       {children}
-      <Tooltip
-        id={c.id}
-        place="top"
-        opacity={1}
-        style={{ paddingInline: 10, zIndex: 9999 }}
-        globalCloseEvents={{ scroll: true, clickOutsideAnchor: true }}
-        render={() => {
-          return (
-            <ul
-              className="flex-center [&>li+li]:border-left w-full gap-3 rounded-md [&>li+li]:pl-3"
-              data-html2canvas-ignore
-            >
-              {classNames.map(({ label, className }) => {
-                return (
-                  <li key={className}>
-                    <Button
-                      baseCn="navigation sm gap-2"
-                      className={cn({
-                        [isActive]: c.props.className.includes(className),
-                      })}
-                      onClick={() => toggleClassName(c, className)}
+      {!CHANGE_DESIGN_FIRED && (
+        <Tooltip
+          id={c.id}
+          place="top"
+          opacity={1}
+          style={{ paddingInline: 10, zIndex: 9999 }}
+          globalCloseEvents={{ scroll: true, clickOutsideAnchor: true }}
+          clickable
+          delayShow={400}
+          delayHide={200}
+          render={() => {
+            return (
+              <ul
+                className="flex-center [&>li+li]:border-left w-full gap-3 rounded-md [&>li+li]:pl-3"
+                data-html2canvas-ignore
+              >
+                {classNames.map(({ label, className }) => {
+                  return (
+                    !Boolean(c.isDecoration) && (
+                      <li key={className}>
+                        <Button
+                          baseCn="navigation sm gap-2"
+                          className={cn({
+                            [active]: c.props.className.includes(className),
+                          })}
+                          onClick={() => toggleClassName(c, className)}
+                        >
+                          {label}
+                        </Button>
+                      </li>
+                    )
+                  );
+                })}
+                <li {...listeners} {...attributes}>
+                  <Button baseCn="navigation sm gap-2">
+                    <IoHandLeftSharp /> Drag
+                  </Button>
+                </li>
+                <li>
+                  <Menu
+                    menuButton={
+                      <MenuButton className="navigation sm common gap-2">
+                        <IoAddCircleSharp /> <SmChevron />
+                      </MenuButton>
+                    }
+                    gap={5}
+                  >
+                    {typedKeys(intrinsic).map((typeOfComponent) => (
+                      <MenuItem
+                        key={typeOfComponent}
+                        onClick={() =>
+                          add(
+                            {
+                              type: typeOfComponent,
+                              ...intrinsic[typeOfComponent],
+                            },
+                            c
+                          )
+                        }
+                      >
+                        {typeOfComponent}
+                      </MenuItem>
+                    ))}
+                  </Menu>
+                </li>
+                <li>
+                  <Button
+                    onClick={() => remove(c)}
+                    className="sm common hover:bg-red"
+                  >
+                    <RiDeleteBin6Line />
+                  </Button>
+                </li>
+                {!Boolean(c.isDecoration) && (
+                  <li>
+                    <Menu
+                      menuButton={
+                        <MenuButton className="navigation sm common gap-2">
+                          Turn into <SmChevron />
+                        </MenuButton>
+                      }
+                      gap={5}
                     >
-                      {label}
-                    </Button>
+                      {typedKeys(intrinsic).map((typeOfComponent) => (
+                        <MenuItem
+                          key={typeOfComponent}
+                          onClick={() => changeType(c, typeOfComponent)}
+                        >
+                          {typeOfComponent}
+                        </MenuItem>
+                      ))}
+                    </Menu>
                   </li>
-                );
-              })}
-              <li {...listeners} {...attributes}>
-                <Button baseCn="navigation sm gap-2">
-                  <IoHandLeftSharp /> Drag
-                </Button>
-              </li>
-              <li>
-                <Menu
-                  menuButton={
-                    <MenuButton className="navigation sm common gap-2">
-                      Add component below <FaChevronDown />
-                    </MenuButton>
-                  }
-                  gap={5}
-                >
-                  {Object.keys(components).map((typeOfComponent) => (
-                    <MenuItem
-                      key={typeOfComponent}
-                      onClick={() =>
-                        addComponent(
-                          {
-                            type: typeOfComponent as TypeOfComponent,
-                            ...components[typeOfComponent as TypeOfComponent],
-                          },
-                          c
-                        )
-                      }
-                    >
-                      {typeOfComponent}
-                    </MenuItem>
-                  ))}
-                </Menu>
-              </li>
-              <li>
-                <Menu
-                  menuButton={
-                    <MenuButton className="navigation sm common gap-2">
-                      Turn into <FaChevronDown />
-                    </MenuButton>
-                  }
-                  gap={5}
-                >
-                  {Object.keys(components).map((typeOfComponent) => (
-                    <MenuItem
-                      key={typeOfComponent}
-                      onClick={() =>
-                        changeComponentType(
-                          c,
-                          typeOfComponent as TypeOfComponent
-                        )
-                      }
-                    >
-                      {typeOfComponent}
-                    </MenuItem>
-                  ))}
-                </Menu>
-              </li>
-            </ul>
-          );
-        }}
-        clickable
-        delayShow={600}
-        delayHide={200}
-      />
+                )}
+              </ul>
+            );
+          }}
+        />
+      )}
     </div>
   );
 };

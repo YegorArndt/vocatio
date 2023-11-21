@@ -1,16 +1,13 @@
-import Image from "next/image";
+import Image, { type ImageProps as NextImageProps } from "next/image";
 import cn from "classnames";
 import { useUser } from "@clerk/nextjs";
-import { api } from "~/utils";
 import { useState } from "react";
 
-type UserImageProps = {
-  height?: number;
-  width?: number;
-  className?: string;
-};
+import { api } from "~/utils";
 
-export const UserImage = (props: UserImageProps) => {
+export type ImageProps = Partial<NextImageProps>;
+
+export const UserImage = (props: ImageProps) => {
   const { height = 100, width = 100, className, ...rest } = props;
   const [isLoading, setIsLoading] = useState(true);
   const defaultUserData = useUser();

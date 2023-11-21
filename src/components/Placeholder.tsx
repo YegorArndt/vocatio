@@ -30,7 +30,11 @@ export const Placeholder = (props: PlaceholderProps) => {
           <span className="h4">{title} 🐈</span>
           <span>{text}</span>
         </span>
-        <Link to={to} className="flex-center gap-2 clr-blue" newTab>
+        <Link
+          to={to}
+          className="flex-center gap-2 clr-blue"
+          newTab={!to.includes("vacancies")}
+        >
           <FaWindowRestore /> {linkText}
         </Link>
       </div>

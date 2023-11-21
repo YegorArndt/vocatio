@@ -1,4 +1,4 @@
-import { Autoresize } from "~/components/ui/inputs/components/Autoresize";
+import { Autoresize } from "~/modules/create/components/Autoresize";
 import { api } from "~/utils";
 import { type StoryComponentProps } from "../Story";
 

@@ -1,5 +1,5 @@
 import { createContext, useContext } from "react";
-import { DraftComponent } from "../draft/types";
+import type { DraftComponent } from "../draft/types/components";
 
 export const ComponentContext = createContext({} as DraftComponent);
 

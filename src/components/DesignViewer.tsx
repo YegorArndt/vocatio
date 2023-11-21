@@ -6,12 +6,12 @@ import { useDraftContext } from "~/modules/draft/DraftContext";
 import { Venusaur } from "~/modules/draft/designs/Venusaur";
 import { Charizard } from "~/modules/draft/designs/Charizard";
 import { BlurImage } from "./BlurImage";
-import { InfoBox } from "./InfoBox";
 import { Nidoqueen } from "~/modules/draft/designs/Nidoqueen";
 import { useEffect, useRef } from "react";
-import { Design } from "~/modules/draft/types";
+import { Charmander } from "~/modules/draft/designs/Charmander";
+import type { Design } from "~/modules/draft/types/processed";
 
-const designs = [Venusaur, Charizard, Nidoqueen];
+const designs = [Venusaur, Charizard, Nidoqueen, Charmander];
 
 export const DesignViewer = () => {
   const {
@@ -71,11 +71,6 @@ export const DesignViewer = () => {
           />
         </span>
       </div>
-      <InfoBox
-        text="We'll try to minimize data loss when switching between designs.
-          In the future before switching designs, you will be able to save your
-          current design without downloading it."
-      />
     </div>
   );
 };

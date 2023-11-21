@@ -12,6 +12,13 @@ type LsStories = {
   id: string;
   story: string;
 };
+export type Timeline = {
+  storyType: StoryType;
+  jobDescription: string;
+  jobTitle: string;
+  vacancyId: string;
+  className?: string;
+};
 
 const getStoriesFromLs = (vacancyId: string) => {
   const storyKeyRegex = new RegExp(`^draft-story-${vacancyId}-(?!\\d+$).+`);
@@ -31,6 +38,7 @@ const getStoriesFromLs = (vacancyId: string) => {
 
 export const Timeline = (props: TimelineProps) => {
   const { jobDescription, jobTitle, vacancyId, storyType, className } = props;
+
   const [stories, setStories] = useState<LsStories[]>(
     getStoriesFromLs(vacancyId)
   );
@@ -57,16 +65,19 @@ export const Timeline = (props: TimelineProps) => {
 
   return (
     <div className={cn(className, "mb-5")}>
-      {stories.map(({ story, id }, index) => (
-        <Story
-          key={id}
-          id={id}
-          story={story}
-          index={index}
-          jobTitle={jobTitle}
-          storyType={storyType}
-        />
-      ))}
+      {stories.map(
+        ({ story, id }, index) =>
+          Boolean(index < 2) && (
+            <Story
+              key={id}
+              id={id}
+              story={story}
+              index={index}
+              jobTitle={jobTitle}
+              storyType={storyType}
+            />
+          )
+      )}
       {!DOWNLOAD_FIRED && !CHANGE_DESIGN_FIRED && (
         <footer className="mt-2">
           {stories.length < 2 ? (

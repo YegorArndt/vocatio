@@ -1,7 +1,7 @@
-import Image from "next/image";
 import { Tooltip } from "react-tooltip";
 import { useDraftContext } from "../draft/DraftContext";
 import { Button } from "~/components/ui/buttons/Button";
+import { BlurImage } from "~/components/BlurImage";
 
 const src = "/change-design.png";
 
@@ -18,7 +18,7 @@ export const ChangeDesign = () => {
       onClick={() => setChangeDesignFired(!CHANGE_DESIGN_FIRED)}
       disabled={DOWNLOAD_FIRED}
     >
-      <Image
+      <BlurImage
         src={src}
         height={50}
         width={50}

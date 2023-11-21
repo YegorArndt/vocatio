@@ -1,10 +1,9 @@
 import { v4 as uuidv4 } from "uuid";
-import type { Design, RawDraftComponent } from "../types";
-import { toDraftComponents } from "../utils";
+import type { RawDesign, RawComponent } from "../types/raw";
 
 const CharizardId = uuidv4();
 
-const leftComponents: RawDraftComponent[] = [
+const leftComponents: RawComponent[] = [
   {
     type: "image",
     id: "user-image",
@@ -45,7 +44,7 @@ const leftComponents: RawDraftComponent[] = [
   },
   {
     type: "heading-2",
-    id: "details-title",
+    id: "charizard-details-title",
     props: {
       value: "Details",
     },
@@ -115,7 +114,7 @@ const leftComponents: RawDraftComponent[] = [
   },
 ];
 
-const rightComponents: RawDraftComponent[] = [
+const rightComponents: RawComponent[] = [
   {
     type: "heading-2",
     id: "charizard-profile-title",
@@ -138,13 +137,9 @@ const rightComponents: RawDraftComponent[] = [
       value: "Employment History",
     },
   },
-  {
-    type: "timeline",
-    id: "timeline",
-  },
 ];
 
-export const Charizard: Design = {
+export const Charizard: RawDesign = {
   id: CharizardId,
   name: "Charizard",
   a4: "grid grid-cols-[300px_1fr] bg-white",
@@ -152,18 +147,18 @@ export const Charizard: Design = {
     left: {
       id: "left",
       order: 0,
-      components: toDraftComponents(leftComponents, "left"),
+      components: leftComponents,
       className:
         "flex items-center h-full flex-col bg-[#064C40] p-8 clr-white [&_.image]:mx-auto",
     },
     right: {
       id: "right",
       order: 1,
-      components: toDraftComponents(rightComponents, "right"),
+      components: rightComponents,
       className: "bg-white p-[2rem] clr-black",
     },
   },
-  components: {
+  intrinsic: {
     "heading-1": {
       className: "text-[30px] font-bold",
     },
@@ -177,12 +172,6 @@ export const Charizard: Design = {
     group: {
       className: "grid grid-cols-[100px,160px] gap-2",
     }, // not using yet
-    timeline: {
-      storyType: 2,
-      jobDescription: "",
-      jobTitle: "",
-      vacancyId: "",
-    },
     divider: {
       className:
         "border-current border-solid border-b-[0.5px] w-[2rem] mx-auto my-2",

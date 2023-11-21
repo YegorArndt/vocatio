@@ -1,66 +1,23 @@
-import { useDraftContext } from "../draft/DraftContext";
-import { Autoresize } from "~/components/ui/inputs/components/Autoresize";
 import { Group } from "./components/Group";
 import { Divider } from "./components/Divider";
-import { Heading } from "./components/Heading";
 import { UserImage } from "./components/UserImage";
 import { useComponentContext } from "./ComponentContext";
-import { CSSProperties } from "react";
-import { Timeline } from "./timeline";
-import { DraftComponent, Timeline as TimelineProps } from "../draft/types";
-
-interface ComponentConfig {
-  className?: string;
-  style?: CSSProperties;
-  [key: string]: unknown;
-}
+import { Autoresize } from "./components/Autoresize";
+import { List } from "./components/List";
 
 const componentMapping = {
   text: Autoresize,
   group: Group,
   divider: Divider,
-  timeline: Timeline,
   image: UserImage,
+  list: List,
 };
 
-const mergeClassNames = (...classNames: (string | undefined)[]) =>
-  classNames.filter(Boolean).join(" ");
-
-const mergeStyles = (...styles: (CSSProperties | undefined)[]) =>
-  Object.assign({}, ...styles) as CSSProperties;
-
 export const ComponentFactory = () => {
-  const { design } = useDraftContext();
-  const c = useComponentContext();
-  const { type, id, props: componentProps } = c;
+  const { type, props } = useComponentContext();
 
-  const componentConfig = (design.components[type] || {}) as ComponentConfig;
-  const { className, style, ...designPropsWithoutClassName } = componentConfig;
+  const Component =
+    componentMapping[type as keyof typeof componentMapping] || Autoresize;
 
-  const {
-    className: componentClassName,
-    style: componentStyle,
-    ...componentPropsWithoutClassName
-  } = componentProps;
-
-  const mergedClassNames = mergeClassNames(className, componentClassName, type);
-  const mergedStyles = mergeStyles(style, componentStyle);
-
-  const mergedProps = {
-    ...designPropsWithoutClassName,
-    ...componentPropsWithoutClassName,
-    style: mergedStyles,
-    className: mergedClassNames,
-  };
-
-  const Component = type.includes("heading")
-    ? Heading
-    : componentMapping[type as keyof typeof componentMapping];
-
-  return Component ? (
-    <Component
-      id={id}
-      {...(mergedProps as TimelineProps & DraftComponent["props"])}
-    />
-  ) : null;
+  return <Component {...props} />;
 };

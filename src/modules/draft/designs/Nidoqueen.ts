@@ -1,10 +1,9 @@
 import { v4 as uuidv4 } from "uuid";
-import type { Design, RawDraftComponent } from "../types";
-import { toDraftComponents } from "../utils";
+import type { RawDesign, RawComponent } from "../types/raw";
 
 const NidoqueenId = uuidv4();
 
-const left: RawDraftComponent[] = [
+const left: RawComponent[] = [
   {
     type: "image",
     id: "user-image",
@@ -51,25 +50,23 @@ const left: RawDraftComponent[] = [
   {
     type: "text",
     id: "english-title",
-    modifierId: "english-level",
-    modifier: (englishLevel: string) => {
-      return `• English (${englishLevel})`;
+    modifierIds: ["english-level"],
+    modifierFn: (values, props) => {
+      const [englishLevel] = values;
+      return {
+        value: `• English (${englishLevel})`,
+      };
     },
   },
   {
     type: "text",
     id: "german-title",
-    modifierId: "german-level",
-    modifier: (germanLevel: string) => {
-      return `• German (${germanLevel})`;
-    },
-  },
-  {
-    type: "text",
-    id: "spanish-title",
-    modifierId: "spanish-level",
-    modifier: (spanishLevel: string) => {
-      return `• Spanish (${spanishLevel})`;
+    modifierIds: ["german-level"],
+    modifierFn: (values, props) => {
+      const [germanLevel] = values;
+      return {
+        value: `• German (${germanLevel})`,
+      };
     },
   },
   {
@@ -140,39 +137,33 @@ const left: RawDraftComponent[] = [
   },
 ];
 
-const right: RawDraftComponent[] = [
+const right: RawComponent[] = [
   {
     type: "heading-1",
     id: "first-name",
     props: {
       className: "uppercase",
     },
-    modifierId: "user-name",
-    modifier: (userName: string) => {
-      // We're adding a line break
-      const nameParts = userName.split(" ");
-      if (nameParts.length > 1) {
-        const [firstName, lastName] = nameParts;
-        return firstName || userName;
-      }
-      return userName;
+    modifierIds: ["user-name"],
+    modifierFn: (values) => {
+      const [firstName] = values;
+      return {
+        value: firstName,
+      };
     },
   },
   {
     type: "heading-1",
     id: "last-name",
-    modifierId: "user-name",
     props: {
       className: "ml-8 uppercase",
     },
-    modifier: (userName: string) => {
-      const nameParts = userName.split(" ");
-      if (nameParts.length > 1) {
-        const [firstName, lastName] = nameParts;
-        // We're adding a line break
-        return lastName || userName;
-      }
-      return userName;
+    modifierIds: ["user-name"],
+    modifierFn: (values) => {
+      const [, lastName] = values;
+      return {
+        value: lastName,
+      };
     },
   },
   {
@@ -190,10 +181,6 @@ const right: RawDraftComponent[] = [
       value: "Experience",
     },
   },
-  {
-    type: "timeline",
-    id: "timeline",
-  },
 ];
 
 const blueSquare =
@@ -210,7 +197,7 @@ const leftImage =
 const leftHeading4 =
   "[&_.heading-4]:w-[120%] [&_.heading-4]:my-4 [&_.heading-4]:max-w-[20rem]";
 
-export const Nidoqueen: Design = {
+export const Nidoqueen: RawDesign = {
   id: NidoqueenId,
   name: "Nidoqueen",
   a4: `flex py-[4rem] px-[2rem] bg-white clr-black relative ${blueSquare} ${dashedCircle}`,
@@ -218,18 +205,18 @@ export const Nidoqueen: Design = {
     left: {
       id: "left",
       order: 0,
-      components: toDraftComponents(left, "left"),
+      components: left,
       className: `flex items-center flex-col [&_.heading-2]:mt-5 [&_.heading-1]:text-[30px] [&_.heading-1]:text-black [&_.text]:my-1 ${leftImage} [&>*]:z-1 relative ${leftHeading4} [&_.text]:max-w-[300px] [&_.group]:max-w-[300px]`,
     },
     right: {
       id: "right",
       order: 1,
-      components: toDraftComponents(right, "right"),
+      components: right,
       className:
         "flex flex-col [&_.heading-4]:ml-[5rem] [&_.heading-4]:mt-[3rem]",
     },
   },
-  components: {
+  intrinsic: {
     "heading-1": {
       className: "text-[50px] font-bold text-[#27384B] leading-[120%]",
     },
@@ -246,13 +233,6 @@ export const Nidoqueen: Design = {
     text: {},
     group: {
       className: "grid grid-cols-[100px,160px] gap-2",
-    },
-    timeline: {
-      storyType: 2,
-      className: "pl-8 ml-12",
-      jobDescription: "",
-      jobTitle: "",
-      vacancyId: "",
     },
     image: {
       height: 200,

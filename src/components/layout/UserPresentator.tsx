@@ -3,13 +3,17 @@ import { Menu, MenuButton, MenuItem } from "@szhsin/react-menu";
 import { UserImage } from "~/modules/create/components/UserImage";
 import { api } from "~/utils";
 import { Chip } from "../Chip";
+import { Ref, forwardRef } from "react";
 
-export const UserPresentator = () => {
+export const UserPresentator = forwardRef((_, ref: Ref<HTMLDivElement>) => {
   const { data: user } = api.users.get.useQuery();
   const defaultUserData = useUser();
 
   return (
-    <div className="flex w-full items-center justify-normal gap-4 pl-3 pt-5">
+    <div
+      className="flex w-full items-center justify-normal gap-4 pl-3 pt-5"
+      ref={ref}
+    >
       <span className="font-logo text-[30px]">Vocatio</span>
       <div className="h-[30px] w-[0.5px] rotate-[30deg] transform bg-base-reversed" />
       <Menu
@@ -28,7 +32,9 @@ export const UserPresentator = () => {
           <SignOutButton>Log out</SignOutButton>
         </MenuItem>
       </Menu>
-      <Chip className="sm">Free</Chip>
+      <Chip className="sm sky-bg">Free</Chip>
     </div>
   );
-};
+});
+
+UserPresentator.displayName = "UserPresentator";

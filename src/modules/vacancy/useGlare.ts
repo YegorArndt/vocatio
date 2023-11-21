@@ -8,7 +8,7 @@ export const useGlare = () => {
     if (!tiltRef.current) return;
 
     VanillaTilt.init(tiltRef.current, {
-      max: 5,
+      max: 3,
       speed: 100,
       glare: true,
       "max-glare": 0.5,

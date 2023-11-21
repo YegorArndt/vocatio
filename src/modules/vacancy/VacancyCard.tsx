@@ -11,11 +11,11 @@ import { Button } from "~/components/ui/buttons/Button";
 
 export const VacancyCard = (props: { vacancy: Vacancy }) => {
   const { vacancy } = props;
-  const tiltRef = useGlare();
   const { header, available, unavailable } = breakDown(vacancy);
-
   const { companyName, jobTitle, age, sourceName, sourceUrl, createdAt } =
     header;
+
+  const tiltRef = useGlare();
 
   return (
     <div className="flex flex-col gap-5">
@@ -70,7 +70,7 @@ export const VacancyCard = (props: { vacancy: Vacancy }) => {
                 )}
                 initiallyOpen={index === 0}
               >
-                <ul className="accordion flex flex-col gap-3 p-4">
+                <ul className="flex flex-col gap-3 p-4">
                   {items.map(({ text, icon, value }) =>
                     index === 0 ? (
                       <li key={text} className="flex-between">

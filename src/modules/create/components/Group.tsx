@@ -3,9 +3,9 @@ import cn from "classnames";
 import {
   Autoresize,
   type AutoresizeProps,
-} from "~/components/ui/inputs/components/Autoresize";
+} from "~/modules/create/components/Autoresize";
 
-type GroupProps = {
+export type GroupProps = {
   label: string;
   value: string;
 } & AutoresizeProps;
@@ -16,7 +16,7 @@ export const Group = (props: GroupProps) => {
   const labelId = `label-${id}`;
 
   return (
-    <div className={cn(className)}>
+    <div className={cn(className)} {...rest}>
       <Autoresize id={labelId} value={label} />
       <Autoresize id={id} value={value} />
     </div>

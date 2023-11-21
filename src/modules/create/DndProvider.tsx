@@ -19,20 +19,15 @@ import {
 } from "@dnd-kit/sortable";
 import { type PropsWithChildren, useState } from "react";
 import { CSS } from "@dnd-kit/utilities";
-import { FaTrashAlt } from "react-icons/fa";
 
-import { ComponentFactory } from "./ComponentFactory";
 import { useDraftContext } from "../draft/DraftContext";
 import { EditorTooltip } from "./components/EditorTooltip";
-import cn from "classnames";
-import { Tooltip } from "react-tooltip";
-import type {
-  DraftComponent,
-  Section,
-  SectionId,
-  Sections,
-} from "../draft/types";
+
 import { ComponentContext, useComponentContext } from "./ComponentContext";
+import type { DraftComponent } from "../draft/types/components";
+import type { Sections, SectionId, Section } from "../draft/types/sections";
+import { typedKeys } from "../draft/utils/common";
+import { ComponentFactory } from "./ComponentFactory";
 
 export const getSectionIdByComponentId = (
   sections: Sections,
@@ -85,8 +80,7 @@ const SortableItem = (props: PropsWithChildren<Record<string, unknown>>) => {
 };
 
 const Section = (props: Section) => {
-  const { id, components, className, sections } = props;
-
+  const { id, components, className } = props;
   const { setNodeRef } = useDroppable({
     id,
   });
@@ -110,61 +104,9 @@ const Section = (props: Section) => {
   );
 };
 
-const id = "garbage";
-
-const Garbage = (props: Pick<Section, "components">) => {
-  const { components } = props;
-  const [tooltipShown, setTooltipShown] = useState(false);
-
-  const { setNodeRef, isOver, active } = useDroppable({
-    id,
-  });
-
-  return (
-    <SortableContext
-      id={id}
-      items={components}
-      strategy={verticalListSortingStrategy}
-    >
-      <div
-        ref={setNodeRef}
-        className={cn("fixed right-0 top-[110px] h-screen w-[20vw]", {
-          "danger-zone": isOver,
-        })}
-      >
-        <div
-          className="size-full flex justify-center pt-[90%]"
-          onMouseEnter={() => setTooltipShown(true)}
-          onMouseLeave={() => setTooltipShown(false)}
-          data-tooltip-id={id}
-        >
-          <FaTrashAlt
-            size={25}
-            id={`${id}-bucket`}
-            className="pointer-events-none clr-base"
-          />
-        </div>
-        <Tooltip
-          anchorSelect={`#${id}-bucket`}
-          isOpen={Boolean(active && tooltipShown)}
-          place="top"
-          opacity={1}
-          content="Move to Trash"
-          variant="error"
-        />
-      </div>
-    </SortableContext>
-  );
-};
-
 export const DndProvider = () => {
-  const {
-    design,
-    updateDesign,
-    draftState: { CHANGE_DESIGN_FIRED },
-  } = useDraftContext();
+  const { design, updateDesign } = useDraftContext();
   const [activeId, setActiveId] = useState<null | string>(null);
-  const [deleted, setDeleted] = useState<DraftComponent[]>([]);
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -299,10 +241,9 @@ export const DndProvider = () => {
       onDragOver={handleDragOver}
       onDragEnd={handleDragEnd}
     >
-      {Object.keys(design.sections).map((name) => (
-        <Section key={name} {...design.sections[name as SectionId]!} />
+      {typedKeys(design.sections).map((sectionId) => (
+        <Section key={sectionId} {...design.sections[sectionId]!} />
       ))}
-      {!CHANGE_DESIGN_FIRED && <Garbage components={deleted} />}
     </DndContext>
   );
 };

@@ -13,6 +13,7 @@ export const Layout = (props: LayoutProps) => {
   return (
     <>
       <Navigation />
+      <div className="absolute left-0 top-[65px] w-full" />
       {children}
       <footer className="mt-[5rem] flex w-screen grow items-end justify-center">
         <div className="border-top flex-center w-full gap-2 py-5">

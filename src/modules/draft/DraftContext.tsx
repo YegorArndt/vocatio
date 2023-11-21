@@ -1,21 +1,24 @@
 import { createContext, useContext, useReducer, useState } from "react";
+
+import * as actions from "./actions";
+import { Venusaur } from "./designs/Venusaur";
+import { DraftComponent, TypeOfComponent } from "./types/components";
 import type {
   DraftState,
   DraftContextInput,
   Design,
-  DraftContext as DraftContextType,
   NewComponent,
-  DraftComponent,
-  TypeOfComponent,
-} from "./types";
-import * as actions from "./actions";
+  DraftContext as DraftContextType,
+} from "./types/processed";
+import type { RawDesign } from "./types/raw";
+import { getDefaults } from "./utils/common";
+import { getProcessedDesign } from "./utils/getProcessedDesign";
 import {
   addNewComponent,
-  getEditableDesign,
-  changeComponentType as changeType,
-  toggleClassName as toggleCn,
-} from "./utils";
-import { Venusaur } from "./designs/Venusaur";
+  changeComponentType,
+  removeComponent,
+  toggleCn,
+} from "./utils/tooltip";
 
 const initialArg = {
   [actions.DOWNLOAD_FIRED]: false,
@@ -58,59 +61,33 @@ export const DraftContext = (props: DraftContextInput) => {
   const { children, defaultUserData, vacancy, user } = props;
   const [state, dispatch] = useReducer(reducer, initialArg);
 
-  const fields = {
-    "user-name": user.ownName || defaultUserData.fullName,
-    "job-title": user.ownJobTitle || vacancy.jobTitle,
-    objective: user.ownObjective,
-    email: defaultUserData.emailAddresses[0]?.emailAddress,
-    experience: user.ownExperienceYears || vacancy.requiredYears,
-    "skills-list": vacancy.requiredSkills,
-    country: user.ownCountry || vacancy.country,
-    address: vacancy.country,
-    phone: user.ownPhone || defaultUserData.phoneNumbers[0]?.phoneNumber,
-    linkedin: user.linkedInUrl,
-    github: user.githubUrl,
-    "education-duration": "2016-2020",
-    "education-degree": "Master degree",
-    "education-university": "MSU, Computer Science",
-    "english-level": "C1",
-    "russian-level": "C1",
-    "german-level": "C1",
-    "spanish-level": "C1",
-    city: user.ownCity || vacancy.country,
-    "user-image": user.ownImage || defaultUserData.imageUrl,
-  };
+  const defaults = getDefaults(user, defaultUserData, vacancy);
+  const jobTitle = vacancy.jobTitle || user.ownJobTitle || "";
+  const jobDescription = vacancy.description || "";
 
-  const toEditableDesign = (design: Design) => {
-    return getEditableDesign({
-      design,
-      fields,
-      vacancyId: vacancy.id,
-      jobDescription: vacancy.description || "",
-      jobTitle: vacancy.jobTitle || user.ownJobTitle || "",
-    });
-  };
+  const processDesign = (d: RawDesign | Design) =>
+    getProcessedDesign(defaults, d, vacancy.id, jobTitle, jobDescription);
 
-  const initialDesign = toEditableDesign(Venusaur);
+  const initialDesign = processDesign(Venusaur);
 
   const [design, setDesign] = useState<Design>(initialDesign);
 
-  const updateDesign = (updateFn: (design: Design) => Design) => {
-    setDesign((prev) => updateFn(prev));
+  const updateDesign = (updateFn: (d: Design) => Design) => {
+    setDesign((d) => updateFn(d));
   };
 
-  const changeDesign = (design: Design) => setDesign(toEditableDesign(design));
+  const changeDesign = (d: RawDesign | Design) => setDesign(processDesign(d));
 
-  const addComponent = (nc: NewComponent, clickedComponent: DraftComponent) =>
-    setDesign((prev) => addNewComponent(prev, nc, clickedComponent));
+  const add = (nc: NewComponent, clickedComponent: DraftComponent) =>
+    setDesign((d) => addNewComponent(d, nc, clickedComponent));
 
-  const toggleClassName = (component: DraftComponent, className: string) =>
-    setDesign((prev) => toggleCn(prev, component, className));
+  const remove = (c: DraftComponent) => setDesign((d) => removeComponent(d, c));
 
-  const changeComponentType = (
-    componentToChange: DraftComponent,
-    newType: TypeOfComponent
-  ) => setDesign((prev) => changeType(prev, componentToChange, newType));
+  const toggleClassName = (c: DraftComponent, className: string) =>
+    setDesign((d) => toggleCn(d, c, className));
+
+  const changeType = (c: DraftComponent, newType: TypeOfComponent) =>
+    setDesign((d) => changeComponentType(d, c, newType));
 
   const context: DraftContextType = {
     draftState: state,
@@ -122,9 +99,10 @@ export const DraftContext = (props: DraftContextInput) => {
     },
     design,
     updateDesign,
-    addComponent,
+    add,
+    remove,
     toggleClassName,
-    changeComponentType,
+    changeType,
     changeDesign,
     user,
     vacancy,

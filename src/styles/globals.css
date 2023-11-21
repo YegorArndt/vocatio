@@ -75,7 +75,7 @@
   /* SUPER IMPORTANT
     This helps prevent cv texts from shifting down
   */
-  img:not([class*="divider"]) {
+  img {
     @apply inline-block;
   }
 
@@ -264,6 +264,17 @@
     align-items: center;
   }
 
+  /* CV  */
+  .cv-with-header {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* Creates three equal columns */
+    grid-template-rows: 300px 1fr; /* Two rows: one for the full-width div, another for the columns */
+  }
+
+  .cv-top-section {
+    grid-column: 1 / -1; /* Span from the first column line to the last column line */
+  }
+
   .border {
     border: 1px solid var(--border-clr);
   }
@@ -300,5 +311,9 @@
         transparent 2px,
         transparent 4px
       );
+  }
+
+  .sky-bg {
+    background: linear-gradient(to right, #3a0287, #3b7eb4);
   }
 }

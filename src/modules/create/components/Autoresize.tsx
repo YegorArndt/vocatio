@@ -1,19 +1,13 @@
 import cn from "classnames";
-import {
-  type SyntheticEvent,
-  type TextareaHTMLAttributes,
-  useRef,
-  useEffect,
-} from "react";
+import { type SyntheticEvent, useRef, useEffect, HTMLAttributes } from "react";
 
 export type AutoresizeProps = {
   id: string;
   value: string | undefined;
-  className?: string;
-} & TextareaHTMLAttributes<HTMLTextAreaElement>;
+} & HTMLAttributes<HTMLDivElement>;
 
 export const Autoresize = (props: AutoresizeProps) => {
-  const { className, id, value, style } = props;
+  const { id, value, style, className } = props;
 
   const _value = useRef(localStorage.getItem(id) || value);
 
@@ -34,10 +28,11 @@ export const Autoresize = (props: AutoresizeProps) => {
   return (
     <div
       contentEditable
-      className={cn("max-w-[400px] break-words", className, {})}
       onInput={onInput}
       data-placeholder={value ?? _value.current}
+      className={cn("max-w-[400px] break-words", className, {})}
       style={style}
+      suppressContentEditableWarning
     >
       {_value.current}
     </div>

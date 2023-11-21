@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from "uuid";
 
 import { DraftComponent, TypeOfComponent } from "../types/components";
-import { Design, NewComponent } from "../types/processed";
+import { Design, NewComponent } from "../types";
 import { isDecoration } from "./common";
 
 const rawComponent = {

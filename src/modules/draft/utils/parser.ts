@@ -1,5 +1,5 @@
 import { type Defaults } from "../constants";
-import type { Design } from "../types/processed";
+import type { Design } from "../types";
 import type { RawComponent, RawDesign } from "../types/raw";
 import type { Sections } from "../types/sections";
 import { typedKeys, isDecoration } from "./common";
@@ -36,23 +36,21 @@ const getProps = (
   return modified;
 };
 
-export const getProcessedDesign = (
+export const parser = (
   defaults: Defaults,
   rawDesign: RawDesign | Design,
   vacancyId: string,
   jobTitle: string,
   jobDescription: string
 ): Design => {
-  if ("sections" in rawDesign) return rawDesign as Design;
-
   const processedSections = {} as Sections;
-  const { rawSections } = rawDesign;
+  const { sections } = rawDesign;
 
-  typedKeys(rawSections).forEach((sectionId) => {
-    const section = rawSections[sectionId]!;
-    const { rawComponents } = section;
+  typedKeys(sections).forEach((sectionId) => {
+    const section = sections[sectionId]!;
+    const { components } = section;
 
-    const processedComponents = rawComponents.map((rc, i) => {
+    const processedComponents = components.map((rc, i) => {
       const { id, ...rest } = rc;
 
       const newId = `${id}-${vacancyId}`;

@@ -77,12 +77,12 @@ export const EditorTooltip = (props: EditorTooltipProps) => {
               >
                 {classNames.map(({ label, className }) => {
                   return (
-                    !Boolean(c.isDecoration) && (
+                    !c.isDecoration && (
                       <li key={className}>
                         <Button
                           baseCn="navigation sm gap-2"
                           className={cn({
-                            [active]: c.props.className.includes(className),
+                            [active]: c.props?.className?.includes(className),
                           })}
                           onClick={() => toggleClassName(c, className)}
                         >
@@ -132,7 +132,7 @@ export const EditorTooltip = (props: EditorTooltipProps) => {
                     <RiDeleteBin6Line />
                   </Button>
                 </li>
-                {!Boolean(c.isDecoration) && (
+                {!c.isDecoration && (
                   <li>
                     <Menu
                       menuButton={

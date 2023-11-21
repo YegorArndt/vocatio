@@ -9,7 +9,7 @@ import { BlurImage } from "./BlurImage";
 import { Nidoqueen } from "~/modules/draft/designs/Nidoqueen";
 import { useEffect, useRef } from "react";
 import { Charmander } from "~/modules/draft/designs/Charmander";
-import type { Design } from "~/modules/draft/types/processed";
+import type { Design } from "~/modules/draft/types";
 
 const designs = [Venusaur, Charizard, Nidoqueen, Charmander];
 

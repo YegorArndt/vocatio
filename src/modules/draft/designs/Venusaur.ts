@@ -327,31 +327,31 @@ export const Venusaur: RawDesign = {
   id: VenusaurId,
   name: "Venusaur",
   a4: `grid grid-cols-[300px_1fr] [&_.group]:mb-2 [&>*]:px-5 [&_.divider]:mb-3 [&_.story]:text-[#737373] [&_.story]:text-[#737373] [&_.story]:pb-6 [&_.story]:pt-2 [&_.story]:max-w-[420px]  [&_.text]:leading-[170%] [&_.date]:relative [&_.story]:relative [&_.companyName]:relative [&_.jobTitle]:relative`,
-  rawSections: {
+  sections: {
     "top-left": {
       id: "top-left",
       order: 0,
-      rawComponents: topLeft,
+      components: topLeft,
       className: "bg-[#323B4C] text-[#fff]  [&_.image]:m-auto pt-[2rem]",
     },
     "top-right": {
       id: "top-right",
       order: 1,
-      rawComponents: topRight,
+      components: topRight,
       className:
         "pt-[2rem] bg-[#fff] text-[#000] [&_.heading-2]:text-[1.5rem] [&_.heading-2]:tracking-wider [&_.heading-2]:text-[#323B4C] [&_.heading-2]:mb-3 [&_.heading-2]:font-light !pr-2 [&_.text]:max-w-[450px] overflow-y-visible [&_.text]:pb-3 [&_.text]:text-[#737373]",
     },
     "body-left": {
       id: "body-left",
       order: 3,
-      rawComponents: bodyLeft,
+      components: bodyLeft,
       className:
         "flex h-full flex-col items-center bg-[#323B4C] h-[842px] clr-white [&_.image]:mx-auto [&_div:not(:first-child)>.heading-2]:pt-3",
     },
     "body-right": {
       id: "body-right",
       order: 4,
-      rawComponents: bodyRight,
+      components: bodyRight,
       className:
         "relative bg-white clr-black [&_.heading-1]:text-[#323B4C] [&_.heading-2]:text-[#323B4C] [&_.heading-3]:text-[#323B4C] !pr-2 [&_div:not(:first-child)>.heading-2]:pt-3 [&_.date]:text-[.9rem] [&_.text]:pl-6 [&_.heading-3]:pl-6",
     },

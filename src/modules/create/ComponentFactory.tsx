@@ -4,7 +4,7 @@ import { UserImage } from "./components/UserImage";
 import { useComponentContext } from "./ComponentContext";
 import { Autoresize } from "./components/Autoresize";
 import { List } from "./components/List";
-import { Design } from "../draft/types/processed";
+import { Design } from "../draft/types";
 import { DraftComponent } from "../draft/types/components";
 import { useDraftContext } from "../draft/DraftContext";
 

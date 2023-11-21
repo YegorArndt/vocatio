@@ -8,7 +8,6 @@ import type {
   TypeOfComponent,
 } from "./components";
 import type { Sections } from "./sections";
-import { RawDesign } from "./raw";
 
 export type Design = {
   id: string;
@@ -38,7 +37,7 @@ export type DraftContext = {
   design: Design;
   updateDesign: (updateFn: (design: Design) => Design) => void;
   add: (nc: NewComponent, clickedComponent: DraftComponent) => void;
-  changeDesign: (design: RawDesign | Design) => void;
+  changeDesign: (design: Design) => void;
   toggleClassName: (component: DraftComponent, className: string) => void;
   changeType: (
     componentToChange: DraftComponent,

@@ -143,18 +143,18 @@ export const Charizard: RawDesign = {
   id: CharizardId,
   name: "Charizard",
   a4: "grid grid-cols-[300px_1fr] bg-white",
-  rawSections: {
+  sections: {
     left: {
       id: "left",
       order: 0,
-      rawComponents: leftComponents,
+      components: leftComponents,
       className:
         "flex items-center h-full flex-col bg-[#064C40] p-8 clr-white [&_.image]:mx-auto",
     },
     right: {
       id: "right",
       order: 1,
-      rawComponents: rightComponents,
+      components: rightComponents,
       className: "bg-white p-[2rem] clr-black",
     },
   },

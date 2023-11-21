@@ -9,10 +9,10 @@ import type {
   Design,
   NewComponent,
   DraftContext as DraftContextType,
-} from "./types/processed";
+} from "./types";
 import type { RawDesign } from "./types/raw";
 import { getDefaults } from "./utils/common";
-import { getProcessedDesign } from "./utils/getProcessedDesign";
+import { parser } from "./utils/parser";
 import {
   addNewComponent,
   changeComponentType,
@@ -65,10 +65,10 @@ export const DraftContext = (props: DraftContextInput) => {
   const jobTitle = vacancy.jobTitle || user.ownJobTitle || "";
   const jobDescription = vacancy.description || "";
 
-  const processDesign = (d: RawDesign | Design) =>
-    getProcessedDesign(defaults, d, vacancy.id, jobTitle, jobDescription);
+  const parseDesign = (d: RawDesign | Design) =>
+    parser(defaults, d, vacancy.id, jobTitle, jobDescription);
 
-  const initialDesign = processDesign(Venusaur);
+  const initialDesign = parseDesign(Venusaur);
 
   const [design, setDesign] = useState<Design>(initialDesign);
 
@@ -76,7 +76,7 @@ export const DraftContext = (props: DraftContextInput) => {
     setDesign((d) => updateFn(d));
   };
 
-  const changeDesign = (d: RawDesign | Design) => setDesign(processDesign(d));
+  const changeDesign = (d: RawDesign | Design) => setDesign(parseDesign(d));
 
   const add = (nc: NewComponent, clickedComponent: DraftComponent) =>
     setDesign((d) => addNewComponent(d, nc, clickedComponent));

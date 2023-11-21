@@ -201,17 +201,17 @@ export const Nidoqueen: RawDesign = {
   id: NidoqueenId,
   name: "Nidoqueen",
   a4: `flex py-[4rem] px-[2rem] bg-white clr-black relative ${blueSquare} ${dashedCircle}`,
-  sections: {
+  rawSections: {
     left: {
       id: "left",
       order: 0,
-      components: left,
+      rawComponents: left,
       className: `flex items-center flex-col [&_.heading-2]:mt-5 [&_.heading-1]:text-[30px] [&_.heading-1]:text-black [&_.text]:my-1 ${leftImage} [&>*]:z-1 relative ${leftHeading4} [&_.text]:max-w-[300px] [&_.group]:max-w-[300px]`,
     },
     right: {
       id: "right",
       order: 1,
-      components: right,
+      rawComponents: right,
       className:
         "flex flex-col [&_.heading-4]:ml-[5rem] [&_.heading-4]:mt-[3rem]",
     },

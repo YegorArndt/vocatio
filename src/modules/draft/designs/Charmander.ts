@@ -166,30 +166,30 @@ export const Charmander: RawDesign = {
   id: CharmanderId,
   name: "Charmander",
   a4: `grid grid-cols-[300px,1fr] [&_.group]:mb-2 [&>*]:p-[2rem]`,
-  sections: {
+  rawSections: {
     "top-left": {
       id: "top-left",
       order: 0,
-      components: topLeft,
+      rawComponents: topLeft,
       className: "bg-[#252E34] text-[#fff] h-[300px]",
     },
     "top-right": {
       id: "top-right",
       order: 1,
-      components: topRight,
+      rawComponents: topRight,
       className: "bg-[#252E34] text-[#fff] h-[300px]",
     },
     "body-left": {
       id: "body-left",
       order: 3,
-      components: bodyLeft,
+      rawComponents: bodyLeft,
       className:
         "bg-[#3F4C5C] h-[822px] [&_.divider]:max-w-[180px] [&_div:not(:first-child)>.heading-3]:mt-5 [&_.text]:mt-1 [&_.group]:grid [&_.group]:grid-cols-[70px,175px] [&_.group]:gap-2 [&_.group]:text-[13px]",
     },
     "body-right": {
       id: "body-right",
       order: 4,
-      components: bodyRight,
+      rawComponents: bodyRight,
       className: "bg-[#fff] text-[#000] h-[822px] [&_.divider]:max-w-[180px]",
     },
   },

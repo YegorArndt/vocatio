@@ -18,7 +18,7 @@ export type RawComponent = Omit<
 };
 
 export type RawSection = Omit<Section, "components"> & {
-  components: RawComponent[];
+  rawComponents: RawComponent[];
 };
 
 export type RawDesign = {
@@ -26,7 +26,7 @@ export type RawDesign = {
   name: string;
   a4: string;
   intrinsic: IntrinsicDesignComponents;
-  sections: Partial<Record<SectionId, RawSection>>;
+  rawSections: Partial<Record<SectionId, RawSection>>;
   font: string;
   image: string;
   pokemonImage: string;

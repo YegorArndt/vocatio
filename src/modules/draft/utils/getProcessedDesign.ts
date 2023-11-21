@@ -1,26 +1,8 @@
-import { type CSSProperties } from "react";
-
 import { type Defaults } from "../constants";
 import type { Design } from "../types/processed";
 import type { RawComponent, RawDesign } from "../types/raw";
 import type { Sections } from "../types/sections";
 import { typedKeys, isDecoration } from "./common";
-
-const mergeWithIntrinsic = (
-  c: RawComponent & { props: { className: string; style: CSSProperties } },
-  d: RawDesign | Design
-) => {
-  const { intrinsic } = d;
-  const intrinsicComponent = intrinsic[c.type];
-  if (!intrinsicComponent) return c.props;
-
-  const { className: k, style: s } = c.props;
-
-  const className = `${c.type} ${intrinsicComponent.className || ""} ${k}`;
-  const style = { ...intrinsicComponent.style, ...s };
-
-  return { ...intrinsicComponent, ...c.props, className, style };
-};
 
 const applyModifiers = (rc: RawComponent, defaults: Defaults) => {
   const { modifierFn, modifierIds, props } = rc;
@@ -49,8 +31,7 @@ const getProps = (
     props: { className: "", style: {}, ...rc.props },
   };
 
-  const merged = mergeWithIntrinsic(rcCopy, d);
-  const modified = applyModifiers({ ...rcCopy, props: merged }, defaults);
+  const modified = applyModifiers(rcCopy, defaults);
 
   return modified;
 };
@@ -62,14 +43,16 @@ export const getProcessedDesign = (
   jobTitle: string,
   jobDescription: string
 ): Design => {
+  if ("sections" in rawDesign) return rawDesign as Design;
+
   const processedSections = {} as Sections;
-  const { sections } = rawDesign;
+  const { rawSections } = rawDesign;
 
-  typedKeys(sections).forEach((sectionId) => {
-    const section = sections[sectionId]!;
-    const { components } = section;
+  typedKeys(rawSections).forEach((sectionId) => {
+    const section = rawSections[sectionId]!;
+    const { rawComponents } = section;
 
-    const processedComponents = components.map((rc, i) => {
+    const processedComponents = rawComponents.map((rc, i) => {
       const { id, ...rest } = rc;
 
       const newId = `${id}-${vacancyId}`;

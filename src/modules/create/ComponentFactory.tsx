@@ -44,5 +44,5 @@ export const ComponentFactory = () => {
   const Component =
     componentMapping[c.type as keyof typeof componentMapping] || Autoresize;
 
-  return <Component {...merged} />;
+  return <Component id={c.id} {...merged} />;
 };

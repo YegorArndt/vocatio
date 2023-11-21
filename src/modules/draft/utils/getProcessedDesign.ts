@@ -63,7 +63,7 @@ export const getProcessedDesign = (
         order: i + 1,
         id: newId,
         sectionId,
-        props: { ...getProps(rc, defaults, rawDesign), id: newId },
+        props: { ...getProps(rc, defaults, rawDesign) },
       };
 
       return component;

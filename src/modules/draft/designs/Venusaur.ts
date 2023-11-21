@@ -343,14 +343,14 @@ export const Venusaur: RawDesign = {
     },
     "body-left": {
       id: "body-left",
-      order: 0,
+      order: 3,
       rawComponents: bodyLeft,
       className:
         "flex h-full flex-col items-center bg-[#323B4C] h-[842px] clr-white [&_.image]:mx-auto [&_div:not(:first-child)>.heading-2]:pt-3",
     },
     "body-right": {
       id: "body-right",
-      order: 1,
+      order: 4,
       rawComponents: bodyRight,
       className:
         "relative bg-white clr-black [&_.heading-1]:text-[#323B4C] [&_.heading-2]:text-[#323B4C] [&_.heading-3]:text-[#323B4C] !pr-2 [&_div:not(:first-child)>.heading-2]:pt-3 [&_.date]:text-[.9rem] [&_.text]:pl-6 [&_.heading-3]:pl-6",

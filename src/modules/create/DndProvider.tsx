@@ -137,14 +137,12 @@ export const DndProvider = () => {
       return;
     }
 
-    updateDesign((currentDesign) => {
-      const activeItems =
-        currentDesign.sections[activeSectionId as SectionId]?.components;
-      const overItems =
-        currentDesign.sections[overSectionId as SectionId]?.components;
+    updateDesign((d) => {
+      const activeItems = d.sections[activeSectionId as SectionId]?.components;
+      const overItems = d.sections[overSectionId as SectionId]?.components;
 
       if (!activeItems || !overItems) {
-        return currentDesign;
+        return d;
       }
 
       const activeIndex = activeItems.findIndex(
@@ -152,7 +150,7 @@ export const DndProvider = () => {
       );
       const overIndex = overItems.findIndex((item) => item.id === over?.id);
 
-      const newSections = { ...currentDesign.sections };
+      const newSections = { ...d.sections };
 
       // Remove the active item from its original section
       newSections[activeSectionId as SectionId]!.components =
@@ -165,7 +163,15 @@ export const DndProvider = () => {
         ...overItems.slice(overIndex),
       ] as DraftComponent[];
 
-      return { ...currentDesign, sections: newSections };
+      // Update sectionId key of component
+      newSections[overSectionId as SectionId]!.components = newSections[
+        overSectionId as SectionId
+      ]!.components.map((c, index) => ({
+        ...c,
+        sectionId: overSectionId as SectionId,
+      }));
+
+      return { ...d, sections: newSections };
     });
   };
 
@@ -179,25 +185,6 @@ export const DndProvider = () => {
       over?.id as string
     );
 
-    if (overSectionId === undefined) {
-      // Delete the component
-      updateDesign((currentDesign) => {
-        const newSections = { ...currentDesign.sections };
-
-        Object.keys(newSections).forEach((sectionId) => {
-          newSections[sectionId as SectionId]!.components = newSections[
-            sectionId as SectionId
-          ]!.components.filter((c) => c.id !== active.id);
-        });
-
-        return { ...currentDesign, sections: newSections };
-      });
-
-      setActiveId(null);
-      // setDeleted((deleted) => [...(deleted ?? []), active.data.current]);
-      return;
-    }
-
     if (
       !activeSectionId ||
       !overSectionId ||
@@ -206,16 +193,16 @@ export const DndProvider = () => {
       return;
     }
 
-    updateDesign((currentDesign) => {
-      const activeIndex = currentDesign.sections[
+    updateDesign((d) => {
+      const activeIndex = d.sections[
         activeSectionId as SectionId
       ]?.components.findIndex((c) => c.id === active.id);
-      const overIndex = currentDesign.sections[
+      const overIndex = d.sections[
         overSectionId as SectionId
       ]?.components.findIndex((c) => c.id === over?.id);
 
       if (activeIndex !== overIndex) {
-        const newSections = { ...currentDesign.sections };
+        const newSections = { ...d.sections };
 
         // Move the active item within its section to the new position
         newSections[overSectionId as SectionId]!.components = arrayMove(
@@ -224,10 +211,18 @@ export const DndProvider = () => {
           overIndex!
         );
 
-        return { ...currentDesign, sections: newSections };
+        // Update sectionId key of component
+        newSections[overSectionId as SectionId]!.components = newSections[
+          overSectionId as SectionId
+        ]!.components.map((c, index) => ({
+          ...c,
+          sectionId: overSectionId as SectionId,
+        }));
+
+        return { ...d, sections: newSections };
       }
 
-      return currentDesign; // If nothing changed, return the current design
+      return d; // If nothing changed, return the current design
     });
 
     setActiveId(null);

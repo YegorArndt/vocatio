@@ -80,6 +80,8 @@ export const toggleCn = (
   const { sectionId } = component;
   const section = sections[sectionId];
 
+  console.log(section);
+
   if (!section) return design;
 
   const { components } = section;
@@ -148,7 +150,7 @@ export const addNewComponent = (
     id: uuidv4(),
     order,
     sectionId: targetSection.id,
-  } as DraftComponent;
+  };
 
   targetSection.components = [...targetSection.components, draftComponent].sort(
     (a, b) => a.order - b.order

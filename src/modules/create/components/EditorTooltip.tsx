@@ -15,7 +15,7 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import { Button } from "~/components/ui/buttons/Button";
 import { useDraftContext } from "~/modules/draft/DraftContext";
 import { useComponentContext } from "../ComponentContext";
-import { typedKeys } from "~/modules/draft/utils/common";
+import { isDecoration, typedKeys } from "~/modules/draft/utils/common";
 
 type EditorTooltipProps = PropsWithChildren<{
   dndRef: (node: HTMLElement | null) => void;
@@ -45,7 +45,6 @@ const active = "!bg-secondary-hover transition";
 
 export const EditorTooltip = (props: EditorTooltipProps) => {
   const { dndRef, listeners, attributes, children, ...rest } = props;
-
   const c = useComponentContext();
   const {
     design,
@@ -143,14 +142,17 @@ export const EditorTooltip = (props: EditorTooltipProps) => {
                       }
                       gap={5}
                     >
-                      {typedKeys(intrinsic).map((typeOfComponent) => (
-                        <MenuItem
-                          key={typeOfComponent}
-                          onClick={() => changeType(c, typeOfComponent)}
-                        >
-                          {typeOfComponent}
-                        </MenuItem>
-                      ))}
+                      {typedKeys(intrinsic).map(
+                        (typeOfComponent) =>
+                          !isDecoration(typeOfComponent) && (
+                            <MenuItem
+                              key={typeOfComponent}
+                              onClick={() => changeType(c, typeOfComponent)}
+                            >
+                              {typeOfComponent}
+                            </MenuItem>
+                          )
+                      )}
                     </Menu>
                   </li>
                 )}

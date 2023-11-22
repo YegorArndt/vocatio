@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from "uuid";
-import type { RawDesign, RawComponent } from "../types/raw";
+import type { RawComponent, RawDesign } from "./types";
 
 const CharizardId = uuidv4();
 

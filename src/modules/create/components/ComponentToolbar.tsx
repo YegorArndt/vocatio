@@ -11,13 +11,18 @@ import { IoHandLeftSharp } from "react-icons/io5";
 import { IoAddCircleSharp } from "react-icons/io5";
 import { Menu, MenuButton, MenuItem } from "@szhsin/react-menu";
 import { RiDeleteBin6Line } from "react-icons/ri";
+import { HiOutlineArrowUturnDown } from "react-icons/hi2";
 
 import { Button } from "~/components/ui/buttons/Button";
 import { useDraftContext } from "~/modules/draft/DraftContext";
 import { useComponentContext } from "../ComponentContext";
-import { isDecoration, typedKeys } from "~/modules/draft/utils/common";
+import {
+  isDecoration,
+  isTimeline,
+  typedKeys,
+} from "~/modules/draft/utils/common";
 
-type EditorTooltipProps = PropsWithChildren<{
+type ComponentToolbarProps = PropsWithChildren<{
   dndRef: (node: HTMLElement | null) => void;
   listeners: SyntheticListenerMap | undefined;
   attributes: DraggableAttributes;
@@ -43,15 +48,15 @@ const SmChevron = () => <FaChevronDown size={8} />;
 
 const active = "!bg-secondary-hover transition";
 
-export const EditorTooltip = (props: EditorTooltipProps) => {
+export const ComponentToolbar = (props: ComponentToolbarProps) => {
   const { dndRef, listeners, attributes, children, ...rest } = props;
   const c = useComponentContext();
   const {
     design,
     toggleClassName,
-    add,
-    changeType,
-    remove,
+    addNewComponent,
+    changeComponentType,
+    removeComponent,
     draftState: { CHANGE_DESIGN_FIRED },
   } = useDraftContext();
   const { intrinsic } = design;
@@ -62,10 +67,10 @@ export const EditorTooltip = (props: EditorTooltipProps) => {
       {!CHANGE_DESIGN_FIRED && (
         <Tooltip
           id={c.id}
-          place="top"
+          place={isTimeline(c.type) ? "bottom" : "top"}
           opacity={1}
           style={{ paddingInline: 10, zIndex: 9999 }}
-          globalCloseEvents={{ scroll: true, clickOutsideAnchor: true }}
+          globalCloseEvents={{ clickOutsideAnchor: true }}
           clickable
           delayShow={400}
           delayHide={200}
@@ -77,7 +82,8 @@ export const EditorTooltip = (props: EditorTooltipProps) => {
               >
                 {classNames.map(({ label, className }) => {
                   return (
-                    !c.isDecoration && (
+                    !isDecoration(c.type) &&
+                    !isTimeline(c.type) && (
                       <li key={className}>
                         <Button
                           baseCn="navigation sm gap-2"
@@ -93,8 +99,8 @@ export const EditorTooltip = (props: EditorTooltipProps) => {
                   );
                 })}
                 <li {...listeners} {...attributes}>
-                  <Button baseCn="navigation sm gap-2">
-                    <IoHandLeftSharp /> Drag
+                  <Button baseCn="navigation sm">
+                    <IoHandLeftSharp />
                   </Button>
                 </li>
                 <li>
@@ -110,7 +116,7 @@ export const EditorTooltip = (props: EditorTooltipProps) => {
                       <MenuItem
                         key={typeOfComponent}
                         onClick={() =>
-                          add(
+                          addNewComponent(
                             {
                               type: typeOfComponent,
                               ...intrinsic[typeOfComponent],
@@ -126,18 +132,18 @@ export const EditorTooltip = (props: EditorTooltipProps) => {
                 </li>
                 <li>
                   <Button
-                    onClick={() => remove(c)}
+                    onClick={() => removeComponent(c)}
                     className="sm common hover:bg-red"
                   >
                     <RiDeleteBin6Line />
                   </Button>
                 </li>
-                {!c.isDecoration && (
+                {!isDecoration(c.type) && !isTimeline(c.type) && (
                   <li>
                     <Menu
                       menuButton={
                         <MenuButton className="navigation sm common gap-2">
-                          Turn into <SmChevron />
+                          <HiOutlineArrowUturnDown /> <SmChevron />
                         </MenuButton>
                       }
                       gap={5}
@@ -147,7 +153,9 @@ export const EditorTooltip = (props: EditorTooltipProps) => {
                           !isDecoration(typeOfComponent) && (
                             <MenuItem
                               key={typeOfComponent}
-                              onClick={() => changeType(c, typeOfComponent)}
+                              onClick={() =>
+                                changeComponentType(c, typeOfComponent)
+                              }
                             >
                               {typeOfComponent}
                             </MenuItem>

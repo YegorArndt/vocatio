@@ -9,7 +9,7 @@ import { BlurImage } from "./BlurImage";
 import { Nidoqueen } from "~/modules/draft/designs/Nidoqueen";
 import { useEffect, useRef } from "react";
 import { Charmander } from "~/modules/draft/designs/Charmander";
-import type { Design } from "~/modules/draft/types";
+import type { Design } from "~/modules/draft/types/design";
 
 const designs = [Venusaur, Charizard, Nidoqueen, Charmander];
 
@@ -18,6 +18,7 @@ export const DesignViewer = () => {
     dispatchers: { setChangeDesignFired },
     changeDesign,
     design,
+    updateDesign,
   } = useDraftContext();
 
   const initialDesign = useRef<Design | null>(null);
@@ -57,7 +58,7 @@ export const DesignViewer = () => {
           text="Cancel"
           className="outlined lg"
           onClick={() => {
-            changeDesign(initialDesign.current!);
+            updateDesign(() => initialDesign.current!);
             setChangeDesignFired(false);
           }}
         />

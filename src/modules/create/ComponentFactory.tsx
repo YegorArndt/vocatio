@@ -4,9 +4,10 @@ import { UserImage } from "./components/UserImage";
 import { useComponentContext } from "./ComponentContext";
 import { Autoresize } from "./components/Autoresize";
 import { List } from "./components/List";
-import { Design } from "../draft/types";
-import { DraftComponent } from "../draft/types/components";
 import { useDraftContext } from "../draft/DraftContext";
+import type { NormalizedComponent } from "../draft/types/components";
+import type { Design } from "../draft/types/design";
+import { DecoratedTimeline } from "./components/DecoratedTimeline";
 
 const componentMapping = {
   text: Autoresize,
@@ -14,6 +15,7 @@ const componentMapping = {
   divider: Divider,
   image: UserImage,
   list: List,
+  "decorated-timeline": DecoratedTimeline,
 };
 
 /**
@@ -22,7 +24,7 @@ const componentMapping = {
  * So the props need to be recalculated dynamically.
  */
 
-const mergeWithIntrinsic = (c: DraftComponent, d: Design) => {
+const mergeWithIntrinsic = (c: NormalizedComponent, d: Design) => {
   const { intrinsic } = d;
   const intrinsicComponent = intrinsic[c.type];
   if (!intrinsicComponent) return c.props;

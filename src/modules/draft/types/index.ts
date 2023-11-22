@@ -3,22 +3,12 @@ import type { ReactNode } from "react";
 import * as actions from "../actions";
 import type { UserResource } from "@clerk/types";
 import type {
-  DraftComponent,
-  IntrinsicDesignComponents,
+  NormalizedComponent,
+  RawComponent,
   TypeOfComponent,
 } from "./components";
-import type { Sections } from "./sections";
-
-export type Design = {
-  id: string;
-  name: string;
-  sections: Sections;
-  intrinsic: IntrinsicDesignComponents;
-  a4: string;
-  font: string;
-  image: string;
-  pokemonImage: string;
-};
+import type { Defaults } from "../constants";
+import type { Design } from "./design";
 
 export type DraftContextInput = {
   defaultUserData: UserResource;
@@ -35,22 +25,26 @@ export type Dispatchers = Record<
 
 export type DraftContext = {
   design: Design;
-  updateDesign: (updateFn: (design: Design) => Design) => void;
-  add: (nc: NewComponent, clickedComponent: DraftComponent) => void;
-  changeDesign: (design: Design) => void;
-  toggleClassName: (component: DraftComponent, className: string) => void;
-  changeType: (
-    componentToChange: DraftComponent,
+  updateDesign: (updateFn: (d: Design) => Design) => void;
+  changeDesign: (d: Design) => void;
+  toggleClassName: (component: NormalizedComponent, className: string) => void;
+  addNewComponent: (
+    rc: RawComponent,
+    clickedComponent: NormalizedComponent
+  ) => void;
+  addMultipleComponents: (
+    newComponents: RawComponent[],
+    clickedComponent: NormalizedComponent
+  ) => void;
+  changeComponentType: (
+    componentToChange: NormalizedComponent,
     type: TypeOfComponent
   ) => void;
-  remove: (componentToRemove: DraftComponent) => void;
+  removeComponent: (componentToRemove: NormalizedComponent) => void;
   draftState: DraftState;
   dispatchers: Dispatchers;
   user: User;
   vacancy: Vacancy;
   defaultUserData: UserResource;
-};
-
-export type NewComponent = Partial<DraftComponent> & {
-  type: TypeOfComponent;
+  defaults: Defaults;
 };

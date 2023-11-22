@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from "uuid";
-import { RawDesign, RawComponent } from "../types/raw";
+import type { RawComponent, RawDesign } from "./types";
 
 const CharmanderId = uuidv4();
 
@@ -179,15 +179,15 @@ export const Charmander: RawDesign = {
       components: topRight,
       className: "bg-[#252E34] text-[#fff] h-[300px]",
     },
-    "body-left": {
-      id: "body-left",
+    left: {
+      id: "left",
       order: 3,
       components: bodyLeft,
       className:
         "bg-[#3F4C5C] h-[822px] [&_.divider]:max-w-[180px] [&_div:not(:first-child)>.heading-3]:mt-5 [&_.text]:mt-1 [&_.group]:grid [&_.group]:grid-cols-[70px,175px] [&_.group]:gap-2 [&_.group]:text-[13px]",
     },
-    "body-right": {
-      id: "body-right",
+    right: {
+      id: "right",
       order: 4,
       components: bodyRight,
       className: "bg-[#fff] text-[#000] h-[822px] [&_.divider]:max-w-[180px]",

@@ -21,13 +21,12 @@ import { type PropsWithChildren, useState } from "react";
 import { CSS } from "@dnd-kit/utilities";
 
 import { useDraftContext } from "../draft/DraftContext";
-import { EditorTooltip } from "./components/EditorTooltip";
-
 import { ComponentContext, useComponentContext } from "./ComponentContext";
-import type { DraftComponent } from "../draft/types/components";
+import type { NormalizedComponent } from "../draft/types/components";
 import type { Sections, SectionId, Section } from "../draft/types/sections";
 import { typedKeys } from "../draft/utils/common";
 import { ComponentFactory } from "./ComponentFactory";
+import { ComponentToolbar } from "./components/ComponentToolbar";
 
 export const getSectionIdByComponentId = (
   sections: Sections,
@@ -40,7 +39,9 @@ export const getSectionIdByComponentId = (
 
     if (!section) return null;
 
-    return section.components.find((c: DraftComponent) => c.id === componentId);
+    return section.components.find(
+      (c: NormalizedComponent) => c.id === componentId
+    );
   });
 
   return sectionId;
@@ -68,14 +69,14 @@ const SortableItem = (props: PropsWithChildren<Record<string, unknown>>) => {
   };
 
   return (
-    <EditorTooltip
+    <ComponentToolbar
       dndRef={setNodeRef}
       listeners={listeners}
       attributes={attributes}
       style={style}
     >
       {children}
-    </EditorTooltip>
+    </ComponentToolbar>
   );
 };
 
@@ -161,7 +162,7 @@ export const DndProvider = () => {
         ...overItems.slice(0, overIndex),
         activeItems[activeIndex],
         ...overItems.slice(overIndex),
-      ] as DraftComponent[];
+      ] as NormalizedComponent[];
 
       // Update sectionId key of component
       newSections[overSectionId as SectionId]!.components = newSections[

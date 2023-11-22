@@ -1,7 +1,6 @@
 import { v4 as uuidv4 } from "uuid";
-
-import type { RawComponent, RawDesign } from "../types/raw";
-import { Story } from "@prisma/client";
+import type { RawComponent } from "../types/components";
+import type { RawDesign } from "../types/design";
 
 const VenusaurId = uuidv4();
 
@@ -30,7 +29,7 @@ const topRight: RawComponent[] = [
   },
 ];
 
-const bodyLeft: RawComponent[] = [
+const left: RawComponent[] = [
   {
     type: "heading-2",
     id: "general-title",
@@ -186,13 +185,7 @@ const bodyLeft: RawComponent[] = [
   },
 ];
 
-const line =
-  "before:absolute before:left-[1.5px] before:-top-2 before:h-[110%] before:w-[0.5px] before:bg-black";
-
-const ball =
-  "before:absolute before:-left-1 before:top-2 before:z-1 before:h-3 before:w-3 before:rounded-full before:border-2 before:border-solid before:border-black before:bg-white";
-
-const bodyRight: RawComponent[] = [
+const right: RawComponent[] = [
   {
     type: "heading-2",
     id: "experience-title-title",
@@ -205,121 +198,8 @@ const bodyRight: RawComponent[] = [
     id: "experience-divider",
   },
   {
-    type: "text",
-    id: "story-date-0",
-    props: {
-      className: `date font-bold ${ball}`,
-    },
-    modifierIds: ["user-stories"],
-    modifierFn: (values: Story[]) => {
-      const latestEmployment = values[0];
-      return { value: latestEmployment?.periodOfEmployment };
-    },
-  },
-  {
-    type: "heading-3",
-    id: "story-companyName-0",
-    props: {
-      className: `companyName ${line}`,
-    },
-    modifierIds: ["user-stories"],
-    modifierFn: (values: Story[]) => {
-      const latestEmployment = values[0];
-      return { value: latestEmployment?.companyName };
-    },
-  },
-  {
-    type: "heading-3",
-    id: "story-jobTitle-0",
-    props: {
-      className: `jobTitle font-bold ${line}`,
-    },
-    modifierIds: ["user-stories"],
-    modifierFn: (values: Story[]) => {
-      const latestEmployment = values[0];
-      return { value: latestEmployment?.jobTitle };
-    },
-  },
-  {
-    type: "text",
-    id: "story-content-0",
-    props: {
-      className: `story ${line}`,
-    },
-    modifierIds: ["user-stories"],
-    modifierFn: (values: Story[]) => {
-      const latestEmployment = values[0];
-      return { value: latestEmployment?.story };
-    },
-  },
-  // 2nd story
-  {
-    type: "text",
-    id: "story-date-1",
-    props: {
-      className: `date font-bold ${ball}`,
-    },
-    modifierIds: ["user-stories"],
-    modifierFn: (values: Story[]) => {
-      const latestEmployment = values[1];
-      return { value: latestEmployment?.periodOfEmployment };
-    },
-  },
-  {
-    type: "heading-3",
-    id: "story-companyName-1",
-    props: {
-      className: `companyName ${line}`,
-    },
-    modifierIds: ["user-stories"],
-    modifierFn: (values: Story[], props) => {
-      const latestEmployment = values[1];
-      const isLast = values.length - 1 === 1;
-
-      return {
-        value: latestEmployment?.companyName,
-        className: isLast
-          ? props?.className.replaceAll(line)
-          : props?.className,
-      };
-    },
-  },
-  {
-    type: "heading-3",
-    id: "story-jobTitle-1",
-    props: {
-      className: `jobTitle font-bold ${line}`,
-    },
-    modifierIds: ["user-stories"],
-    modifierFn: (values: Story[], props) => {
-      const latestEmployment = values[1];
-      const isLast = values.length - 1 === 1;
-
-      return {
-        value: latestEmployment?.jobTitle,
-        className: isLast
-          ? props?.className.replaceAll(line)
-          : props?.className,
-      };
-    },
-  },
-  {
-    type: "text",
-    id: "story-content-1",
-    props: {
-      className: `story ${line}`,
-    },
-    modifierIds: ["user-stories"],
-    modifierFn: (values: Story[], props) => {
-      const latestEmployment = values[1];
-      const isLast = values.length - 1 === 1;
-      return {
-        value: latestEmployment?.story,
-        className: isLast
-          ? props?.className.replaceAll(line)
-          : props?.className,
-      };
-    },
+    type: "decorated-timeline",
+    id: "user-stories",
   },
 ];
 
@@ -341,17 +221,17 @@ export const Venusaur: RawDesign = {
       className:
         "pt-[2rem] bg-[#fff] text-[#000] [&_.heading-2]:text-[1.5rem] [&_.heading-2]:tracking-wider [&_.heading-2]:text-[#323B4C] [&_.heading-2]:mb-3 [&_.heading-2]:font-light !pr-2 [&_.text]:max-w-[450px] overflow-y-visible [&_.text]:pb-3 [&_.text]:text-[#737373]",
     },
-    "body-left": {
-      id: "body-left",
+    left: {
+      id: "left",
       order: 3,
-      components: bodyLeft,
+      components: left,
       className:
-        "flex h-full flex-col items-center bg-[#323B4C] h-[842px] clr-white [&_.image]:mx-auto [&_div:not(:first-child)>.heading-2]:pt-3",
+        "flex flex-col items-center bg-[#323B4C] h-[842px] clr-white [&_.image]:mx-auto [&_div:not(:first-child)>.heading-2]:pt-3",
     },
-    "body-right": {
-      id: "body-right",
+    right: {
+      id: "right",
       order: 4,
-      components: bodyRight,
+      components: right,
       className:
         "relative bg-white clr-black [&_.heading-1]:text-[#323B4C] [&_.heading-2]:text-[#323B4C] [&_.heading-3]:text-[#323B4C] !pr-2 [&_div:not(:first-child)>.heading-2]:pt-3 [&_.date]:text-[.9rem] [&_.text]:pl-6 [&_.heading-3]:pl-6",
     },

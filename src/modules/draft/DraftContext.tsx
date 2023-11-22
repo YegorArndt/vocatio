@@ -2,23 +2,26 @@ import { createContext, useContext, useReducer, useState } from "react";
 
 import * as actions from "./actions";
 import { Venusaur } from "./designs/Venusaur";
-import { DraftComponent, TypeOfComponent } from "./types/components";
+import type {
+  NormalizedComponent,
+  RawComponent,
+  TypeOfComponent,
+} from "./types/components";
 import type {
   DraftState,
   DraftContextInput,
-  Design,
-  NewComponent,
   DraftContext as DraftContextType,
 } from "./types";
-import type { RawDesign } from "./types/raw";
-import { getDefaults } from "./utils/common";
-import { parser } from "./utils/parser";
+import { getDefaults } from "./utils/getDefaults";
+import { RawDesign, Design } from "./types/design";
+import { init } from "./utils/init";
 import {
-  addNewComponent,
-  changeComponentType,
-  removeComponent,
-  toggleCn,
-} from "./utils/tooltip";
+  insertMany,
+  remove,
+  add,
+  toggle,
+  changeType,
+} from "./utils/component-toolbar";
 
 const initialArg = {
   [actions.DOWNLOAD_FIRED]: false,
@@ -39,9 +42,7 @@ const reducer = (
 
   const newState = { ...state };
 
-  /**
-   * Set all other actions to false.
-   */
+  // Set all other actions to false.
   Object.keys(state).forEach((key) => {
     if (key !== type) newState[key as keyof typeof actions] = false;
     else newState[key] = newValue;
@@ -65,10 +66,10 @@ export const DraftContext = (props: DraftContextInput) => {
   const jobTitle = vacancy.jobTitle || user.ownJobTitle || "";
   const jobDescription = vacancy.description || "";
 
-  const parseDesign = (d: RawDesign | Design) =>
-    parser(defaults, d, vacancy.id, jobTitle, jobDescription);
+  const initDesign = (d: RawDesign) =>
+    init(defaults, d, vacancy.id, jobTitle, jobDescription);
 
-  const initialDesign = parseDesign(Venusaur);
+  const initialDesign = initDesign(Venusaur);
 
   const [design, setDesign] = useState<Design>(initialDesign);
 
@@ -76,18 +77,31 @@ export const DraftContext = (props: DraftContextInput) => {
     setDesign((d) => updateFn(d));
   };
 
-  const changeDesign = (d: RawDesign | Design) => setDesign(parseDesign(d));
+  const changeDesign = (d: RawDesign) => setDesign(initDesign(d));
 
-  const add = (nc: NewComponent, clickedComponent: DraftComponent) =>
-    setDesign((d) => addNewComponent(d, nc, clickedComponent));
+  const addNewComponent = (
+    nc: RawComponent,
+    clickedComponent: NormalizedComponent
+  ) => setDesign((d) => add(d, vacancy.id, defaults, nc, clickedComponent));
 
-  const remove = (c: DraftComponent) => setDesign((d) => removeComponent(d, c));
+  const addMultipleComponents = (
+    newComponents: RawComponent[],
+    clickedComponent: NormalizedComponent
+  ) =>
+    setDesign((d) =>
+      insertMany(d, newComponents, clickedComponent, defaults, vacancy.id)
+    );
 
-  const toggleClassName = (c: DraftComponent, className: string) =>
-    setDesign((d) => toggleCn(d, c, className));
+  const removeComponent = (c: NormalizedComponent) =>
+    setDesign((d) => remove(d, c));
 
-  const changeType = (c: DraftComponent, newType: TypeOfComponent) =>
-    setDesign((d) => changeComponentType(d, c, newType));
+  const toggleClassName = (c: NormalizedComponent, className: string) =>
+    setDesign((d) => toggle(d, c, className));
+
+  const changeComponentType = (
+    c: NormalizedComponent,
+    newType: TypeOfComponent
+  ) => setDesign((d) => changeType(d, c, newType));
 
   const context: DraftContextType = {
     draftState: state,
@@ -99,14 +113,16 @@ export const DraftContext = (props: DraftContextInput) => {
     },
     design,
     updateDesign,
-    add,
-    remove,
+    addNewComponent,
+    addMultipleComponents,
+    removeComponent,
     toggleClassName,
-    changeType,
+    changeComponentType,
     changeDesign,
     user,
     vacancy,
     defaultUserData,
+    defaults,
   };
 
   return (

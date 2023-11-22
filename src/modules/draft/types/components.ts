@@ -1,3 +1,5 @@
+import { type CSSProperties } from "react";
+
 import type { AutoresizeProps } from "~/modules/create/components/Autoresize";
 import type { ListProps } from "~/modules/create/components/List";
 import type { DividerProps } from "~/modules/create/components/Divider";
@@ -5,37 +7,34 @@ import type { GroupProps } from "~/modules/create/components/Group";
 import type { ImageProps } from "~/modules/create/components/UserImage";
 import type { SectionId } from "./sections";
 import { dbIds } from "../constants";
-import { type CSSProperties } from "react";
 
-export type TypeOfComponent = keyof DraftComponents;
+export type TypeOfComponent = keyof NormalizedComponents;
 
-export type DraftComponents = { [P in Text["type"]]: Text } & {
+export type ComponentValue = string | number | null | undefined;
+
+export type NormalizedComponents = { [P in Text["type"]]: Text } & {
   [P in Heading["type"]]: Heading;
 } & { [P in Group["type"]]: Group } & { [P in Divider["type"]]: Divider } & {
   [P in List["type"]]: List;
-} & { [P in Url["type"]]: Url } & { [P in Image["type"]]: Image };
+} & { [P in Url["type"]]: Url } & { [P in Image["type"]]: Image } & {
+  [P in DecoratedTimeline["type"]]: DecoratedTimeline;
+};
 
-export type IntrinsicDesignComponents = Partial<
-  Record<
-    TypeOfComponent,
-    AutoresizeProps | ListProps | GroupProps | DividerProps | ImageProps
-  >
->;
+export type NormalizedComponent =
+  NormalizedComponents[keyof NormalizedComponents] & Obligatory; // obl missing in normalizedcomponents
 
-export type DraftComponent = DraftComponents[keyof DraftComponents] &
-  Obligatory;
-
-type Obligatory = {
+export type Obligatory = {
   id: string | (typeof dbIds)[number];
   sectionId: SectionId;
   order: number;
-  isDecoration: boolean;
+  modifierIds?: typeof dbIds;
 };
 
-type ObligatoryProps = {
+export type ObligatoryProps = {
   className: string;
   style: CSSProperties;
-  value: string;
+  value: ComponentValue;
+  label: string;
 };
 
 export type Text = {
@@ -71,4 +70,15 @@ export type Url = {
 export type Image = {
   type: "image";
   props: Omit<ImageProps & ObligatoryProps, "id">;
+};
+
+export type DecoratedTimeline = {
+  type: "decorated-timeline";
+  props: Omit<ImageProps & ObligatoryProps, "id">;
+};
+
+export type RawComponent = Omit<Partial<NormalizedComponent>, "props"> & {
+  id: string;
+  type: TypeOfComponent;
+  props?: Partial<NormalizedComponent["props"]>;
 };

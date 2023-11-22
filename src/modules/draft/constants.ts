@@ -1,4 +1,4 @@
-import type { Story } from "@prisma/client";
+import type { ComponentValue } from "./types/components";
 
 export const dbIds = [
   "user-name",
@@ -23,6 +23,4 @@ export const dbIds = [
   "user-stories",
 ];
 
-export type Defaults = Partial<
-  Record<(typeof dbIds)[number], string | undefined | null | number | Story>
->;
+export type Defaults = Partial<Record<(typeof dbIds)[number], ComponentValue>>;

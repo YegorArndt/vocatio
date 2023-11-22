@@ -1,7 +1,7 @@
 import { createContext, useContext } from "react";
-import type { DraftComponent } from "../draft/types/components";
+import type { NormalizedComponent } from "../draft/types/components";
 
-export const ComponentContext = createContext({} as DraftComponent);
+export const ComponentContext = createContext({} as NormalizedComponent);
 
 export const useComponentContext = () => {
   const context = useContext(ComponentContext);

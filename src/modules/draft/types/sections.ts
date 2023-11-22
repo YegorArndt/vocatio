@@ -1,4 +1,4 @@
-import type { DraftComponent } from "./components";
+import type { NormalizedComponent, RawComponent } from "./components";
 
 export type SectionId =
   | "top"
@@ -9,14 +9,23 @@ export type SectionId =
   | "top-right"
   | "bottom-left"
   | "bottom-right"
-  | "body-left"
-  | "body-right";
+  | "left"
+  | "right";
 
 export type Section = {
   id: SectionId;
   order: number;
-  components: DraftComponent[];
+  components: NormalizedComponent[];
   className: string;
 };
 
 export type Sections = Partial<Record<SectionId, Section>>;
+
+export type RawSection = {
+  id: SectionId;
+  order: number;
+  components: RawComponent[];
+  className: string;
+};
+
+export type RawSections = Partial<Record<SectionId, RawSection>>;

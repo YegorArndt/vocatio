@@ -1,6 +1,6 @@
 import { ProfessionField } from "@prisma/client";
 
-export const baseStories = [
+export const baseItems = [
   {
     id: "Yandex",
     story:

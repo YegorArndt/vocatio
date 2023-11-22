@@ -1,11 +1,11 @@
-import { type HTMLAttributes } from "react";
 import cn from "classnames";
 
 import { Autoresize, type AutoresizeProps } from "./Autoresize";
 
 export type ListProps = {
   autoresizes?: AutoresizeProps[];
-} & HTMLAttributes<HTMLLIElement>;
+  className?: string;
+};
 
 export const List = (props: ListProps) => {
   const { autoresizes, className } = props;

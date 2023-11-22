@@ -1,11 +1,13 @@
 import cn from "classnames";
-import { type SyntheticEvent, useRef, useEffect, HTMLAttributes } from "react";
+import { type SyntheticEvent, useRef, useEffect, CSSProperties } from "react";
 import { ComponentValue } from "~/modules/draft/types/components";
 
 export type AutoresizeProps = {
   id: string;
   value: ComponentValue;
-} & HTMLAttributes<HTMLDivElement>;
+  className?: string;
+  style?: CSSProperties;
+};
 
 export const Autoresize = (props: AutoresizeProps) => {
   const { id, value, style, className } = props;

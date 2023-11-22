@@ -18,17 +18,10 @@ export const hydrate = (
   const { modifierIds, props } = c;
   let hydratedProps: NormalizedComponent["props"];
 
-  if (modifierIds) {
-    const defaultValues = modifierIds.map((id) => ({
-      [id]: defaults[id],
-    }));
-    hydratedProps = { ...props, defaultValues };
-  } else {
-    hydratedProps = { ...props, value: defaults?.[dbId] ?? props?.value };
-  }
+  hydratedProps = { ...props, value: defaults?.[dbId] ?? props?.value };
 
   return {
     ...c,
     props: hydratedProps,
-  };
+  } as NormalizedComponent;
 };

@@ -15,13 +15,7 @@ import type {
 import { getDefaults } from "./utils/getDefaults";
 import { RawDesign, Design } from "./types/design";
 import { init } from "./utils/init";
-import {
-  insertMany,
-  remove,
-  add,
-  toggle,
-  changeType,
-} from "./utils/component-toolbar";
+import { remove, add, toggle, changeType } from "./utils/component-toolbar";
 
 const initialArg = {
   [actions.DOWNLOAD_FIRED]: false,
@@ -84,14 +78,6 @@ export const DraftContext = (props: DraftContextInput) => {
     clickedComponent: NormalizedComponent
   ) => setDesign((d) => add(d, vacancy.id, defaults, nc, clickedComponent));
 
-  const addMultipleComponents = (
-    newComponents: RawComponent[],
-    clickedComponent: NormalizedComponent
-  ) =>
-    setDesign((d) =>
-      insertMany(d, newComponents, clickedComponent, defaults, vacancy.id)
-    );
-
   const removeComponent = (c: NormalizedComponent) =>
     setDesign((d) => remove(d, c));
 
@@ -114,7 +100,6 @@ export const DraftContext = (props: DraftContextInput) => {
     design,
     updateDesign,
     addNewComponent,
-    addMultipleComponents,
     removeComponent,
     toggleClassName,
     changeComponentType,

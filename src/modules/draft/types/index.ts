@@ -32,10 +32,6 @@ export type DraftContext = {
     rc: RawComponent,
     clickedComponent: NormalizedComponent
   ) => void;
-  addMultipleComponents: (
-    newComponents: RawComponent[],
-    clickedComponent: NormalizedComponent
-  ) => void;
   changeComponentType: (
     componentToChange: NormalizedComponent,
     type: TypeOfComponent

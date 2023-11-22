@@ -4,10 +4,11 @@ import {
   Autoresize,
   type AutoresizeProps,
 } from "~/modules/create/components/Autoresize";
+import { ComponentValue } from "~/modules/draft/types/components";
 
 export type GroupProps = {
-  label: string;
-  value: string;
+  label?: string;
+  value: ComponentValue;
 } & AutoresizeProps;
 
 export const Group = (props: GroupProps) => {

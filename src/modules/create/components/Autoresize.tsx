@@ -1,9 +1,10 @@
 import cn from "classnames";
 import { type SyntheticEvent, useRef, useEffect, HTMLAttributes } from "react";
+import { ComponentValue } from "~/modules/draft/types/components";
 
 export type AutoresizeProps = {
   id: string;
-  value: string | undefined;
+  value: ComponentValue;
 } & HTMLAttributes<HTMLDivElement>;
 
 export const Autoresize = (props: AutoresizeProps) => {
@@ -22,7 +23,7 @@ export const Autoresize = (props: AutoresizeProps) => {
   };
 
   useEffect(() => {
-    if (_value.current) localStorage.setItem(id, _value.current);
+    if (_value.current) localStorage.setItem(id, _value.current as string);
   }, []);
 
   return (
@@ -34,7 +35,7 @@ export const Autoresize = (props: AutoresizeProps) => {
       style={style}
       suppressContentEditableWarning
     >
-      {_value.current}
+      {_value.current as string}
     </div>
   );
 };

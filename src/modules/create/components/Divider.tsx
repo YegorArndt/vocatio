@@ -1,7 +1,7 @@
 import { type CSSProperties } from "react";
 
 export type DividerProps = {
-  className: string;
+  className?: string;
   style?: CSSProperties;
 };
 

@@ -28,6 +28,7 @@ import { Button } from "~/components/ui/buttons/Button";
 import { RiDragMove2Fill } from "react-icons/ri";
 import { LuCopyPlus } from "react-icons/lu";
 import { FcRightDown2 } from "react-icons/fc";
+import { ComponentValue } from "~/modules/draft/types/components";
 
 type ItemProps = {
   id: string;
@@ -39,7 +40,7 @@ type ItemProps = {
 };
 
 type DecoratedTimelineProps = {
-  value: ItemProps[];
+  value: ComponentValue;
   className?: string;
 };
 
@@ -174,7 +175,7 @@ export const DecoratedTimeline = (props: DecoratedTimelineProps) => {
   const { vacancy } = useDraftContext();
 
   const [items, setItems] = useState<ItemProps[]>(
-    getItemsFromLs(vacancy.id) ?? setItemsToLs(vacancy.id, value)
+    getItemsFromLs(vacancy.id) ?? setItemsToLs(vacancy.id, value as ItemProps[])
   );
 
   const sensors = useSensors(useSensor(PointerSensor));

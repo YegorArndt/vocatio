@@ -1,11 +1,11 @@
 import { type CSSProperties } from "react";
 
 import type { AutoresizeProps } from "~/modules/create/components/Autoresize";
-import type { ListProps } from "~/modules/create/components/List";
 import type { DividerProps } from "~/modules/create/components/Divider";
 import type { GroupProps } from "~/modules/create/components/Group";
 import type { ImageProps } from "~/modules/create/components/UserImage";
 import type { SectionId } from "./sections";
+import type { ListProps } from "~/modules/create/components/List";
 import { dbIds } from "../constants";
 
 export type TypeOfComponent = keyof NormalizedComponents;

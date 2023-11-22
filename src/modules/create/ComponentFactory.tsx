@@ -5,7 +5,10 @@ import { useComponentContext } from "./ComponentContext";
 import { Autoresize } from "./components/Autoresize";
 import { List } from "./components/List";
 import { useDraftContext } from "../draft/DraftContext";
-import type { NormalizedComponent } from "../draft/types/components";
+import type {
+  ComponentValue,
+  NormalizedComponent,
+} from "../draft/types/components";
 import type { Design } from "../draft/types/design";
 import { DecoratedTimeline } from "./components/DecoratedTimeline";
 
@@ -41,7 +44,7 @@ export const ComponentFactory = () => {
   const c = useComponentContext();
   const { design } = useDraftContext();
 
-  const merged = mergeWithIntrinsic(c, design);
+  const merged = mergeWithIntrinsic(c, design) as { value: ComponentValue };
 
   const Component =
     componentMapping[c.type as keyof typeof componentMapping] || Autoresize;

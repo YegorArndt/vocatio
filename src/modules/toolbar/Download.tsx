@@ -21,8 +21,6 @@ const getPdf = async (
 
   if (!a4) return;
 
-  await new Promise((resolve) => setTimeout(resolve, 1000));
-
   /**
    * Convert HTML to Canvas
    */

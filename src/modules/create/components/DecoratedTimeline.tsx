@@ -1,3 +1,9 @@
+import {
+  ButtonHTMLAttributes,
+  PropsWithChildren,
+  useEffect,
+  useState,
+} from "react";
 import cn from "classnames";
 import {
   DndContext,
@@ -14,21 +20,16 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-
-import { Autoresize, type AutoresizeProps } from "./Autoresize";
-import { Tooltip } from "react-tooltip";
-import {
-  ButtonHTMLAttributes,
-  PropsWithChildren,
-  useEffect,
-  useState,
-} from "react";
-import { useDraftContext } from "~/modules/draft/DraftContext";
-import { Button } from "~/components/ui/buttons/Button";
 import { RiDragMove2Fill } from "react-icons/ri";
 import { LuCopyPlus } from "react-icons/lu";
 import { FcRightDown2 } from "react-icons/fc";
-import { ComponentValue } from "~/modules/draft/types/components";
+import { Tooltip } from "react-tooltip";
+
+import { Autoresize, type AutoresizeProps } from "./Autoresize";
+import { useDraftContext } from "~/modules/draft/DraftContext";
+import { Button } from "~/components/ui/buttons/Button";
+import type { ComponentValue } from "~/modules/draft/types/components";
+import { api } from "~/utils";
 
 type ItemProps = {
   id: string;
@@ -42,6 +43,14 @@ type ItemProps = {
 type DecoratedTimelineProps = {
   value: ComponentValue;
   className?: string;
+};
+
+const getConsequentDate = (index: number) => {
+  const coefficient = index + 1;
+  const currentYear = new Date().getFullYear();
+  const startYear = currentYear - coefficient * 2;
+  const endYear = startYear + 2 > currentYear ? currentYear : startYear + 2;
+  return `${startYear} - ${endYear}`;
 };
 
 const SmChevron = () => <FcRightDown2 size={10} />;
@@ -98,8 +107,10 @@ const getItemsFromLs = (vacancyId: string) => {
   return items.length ? items : null;
 };
 
-export const Item = (props: ItemProps & { hasLine: boolean }) => {
-  const { date, place, heading, story, hasLine, id } = props;
+export const Item = (
+  props: ItemProps & { hasLine: boolean; addItem: () => void }
+) => {
+  const { date, place, heading, story, hasLine, id, addItem } = props;
 
   const {
     attributes,
@@ -120,7 +131,7 @@ export const Item = (props: ItemProps & { hasLine: boolean }) => {
     <div
       ref={setNodeRef}
       style={style}
-      className="relative pl-8"
+      className="relative flex flex-col gap-1 pl-8"
       data-tooltip-id={id}
     >
       <div className="absolute left-0 top-2 z-1 h-3 w-3 rounded-full border-2 border-solid border-black bg-white" />
@@ -153,7 +164,7 @@ export const Item = (props: ItemProps & { hasLine: boolean }) => {
                 </Button>
               </li>
               <li>
-                <Button className="sm navigation gap-2">
+                <Button className="sm navigation gap-2" onClick={addItem}>
                   <LuCopyPlus /> <SmChevron />
                 </Button>
               </li>
@@ -193,6 +204,60 @@ export const DecoratedTimeline = (props: DecoratedTimelineProps) => {
     }
   };
 
+  const { mutate, data, isLoading } = api.gpt.getCompletion.useMutation();
+
+  const addItem = (index: number) => {
+    setItems((currentItems) => {
+      // Create a copy of the item at the specified index
+      const newItem = { ...currentItems[index] };
+      // Modify the id of the new item to make it unique
+      newItem.id = `item-${new Date().getTime()}`;
+
+      // Insert the new item below the clicked item
+      const updatedItems = [...currentItems];
+      updatedItems.splice(index + 1, 0, newItem as ItemProps);
+
+      return updatedItems;
+    });
+  };
+
+  const addWithAi = (index: number) => {
+    mutate({
+      jobDescription: vacancy.description!,
+      jobTitle: vacancy.jobTitle!,
+    });
+  };
+
+  useEffect(() => {
+    if (!data) return;
+
+    const { story, companyName } = data;
+    const index = items.length;
+
+    setItems((prev) => [
+      ...prev,
+      {
+        id: `item-${index}`,
+        story: {
+          id: `story-${index}`,
+          value: story.content,
+        },
+        date: {
+          id: `date-${index}`,
+          value: getConsequentDate(index),
+        },
+        place: {
+          id: `place-${index}`,
+          value: companyName,
+        },
+        heading: {
+          id: `heading-${index}`,
+          value: vacancy.jobTitle,
+        },
+      },
+    ]);
+  }, [data]);
+
   return (
     <DndContext
       sensors={sensors}
@@ -211,7 +276,12 @@ export const DecoratedTimeline = (props: DecoratedTimelineProps) => {
           {...rest}
         >
           {items.map((item, i) => (
-            <Item key={item.id} {...item} hasLine={i < items.length - 1} />
+            <Item
+              key={item.id}
+              {...item}
+              hasLine={i < items.length - 1}
+              addItem={() => addItem(i)}
+            />
           ))}
         </div>
       </SortableContext>

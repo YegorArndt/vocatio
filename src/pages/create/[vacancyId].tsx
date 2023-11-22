@@ -1,6 +1,6 @@
 import { useUser } from "@clerk/nextjs";
 import { type GetStaticProps } from "next";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Head from "next/head";
 
 import { api } from "~/utils";
@@ -17,31 +17,40 @@ type CVBuilderProps = {
   vacancyId: string;
 };
 
+const a4Height = 1122;
+const a4Width = 793;
+
 const CVBuilder = (props: CVBuilderProps) => {
   const { vacancyId } = props;
+  const [pages, setPages] = useState(1);
 
   const a4Ref = useRef(null);
 
-  useEffect(() => {
-    localStorage.setItem("last-edited-vacancy", vacancyId);
-  }, []);
+  useEffect(() => localStorage.setItem("last-edited-vacancy", vacancyId), []);
 
-  /**
-   * Get default user data from Clerk
-   */
+  useEffect(() => {
+    const a4 = a4Ref.current;
+    if (!a4) return;
+
+    const observer = new MutationObserver(() => {
+      const isOverflowing = a4.scrollHeight > a4.clientHeight;
+      if (isOverflowing && pages === 1) setPages(2);
+      else if (!isOverflowing && pages === 2) setPages(1);
+    });
+
+    observer.observe(a4, { childList: true, subtree: true });
+
+    return () => observer.disconnect();
+  }, [a4Ref.current]);
+
+  // Get data
   const { user: defaultUserData } = useUser();
 
-  /**
-   * Get vacancy data from database
-   */
   const { data: vacancy, isLoading: vacancyLoading } =
     api.vacancies.getById.useQuery({
       id: vacancyId,
     });
 
-  /**
-   * Get user data from database
-   */
   const { data: user, isLoading: userLoading } = api.users.get.useQuery();
 
   return (
@@ -72,7 +81,14 @@ const CVBuilder = (props: CVBuilderProps) => {
                 })}
               >
                 {!changingDesign && <Toolbar a4Ref={a4Ref} />}
-                <div ref={a4Ref} className={cn("a4", a4Classes)}>
+                <div
+                  ref={a4Ref}
+                  className={cn("a4", a4Classes)}
+                  style={{
+                    height: a4Height * pages,
+                    width: a4Width,
+                  }}
+                >
                   <DndProvider />
                 </div>
                 {changingDesign && <DesignViewer />}

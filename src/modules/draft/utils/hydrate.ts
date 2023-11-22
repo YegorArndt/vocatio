@@ -15,10 +15,8 @@ export const hydrate = (
   defaults: Defaults,
   dbId: (typeof dbIds)[number]
 ): NormalizedComponent => {
-  const { modifierIds, props } = c;
-  let hydratedProps: NormalizedComponent["props"];
-
-  hydratedProps = { ...props, value: defaults?.[dbId] ?? props?.value };
+  const { props } = c;
+  const hydratedProps = { ...props, value: defaults?.[dbId] ?? props?.value };
 
   return {
     ...c,

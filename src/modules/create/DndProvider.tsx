@@ -157,12 +157,28 @@ export const DndProvider = () => {
       newSections[activeSectionId as SectionId]!.components =
         activeItems.filter((item) => item.id !== active.id);
 
+      // Recalculate order of all items in the original section
+      newSections[activeSectionId as SectionId]!.components = newSections[
+        activeSectionId as SectionId
+      ]!.components.map((c, index) => ({
+        ...c,
+        order: index,
+      }));
+
       // Insert the active item into the new section at the correct position
       newSections[overSectionId as SectionId]!.components = [
         ...overItems.slice(0, overIndex),
         activeItems[activeIndex],
         ...overItems.slice(overIndex),
       ] as NormalizedComponent[];
+
+      // Recalculate order of all items in the new section
+      newSections[overSectionId as SectionId]!.components = newSections[
+        overSectionId as SectionId
+      ]!.components.map((c, index) => ({
+        ...c,
+        order: index,
+      }));
 
       // Update sectionId key of component
       newSections[overSectionId as SectionId]!.components = newSections[
@@ -211,6 +227,14 @@ export const DndProvider = () => {
           activeIndex!,
           overIndex!
         );
+
+        // Recalculate order of all items in the section
+        newSections[overSectionId as SectionId]!.components = newSections[
+          overSectionId as SectionId
+        ]!.components.map((c, index) => ({
+          ...c,
+          order: index,
+        }));
 
         // Update sectionId key of component
         newSections[overSectionId as SectionId]!.components = newSections[

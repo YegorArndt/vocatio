@@ -112,22 +112,24 @@ export const ComponentToolbar = (props: ComponentToolbarProps) => {
                     }
                     gap={5}
                   >
-                    {typedKeys(intrinsic).map((typeOfComponent) => (
-                      <MenuItem
-                        key={typeOfComponent}
-                        onClick={() =>
-                          addNewComponent(
-                            {
-                              type: typeOfComponent,
-                              ...intrinsic[typeOfComponent],
-                            },
-                            c
-                          )
-                        }
-                      >
-                        {typeOfComponent}
-                      </MenuItem>
-                    ))}
+                    {typedKeys(intrinsic).map((typeOfComponent) => {
+                      return (
+                        <MenuItem
+                          key={typeOfComponent}
+                          onClick={() =>
+                            addNewComponent(
+                              {
+                                id: "",
+                                type: typeOfComponent,
+                              },
+                              c
+                            )
+                          }
+                        >
+                          {typeOfComponent}
+                        </MenuItem>
+                      );
+                    })}
                   </Menu>
                 </li>
                 <li>

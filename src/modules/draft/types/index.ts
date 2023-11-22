@@ -8,7 +8,7 @@ import type {
   TypeOfComponent,
 } from "./components";
 import type { Defaults } from "../constants";
-import type { Design } from "./design";
+import type { Design, RawDesign } from "./design";
 
 export type DraftContextInput = {
   defaultUserData: UserResource;
@@ -26,7 +26,7 @@ export type Dispatchers = Record<
 export type DraftContext = {
   design: Design;
   updateDesign: (updateFn: (d: Design) => Design) => void;
-  changeDesign: (d: Design) => void;
+  changeDesign: (d: RawDesign) => void;
   toggleClassName: (component: NormalizedComponent, className: string) => void;
   addNewComponent: (
     rc: RawComponent,

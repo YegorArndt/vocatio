@@ -23,7 +23,7 @@ export const changeType = (
       };
     }
     return component;
-  });
+  }) as NormalizedComponent[];
 
   sections[sectionId] = {
     ...targetSection,

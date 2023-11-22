@@ -10,7 +10,6 @@ export type Design = {
   name: string;
   sections: Sections;
   intrinsic: Intrinsic;
-  many?: any;
   a4: string;
   font: string;
   image: string;

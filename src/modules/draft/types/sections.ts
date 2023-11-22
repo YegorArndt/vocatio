@@ -8,9 +8,7 @@ export type SectionId =
   | "top-left"
   | "top-right"
   | "bottom-left"
-  | "bottom-right"
-  | "left"
-  | "right";
+  | "bottom-right";
 
 export type Section = {
   id: SectionId;

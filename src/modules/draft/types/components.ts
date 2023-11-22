@@ -10,7 +10,19 @@ import { dbIds } from "../constants";
 
 export type TypeOfComponent = keyof NormalizedComponents;
 
-export type ComponentValue = string | number | null | undefined;
+export type ComponentValue =
+  | string
+  | number
+  | null
+  | undefined
+  | {
+      id: string;
+      date: AutoresizeProps;
+      place: AutoresizeProps;
+      heading: AutoresizeProps;
+      story: AutoresizeProps;
+      className?: string;
+    }[];
 
 export type NormalizedComponents = { [P in Text["type"]]: Text } & {
   [P in Heading["type"]]: Heading;
@@ -24,7 +36,8 @@ export type NormalizedComponent =
   NormalizedComponents[keyof NormalizedComponents] & Obligatory; // obl missing in normalizedcomponents
 
 export type Obligatory = {
-  id: string | (typeof dbIds)[number];
+  // id: string | (typeof dbIds)[number];
+  id: string;
   sectionId: SectionId;
   order: number;
   modifierIds?: typeof dbIds;

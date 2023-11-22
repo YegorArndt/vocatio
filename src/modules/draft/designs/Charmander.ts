@@ -1,5 +1,7 @@
 import { v4 as uuidv4 } from "uuid";
-import type { RawComponent, RawDesign } from "./types";
+
+import type { RawComponent } from "../types/components";
+import type { RawDesign } from "../types/design";
 
 const CharmanderId = uuidv4();
 
@@ -19,12 +21,6 @@ const topRight: RawComponent[] = [
       className: "uppercase text-[#fff]",
     },
     modifierIds: ["user-name"],
-    modifierFn: (values) => {
-      const [userName] = values;
-      if (!userName) return userName;
-      const [firstName] = userName.toString().split(" ");
-      return { value: firstName || userName };
-    },
   },
   {
     type: "heading-1",
@@ -34,12 +30,6 @@ const topRight: RawComponent[] = [
       className: "font-bold uppercase tracking-[0.2rem] text-[#fff]",
     },
     modifierIds: ["user-name"],
-    modifierFn: (values) => {
-      const [userName] = values;
-      if (!userName) return userName;
-      const [firstName, lastName] = userName.toString().split(" ");
-      return { value: lastName };
-    },
   },
   {
     type: "divider",
@@ -99,12 +89,6 @@ const bodyLeft: RawComponent[] = [
     type: "text",
     id: "charmander-education-duration",
     modifierIds: ["education-duration"],
-    modifierFn: (values) => {
-      const [duration] = values;
-      const [start, end] = duration?.toString().split("-");
-      const value = !start || !end ? duration : `Completed in ${end}`;
-      return { value };
-    },
     props: {
       className: "font-bold",
     },

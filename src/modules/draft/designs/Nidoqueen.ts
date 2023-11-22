@@ -1,6 +1,7 @@
 import { v4 as uuidv4 } from "uuid";
 
-import type { RawComponent, RawDesign } from "./types";
+import type { RawComponent } from "../types/components";
+import type { RawDesign } from "../types/design";
 
 const NidoqueenId = uuidv4();
 
@@ -52,23 +53,11 @@ const left: RawComponent[] = [
     type: "text",
     id: "english-title",
     modifierIds: ["english-level"],
-    modifierFn: (values, props) => {
-      const [englishLevel] = values;
-      return {
-        value: `• English (${englishLevel})`,
-      };
-    },
   },
   {
     type: "text",
     id: "german-title",
     modifierIds: ["german-level"],
-    modifierFn: (values, props) => {
-      const [germanLevel] = values;
-      return {
-        value: `• German (${germanLevel})`,
-      };
-    },
   },
   {
     type: "heading-4",
@@ -146,12 +135,6 @@ const right: RawComponent[] = [
       className: "uppercase",
     },
     modifierIds: ["user-name"],
-    modifierFn: (values) => {
-      const [firstName] = values;
-      return {
-        value: firstName,
-      };
-    },
   },
   {
     type: "heading-1",
@@ -160,12 +143,6 @@ const right: RawComponent[] = [
       className: "ml-8 uppercase",
     },
     modifierIds: ["user-name"],
-    modifierFn: (values) => {
-      const [, lastName] = values;
-      return {
-        value: lastName,
-      };
-    },
   },
   {
     type: "heading-2",

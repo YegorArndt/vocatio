@@ -1,6 +1,6 @@
 import type { UserResource } from "@clerk/types";
 import type { User, Vacancy } from "@prisma/client";
-import { items, highlights } from "~/modules/create/constants/frontend";
+import { items } from "~/modules/create/constants/frontend";
 import { type Defaults } from "../constants";
 
 export const getDefaults = (
@@ -31,7 +31,7 @@ export const getDefaults = (
     "spanish-level": "C1",
     city: user.ownCity || vacancy.country,
     "user-image": user.ownImage || defaultUserData.imageUrl,
-    "user-stories": user?.ownStories || items,
-    "user-stories-highlights": user?.ownStoriesHighlights || highlights,
+    "user-stories": user?.ownObjective || items,
+    // "user-stories-highlights": user?.ownObjective || highlights,
   };
 };

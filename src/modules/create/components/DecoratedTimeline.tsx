@@ -20,7 +20,7 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { RiDragMove2Fill } from "react-icons/ri";
+import { RiDeleteBin6Line, RiDragMove2Fill } from "react-icons/ri";
 import { LuCopyPlus } from "react-icons/lu";
 import { FcRightDown2 } from "react-icons/fc";
 import { Tooltip } from "react-tooltip";
@@ -108,9 +108,14 @@ const getItemsFromLs = (vacancyId: string) => {
 };
 
 export const Item = (
-  props: ItemProps & { hasLine: boolean; addItem: () => void }
+  props: ItemProps & {
+    isLast: boolean;
+    addItem: () => void;
+    deleteItem: () => void;
+  }
 ) => {
-  const { date, place, heading, story, hasLine, id, addItem } = props;
+  const { date, place, heading, story, isLast, id, addItem, deleteItem } =
+    props;
 
   const {
     attributes,
@@ -134,9 +139,15 @@ export const Item = (
       className="relative flex flex-col gap-1 pl-8"
       data-tooltip-id={id}
     >
-      <div className="absolute left-0 top-2 z-1 h-3 w-3 rounded-full border-2 border-solid border-black bg-white" />
-      {hasLine && (
-        <div className="absolute left-[.36rem] top-2 h-[110%] w-[0.5px] bg-black" />
+      {/* Dot  */}
+      <div
+        className={cn(
+          "absolute left-0 top-2 z-1 h-3 w-3 rounded-full border-2 border-solid border-black bg-white"
+        )}
+      />
+      {/* Line  */}
+      {isLast && (
+        <div className="absolute left-[.36rem] top-2 h-full w-[0.5px] bg-black" />
       )}
       <Autoresize className="text-[1rem] font-bold" {...date} />
       <Autoresize className="text-[1rem] font-bold" {...place} />
@@ -161,6 +172,11 @@ export const Item = (
               <li {...listeners} {...attributes}>
                 <Button className="sm navigation">
                   <RiDragMove2Fill />
+                </Button>
+              </li>
+              <li>
+                <Button onClick={deleteItem} className="sm common hover:bg-red">
+                  <RiDeleteBin6Line />
                 </Button>
               </li>
               <li>
@@ -221,11 +237,10 @@ export const DecoratedTimeline = (props: DecoratedTimelineProps) => {
     });
   };
 
-  const addWithAi = (index: number) => {
-    mutate({
-      jobDescription: vacancy.description!,
-      jobTitle: vacancy.jobTitle!,
-    });
+  const deleteItem = (itemId: string) => {
+    setItems((currentItems) =>
+      currentItems.filter((item) => item.id !== itemId)
+    );
   };
 
   useEffect(() => {
@@ -269,18 +284,16 @@ export const DecoratedTimeline = (props: DecoratedTimelineProps) => {
         strategy={verticalListSortingStrategy}
       >
         <div
-          className={cn(
-            "relative flex flex-col gap-5 pb-4 first:mt-4",
-            className
-          )}
+          className={cn("relative flex flex-col [&>*]:pb-4", className)}
           {...rest}
         >
           {items.map((item, i) => (
             <Item
               key={item.id}
               {...item}
-              hasLine={i < items.length - 1}
+              isLast={i < items.length - 1}
               addItem={() => addItem(i)}
+              deleteItem={() => deleteItem(item.id)}
             />
           ))}
         </div>

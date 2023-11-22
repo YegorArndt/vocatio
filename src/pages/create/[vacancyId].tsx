@@ -24,7 +24,7 @@ const CVBuilder = (props: CVBuilderProps) => {
   const { vacancyId } = props;
   const [pages, setPages] = useState(1);
 
-  const a4Ref = useRef(null);
+  const a4Ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => localStorage.setItem("last-edited-vacancy", vacancyId), []);
 
@@ -33,9 +33,8 @@ const CVBuilder = (props: CVBuilderProps) => {
     if (!a4) return;
 
     const observer = new MutationObserver(() => {
-      const isOverflowing = a4.scrollHeight > a4.clientHeight;
-      if (isOverflowing && pages === 1) setPages(2);
-      else if (!isOverflowing && pages === 2) setPages(1);
+      const pageCount = Math.ceil(a4.scrollHeight / a4Height);
+      setPages(pageCount);
     });
 
     observer.observe(a4, { childList: true, subtree: true });
@@ -65,7 +64,7 @@ const CVBuilder = (props: CVBuilderProps) => {
       </Head>
       <Layout>
         {(userLoading || vacancyLoading) && (
-          <CreatePageSkeleton className="pt-[4rem]" />
+          <CreatePageSkeleton className="top-offset" />
         )}
         {vacancy && user && defaultUserData && (
           <DraftContext
@@ -75,7 +74,7 @@ const CVBuilder = (props: CVBuilderProps) => {
           >
             {(a4Classes, changingDesign) => (
               <div
-                className={cn("relative overflow-hidden pt-[4rem]", {
+                className={cn("top-offset relative", {
                   "mx-auto flex max-w-[90rem] gap-8": changingDesign,
                   "flex-center": !changingDesign,
                 })}
@@ -91,6 +90,15 @@ const CVBuilder = (props: CVBuilderProps) => {
                 >
                   <DndProvider />
                 </div>
+                {Array.from({ length: pages - 1 }).map((_, i) => (
+                  <div
+                    key={i}
+                    className="page-break"
+                    style={{
+                      top: 122 + 64 + 1122 * (i + 1),
+                    }}
+                  />
+                ))}
                 {changingDesign && <DesignViewer />}
               </div>
             )}

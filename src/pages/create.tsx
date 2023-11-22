@@ -35,7 +35,7 @@ export const Create = () => {
       </Head>
       <Layout>
         {isLoading ? (
-          <CreatePageSkeleton className="pt-[4rem]" />
+          <CreatePageSkeleton className="top-offset" />
         ) : (
           <Placeholder />
         )}

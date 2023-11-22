@@ -1,4 +1,3 @@
-import type { User, Vacancy } from "@prisma/client";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import { type RefObject } from "react";
@@ -9,26 +8,20 @@ import { Button } from "~/components/ui/buttons/Button";
 import { useDraftContext } from "../draft/DraftContext";
 import { snakeCase } from "lodash-es";
 import { BlurImage } from "~/components/BlurImage";
+import { User, Vacancy } from "@prisma/client";
 
 const src = "/download.png";
 
-const getPdf = async (
+const downloadPdf = async (
   a4Ref: RefObject<HTMLDivElement>,
   userName: User["ownName"],
-  companyName: Vacancy["companyName"] = "CV"
+  companyName: Vacancy["companyName"] = "cv"
 ) => {
   const a4 = a4Ref.current;
-
   if (!a4) return;
 
-  /**
-   * Convert HTML to Canvas
-   */
-  const canvas = await html2canvas(a4);
+  const pageCount = Math.ceil(a4.clientHeight / 1122);
 
-  /**
-   * Initialize jsPDF
-   */
   const pdf = new jsPDF({
     format: "a4",
     orientation: "portrait",
@@ -38,15 +31,28 @@ const getPdf = async (
   const width = pdf.internal.pageSize.getWidth();
   const height = pdf.internal.pageSize.getHeight();
 
-  /**
-   * Add canvas to jsPDF
-   */
-  const imgData = canvas.toDataURL("image/png");
-  pdf.addImage(imgData, "PNG", 0, 0, width, height);
+  for (let i = 0; i < pageCount; i++) {
+    const yOffset = i * 1122;
 
-  /**
-   * Save PDF
-   */
+    const canvas = await html2canvas(a4, {
+      width: 793,
+      height: 1122,
+      windowHeight: 1122,
+      windowWidth: 793,
+      y: yOffset,
+      scrollY: -yOffset,
+      useCORS: true,
+    });
+
+    const imgData = canvas.toDataURL("image/png");
+
+    if (i > 0) {
+      pdf.addPage();
+    }
+
+    pdf.addImage(imgData, "PNG", 0, 0, width, height);
+  }
+
   pdf.save(`${snakeCase(userName)}_${companyName}.pdf`);
 };
 
@@ -61,7 +67,7 @@ export const Download = (props: { a4Ref: RefObject<HTMLDivElement> }) => {
 
   const onClick = async () => {
     setDownloadFired(true);
-    await getPdf(a4Ref, ownName, companyName);
+    await downloadPdf(a4Ref, ownName, companyName);
     setDownloadFired(false);
   };
 

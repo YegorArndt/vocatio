@@ -117,11 +117,19 @@
 }
 
 @layer components {
-  /* A4 */
+  .top-offset {
+    @apply pt-16;
+  }
+
   .a4 {
     overflow: hidden;
     display: grid;
-    grid-template-rows: auto auto 1fr 1fr;
+    grid-template-rows: auto 1fr;
+    @apply relative;
+  }
+
+  .a4 * {
+    box-sizing: border-box;
   }
 
   .top-left {
@@ -137,18 +145,19 @@
     grid-area: 2 / 2 / 3 / 3;
   }
 
-  .a4 * {
-    box-sizing: border-box;
+  .page-break {
+    position: absolute;
+    /* top: calc(122px + 64px + 1122px); */
+    width: 100vw;
+    height: 1px;
+    z-index: 100;
+    @apply bg-primary;
   }
 
   .toolbar {
     @apply fixed grid grid-cols-2 items-center gap-1 rounded-md border p-2;
     left: 1rem;
     top: 12rem;
-  }
-
-  .danger-zone {
-    background-color: rgba(255, 0, 0, 0.17);
   }
 
   /* Buttons  */

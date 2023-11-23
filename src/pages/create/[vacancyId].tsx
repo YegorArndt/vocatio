@@ -13,6 +13,7 @@ import cn from "classnames";
 import { Layout } from "~/components/layout/Layout";
 import { DesignViewer } from "~/components/DesignViewer";
 import { Button } from "~/components/ui/buttons/Button";
+import { GarbageBin } from "~/modules/create/GarbageBin";
 
 type CVBuilderProps = {
   vacancyId: string;
@@ -129,6 +130,7 @@ const CVBuilder = (props: CVBuilderProps) => {
                     )}
                   </div>
                 ))}
+                <GarbageBin vacancyId={vacancy.id} />
                 {changingDesign && <DesignViewer />}
               </div>
             )}

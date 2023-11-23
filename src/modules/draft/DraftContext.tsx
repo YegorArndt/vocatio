@@ -79,7 +79,7 @@ export const DraftContext = (props: DraftContextInput) => {
   ) => setDesign((d) => add(d, vacancy.id, defaults, nc, clickedComponent));
 
   const removeComponent = (c: NormalizedComponent) =>
-    setDesign((d) => remove(d, c));
+    setDesign((d) => remove(d, c, vacancy.id));
 
   const toggleClassName = (c: NormalizedComponent, className: string) =>
     setDesign((d) => toggle(d, c, className));

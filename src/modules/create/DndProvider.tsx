@@ -24,9 +24,9 @@ import { useDraftContext } from "../draft/DraftContext";
 import { ComponentContext, useComponentContext } from "./ComponentContext";
 import type { NormalizedComponent } from "../draft/types/components";
 import type { Sections, SectionId, Section } from "../draft/types/sections";
-import { typedKeys } from "../draft/utils/common";
 import { ComponentFactory } from "./ComponentFactory";
 import { ComponentToolbar } from "./components/ComponentToolbar";
+import { typedKeys } from "../draft/utils/common";
 
 export const getSectionIdByComponentId = (
   sections: Sections,

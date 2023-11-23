@@ -219,14 +219,14 @@ export const Venusaur: RawDesign = {
       order: 0,
       components: topLeft,
       className:
-        "top-left [&>*:first-child]:my-[2rem] bg-[#323B4C] text-[#fff] [&_.image]:m-auto",
+        "top-left [&>*:first-child]:mt-[2rem] flex flex-col items-center bg-[#323B4C] text-[#fff] [&_.image]:mx-auto [&_div:not(:first-child)>.heading-2]:mt-3 [&_.group]:mb-2 [&_.icon-group]:mb-2 [&_.text]:mb-1 [&_.text]:text-[14px]",
     },
     "top-right": {
       id: "top-right",
       order: 1,
       components: topRight,
       className:
-        "top-right [&>*:first-child]:mt-[2rem] [&>*:nth-child(even)]:mb-[1rem] [&>*:nth-child(even)]:mt-1 [&>*:last-child]:mb-[2rem] bg-[#fff] text-[#737373] [&_.heading-2]:text-[1.5rem] [&_.heading-2]:tracking-wider [&_.heading-2]:text-[#323B4C] [&_.heading-2]:font-light [&>*]:max-w-[450px]",
+        "top-right [&>*:first-child]:mt-[2rem] [&>*:nth-child(even)]:mb-[0.5rem] [&>*:nth-child(even)]:mt-1 [&>*:last-child]:mb-[1rem] bg-[#fff] text-[#737373] [&_.heading-2]:text-[1.5rem] [&_.heading-2]:tracking-wider [&_.heading-2]:text-[#323B4C] [&_.heading-2]:font-light [&>*]:max-w-[450px]",
     },
     left: {
       id: "left",
@@ -263,7 +263,7 @@ export const Venusaur: RawDesign = {
       height: 30,
     },
     divider: {
-      className: "border-current border-solid border-b-[2px] mt-2 mb-3",
+      className: "border-current border-solid border-b-[2px] my-2",
     },
     image: {
       height: 210,

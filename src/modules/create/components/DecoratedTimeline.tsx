@@ -97,7 +97,7 @@ export const Item = (
     transform,
     transition,
     isDragging,
-  } = useSortable({ id: id });
+  } = useSortable({ id });
 
   const style = {
     transform: CSS.Translate.toString(transform),

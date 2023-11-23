@@ -48,7 +48,7 @@ export const IconGroup = (props: IconGroupProps) => {
 
   const imgId = `${id}-img`;
 
-  const Icon = icons[img];
+  const Icon = icons[img as keyof typeof icons];
 
   useEffect(() => {
     setIsLoading(false);

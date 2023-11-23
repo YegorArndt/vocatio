@@ -2,12 +2,16 @@ import { useState } from "react";
 import Image, { type ImageProps } from "next/image";
 import cn from "classnames";
 
-export const BlurImage = (props: ImageProps) => {
+type BlurImageProps = {
+  imageClassName?: string;
+} & ImageProps;
+
+export const BlurImage = (props: BlurImageProps) => {
   const { className, height, width, ...rest } = props;
   const [isLoading, setIsLoading] = useState(true);
 
   return (
-    <div className={cn("bg-gray-200 !block overflow-hidden", className)}>
+    <div className={cn("bg-gray-200 !inline-block overflow-hidden", className)}>
       <Image
         height={height}
         width={width}

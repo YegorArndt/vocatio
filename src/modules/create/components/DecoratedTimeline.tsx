@@ -168,10 +168,9 @@ export const Item = (
         opacity={1}
         offset={-50}
         style={{ paddingInline: 10, zIndex: 9999 }}
-        globalCloseEvents={{ clickOutsideAnchor: true }}
         clickable
         delayShow={400}
-        delayHide={200}
+        delayHide={600}
         render={() => {
           return (
             <ul

@@ -72,34 +72,38 @@ const left: RawComponent[] = [
     },
   },
   {
-    type: "group",
+    type: "icon-group",
     id: "email",
     props: {
       label: "Email",
+      img: "email",
     },
   },
   {
-    type: "group",
+    type: "icon-group",
     id: "linkedin",
     props: {
-      value: "short-url",
+      value: "your-linkedin",
       label: "LinkedIn",
+      img: "linkedin",
     },
   },
   {
-    type: "group",
+    type: "icon-group",
     id: "github",
     props: {
-      value: "short-url",
+      value: "your-github",
       label: "Github",
+      img: "github",
     },
   },
   {
-    type: "group",
+    type: "icon-group",
     id: "address",
     props: {
       value: "Baker Street, 221B",
       label: "Address",
+      img: "location",
     },
   },
   {
@@ -229,7 +233,7 @@ export const Venusaur: RawDesign = {
       order: 3,
       components: left,
       className:
-        "left flex flex-col items-center bg-[#323B4C] text-[#fff] [&_.image]:mx-auto [&_div:not(:first-child)>.heading-2]:mt-3 [&_.group]:mb-2 [&_.text]:mb-1 [&_.text]:text-[14px]",
+        "left flex flex-col items-center bg-[#323B4C] text-[#fff] [&_.image]:mx-auto [&_div:not(:first-child)>.heading-2]:mt-3 [&_.group]:mb-2 [&_.icon-group]:mb-2 [&_.text]:mb-1 [&_.text]:text-[14px]",
     },
     right: {
       id: "right",
@@ -254,6 +258,12 @@ export const Venusaur: RawDesign = {
     },
     group: {
       className: "grid grid-cols-[90px,160px] gap-2",
+    },
+    "icon-group": {
+      className: "grid items-center grid-cols-[30px_1fr] gap-3",
+      iconClassName: "text-[#fff]",
+      width: 30,
+      height: 30,
     },
     divider: {
       className: "border-current border-solid border-b-[2px]",

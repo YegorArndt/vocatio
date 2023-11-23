@@ -37,7 +37,7 @@ export const Autoresize = (props: AutoresizeProps) => {
       contentEditable
       onInput={onInput}
       data-placeholder={value ?? _value.current}
-      className={cn("max-w-[400px] break-words", className)}
+      className={cn("break-words", className)}
       style={style}
       suppressContentEditableWarning
     >

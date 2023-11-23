@@ -11,10 +11,12 @@ import type {
 } from "../draft/types/components";
 import type { Design } from "../draft/types/design";
 import { DecoratedTimeline } from "./components/DecoratedTimeline";
+import { IconGroup } from "./components/IconGroup";
 
 const componentMapping = {
   text: Autoresize,
   group: Group,
+  "icon-group": IconGroup,
   divider: Divider,
   image: UserImage,
   list: List,

@@ -7,6 +7,7 @@ import type { ImageProps } from "~/modules/create/components/UserImage";
 import type { SectionId } from "./sections";
 import type { ListProps } from "~/modules/create/components/List";
 import { dbIds } from "../constants";
+import { IconGroupProps } from "~/modules/create/components/IconGroup";
 
 export type TypeOfComponent = keyof NormalizedComponents;
 
@@ -30,7 +31,7 @@ export type NormalizedComponents = { [P in Text["type"]]: Text } & {
   [P in List["type"]]: List;
 } & { [P in Url["type"]]: Url } & { [P in Image["type"]]: Image } & {
   [P in DecoratedTimeline["type"]]: DecoratedTimeline;
-};
+} & { [P in IconGroup["type"]]: IconGroup };
 
 export type NormalizedComponent =
   NormalizedComponents[keyof NormalizedComponents] & Obligatory; // obl missing in normalizedcomponents
@@ -88,6 +89,11 @@ export type Image = {
 export type DecoratedTimeline = {
   type: "decorated-timeline";
   props: Omit<ImageProps & ObligatoryProps, "id">;
+};
+
+export type IconGroup = {
+  type: "icon-group";
+  props: Omit<IconGroupProps & ObligatoryProps, "id">;
 };
 
 export type RawComponent = Omit<Partial<NormalizedComponent>, "props"> & {

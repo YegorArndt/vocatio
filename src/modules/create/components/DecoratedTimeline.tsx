@@ -30,6 +30,7 @@ import { useDraftContext } from "~/modules/draft/DraftContext";
 import { Button } from "~/components/ui/buttons/Button";
 import type { ComponentValue } from "~/modules/draft/types/components";
 import { api } from "~/utils";
+import { BlurImage } from "~/components/BlurImage";
 
 type ItemProps = {
   id: string;
@@ -150,7 +151,15 @@ export const Item = (
         <div className="absolute left-[.36rem] top-2 h-full w-[0.5px] bg-black" />
       )}
       <Autoresize className="text-[1rem] font-bold" {...date} />
-      <Autoresize className="text-[1rem] font-bold" {...place} />
+      <div className="flex gap-2">
+        <BlurImage
+          src="https://media.licdn.com/dms/image/C560BAQFrtK-ioO1rsQ/company-logo_100_100/0/1630645864762/adobe_logo?e=1708560000&v=beta&t=QGe5TIVH_RPfn3r7zZmNUCjeKSF0MqC4B10NaRTSk0k"
+          width={20}
+          height={20}
+          alt="e"
+        />
+        <Autoresize className="text-[1rem] font-bold" {...place} />
+      </div>
       <Autoresize className="italic" {...heading} />
       <Autoresize {...story} />
       <Tooltip

@@ -61,10 +61,9 @@ const SortableItem = (props: PropsWithChildren<Record<string, unknown>>) => {
   } = useSortable({ id: c.id, data: c });
 
   const style = {
-    transform: CSS.Transform.toString(transform),
+    transform: CSS.Translate.toString(transform),
     transition,
     width: "100%",
-
     opacity: isDragging ? 0.5 : 1,
   };
 
@@ -82,7 +81,7 @@ const SortableItem = (props: PropsWithChildren<Record<string, unknown>>) => {
 
 const Section = (props: Section) => {
   const { id, components, className } = props;
-  const { setNodeRef } = useDroppable({
+  const { setNodeRef, active } = useDroppable({
     id,
   });
 

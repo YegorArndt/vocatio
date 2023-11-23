@@ -8,6 +8,7 @@ import { ComponentValue } from "~/modules/draft/types/components";
 
 export type GroupProps = {
   label?: string;
+  img?: string;
   value: ComponentValue;
 } & AutoresizeProps;
 

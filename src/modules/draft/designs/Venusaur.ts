@@ -240,7 +240,7 @@ export const Venusaur: RawDesign = {
       order: 4,
       components: right,
       className:
-        "right relative bg-white clr-black [&_.heading-1]:text-[#323B4C] [&_.heading-2]:text-[#323B4C] [&_.heading-3]:text-[#323B4C] !pr-2 [&_div:not(:first-child)>.heading-2]:pt-3 [&_.date]:text-[.9rem] [&_.text]:pl-6 [&_.heading-3]:pl-6",
+        "right relative bg-white clr-black [&_.heading-1]:text-[#323B4C] [&_.heading-2]:text-[#323B4C] !pr-2 [&_div:not(:first-child)>.heading-2]:pt-3 [&_.date]:text-[.9rem]",
     },
   },
   intrinsic: {
@@ -249,9 +249,6 @@ export const Venusaur: RawDesign = {
     },
     "heading-2": {
       className: "text-[2rem] tracking-[-0.029375rem] font-bold",
-    },
-    "heading-3": {
-      className: "text-[1rem]",
     },
     text: {
       className: "text-[.8rem]",

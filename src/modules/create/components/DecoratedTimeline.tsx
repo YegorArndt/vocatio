@@ -1,9 +1,4 @@
-import {
-  ButtonHTMLAttributes,
-  PropsWithChildren,
-  useEffect,
-  useState,
-} from "react";
+import { useEffect, useState } from "react";
 import cn from "classnames";
 import {
   DndContext,
@@ -22,8 +17,10 @@ import {
 import { CSS } from "@dnd-kit/utilities";
 import { RiDeleteBin6Line, RiDragMove2Fill } from "react-icons/ri";
 import { LuCopyPlus } from "react-icons/lu";
-import { FcRightDown2 } from "react-icons/fc";
 import { Tooltip } from "react-tooltip";
+import { TfiWrite } from "react-icons/tfi";
+import { BsArrowsCollapse } from "react-icons/bs";
+import { SlMagicWand } from "react-icons/sl";
 
 import { Autoresize, type AutoresizeProps } from "./Autoresize";
 import { useDraftContext } from "~/modules/draft/DraftContext";
@@ -31,6 +28,7 @@ import { Button } from "~/components/ui/buttons/Button";
 import type { ComponentValue } from "~/modules/draft/types/components";
 import { api } from "~/utils";
 import { BlurImage } from "~/components/BlurImage";
+import { Menu, MenuButton, MenuItem } from "@szhsin/react-menu";
 
 type ItemProps = {
   id: string;
@@ -52,32 +50,6 @@ const getConsequentDate = (index: number) => {
   const startYear = currentYear - coefficient * 2;
   const endYear = startYear + 2 > currentYear ? currentYear : startYear + 2;
   return `${startYear} - ${endYear}`;
-};
-
-const SmChevron = () => <FcRightDown2 size={10} />;
-
-const BlurButton = (
-  props: PropsWithChildren<ButtonHTMLAttributes<HTMLButtonElement>>
-) => {
-  const { className, children, ...rest } = props;
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => setIsLoading(false), []);
-
-  return (
-    <button
-      className={cn(
-        "flex-center duration-700 ease-in-out group-hover:opacity-75",
-        className,
-        isLoading
-          ? "scale-110 blur-2xl grayscale"
-          : "scale-100 blur-0 grayscale-0"
-      )}
-      {...rest}
-    >
-      {children}
-    </button>
-  );
 };
 
 const setItemsToLs = (vacancyId: string, items: ItemProps[]) => {
@@ -128,7 +100,7 @@ export const Item = (
   } = useSortable({ id: id });
 
   const style = {
-    transform: CSS.Transform.toString(transform),
+    transform: CSS.Translate.toString(transform),
     transition,
     opacity: isDragging ? 0.5 : 1,
   };
@@ -169,33 +141,61 @@ export const Item = (
         offset={-50}
         style={{ paddingInline: 10, zIndex: 9999 }}
         clickable
+        className="h-[40px] !p-0 [&>*]:h-full"
         delayShow={400}
         delayHide={600}
         render={() => {
           return (
             <ul
-              className="flex-center [&>li+li]:border-left w-full gap-3 rounded-md [&>li+li]:pl-3"
+              className="flex-center [&>li+li]:border-left h-full w-full rounded-md [&_li]:h-full [&_li_button]:h-full [&_li_button]:px-3"
               data-html2canvas-ignore
             >
               <li {...listeners} {...attributes}>
-                <Button className="sm navigation">
-                  <RiDragMove2Fill />
+                <Button baseCn="navigation flex-center gap-2 common-transition">
+                  Move item <RiDragMove2Fill />
                 </Button>
+              </li>
+              <li>
+                <Button
+                  baseCn="navigation flex-center gap-2 common-transition"
+                  onClick={addItem}
+                >
+                  Duplicate item <LuCopyPlus />
+                </Button>
+              </li>
+              <li>
+                <Menu
+                  menuButton={
+                    <MenuButton className="navigation flex-center">
+                      <BlurImage
+                        src="/gpt-logo.jpg"
+                        height={30}
+                        width={30}
+                        alt="logo"
+                      />
+                    </MenuButton>
+                  }
+                  transition
+                  gap={5}
+                >
+                  <MenuItem className="flex items-center gap-2">
+                    <SlMagicWand />
+                    Adjust to vacancy
+                  </MenuItem>
+                  <MenuItem className="flex items-center gap-2">
+                    <BsArrowsCollapse />
+                    Condense
+                  </MenuItem>
+                  <MenuItem className="flex items-center gap-2">
+                    <TfiWrite />
+                    Rewrite
+                  </MenuItem>
+                </Menu>
               </li>
               <li>
                 <Button onClick={deleteItem} className="sm common hover:bg-red">
                   <RiDeleteBin6Line />
                 </Button>
-              </li>
-              <li>
-                <Button className="sm navigation gap-2" onClick={addItem}>
-                  <LuCopyPlus /> <SmChevron />
-                </Button>
-              </li>
-              <li>
-                <BlurButton className="sm navigation gap-1 rounded-full">
-                  ✨<SmChevron />
-                </BlurButton>
               </li>
             </ul>
           );

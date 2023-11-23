@@ -122,7 +122,7 @@
   }
 
   .a4 {
-    overflow: hidden;
+    /* overflow: hidden; */
     display: grid;
     grid-template-rows: auto 1fr;
     @apply relative;
@@ -148,10 +148,12 @@
   .page-break {
     position: absolute;
     /* top: calc(122px + 64px + 1122px); */
-    width: 100vw;
+    width: 793px;
     height: 1px;
     z-index: 100;
-    @apply bg-primary;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: var(--border-clr);
   }
 
   .toolbar {
@@ -245,6 +247,13 @@
     max-width: 18.75rem;
     cursor: pointer;
     @apply flex items-center justify-center rounded-md;
+  }
+
+  .common-transition:is(button, a) {
+    transition-property: border-color, background, color, transform, box-shadow,
+      filter;
+    transition-duration: 0.15s;
+    transition-timing-function: ease;
   }
 
   .lg:is(button, a) {

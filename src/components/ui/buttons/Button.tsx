@@ -19,7 +19,7 @@ export const Button = (props: PropsWithChildren<ButtonProps>) => {
   } = props;
 
   return (
-    <button type={type} className={cn("common", baseCn, className)} {...rest}>
+    <button type={type} className={cn(baseCn, className)} {...rest}>
       {frontIcon && <span className="mr-2">{frontIcon}</span>}
       {children}
     </button>

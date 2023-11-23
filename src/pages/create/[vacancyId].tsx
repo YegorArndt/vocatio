@@ -12,6 +12,7 @@ import { CreatePageSkeleton } from "~/components/loaders/CreatePageSkeleton";
 import cn from "classnames";
 import { Layout } from "~/components/layout/Layout";
 import { DesignViewer } from "~/components/DesignViewer";
+import { Button } from "~/components/ui/buttons/Button";
 
 type CVBuilderProps = {
   vacancyId: string;
@@ -19,6 +20,21 @@ type CVBuilderProps = {
 
 const a4Height = 1122;
 const a4Width = 793;
+
+const ordinalSuffixOf = (n: number) => {
+  const j = n % 10,
+    k = n % 100;
+  if (j === 1 && k !== 11) {
+    return n + "st";
+  }
+  if (j === 2 && k !== 12) {
+    return n + "nd";
+  }
+  if (j === 3 && k !== 13) {
+    return n + "rd";
+  }
+  return n + "th";
+};
 
 const CVBuilder = (props: CVBuilderProps) => {
   const { vacancyId } = props;
@@ -95,9 +111,23 @@ const CVBuilder = (props: CVBuilderProps) => {
                     key={i}
                     className="page-break"
                     style={{
-                      top: 122 + 64 + 1122 * (i + 1),
+                      top: 64 + 1122 * (i + 1),
                     }}
-                  />
+                  >
+                    {i === pages - 2 && ( // Render button only for the last page break
+                      <div className="absolute -left-[13rem] -top-[1rem] flex flex-col gap-3">
+                        <Button
+                          text="Delete last page"
+                          className="sm common primary"
+                          onClick={() => setPages(pages - 1)}
+                        />
+                        <small>
+                          If content is cut off it will reappear <br />
+                          once CV is interacted with.
+                        </small>
+                      </div>
+                    )}
+                  </div>
                 ))}
                 {changingDesign && <DesignViewer />}
               </div>

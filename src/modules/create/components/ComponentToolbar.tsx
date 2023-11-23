@@ -7,11 +7,9 @@ import { FaItalic } from "react-icons/fa";
 import cn from "classnames";
 import { FaUnderline } from "react-icons/fa6";
 import { FaChevronDown } from "react-icons/fa6";
-import { IoHandLeftSharp } from "react-icons/io5";
 import { IoAddCircleSharp } from "react-icons/io5";
 import { Menu, MenuButton, MenuItem } from "@szhsin/react-menu";
-import { RiDeleteBin6Line } from "react-icons/ri";
-import { HiOutlineArrowUturnDown } from "react-icons/hi2";
+import { RiDeleteBin6Line, RiDragMove2Fill } from "react-icons/ri";
 
 import { Button } from "~/components/ui/buttons/Button";
 import { useDraftContext } from "~/modules/draft/DraftContext";
@@ -31,22 +29,25 @@ type ComponentToolbarProps = PropsWithChildren<{
 
 const classNames = [
   {
-    label: <FaBold />,
+    icon: <FaBold />,
+    label: "Bold",
     className: "font-bold",
   },
   {
-    label: <FaItalic />,
+    icon: <FaItalic />,
+    label: "Italic",
     className: "italic",
   },
   {
-    label: <FaUnderline />,
+    icon: <FaUnderline />,
+    label: "Underline",
     className: "underline",
   },
 ];
 
 const SmChevron = () => <FaChevronDown size={8} />;
 
-const active = "!bg-secondary-hover transition";
+const active = "bg-gray transition";
 
 export const ComponentToolbar = (props: ComponentToolbarProps) => {
   const { dndRef, listeners, attributes, children, ...rest } = props;
@@ -71,45 +72,62 @@ export const ComponentToolbar = (props: ComponentToolbarProps) => {
           opacity={1}
           style={{ paddingInline: 10, zIndex: 9999 }}
           globalCloseEvents={{ clickOutsideAnchor: true }}
+          className="h-[40px] !p-0 [&>*]:h-full"
           clickable
           delayShow={400}
           delayHide={200}
           render={() => {
             return (
               <ul
-                className="flex-center [&>li+li]:border-left w-full gap-3 rounded-md [&>li+li]:pl-3"
+                className="flex-center [&>li+li]:border-left h-full w-full rounded-md [&_li]:h-full [&_li_button]:h-full [&_li_button]:px-3"
                 data-html2canvas-ignore
               >
-                {classNames.map(({ label, className }) => {
-                  return (
-                    !isDecoration(c.type) &&
-                    !isTimeline(c.type) && (
-                      <li key={className}>
-                        <Button
-                          baseCn="navigation sm gap-2"
-                          className={cn({
-                            [active]: c.props?.className?.includes(className),
-                          })}
-                          onClick={() => toggleClassName(c, className)}
-                        >
-                          {label}
-                        </Button>
-                      </li>
-                    )
-                  );
-                })}
+                {!isDecoration(c.type) && !isTimeline(c.type) && (
+                  <li>
+                    <Menu
+                      menuButton={
+                        <MenuButton className="flex-center navigation common-transition gap-2">
+                          A <SmChevron />
+                        </MenuButton>
+                      }
+                      transition
+                      gap={5}
+                    >
+                      {classNames.map(({ icon, label, className }) => {
+                        return (
+                          <MenuItem
+                            key={className}
+                            className={cn("flex items-center gap-2", {
+                              [active]: c.props?.className?.includes(className),
+                            })}
+                            onClick={() => toggleClassName(c, className)}
+                          >
+                            {icon} {label}
+                          </MenuItem>
+                        );
+                      })}
+                    </Menu>
+                  </li>
+                )}
                 <li {...listeners} {...attributes}>
-                  <Button baseCn="navigation sm">
-                    <IoHandLeftSharp />
+                  <Button baseCn="navigation flex-center gap-2 common-transition">
+                    {isTimeline(c.type) ? "Move whole timeline" : "Move"}
+                    <RiDragMove2Fill />
                   </Button>
                 </li>
                 <li>
                   <Menu
                     menuButton={
-                      <MenuButton className="navigation sm common gap-2">
-                        <IoAddCircleSharp /> <SmChevron />
+                      <MenuButton className="navigation flex-center common-transition gap-2">
+                        {isTimeline(c.type) ? (
+                          "Add after timeline"
+                        ) : (
+                          <IoAddCircleSharp />
+                        )}
+                        <SmChevron />
                       </MenuButton>
                     }
+                    transition
                     gap={5}
                   >
                     {typedKeys(intrinsic).map((typeOfComponent) => {
@@ -135,7 +153,7 @@ export const ComponentToolbar = (props: ComponentToolbarProps) => {
                 <li>
                   <Button
                     onClick={() => removeComponent(c)}
-                    className="sm common hover:bg-red"
+                    className="common-transition hover:bg-red"
                   >
                     <RiDeleteBin6Line />
                   </Button>
@@ -144,10 +162,11 @@ export const ComponentToolbar = (props: ComponentToolbarProps) => {
                   <li>
                     <Menu
                       menuButton={
-                        <MenuButton className="navigation sm common gap-2">
-                          <HiOutlineArrowUturnDown /> <SmChevron />
+                        <MenuButton className="navigation flex-center common-transition gap-2">
+                          Turn into <SmChevron />
                         </MenuButton>
                       }
+                      transition
                       gap={5}
                     >
                       {typedKeys(intrinsic).map(

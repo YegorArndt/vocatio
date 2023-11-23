@@ -73,7 +73,7 @@ export const Download = (props: { a4Ref: RefObject<HTMLDivElement> }) => {
 
   return (
     <Button
-      baseCn="p-1 navigation transition transform hover:-translate-y-1 motion-reduce:transition-none"
+      baseCn="p-1 navigation transition common transform hover:-translate-y-1 motion-reduce:transition-none"
       className={cn({
         "-translate-y-1 transform !bg-secondary-hover transition":
           DOWNLOAD_FIRED,

@@ -50,13 +50,13 @@ export const DesignViewer = () => {
         <Button
           frontIcon={<AiFillCheckCircle />}
           text="Accept"
-          className="primary lg"
+          className="primary common lg"
           onClick={() => setChangeDesignFired(false)}
         />
         <Button
           frontIcon={<TiCancel />}
           text="Cancel"
-          className="outlined lg"
+          className="outlined common lg"
           onClick={() => {
             updateDesign(() => initialDesign.current!);
             setChangeDesignFired(false);

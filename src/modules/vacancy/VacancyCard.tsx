@@ -64,7 +64,7 @@ export const VacancyCard = (props: { vacancy: Vacancy }) => {
                       text={expanded ? "Hide" : "Show"}
                       frontIcon={expanded ? <IoMdEyeOff /> : <IoEye />}
                       onClick={() => setExpanded(!expanded)}
-                      className="text-[13px] clr-blue"
+                      className="common text-[13px] clr-blue"
                     />
                   </div>
                 )}

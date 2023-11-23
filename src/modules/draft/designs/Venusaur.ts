@@ -16,7 +16,7 @@ const topRight: RawComponent[] = [
     type: "heading-1",
     id: "user-name",
     props: {
-      className: "text-[#323B4C] first",
+      className: "text-[#323B4C]",
     },
   },
   {
@@ -208,28 +208,28 @@ const right: RawComponent[] = [
 export const Venusaur: RawDesign = {
   id: VenusaurId,
   name: "Venusaur",
-  a4: `grid-cols-[300px_1fr] [&_.group]:mb-2 [&>*]:px-5 [&_.divider]:mb-3 [&_.story]:text-[#737373] [&_.story]:text-[#737373] [&_.story]:pb-6 [&_.story]:pt-2 [&_.story]:max-w-[420px]  [&_.text]:leading-[170%] [&_.date]:relative [&_.story]:relative [&_.companyName]:relative [&_.jobTitle]:relative`,
+  a4: `grid-cols-[300px_1fr] [&>*]:px-5 [&_.divider]:mb-3 [&_.text]:leading-[170%] [&_.date]:relative [&_.story]:relative`,
   sections: {
     "top-left": {
       id: "top-left",
       order: 0,
       components: topLeft,
       className:
-        "top-left bg-[#323B4C] text-[#fff] [&_.image]:m-auto pt-[2rem]",
+        "top-left [&>*:first-child]:my-[2rem] bg-[#323B4C] text-[#fff] [&_.image]:m-auto",
     },
     "top-right": {
       id: "top-right",
       order: 1,
       components: topRight,
       className:
-        "top-right pt-[2rem] bg-[#fff] text-[#000] [&_.heading-2]:text-[1.5rem] [&_.heading-2]:tracking-wider [&_.heading-2]:text-[#323B4C] [&_.heading-2]:mb-3 [&_.heading-2]:font-light !pr-2 [&_.text]:max-w-[450px] overflow-y-visible [&_.text]:pb-3 [&_.text]:text-[#737373]",
+        "top-right [&>*:first-child]:mt-[2rem] [&>*:nth-child(even)]:mb-[1rem] [&>*:nth-child(even)]:mt-1 [&>*:last-child]:mb-[2rem] bg-[#fff] text-[#737373] [&_.heading-2]:text-[1.5rem] [&_.heading-2]:tracking-wider [&_.heading-2]:text-[#323B4C] [&_.heading-2]:font-light [&>*]:max-w-[450px]",
     },
     left: {
       id: "left",
       order: 3,
       components: left,
       className:
-        "left flex flex-col items-center bg-[#323B4C] text-[#fff] [&_.image]:mx-auto [&_div:not(:first-child)>.heading-2]:pt-3",
+        "left flex flex-col items-center bg-[#323B4C] text-[#fff] [&_.image]:mx-auto [&_div:not(:first-child)>.heading-2]:mt-3 [&_.group]:mb-2 [&_.text]:mb-1 [&_.text]:text-[14px]",
     },
     right: {
       id: "right",

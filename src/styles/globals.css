@@ -129,7 +129,7 @@
   }
 
   .a4 * {
-    box-sizing: border-box;
+    /* box-sizing: border-box; */
   }
 
   .top-left {

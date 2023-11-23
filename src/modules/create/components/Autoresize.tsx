@@ -1,3 +1,4 @@
+import { motion } from "framer-motion";
 import cn from "classnames";
 import { type SyntheticEvent, useRef, useEffect, CSSProperties } from "react";
 import { ComponentValue } from "~/modules/draft/types/components";
@@ -29,15 +30,18 @@ export const Autoresize = (props: AutoresizeProps) => {
   }, []);
 
   return (
-    <div
+    <motion.div
+      initial={{ opacity: 0, y: -10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, ease: "easeOut" }}
       contentEditable
       onInput={onInput}
       data-placeholder={value ?? _value.current}
-      className={cn("max-w-[400px] break-words", className, {})}
+      className={cn("max-w-[400px] break-words", className)}
       style={style}
       suppressContentEditableWarning
     >
       {_value.current as string}
-    </div>
+    </motion.div>
   );
 };

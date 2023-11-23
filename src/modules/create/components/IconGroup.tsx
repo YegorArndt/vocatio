@@ -55,10 +55,6 @@ const BlurIcon = (props: BlurIconProps) => {
 
   useEffect(() => setIsLoading(false), []);
 
-  // useEffect(() => {
-  //   if (img) localStorage.setItem(imgId, img);
-  // }, [img]);
-
   return (
     <div className={cn("bg-gray-200 !inline-block overflow-hidden")}>
       <Icon
@@ -117,6 +113,7 @@ export const IconGroup = (props: IconGroupProps) => {
         position="initial"
         menuClassName={cn(sectionBg, sectionTextColor)}
         theming="dark"
+        menuStyle={{ zIndex: 1000 }}
       >
         <MenuHeader>Change to</MenuHeader>
         <FocusableItem className="mb-2">

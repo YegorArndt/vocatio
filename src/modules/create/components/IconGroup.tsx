@@ -114,11 +114,11 @@ export const IconGroup = (props: IconGroupProps) => {
         direction="left"
         gap={25}
         transition
-        className={sectionBg}
         position="initial"
         menuClassName={cn(sectionBg, sectionTextColor)}
+        theming="dark"
       >
-        <MenuHeader className={cn(sectionTextColor)}>Change to</MenuHeader>
+        <MenuHeader>Change to</MenuHeader>
         <FocusableItem className="mb-2">
           {({ ref }) => (
             <input

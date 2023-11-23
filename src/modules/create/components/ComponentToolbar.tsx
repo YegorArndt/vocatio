@@ -111,7 +111,7 @@ export const ComponentToolbar = (props: ComponentToolbarProps) => {
                 )}
                 <li {...listeners} {...attributes}>
                   <Button baseCn="navigation flex-center gap-2 common-transition">
-                    {isTimeline(c.type) ? "Move whole timeline" : "Move"}
+                    {isTimeline(c.type) ? "Move timeline" : "Move"}
                     <RiDragMove2Fill />
                   </Button>
                 </li>
@@ -153,8 +153,9 @@ export const ComponentToolbar = (props: ComponentToolbarProps) => {
                 <li>
                   <Button
                     onClick={() => removeComponent(c)}
-                    className="common-transition hover:bg-red"
+                    className="common gap-2 clr-secondary hover:bg-red hover:clr-base"
                   >
+                    {isTimeline(c.type) ? "Delete whole timeline" : ""}
                     <RiDeleteBin6Line />
                   </Button>
                 </li>

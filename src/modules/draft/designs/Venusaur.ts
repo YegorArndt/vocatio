@@ -212,7 +212,7 @@ const right: RawComponent[] = [
 export const Venusaur: RawDesign = {
   id: VenusaurId,
   name: "Venusaur",
-  a4: `grid-cols-[300px_1fr] [&>*]:px-5 [&_.divider]:mb-3 [&_.text]:leading-[170%] [&_.date]:relative [&_.story]:relative`,
+  a4: `grid-cols-[300px_1fr] [&>*]:px-5 [&_.text]:leading-[170%]`,
   sections: {
     "top-left": {
       id: "top-left",
@@ -240,7 +240,7 @@ export const Venusaur: RawDesign = {
       order: 4,
       components: right,
       className:
-        "right relative bg-white clr-black [&_.heading-1]:text-[#323B4C] [&_.heading-2]:text-[#323B4C] !pr-2 [&_div:not(:first-child)>.heading-2]:pt-3 [&_.date]:text-[.9rem]",
+        "right relative bg-white clr-black [&_.heading-1]:text-[#323B4C] [&_.heading-2]:text-[#323B4C] !pr-2 [&_div:not(:first-child)>.heading-2]:pt-3",
     },
   },
   intrinsic: {
@@ -263,7 +263,7 @@ export const Venusaur: RawDesign = {
       height: 30,
     },
     divider: {
-      className: "border-current border-solid border-b-[2px]",
+      className: "border-current border-solid border-b-[2px] mt-2 mb-3",
     },
     image: {
       height: 210,

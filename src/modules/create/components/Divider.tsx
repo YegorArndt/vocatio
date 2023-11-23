@@ -8,9 +8,5 @@ export type DividerProps = {
 export const Divider = (props: DividerProps) => {
   const { className } = props;
 
-  return (
-    <div className="divider-container !block">
-      <div className={className} />
-    </div>
-  );
+  return <div className={className} />;
 };

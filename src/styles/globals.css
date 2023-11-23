@@ -122,9 +122,10 @@
   }
 
   .a4 {
-    /* overflow: hidden; */
+    overflow-y: clip;
     display: grid;
     grid-template-rows: auto 1fr;
+    white-space: pre-wrap;
     @apply relative;
   }
 
@@ -147,13 +148,15 @@
 
   .page-break {
     position: absolute;
-    /* top: calc(122px + 64px + 1122px); */
-    width: 793px;
-    height: 1px;
+    width: 100%; /* Full width of the container */
+    height: 10px; /* Adjust this as needed for visual effect */
     z-index: 100;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: var(--border-clr);
+    left: 0;
+    background-color: #000; /* Slightly different background */
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
+    box-shadow: 0 4px 3px -3px black,
+      /* Reduced shadow size */ 0 -4px 3px -3px black;
   }
 
   .toolbar {
@@ -209,6 +212,10 @@
   [contentEditable="true"]:empty:before {
     content: attr(data-placeholder);
     @apply pointer-events-none select-none clr-secondary;
+  }
+
+  .divider {
+    margin: 0;
   }
 }
 

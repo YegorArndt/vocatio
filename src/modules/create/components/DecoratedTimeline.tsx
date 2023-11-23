@@ -133,7 +133,7 @@ export const Item = (
         <Autoresize className="text-[1rem] font-bold" {...place} />
       </div>
       <Autoresize className="italic" {...heading} />
-      <Autoresize {...story} />
+      <Autoresize className="text-[14px]" {...story} />
       <Tooltip
         id={id}
         place="top"

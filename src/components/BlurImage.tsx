@@ -7,7 +7,7 @@ export const BlurImage = (props: ImageProps) => {
   const [isLoading, setIsLoading] = useState(true);
 
   return (
-    <div className={cn("bg-gray-200 overflow-hidden", className)}>
+    <div className={cn("bg-gray-200 !block overflow-hidden", className)}>
       <Image
         height={height}
         width={width}

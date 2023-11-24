@@ -23,7 +23,9 @@ export const Aside = (props: PropsWithChildren<Record<string, unknown>>) => {
 
   return (
     <aside className="border-right fixed inset-0 z-50 flex w-[240px] flex-col bg-secondary font-semibold clr-secondary [&>*]:px-4 [&>*]:py-1">
-      <header className="!py-3">🐈 &nbsp;&nbsp;{firstName}'s vocatio</header>
+      <header className="!py-3">
+        🐈 &nbsp;&nbsp;{firstName}&quot;s vocatio
+      </header>
       {mainNav.map((props) => (
         <NavigationLink
           key={props.text}

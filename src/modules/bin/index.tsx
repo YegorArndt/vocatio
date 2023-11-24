@@ -16,7 +16,9 @@ import { Placeholder } from "~/components/Placeholder";
 
 const getDeletedComponents = (lsKey: string) => {
   const deletedComponents = localStorage.getItem(lsKey);
-  return deletedComponents ? JSON.parse(deletedComponents) : [];
+  return (
+    deletedComponents ? JSON.parse(deletedComponents) : []
+  ) as NormalizedComponent[];
 };
 
 export const Bin = () => {
@@ -138,7 +140,7 @@ export const Bin = () => {
                   ))}
                 </div>
                 {deletedComponents.length > 0 && (
-                  <footer className="mt-auto flex">
+                  <footer className="border-top mt-auto flex">
                     <Button
                       text="Restore selected"
                       frontIcon={<TbRestore />}

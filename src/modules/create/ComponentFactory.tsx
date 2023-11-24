@@ -12,6 +12,7 @@ import type {
 import type { Design } from "../draft/types/design";
 import { DecoratedTimeline } from "./components/DecoratedTimeline";
 import { IconGroup } from "./components/IconGroup";
+import { Name } from "./components/Name";
 
 const componentMapping = {
   text: Autoresize,
@@ -21,6 +22,7 @@ const componentMapping = {
   image: UserImage,
   list: List,
   "decorated-timeline": DecoratedTimeline,
+  name: Name,
 };
 
 /**
@@ -32,12 +34,11 @@ const componentMapping = {
 const mergeWithIntrinsic = (c: NormalizedComponent, d: Design) => {
   const { intrinsic } = d;
   const intrinsicComponent = intrinsic[c.type];
-  if (!intrinsicComponent) return c.props;
 
   const { className: k, style: s } = c.props;
 
-  const className = `${c.type} ${intrinsicComponent.className || ""} ${k}`;
-  const style = { ...intrinsicComponent.style, ...s };
+  const className = `${c.type} ${intrinsicComponent?.className || ""} ${k}`;
+  const style = { ...(intrinsicComponent?.style || {}), ...s };
 
   return { ...intrinsicComponent, ...c.props, className, style };
 };

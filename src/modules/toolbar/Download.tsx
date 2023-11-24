@@ -73,7 +73,7 @@ export const Download = (props: { a4Ref: RefObject<HTMLDivElement> }) => {
 
   return (
     <Button
-      baseCn="p-1 navigation transition common transform hover:-translate-y-1 motion-reduce:transition-none"
+      baseCn="p-1 hover transition common transform hover:-translate-y-1 motion-reduce:transition-none"
       className={cn({
         "-translate-y-1 transform !bg-secondary-hover transition":
           DOWNLOAD_FIRED,
@@ -88,10 +88,10 @@ export const Download = (props: { a4Ref: RefObject<HTMLDivElement> }) => {
         alt={src}
         className="rounded-lg"
       />
-      <Tooltip id={src} place="bottom" content="Download" />
+      <Tooltip id={src} place="top" content="Download" />
       <Tooltip
         id={src}
-        place="bottom"
+        place="top"
         content="Downloading..."
         isOpen={DOWNLOAD_FIRED}
       />

@@ -49,7 +49,7 @@ const icons = {
 };
 
 const BlurIcon = (props: BlurIconProps) => {
-  const { img, height, width, className, ...rest } = props;
+  const { img, height = 30, width = 30, className, ...rest } = props;
   const Icon = icons[img as keyof typeof icons] || icons.email;
   const [isLoading, setIsLoading] = useState(true);
 
@@ -100,22 +100,27 @@ export const IconGroup = (props: IconGroupProps) => {
     .find((i) => i.includes("text-"));
 
   return (
-    <div className={cn(className)} {...rest}>
+    <div
+      className={cn("grid grid-cols-[30px_1fr] items-center gap-3", className)}
+      {...rest}
+    >
       <Menu
         menuButton={
           <MenuButton>
-            <BlurIcon className={iconClassName} {...rest} img={img} />
+            <BlurIcon
+              className={cn(iconClassName, sectionTextColor)}
+              {...rest}
+              img={img}
+            />
           </MenuButton>
         }
         direction="left"
         gap={25}
         transition
-        position="initial"
         menuClassName={cn(sectionBg, sectionTextColor)}
-        theming="dark"
         menuStyle={{ zIndex: 1000 }}
       >
-        <MenuHeader>Change to</MenuHeader>
+        <MenuHeader className={sectionTextColor}>Change to</MenuHeader>
         <FocusableItem className="mb-2">
           {({ ref }) => (
             <input
@@ -123,7 +128,10 @@ export const IconGroup = (props: IconGroupProps) => {
               type="text"
               placeholder="Type to filter"
               value={filter}
-              className="border-gray-300 focus:border-gray-500 w-full border-b bg-transparent p-2 focus:outline-none"
+              className={cn(
+                "border-gray-300 focus:border-gray-500 w-full border-b bg-transparent p-2 focus:outline-none",
+                sectionTextColor
+              )}
               onChange={(e) => setFilter(e.target.value)}
             />
           )}

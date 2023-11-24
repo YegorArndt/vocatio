@@ -43,6 +43,8 @@ const config = {
         cyan: "var(--cyan)",
         gray: "var(--gray)",
         skeleton: "var(--skeleton)",
+        border: "var(--border-clr)",
+        disabled: "var(--clr-disabled)",
       },
       backgroundColor: {
         base: "var(--bg-base)",
@@ -52,6 +54,9 @@ const config = {
         "secondary-hover": "var(--bg-secondary-hover)",
         green: "var(--green)",
         skeleton: "var(--skeleton)",
+        hover: "var(--bg-hover)",
+        card: "var(--bg-card)",
+        border: "var(--border-clr)",
       },
       fontSize: {
         small: "clamp(0.625rem, 0.5946rem + 0.0833vw, 0.75rem)",

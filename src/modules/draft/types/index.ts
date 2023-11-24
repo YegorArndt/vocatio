@@ -14,7 +14,7 @@ export type DraftContextInput = {
   defaultUserData: UserResource;
   vacancy: Vacancy;
   user: User;
-  children: (a4: string, changingDesign: boolean) => ReactNode;
+  children: (a: DraftContext) => ReactNode;
 };
 
 export type DraftState = Partial<Record<keyof typeof actions, boolean>>;

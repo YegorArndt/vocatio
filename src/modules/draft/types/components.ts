@@ -8,6 +8,7 @@ import type { SectionId } from "./sections";
 import type { ListProps } from "~/modules/create/components/List";
 import { dbIds } from "../constants";
 import { IconGroupProps } from "~/modules/create/components/IconGroup";
+import { NameProps } from "~/modules/create/components/Name";
 
 export type TypeOfComponent = keyof NormalizedComponents;
 
@@ -23,7 +24,8 @@ export type ComponentValue =
       heading: AutoresizeProps;
       story: AutoresizeProps;
       className?: string;
-    }[];
+    }[]
+  | NameProps;
 
 export type NormalizedComponents = { [P in Text["type"]]: Text } & {
   [P in Heading["type"]]: Heading;
@@ -31,7 +33,7 @@ export type NormalizedComponents = { [P in Text["type"]]: Text } & {
   [P in List["type"]]: List;
 } & { [P in Url["type"]]: Url } & { [P in Image["type"]]: Image } & {
   [P in DecoratedTimeline["type"]]: DecoratedTimeline;
-} & { [P in IconGroup["type"]]: IconGroup };
+} & { [P in IconGroup["type"]]: IconGroup } & { [P in Name["type"]]: Name };
 
 export type NormalizedComponent =
   NormalizedComponents[keyof NormalizedComponents] & Obligatory; // obl missing in normalizedcomponents
@@ -94,6 +96,11 @@ export type DecoratedTimeline = {
 export type IconGroup = {
   type: "icon-group";
   props: Omit<IconGroupProps & ObligatoryProps, "id">;
+};
+
+export type Name = {
+  type: "name";
+  props: Omit<NameProps & ObligatoryProps, "id">;
 };
 
 export type RawComponent = Omit<Partial<NormalizedComponent>, "props"> & {

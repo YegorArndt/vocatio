@@ -111,8 +111,6 @@ export const DraftContext = (props: DraftContextInput) => {
   };
 
   return (
-    <Context.Provider value={context}>
-      {children(design.a4, Boolean(state.CHANGE_DESIGN_FIRED))}
-    </Context.Provider>
+    <Context.Provider value={context}>{children(context)}</Context.Provider>
   );
 };

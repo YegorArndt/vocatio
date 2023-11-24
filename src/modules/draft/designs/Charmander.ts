@@ -14,22 +14,12 @@ const topLeft: RawComponent[] = [
 
 const topRight: RawComponent[] = [
   {
-    type: "heading-1",
-    id: "first-name",
+    type: "name",
+    id: "user-name",
     props: {
-      label: "First name",
-      className: "uppercase text-[#fff]",
+      className: "uppercase flex flex-col text-[50px] leading-[120%]",
+      classNameLast: "font-bold",
     },
-    modifierIds: ["user-name"],
-  },
-  {
-    type: "heading-1",
-    id: "last-name",
-    props: {
-      label: "Last name",
-      className: "font-bold uppercase tracking-[0.2rem] text-[#fff]",
-    },
-    modifierIds: ["user-name"],
   },
   {
     type: "divider",
@@ -87,8 +77,7 @@ const bodyLeft: RawComponent[] = [
   },
   {
     type: "text",
-    id: "charmander-education-duration",
-    modifierIds: ["education-duration"],
+    id: "education-duration",
     props: {
       className: "font-bold",
     },
@@ -108,24 +97,27 @@ const bodyLeft: RawComponent[] = [
     },
   },
   {
-    type: "group",
+    type: "icon-group",
     id: "email",
     props: {
+      img: "email",
       label: "Email",
     },
   },
   {
-    type: "group",
+    type: "icon-group",
     id: "linkedin",
     props: {
+      img: "linkedin",
       value: "short-url.com",
       label: "LinkedIn",
     },
   },
   {
-    type: "group",
+    type: "icon-group",
     id: "github",
     props: {
+      img: "github",
       value: "short-url.com",
       label: "Github",
     },
@@ -144,37 +136,44 @@ const bodyRight: RawComponent[] = [
     type: "divider",
     id: "charmander-experience-title-divider",
   },
+  {
+    type: "decorated-timeline",
+    id: "user-stories",
+  },
 ];
 
 export const Charmander: RawDesign = {
   id: CharmanderId,
   name: "Charmander",
-  a4: `grid grid-cols-[300px,1fr] [&_.group]:mb-2 [&>*]:p-[2rem]`,
+  a4: `grid-cols-[300px,1fr] [&_.group]:mb-2 [&>*]:px-[2rem]`,
   sections: {
     "top-left": {
       id: "top-left",
       order: 0,
       components: topLeft,
-      className: "bg-[#252E34] text-[#fff] h-[300px]",
+      className:
+        "top-left bg-[#252E34] text-[#fff] [&>*:first-child]:mt-[1rem]",
     },
     "top-right": {
       id: "top-right",
       order: 1,
       components: topRight,
-      className: "bg-[#252E34] text-[#fff] h-[300px]",
+      className:
+        "top-right [&>*:first-child]:mt-[1rem] bg-[#252E34] text-[#fff] [&>*:last-child]:mb-[3.5rem]",
     },
     left: {
       id: "left",
       order: 3,
       components: bodyLeft,
       className:
-        "bg-[#3F4C5C] h-[822px] [&_.divider]:max-w-[180px] [&_div:not(:first-child)>.heading-3]:mt-5 [&_.text]:mt-1 [&_.group]:grid [&_.group]:grid-cols-[70px,175px] [&_.group]:gap-2 [&_.group]:text-[13px]",
+        "left bg-[#3F4C5C] [&_.divider]:max-w-[180px] [&>*:first-child]:mt-[2rem] [&_div:not(:first-child)>.heading-3]:mt-5 [&_.text]:mt-1 [&_.group]:grid [&_.group]:grid-cols-[70px,175px] [&_.group]:gap-2 [&_.group]:text-[13px] [&_.icon-group]:mb-2",
     },
     right: {
       id: "right",
       order: 4,
       components: bodyRight,
-      className: "bg-[#fff] text-[#000] h-[822px] [&_.divider]:max-w-[180px]",
+      className:
+        "right bg-[#fff] text-[#000]  [&>*:first-child]:mt-[2rem] [&_.divider]:max-w-[180px]",
     },
   },
   intrinsic: {
@@ -190,7 +189,7 @@ export const Charmander: RawDesign = {
     text: {},
     group: {},
     divider: {
-      className: "border-current border-solid border-b-[2px] mb-5",
+      className: "border-current border-solid border-b-[2px] mt-2 mb-4",
     },
     image: {
       height: 220,

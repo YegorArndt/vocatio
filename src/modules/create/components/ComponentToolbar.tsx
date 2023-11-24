@@ -19,6 +19,7 @@ import {
   isTimeline,
   typedKeys,
 } from "~/modules/draft/utils/common";
+import { BsArrowsCollapse } from "react-icons/bs";
 
 type ComponentToolbarProps = PropsWithChildren<{
   dndRef: (node: HTMLElement | null) => void;
@@ -42,6 +43,11 @@ const classNames = [
     icon: <FaUnderline />,
     label: "Underline",
     className: "underline",
+  },
+  {
+    icon: <BsArrowsCollapse style={{ transform: "rotate(90deg)" }} />,
+    label: "Push to center",
+    className: "text-center",
   },
 ];
 
@@ -79,14 +85,14 @@ export const ComponentToolbar = (props: ComponentToolbarProps) => {
           render={() => {
             return (
               <ul
-                className="flex-center [&>li+li]:border-left h-full w-full rounded-md [&_li]:h-full [&_li_button]:h-full [&_li_button]:px-3"
+                className="flex-center [&>li+li]:border-left h-full w-full rounded-md clr-secondary [&_li]:h-full [&_li_button]:h-full [&_li_button]:px-3"
                 data-html2canvas-ignore
               >
                 {!isDecoration(c.type) && !isTimeline(c.type) && (
                   <li>
                     <Menu
                       menuButton={
-                        <MenuButton className="flex-center navigation common-transition gap-2">
+                        <MenuButton className="flex-center hover common-transition gap-2 hover:text-[#fff]">
                           A <SmChevron />
                         </MenuButton>
                       }
@@ -110,7 +116,7 @@ export const ComponentToolbar = (props: ComponentToolbarProps) => {
                   </li>
                 )}
                 <li {...listeners} {...attributes}>
-                  <Button baseCn="navigation flex-center gap-2 common-transition">
+                  <Button baseCn="hover hover:text-[#fff] flex-center gap-2 common-transition">
                     {isTimeline(c.type) ? "Move timeline" : "Move"}
                     <RiDragMove2Fill />
                   </Button>
@@ -118,7 +124,7 @@ export const ComponentToolbar = (props: ComponentToolbarProps) => {
                 <li>
                   <Menu
                     menuButton={
-                      <MenuButton className="navigation flex-center common-transition gap-2">
+                      <MenuButton className="hover flex-center common-transition gap-2 hover:text-[#fff]">
                         {isTimeline(c.type) ? (
                           "Add after timeline"
                         ) : (
@@ -153,9 +159,9 @@ export const ComponentToolbar = (props: ComponentToolbarProps) => {
                 <li>
                   <Button
                     onClick={() => removeComponent(c)}
-                    className="common gap-2 clr-secondary hover:bg-red hover:clr-base"
+                    className="common flex-center gap-2 clr-secondary hover:bg-red hover:text-[#fff]"
                   >
-                    {isTimeline(c.type) ? "Delete whole timeline" : ""}
+                    {isTimeline(c.type) ? "Delete entire timeline" : ""}
                     <RiDeleteBin6Line />
                   </Button>
                 </li>
@@ -163,7 +169,7 @@ export const ComponentToolbar = (props: ComponentToolbarProps) => {
                   <li>
                     <Menu
                       menuButton={
-                        <MenuButton className="navigation flex-center common-transition gap-2">
+                        <MenuButton className="hover flex-center common-transition gap-2 hover:text-[#fff]">
                           Turn into <SmChevron />
                         </MenuButton>
                       }

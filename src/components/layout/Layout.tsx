@@ -1,30 +1,22 @@
-import { type PropsWithChildren } from "react";
+import { type ReactNode, type PropsWithChildren } from "react";
 
-import { Navigation } from "./Navigation";
-import { Link } from "~/components/ui/buttons/Link";
+import { Aside } from "./Aside";
 
 type LayoutProps = PropsWithChildren<{
   className?: string;
+  asideChildren?: ReactNode;
 }>;
 
 export const Layout = (props: LayoutProps) => {
-  const { children } = props;
+  const { children, asideChildren } = props;
 
   return (
     <>
-      <Navigation />
-      <div className="absolute left-0 top-[65px] w-full" />
-      {children}
-      <footer className="mt-[5rem] flex w-screen grow items-end justify-center">
-        <div className="border-top flex-center w-full gap-2 py-5">
-          Learn about our
-          <Link
-            text="Privacy Policy"
-            to="/privacy-policy"
-            className="underline clr-blue"
-          />
-        </div>
-      </footer>
+      <div className="grid grid-cols-[240px_1fr] pb-[3rem]">
+        <div />
+        <Aside>{asideChildren}</Aside>
+        {children}
+      </div>
     </>
   );
 };

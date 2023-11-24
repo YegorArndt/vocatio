@@ -1,7 +1,6 @@
 import type { Vacancy } from "@prisma/client";
 import { Link } from "../../components/ui/buttons/Link";
 import { breakDown } from "./utils";
-import { useGlare } from "./useGlare";
 import { vacancyUI } from "./constants";
 import { Accordion } from "./Accordion";
 import { IoEye } from "react-icons/io5";
@@ -15,14 +14,9 @@ export const VacancyCard = (props: { vacancy: Vacancy }) => {
   const { companyName, jobTitle, age, sourceName, sourceUrl, createdAt } =
     header;
 
-  const tiltRef = useGlare();
-
   return (
-    <div className="flex flex-col gap-5">
-      <div
-        ref={tiltRef}
-        className="tilt relative rounded-md border bg-primary shadow-md"
-      >
+    <div className="flex flex-col gap-5 ">
+      <div className="clr-card relative rounded-md border bg-card shadow-md">
         <header className="flex flex-col gap-2 p-4">
           <h3 className="text-xl font-bold">{companyName}</h3>
           <span className="italic">{jobTitle}</span>
@@ -64,11 +58,10 @@ export const VacancyCard = (props: { vacancy: Vacancy }) => {
                       text={expanded ? "Hide" : "Show"}
                       frontIcon={expanded ? <IoMdEyeOff /> : <IoEye />}
                       onClick={() => setExpanded(!expanded)}
-                      className="common text-[13px] clr-blue"
+                      className="common flex-center text-[13px] clr-blue"
                     />
                   </div>
                 )}
-                initiallyOpen={index === 0}
               >
                 <ul className="flex flex-col gap-3 p-4">
                   {items.map(({ text, icon, value }) =>

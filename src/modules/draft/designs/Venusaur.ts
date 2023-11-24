@@ -207,19 +207,17 @@ const right: RawComponent[] = [
   },
 ];
 
-//842
-
 export const Venusaur: RawDesign = {
   id: VenusaurId,
   name: "Venusaur",
-  a4: `grid-cols-[300px_1fr] [&>*]:px-5 [&_.text]:leading-[170%]`,
+  a4: `grid-cols-[300px_1fr] [&>*]:px-5`,
   sections: {
     "top-left": {
       id: "top-left",
       order: 0,
       components: topLeft,
       className:
-        "top-left [&>*:first-child]:mt-[2rem] flex flex-col items-center bg-[#323B4C] text-[#fff] [&_.image]:mx-auto [&_div:not(:first-child)>.heading-2]:mt-3 [&_.group]:mb-2 [&_.icon-group]:mb-2 [&_.text]:mb-1 [&_.text]:text-[14px]",
+        "top-left [&>*:first-child]:mt-[2rem] flex flex-col items-center bg-[#323B4C] text-[#fff] [&_.image]:mx-auto [&_div:not(:first-child)>.heading-2]:mt-3 [&_.group]:mb-2 [&_.icon-group]:mb-2 [&_.text]:mb-1 [&_.text]:text-[14px] [&>*:last-child]:mb-[1.5rem]",
     },
     "top-right": {
       id: "top-right",
@@ -255,12 +253,6 @@ export const Venusaur: RawDesign = {
     },
     group: {
       className: "grid grid-cols-[90px,160px] gap-2",
-    },
-    "icon-group": {
-      className: "grid items-center grid-cols-[30px_1fr] gap-3",
-      iconClassName: "text-[#fff]",
-      width: 30,
-      height: 30,
     },
     divider: {
       className: "border-current border-solid border-b-[2px] my-2",

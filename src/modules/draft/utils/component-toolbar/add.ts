@@ -17,7 +17,7 @@ export const add = (
 
   if (!targetSection) return design;
 
-  const order = clickedComponent.order + 1;
+  const order = newComponent.order ?? clickedComponent.order + 1;
 
   const normalizedComponent = normalize(
     {

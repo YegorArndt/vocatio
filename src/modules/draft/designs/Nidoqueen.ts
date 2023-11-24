@@ -5,11 +5,33 @@ import type { RawDesign } from "../types/design";
 
 const NidoqueenId = uuidv4();
 
-const left: RawComponent[] = [
+const topLeft: RawComponent[] = [
   {
     type: "image",
     id: "user-image",
   },
+];
+
+const topRight: RawComponent[] = [
+  {
+    type: "name",
+    id: "user-name",
+    props: {
+      className: "text-[50px] font-bold text-[#27384B] uppercase",
+      classNameLast: "ml-[2rem]",
+    },
+  },
+  {
+    type: "heading-2",
+    id: "job-title",
+    props: {
+      value: "Software Engineer",
+      className: "text-center uppercase",
+    },
+  },
+];
+
+const left: RawComponent[] = [
   {
     type: "heading-2",
     id: "about-me-title",
@@ -25,9 +47,10 @@ const left: RawComponent[] = [
     },
   },
   {
-    type: "text",
+    type: "icon-group",
     id: "phone",
     props: {
+      img: "phone",
       value: "+7 (999) 999-99-99",
     },
   },
@@ -129,36 +152,13 @@ const left: RawComponent[] = [
 
 const right: RawComponent[] = [
   {
-    type: "heading-1",
-    id: "first-name",
-    props: {
-      className: "uppercase",
-    },
-    modifierIds: ["user-name"],
-  },
-  {
-    type: "heading-1",
-    id: "last-name",
-    props: {
-      className: "ml-8 uppercase",
-    },
-    modifierIds: ["user-name"],
-  },
-  {
-    type: "heading-2",
-    id: "job-title",
-    props: {
-      value: "Software Engineer",
-      className: "text-center uppercase",
-    },
-  },
-  {
     type: "heading-4",
     id: "nidoqueen-experience-title",
     props: {
       value: "Experience",
     },
   },
+  { type: "decorated-timeline", id: "user-stories" },
 ];
 
 const blueSquare =
@@ -178,43 +178,54 @@ const leftHeading4 =
 export const Nidoqueen: RawDesign = {
   id: NidoqueenId,
   name: "Nidoqueen",
-  a4: `flex py-[4rem] px-[2rem] bg-white clr-black relative ${blueSquare} ${dashedCircle}`,
+  a4: `[&>*]:px-[2rem] bg-white clr-black relative`,
   sections: {
+    "top-left": {
+      id: "top-left",
+      order: 0,
+      components: topLeft,
+      className: `top-left ${blueSquare} relative [&>*:first-child]:mt-[3rem] [&>*]:ml-[1rem] [&_.image]:outline-black [&_.image]:outline-4 [&_.image]:border-solid [&_.image]:border-[3px] [&_.image]:border-black`,
+    },
+    "top-right": {
+      id: "top-right",
+      order: 1,
+      components: topRight,
+      className: `top-right relative ${dashedCircle} overflow-hidden -ml-[5rem] z-10 [&>*:first-child]:mt-[3rem] [&>*:nth-child(even)]:-ml-[3rem] [&_.text]:w-full [&_.text]:!text-left`,
+    },
     left: {
       id: "left",
-      order: 0,
+      order: 3,
       components: left,
-      className: `flex items-center flex-col [&_.heading-2]:mt-5 [&_.heading-1]:text-[30px] [&_.heading-1]:text-black [&_.text]:my-1 ${leftImage} [&>*]:z-1 relative ${leftHeading4} [&_.text]:max-w-[300px] [&_.group]:max-w-[300px]`,
+      className: `left [&>*:first-child]:mt-[1rem] flex items-center flex-col [&_.heading-2]:mt-5 [&_.heading-1]:text-[30px] [&_.heading-1]:text-black [&_.text]:my-1 ${leftImage} [&>*]:z-1 relative ${leftHeading4} [&_.text]:max-w-[300px] [&_.group]:max-w-[300px]`,
     },
     right: {
       id: "right",
-      order: 1,
+      order: 4,
       components: right,
-      className:
-        "flex flex-col [&_.heading-4]:ml-[5rem] [&_.heading-4]:mt-[3rem]",
+      className: "right flex flex-col [&>*:first-child]:mt-[1rem]",
     },
   },
   intrinsic: {
     "heading-1": {
-      className: "text-[50px] font-bold text-[#27384B] leading-[120%]",
+      className: "text-[50px] font-bold text-[#27384B]",
     },
     "heading-2": {
       className: "text-[20px]",
     },
     "heading-3": {
-      className: "text-[1rem] mb-[2%]",
+      className: "text-[1rem]",
     },
     "heading-4": {
       className:
-        "text-[1rem] py-[8px] w-full bg-[#27384B] text-white flex-center uppercase rounded-[5px] box-border",
+        "text-[1rem] py-[8px] w-full bg-[#27384B] text-white flex-center uppercase rounded-md box-border my-4",
     },
     text: {},
     group: {
       className: "grid grid-cols-[100px,160px] gap-2",
     },
     image: {
-      height: 200,
-      width: 200,
+      height: 220,
+      width: 220,
     },
   },
   font: "Inter",

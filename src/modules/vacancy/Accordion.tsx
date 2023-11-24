@@ -27,7 +27,7 @@ export const Accordion = (props: AccordionProps) => {
               collapsed: { opacity: 0, height: 0 },
             }}
             transition={{
-              opacity: { duration: 0.4, ease: [0.04, 0.62, 0.23, 0.98] },
+              opacity: { duration: 0.2, ease: [0.04, 0.62, 0.23, 0.98] }, // Shortened duration for opacity
               height: { duration: 0.8, ease: [0.04, 0.62, 0.23, 0.98] },
             }}
           >

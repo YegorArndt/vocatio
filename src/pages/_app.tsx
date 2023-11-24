@@ -13,10 +13,10 @@ import "~/styles/globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
-type Theme = "light" | "dark";
+type Theme = "light" | "d";
 
 const useTheme = () => {
-  const [theme, setTheme] = useState<Theme>("dark");
+  const [theme, setTheme] = useState<Theme>("d");
 
   /**
    * Get theme from local storage

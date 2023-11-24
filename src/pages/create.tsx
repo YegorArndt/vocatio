@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import Head from "next/head";
 
 import { Layout } from "~/components/layout/Layout";
-import { CreatePageSkeleton } from "~/components/loaders/CreatePageSkeleton";
 import { Placeholder } from "~/components/Placeholder";
 
 /**
@@ -34,11 +33,7 @@ export const Create = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Layout>
-        {isLoading ? (
-          <CreatePageSkeleton className="top-offset" />
-        ) : (
-          <Placeholder />
-        )}
+        <Placeholder />
       </Layout>
     </>
   );

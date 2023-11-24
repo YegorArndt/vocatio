@@ -147,17 +147,17 @@ export const Item = (
         render={() => {
           return (
             <ul
-              className="flex-center [&>li+li]:border-left h-full w-full rounded-md [&_li]:h-full [&_li_button]:h-full [&_li_button]:px-3"
+              className="flex-center [&>li+li]:border-left h-full w-full rounded-md clr-secondary [&_li]:h-full [&_li_button]:h-full [&_li_button]:px-3"
               data-html2canvas-ignore
             >
               <li {...listeners} {...attributes}>
-                <Button baseCn="navigation flex-center gap-2 common-transition">
+                <Button baseCn="hover hover:text-[#fff] flex-center gap-2 common-transition">
                   Move item <RiDragMove2Fill />
                 </Button>
               </li>
               <li>
                 <Button
-                  baseCn="navigation flex-center gap-2 common-transition"
+                  baseCn="hover hover:text-[#fff] flex-center gap-2 common-transition"
                   onClick={addItem}
                 >
                   Duplicate item <LuCopyPlus />
@@ -166,7 +166,7 @@ export const Item = (
               <li>
                 <Menu
                   menuButton={
-                    <MenuButton className="navigation flex-center">
+                    <MenuButton className="hover  flex-center hover:text-[#fff]">
                       <BlurImage
                         src="/gpt-logo.jpg"
                         height={30}
@@ -193,7 +193,10 @@ export const Item = (
                 </Menu>
               </li>
               <li>
-                <Button onClick={deleteItem} className="sm common hover:bg-red">
+                <Button
+                  onClick={deleteItem}
+                  className="sm common hover:bg-red hover:text-[#fff]"
+                >
                   <RiDeleteBin6Line />
                 </Button>
               </li>

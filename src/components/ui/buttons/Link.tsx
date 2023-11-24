@@ -31,7 +31,7 @@ export const Link = forwardRef(
 
     return (
       <NextLink
-        className={cn("common", className, baseCn)}
+        className={cn(className, baseCn)}
         href={to}
         aria-label={text}
         ref={ref}

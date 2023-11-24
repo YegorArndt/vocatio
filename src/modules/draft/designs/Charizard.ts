@@ -27,7 +27,7 @@ const leftComponents: RawComponent[] = [
     props: {
       value: "Fullstack engineer",
       label: "Job title",
-      className: "text-center tracking-tighter uppercase font-thin",
+      className: "text-center tracking-tighter uppercase font-thin mb-6",
     },
   },
   {
@@ -137,27 +137,33 @@ const rightComponents: RawComponent[] = [
     id: "charizard-employment-history-title",
     props: {
       value: "Employment History",
+      className: "mt-5",
     },
+  },
+  {
+    type: "decorated-timeline",
+    id: "user-stories",
   },
 ];
 
 export const Charizard: RawDesign = {
   id: CharizardId,
   name: "Charizard",
-  a4: "grid grid-cols-[300px_1fr] bg-white",
+  a4: "grid-cols-[300px_1fr] bg-white",
   sections: {
     left: {
       id: "left",
       order: 0,
       components: leftComponents,
       className:
-        "flex items-center h-full flex-col bg-[#064C40] p-8 clr-white [&_.image]:mx-auto",
+        "left flex [&_.heading-2]:mt-5 items-center h-full flex-col bg-[#064C40] [&>*:first-child]:mt-[3rem] px-8 text-[#fff] [&_.image]:mx-auto [&_.heading-2]:my-2",
     },
     right: {
       id: "right",
       order: 1,
       components: rightComponents,
-      className: "bg-white p-[2rem] clr-black",
+      className:
+        "right bg-white [&>*:first-child]:mt-[3rem] px-[2rem] text-[#000]  [&_.heading-2]:mb-3",
     },
   },
   intrinsic: {
@@ -165,18 +171,21 @@ export const Charizard: RawDesign = {
       className: "text-[30px] font-bold",
     },
     "heading-2": {
-      className: "text-[1.3rem] font-bold my-[4%]",
+      className: "text-[1.3rem] font-bold",
     },
     "heading-3": {
-      className: "text-[1rem] font-bold mb-[2%]",
+      className: "text-[1rem] font-bold",
     },
     text: {},
+    "icon-group": {
+      className: "my-1",
+    },
     group: {
       className: "grid grid-cols-[100px,160px] gap-2",
     }, // not using yet
     divider: {
       className:
-        "border-current border-solid border-b-[0.5px] w-[2rem] mx-auto my-2",
+        "border-current border-solid border-b-[0.5px] w-[2rem] my-[.7rem] mx-auto",
     },
     image: {
       className: "rounded-full mb-5",

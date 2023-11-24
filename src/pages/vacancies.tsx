@@ -34,7 +34,7 @@ export const Vacancies = () => {
           <Placeholder
             title="No vacancies found"
             text="Use our Google Extension to add a new vacancy"
-            linkText="Get Extension"
+            actionContent="Get Extension"
             to="https://chrome.google.com/webstore/detail/Vocatio/bknmlolcaccbfcedimgmpnfcjadfelbn"
             newTab
           />

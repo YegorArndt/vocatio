@@ -27,7 +27,7 @@ export const Toolbar = (props: ToolbarProps) => {
           />
         }
         onClick={() =>
-          downloadPdf(
+          void downloadPdf(
             a4Ref,
             user?.ownName ?? (defaultUserData?.fullName as string),
             vacancy?.companyName

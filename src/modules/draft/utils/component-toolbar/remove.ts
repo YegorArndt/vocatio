@@ -29,7 +29,9 @@ export const remove = (
   localStorage.setItem(
     `deleted-components-${vacancyId}`,
     JSON.stringify([
-      ...(componentToDeleteFromLS ? JSON.parse(componentToDeleteFromLS) : []),
+      ...((componentToDeleteFromLS
+        ? JSON.parse(componentToDeleteFromLS)
+        : []) as NormalizedComponent[]),
       componentToDelete,
     ])
   );

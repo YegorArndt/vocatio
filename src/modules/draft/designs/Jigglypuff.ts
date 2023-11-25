@@ -2,12 +2,15 @@ import { v4 as uuidv4 } from "uuid";
 import type { RawComponent } from "../types/components";
 import type { RawDesign } from "../types/design";
 
-const VenusaurId = uuidv4();
+const JigglypuffId = uuidv4();
 
 const topLeft: RawComponent[] = [
   {
     type: "image",
     id: "user-image",
+    props: {
+      className: "-mb-[8rem] grayscale",
+    },
   },
 ];
 
@@ -16,27 +19,24 @@ const topRight: RawComponent[] = [
     type: "heading-1",
     id: "user-name",
     props: {
-      className: "text-[#323B4C]",
+      className: "uppercase font-bold",
     },
   },
   {
     type: "heading-2",
     id: "job-title",
   },
-  {
-    type: "text",
-    id: "objective",
-  },
 ];
 
 const left: RawComponent[] = [
   {
-    type: "heading-2",
-    id: "contact-title",
+    type: "heading-3",
+    id: "jigglypuff-contact-title",
     props: {
-      value: "Contact",
+      value: "My Contact",
     },
   },
+
   {
     type: "icon-group",
     id: "email",
@@ -73,12 +73,13 @@ const left: RawComponent[] = [
     },
   },
   {
-    type: "heading-2",
-    id: "education-title",
+    type: "heading-3",
+    id: "jigglypuff-education-title",
     props: {
       value: "Education",
     },
   },
+
   {
     type: "text",
     id: "education-duration",
@@ -104,14 +105,15 @@ const left: RawComponent[] = [
     },
   },
   {
-    type: "heading-2",
-    id: "skills-title",
+    type: "heading-3",
+    id: "jigglypuff-skills-title",
     props: {
       value: "Skills",
     },
   },
+
   {
-    type: "text",
+    type: "list",
     id: "skills-list",
     props: {
       value: "React, Node.js, TypeScript, GraphQL, MongoDB, PostgreSQL",
@@ -119,12 +121,13 @@ const left: RawComponent[] = [
     },
   },
   {
-    type: "heading-2",
+    type: "heading-3",
     id: "languages-title",
     props: {
       value: "Languages",
     },
   },
+
   {
     type: "group",
     id: "english-level",
@@ -143,75 +146,92 @@ const left: RawComponent[] = [
   },
 ];
 
+// HEY! after:content-[''] after:block after:h-[1px] after:w-full after:bg-[#333132] after:mt-3
+
 const right: RawComponent[] = [
   {
-    type: "heading-2",
+    type: "heading-3",
     id: "experience-title-title",
     props: {
-      value: "Experience",
+      value: "Work experience",
     },
   },
+
   {
     type: "decorated-timeline",
     id: "user-stories",
   },
 ];
 
-export const Venusaur: RawDesign = {
-  id: VenusaurId,
-  name: "Venusaur",
-  a4: `grid-cols-[300px_1fr] [&>*]:px-5`,
+export const Jigglypuff: RawDesign = {
+  id: JigglypuffId,
+  name: "Jigglypuff",
+  a4: `grid-cols-[330px_1fr]`,
   sections: {
     "top-left": {
       id: "top-left",
       order: 0,
       components: topLeft,
       className:
-        "top-left [&>*:first-child]:mt-[2rem] flex flex-col items-center bg-[#323B4C] text-[#fff] [&_.image]:mx-auto [&_div:not(:first-child)>.heading-2]:mt-3 [&_.group]:mb-2 [&_.icon-group]:mb-2 [&_.text]:mb-1 [&_.text]:text-[14px] [&>*:last-child]:mb-[5rem]",
+        "top-left [&>*:first-child]:mt-[2rem] flex flex-col items-center bg-[#8d4b55] text-[#fff] [&_.image]:mx-auto [&_div:not(:first-child)>.heading-2]:mt-3 [&_.group]:mb-2 [&_.icon-group]:mb-2 [&_.text]:mb-1 [&_.text]:text-[14px] [&>*:last-child]:mb-[1.5rem]",
     },
     "top-right": {
       id: "top-right",
       order: 1,
       components: topRight,
       className:
-        "top-right [&_.heading-2]:border-none [&>*:first-child]:mt-[2rem] [&>*:nth-child(even)]:mb-[0.5rem] [&>*:nth-child(even)]:mt-1 [&>*:last-child]:mb-[1rem] bg-[#fff] text-[#737373] [&_.heading-2]:text-[1.5rem] [&_.heading-2]:tracking-wider [&_.heading-2]:text-[#323B4C] [&_.heading-2]:font-light [&>*]:max-w-[450px]",
+        "top-right [&>*:first-child]:mt-[2rem] bg-[#8d4b55] [&>*:nth-child(even)]:mb-[0.5rem] [&>*:nth-child(even)]:mt-1 [&>*:last-child]:mb-[1rem]  text-[#fff] [&_.heading-2]:text-[1.5rem] [&>*]:max-w-[450px]",
     },
     left: {
       id: "left",
       order: 3,
       components: left,
       className:
-        "left flex flex-col items-center bg-[#323B4C] text-[#fff] [&_.image]:mx-auto [&_div:not(:first-child)>.heading-2]:mt-3 [&_.group]:mb-2 [&_.icon-group]:mb-2 [&_.text]:mb-1 [&_.text]:text-[14px]",
+        "left bg-[#FFFDFD] [&>*]:pl-[3rem] [&>*:first-child]:mt-[8rem] [&_.heading-2]:mb-3 text-[#333132] flex flex-col items-center bg-[#fff] [&_.image]:mx-auto [&_div:not(:first-child)>.heading-2]:my-3 [&_.group]:mb-2 [&_.icon-group]:mb-2 [&_.text]:mb-1 [&_.text]:text-[14px] [&_.heading-3]:mt-4",
     },
     right: {
       id: "right",
       order: 4,
       components: right,
       className:
-        "right relative bg-white clr-black [&_.heading-1]:text-[#323B4C] [&_.heading-2]:text-[#323B4C] !pr-2 [&_div:not(:first-child)>.heading-2]:pt-3",
+        "right [&>*:first-child]:mt-[2rem] bg-[#FFFDFD] pr-8 text-[#333132]",
     },
   },
   intrinsic: {
     "heading-1": {
-      className: "text-[50px] leading-[120%]",
+      className: "text-[50px]",
     },
     "heading-2": {
+      className: "text-[2rem] tracking-[-0.029375rem]",
+    },
+    "heading-3": {
       className:
-        "text-[1.8rem] tracking-[-0.029375rem] font-bold border-b-2 border-current pb-1 mb-3",
+        "text-[1.3rem] font-bold text-[#942637] after:content-[''] after:block after:h-[2px] after:w-[90px] after:bg-[#942637] after:my-3",
     },
     text: {
-      className: "text-[0.79rem]",
+      className: "text-[.8rem]",
     },
+    list: {},
     group: {
       className: "grid grid-cols-[90px,160px] gap-2",
     },
-    "icon-group": {},
+    "icon-group": {
+      height: 20,
+      width: 20,
+    },
+    divider: {
+      className:
+        "border-current border-solid border-b-[2px] max-w-[90px] text-[#8D4B55] mt-4 mb-3",
+    },
+    "decorated-timeline": {
+      className: "mt-5",
+    },
     image: {
-      height: 210,
-      width: 210,
+      height: 250,
+      width: 250,
     },
   },
   font: "Inter",
-  image: "/venusaur.png",
-  pokemonImage: "/venusaur-pokemon.png",
+  image: "/jigglypuff.png",
+  pokemonImage: "/jigglypuff-pokemon.png",
 };

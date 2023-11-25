@@ -22,7 +22,7 @@ export const init = (
       const normalized = normalize(
         {
           ...rc,
-          order: i + 1,
+          order: i,
           sectionId,
         },
         defaults,

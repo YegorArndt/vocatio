@@ -3,7 +3,7 @@ import cn from "classnames";
 import {
   Autoresize,
   type AutoresizeProps,
-} from "~/modules/create/components/Autoresize";
+} from "~/modules/create/cv-components/Autoresize";
 import { ComponentValue } from "~/modules/draft/types/components";
 import {
   Email,
@@ -12,6 +12,9 @@ import {
   Location,
   Linkedin,
   Github,
+  Twitter,
+  Vk,
+  X,
 } from "~/components/icons";
 import { useEffect, useState } from "react";
 import {
@@ -29,7 +32,7 @@ import { capitalize } from "lodash-es";
 export type IconGroupProps = BlurIconProps & {
   label?: string;
   iconClassName?: string;
-  value: ComponentValue;
+  value?: ComponentValue;
 } & AutoresizeProps;
 
 export type BlurIconProps = {
@@ -46,6 +49,9 @@ const icons = {
   website: Website,
   linkedin: Linkedin,
   github: Github,
+  twitter: Twitter,
+  vk: Vk,
+  x: X,
 };
 
 const BlurIcon = (props: BlurIconProps) => {
@@ -117,8 +123,8 @@ export const IconGroup = (props: IconGroupProps) => {
         direction="left"
         gap={25}
         transition
-        menuClassName={cn(sectionBg, sectionTextColor)}
-        menuStyle={{ zIndex: 1000 }}
+        portal
+        menuClassName={cn(sectionBg, sectionTextColor, "z-dropdown")}
       >
         <MenuHeader className={sectionTextColor}>Change to</MenuHeader>
         <FocusableItem className="mb-2">

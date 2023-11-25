@@ -110,12 +110,11 @@ export const Item = (
       ref={setNodeRef}
       style={style}
       className="relative flex flex-col gap-1 pl-8"
-      data-tooltip-id={id}
     >
       {/* Dot  */}
       <div
         className={cn(
-          "absolute left-0 top-2 z-1 h-3 w-3 rounded-full border-2 border-solid border-black bg-white"
+          "z-1 absolute left-0 top-2 h-3 w-3 rounded-full border-2 border-solid border-black bg-white"
         )}
       />
       {/* Line  */}
@@ -133,21 +132,20 @@ export const Item = (
         <Autoresize className="text-[1rem] font-bold" {...place} />
       </div>
       <Autoresize className="italic" {...heading} />
-      <Autoresize className="text-[14px]" {...story} />
+      <Autoresize className="text-[14px]" tooltipId={id} {...story} />
       <Tooltip
         id={id}
         place="top"
         opacity={1}
-        offset={-50}
         style={{ paddingInline: 10, zIndex: 9999 }}
         clickable
-        className="h-[40px] !p-0 [&>*]:h-full"
+        className="z-tooltip h-[40px] !p-0 [&>*]:h-full"
         delayShow={400}
         delayHide={600}
         render={() => {
           return (
             <ul
-              className="flex-center [&>li+li]:border-left h-full w-full rounded-md clr-secondary [&_li]:h-full [&_li_button]:h-full [&_li_button]:px-3"
+              className="flex-center [&>li+li]:border-left z-tooltip h-full w-full rounded-md clr-secondary [&_li]:h-full [&_li_button]:h-full [&_li_button]:px-3"
               data-html2canvas-ignore
             >
               <li {...listeners} {...attributes}>

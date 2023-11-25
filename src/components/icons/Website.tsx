@@ -4,7 +4,7 @@ const SvgWebsite = (props: SVGProps<SVGSVGElement>) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     style={{
-      fill: "#fff",
+      fill: "currentcolor",
     }}
     viewBox="0 0 315.3 391.4"
     width="1em"
@@ -20,7 +20,7 @@ const SvgWebsite = (props: SVGProps<SVGSVGElement>) => (
       <path
         d="M315.336 179.59 0-.004l43.184 356.719 86.125-97.75.449-.3 86.344 132.784 60.914-39.61-86.735-133.382.38-.254 124.675-38.613"
         style={{
-          fill: "#fff",
+          fill: "currentcolor",
         }}
       />
     </g>

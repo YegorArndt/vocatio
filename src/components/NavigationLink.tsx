@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import cn from "classnames";
 
-import { Link, type LinkProps } from "./Link";
+import { Link, type LinkProps } from "./ui/buttons/Link";
 
 type NavigationLinkProps = {
   text: string;

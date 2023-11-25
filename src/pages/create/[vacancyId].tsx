@@ -5,13 +5,14 @@ import Head from "next/head";
 
 import { api } from "~/utils";
 import { generateSSGHelper } from "~/server/api/utils/generateSSGHelper";
-import { Toolbar } from "~/modules/toolbar/Toolbar";
+import { Toolbar } from "~/modules/create/toolbar/Toolbar";
 import { DraftContext } from "~/modules/draft/DraftContext";
 import { DndProvider } from "~/modules/create/DndProvider";
 import cn from "classnames";
 import { Layout } from "~/components/layout/Layout";
-import { DesignViewer } from "~/components/DesignViewer";
+import { DesignViewer } from "~/modules/create/DesignViewer";
 import { PageBreak } from "~/modules/create/PageBreak";
+import { CenterSpinner } from "~/components";
 
 type CVBuilderProps = {
   vacancyId: string;
@@ -62,7 +63,7 @@ const CVBuilder = (props: CVBuilderProps) => {
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      {vacancy && user && defaultUserData && (
+      {vacancy && user && defaultUserData ? (
         <DraftContext
           defaultUserData={defaultUserData}
           vacancy={vacancy}
@@ -73,7 +74,7 @@ const CVBuilder = (props: CVBuilderProps) => {
               <div className="top-offset flex gap-[5rem] pl-[6rem]">
                 <div
                   ref={a4Ref}
-                  className={cn("a4", context.design.a4)}
+                  className={cn("a4 z-a4", context.design.a4)}
                   style={{
                     height: a4Height * pages,
                     width: a4Width,
@@ -86,6 +87,8 @@ const CVBuilder = (props: CVBuilderProps) => {
             </Layout>
           )}
         </DraftContext>
+      ) : (
+        <CenterSpinner />
       )}
       {Array.from({ length: pages - 1 }).map((_, i) => (
         <PageBreak

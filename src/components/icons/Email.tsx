@@ -4,7 +4,7 @@ const SvgEmail = (props: SVGProps<SVGSVGElement>) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     style={{
-      fill: "#fff",
+      fill: "currentcolor",
     }}
     viewBox="3 6 26 20"
     width="1em"

@@ -3,4 +3,7 @@ export { default as Github } from "./Github";
 export { default as Linkedin } from "./Linkedin";
 export { default as Location } from "./Location";
 export { default as Phone } from "./Phone";
+export { default as Twitter } from "./Twitter";
+export { default as Vk } from "./Vk";
 export { default as Website } from "./Website";
+export { default as X } from "./X";

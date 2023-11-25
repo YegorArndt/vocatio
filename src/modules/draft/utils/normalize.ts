@@ -29,7 +29,7 @@ export const normalize = (
   const normalized = {
     ...defaultComponent,
     ...c,
-    id: c.id + vacancyId,
+    id: `${c.id}-${vacancyId}`,
     props: { ...defaultProps, ...c.props },
   };
   const hydrated = hydrate(normalized, defaults, c.id);

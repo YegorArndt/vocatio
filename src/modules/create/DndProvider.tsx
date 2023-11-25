@@ -25,8 +25,8 @@ import { ComponentContext, useComponentContext } from "./ComponentContext";
 import type { NormalizedComponent } from "../draft/types/components";
 import type { Sections, SectionId, Section } from "../draft/types/sections";
 import { ComponentFactory } from "./ComponentFactory";
-import { ComponentToolbar } from "./components/ComponentToolbar";
 import { typedKeys } from "../draft/utils/common";
+import { ComponentToolbar } from "./cv-components/component-toolbar";
 
 export const getSectionIdByComponentId = (
   sections: Sections,
@@ -58,6 +58,7 @@ const SortableItem = (props: PropsWithChildren<Record<string, unknown>>) => {
     transform,
     transition,
     isDragging,
+    active,
   } = useSortable({ id: c.id, data: c });
 
   const style = {
@@ -73,6 +74,7 @@ const SortableItem = (props: PropsWithChildren<Record<string, unknown>>) => {
       listeners={listeners}
       attributes={attributes}
       style={style}
+      shouldHide={Boolean(active && active?.id !== c.id)}
     >
       {children}
     </ComponentToolbar>
@@ -81,7 +83,7 @@ const SortableItem = (props: PropsWithChildren<Record<string, unknown>>) => {
 
 const Section = (props: Section) => {
   const { id, components, className } = props;
-  const { setNodeRef, active } = useDroppable({
+  const { setNodeRef } = useDroppable({
     id,
   });
 

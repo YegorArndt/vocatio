@@ -1,17 +1,19 @@
 import { useEffect, useRef, useState } from "react";
+
 import { useDraftContext } from "~/modules/draft/DraftContext";
-import { BlurImage } from "./BlurImage";
+import { BlurImage } from "../../components/BlurImage";
 import type { Design } from "~/modules/draft/types/design";
 import { Charizard } from "~/modules/draft/designs/Charizard";
 import { Charmander } from "~/modules/draft/designs/Charmander";
 import { Venusaur } from "~/modules/draft/designs/Venusaur";
+import { Raichu } from "~/modules/draft/designs/Raichu";
+import { Jigglypuff } from "~/modules/draft/designs/Jigglypuff";
 
-const designs = [Venusaur, Charizard, Charmander];
+const designs = [Venusaur, Charizard, Charmander, Raichu, Jigglypuff];
 
 export const DesignViewer = () => {
   const { changeDesign, design } = useDraftContext();
   const [search, setSearch] = useState("");
-  const [expanded, setExpanded] = useState(true);
 
   const initialDesign = useRef<Design | null>(null);
 
@@ -20,7 +22,7 @@ export const DesignViewer = () => {
   }, []);
 
   return (
-    <div className="z-50 grow border bg-secondary p-5">
+    <div className="z-layout grow border bg-secondary p-5">
       <input
         placeholder="Search designs here..."
         className="reset w-5 bg-transparent"

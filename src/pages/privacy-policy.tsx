@@ -1,7 +1,4 @@
 import Head from "next/head";
-import { AiOutlineArrowLeft } from "react-icons/ai";
-import { Header } from "~/components/layout/Header";
-import { Link } from "~/components/ui/buttons/Link";
 
 const PrivacyPolicy = () => {
   return (
@@ -9,12 +6,7 @@ const PrivacyPolicy = () => {
       <Head>
         <title>Privacy Policy - Vocatio</title>
       </Head>
-      <Header className="py-5">
-        <Link to="/vacancies" className="gap-3 clr-blue">
-          <AiOutlineArrowLeft />
-          Dashboard
-        </Link>
-      </Header>
+
       <main className="container mx-auto my-6 rounded-md bg-white p-6 shadow-xl clr-secondary">
         <h1 className="text-gray-900 text-xl font-semibold">
           Privacy Policy - Vocatio

@@ -64,7 +64,7 @@ export const Bin = () => {
           <BlurImage src="/bin-full.png" alt="bin" height={15} width={15} />
         }
         text="View deleted items"
-        className="common hover flex-center-y gap-1"
+        className="common hover flex-y gap-1"
         onClick={() => setIsOpen(!isOpen)}
       />
       <AnimatePresence>
@@ -75,7 +75,7 @@ export const Bin = () => {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.3 }}
-              className="flex-center fixed inset-0 z-1 bg-black bg-opacity-50 p-4"
+              className="flex-center modal fixed inset-0 z-modal bg-black bg-opacity-50 p-4"
               onClick={(e) => setIsOpen(false)}
             >
               <motion.div
@@ -83,7 +83,7 @@ export const Bin = () => {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 50 }}
                 transition={{ duration: 0.3 }}
-                className="flex h-3/4 w-5/12 flex-col bg-primary [&>*]:px-5 [&>*]:py-3"
+                className="z-modal flex h-3/4 w-5/12 flex-col bg-primary [&>*]:px-5 [&>*]:py-3"
                 onClick={(e) => e.stopPropagation()}
               >
                 <header className="flex-between bg-secondary">
@@ -123,9 +123,7 @@ export const Bin = () => {
                             <TbRestore />
                           </Button>
                           <Button
-                            onClick={() => {
-                              removeFromBin(c);
-                            }}
+                            onClick={() => removeFromBin(c)}
                             className="common flex-center hover:underline"
                           >
                             <RiDeleteBin6Line />

@@ -4,7 +4,7 @@ const SvgPhone = (props: SVGProps<SVGSVGElement>) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     style={{
-      fill: "#fff",
+      fill: "currentcolor",
     }}
     viewBox="10 2 26 44"
     width="1em"

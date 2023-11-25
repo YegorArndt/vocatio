@@ -3,13 +3,13 @@ import cn from "classnames";
 import {
   Autoresize,
   type AutoresizeProps,
-} from "~/modules/create/components/Autoresize";
+} from "~/modules/create/cv-components/Autoresize";
 import { ComponentValue } from "~/modules/draft/types/components";
 
 export type GroupProps = {
   label?: string;
   img?: string;
-  value: ComponentValue;
+  value?: ComponentValue;
 } & AutoresizeProps;
 
 export const Group = (props: GroupProps) => {

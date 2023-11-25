@@ -1,7 +1,7 @@
 import Head from "next/head";
-import { VacancyCard } from "~/components";
 import { Placeholder } from "~/components/Placeholder";
 import { Layout } from "~/components/layout/Layout";
+import { VacancyCard } from "~/modules/vacancy/VacancyCard";
 import { VacancyCardSkeleton } from "~/modules/vacancy/VacancyCardSkeleton";
 import { api } from "~/utils/api";
 

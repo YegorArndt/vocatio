@@ -1,23 +1,30 @@
 import { motion } from "framer-motion";
 import cn from "classnames";
-import { type SyntheticEvent, useRef, useEffect, CSSProperties } from "react";
-import { ComponentValue } from "~/modules/draft/types/components";
+import {
+  type SyntheticEvent,
+  useRef,
+  useEffect,
+  type CSSProperties,
+} from "react";
+
+import type { ComponentValue } from "~/modules/draft/types/components";
 
 export type AutoresizeProps = {
-  id: string;
-  value: ComponentValue;
+  id?: string;
+  value?: ComponentValue;
   className?: string;
   style?: CSSProperties;
+  tooltipId?: string;
 };
 
 export const Autoresize = (props: AutoresizeProps) => {
-  const { id, value, style, className } = props;
+  const { id, value, style, className, tooltipId } = props;
 
-  const _value = useRef(localStorage.getItem(id) || value);
+  const _value = useRef(localStorage.getItem(id!) || value);
 
   const setValue = (newValue: string) => {
     _value.current = newValue;
-    localStorage.setItem(id, newValue);
+    localStorage.setItem(id!, newValue);
   };
 
   const onInput = (e: SyntheticEvent) => {
@@ -26,7 +33,7 @@ export const Autoresize = (props: AutoresizeProps) => {
   };
 
   useEffect(() => {
-    if (_value.current) localStorage.setItem(id, _value.current as string);
+    if (_value.current) localStorage.setItem(id!, _value.current as string);
   }, []);
 
   return (
@@ -40,6 +47,7 @@ export const Autoresize = (props: AutoresizeProps) => {
       className={cn("break-words", className)}
       style={style}
       suppressContentEditableWarning
+      data-tooltip-id={tooltipId}
     >
       {_value.current as string}
     </motion.div>

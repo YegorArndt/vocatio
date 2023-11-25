@@ -19,10 +19,20 @@ export const add = (
 
   const order = newComponent.order ?? clickedComponent.order + 1;
 
+  let id = uuidv4();
+
+  if (newComponent === clickedComponent) {
+    const prefix = newComponent.id.split("-")[0];
+    id = `${prefix}-copy-${id}`;
+  } else {
+    const prefix = newComponent.type;
+    id = `${prefix}-${id}`;
+  }
+
   const normalizedComponent = normalize(
     {
       ...newComponent,
-      id: uuidv4(),
+      id,
       order,
       sectionId: targetSection.id,
     },

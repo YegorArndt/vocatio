@@ -3,8 +3,8 @@
 @tailwind utilities;
 
 @font-face {
-  font-family: "logo"; /* Give a name to your font */
-  src: url("/logo.ttf") format("truetype"); /* URL to the font file */
+  font-family: "logo";
+  src: url("/logo.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
 }
@@ -94,6 +94,11 @@
     @apply bg-primary text-default clr-primary;
   }
 
+  body:has(.modal) {
+    overflow: hidden;
+    padding-right: 8px;
+  }
+
   /* SUPER IMPORTANT
     This helps prevent cv texts from shifting down
   */
@@ -117,8 +122,8 @@
 
   /* For WebKit browsers */
   ::-webkit-scrollbar {
-    width: 12px;
-    height: 12px;
+    width: 8px; /* Decrease scrollbar width */
+    height: 8px; /* Adjust height as needed */
   }
 
   ::-webkit-scrollbar-track {
@@ -127,15 +132,15 @@
 
   ::-webkit-scrollbar-thumb {
     background-color: var(--scrollbar-thumb-color, darkgray);
-    border-radius: 6px;
-    border: 3px solid var(--scrollbar-track-color, lightgray);
+    border-radius: 4px; /* Adjust for smaller width */
+    border: 2px solid var(--scrollbar-track-color, lightgray); /* Adjust border size */
+  }
 
-    /* For Firefox */
-    * {
-      scrollbar-width: thin;
-      scrollbar-color: var(--scrollbar-thumb-color, darkgray)
-        var(--scrollbar-track-color, lightgray);
-    }
+  /* For Firefox */
+  * {
+    scrollbar-width: thin; /* Adjust scrollbar width for Firefox */
+    scrollbar-color: var(--scrollbar-thumb-color, darkgray)
+      var(--scrollbar-track-color, lightgray);
   }
 }
 
@@ -146,12 +151,12 @@
 
   .a4 {
     overflow-y: clip;
-    /* overflow-x: hidden; */
     display: grid;
     grid-template-rows: auto 1fr;
     white-space: pre-wrap;
-    min-width: 793px;
+    width: 793px;
     flex-shrink: 0;
+
     @apply relative;
   }
 
@@ -191,15 +196,6 @@
   }
   .right {
     grid-area: 2 / 2 / 3 / 3;
-  }
-
-  .page-break {
-    position: absolute;
-    width: 100%; /* Full width of the container */
-    height: 10px; /* Adjust this as needed for visual effect */
-    z-index: 49;
-    left: 0;
-    background-color: var(--bg-primary);
   }
 
   /* Chips  */
@@ -268,7 +264,7 @@
       );
   }
 
-  .sky-bg {
+  .bg-sky {
     background: linear-gradient(to right, #3a0287, #3b7eb4);
   }
 
@@ -321,7 +317,7 @@
     align-items: center;
   }
 
-  .flex-center-y {
+  .flex-y {
     display: flex;
     align-items: center;
   }

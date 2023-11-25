@@ -6,7 +6,10 @@ type PageBreakProps = {
 
 export const PageBreak = (props: PageBreakProps) => {
   return (
-    <div className="page-break absolute inset-0" {...props}>
+    <div
+      className="page-break absolute inset-0 z-pageBreak h-[10px] w-full bg-primary"
+      {...props}
+    >
       <small>Just hit Enter to adjust content&quot;s position</small>
     </div>
   );

@@ -10,8 +10,6 @@ export const toggle = (
   const { sectionId } = component;
   const section = sections[sectionId];
 
-  console.log(section);
-
   if (!section) return design;
 
   const { components } = section;
@@ -19,24 +17,20 @@ export const toggle = (
   const newComponents = components.map((c) => {
     if (c.id !== component.id) return c;
 
-    // Split existing class names into an array
-    const existingClassNames = c.props.className
-      ? c.props.className.split(" ")
-      : [];
+    // Split existing class names into a Set to ensure uniqueness
+    const existingClassNames = new Set(
+      c.props.className ? c.props.className.split(" ") : []
+    );
 
-    // Check if the class name to be toggled is already in the array
-    const classNameIndex = existingClassNames.indexOf(className);
-
-    if (classNameIndex === -1) {
-      // Class name not found, add it
-      existingClassNames.push(className);
+    // Toggle the class name
+    if (existingClassNames.has(className)) {
+      existingClassNames.delete(className);
     } else {
-      // Class name found, remove it
-      existingClassNames.splice(classNameIndex, 1);
+      existingClassNames.add(className);
     }
 
-    // Join the class names back into a string
-    const newClassName = existingClassNames.join(" ");
+    // Convert the Set back into a string
+    const newClassName = Array.from(existingClassNames).join(" ");
 
     const newProps = {
       ...c.props,

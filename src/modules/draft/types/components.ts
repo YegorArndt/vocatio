@@ -1,14 +1,14 @@
 import { type CSSProperties } from "react";
 
-import type { AutoresizeProps } from "~/modules/create/components/Autoresize";
-import type { DividerProps } from "~/modules/create/components/Divider";
-import type { GroupProps } from "~/modules/create/components/Group";
-import type { ImageProps } from "~/modules/create/components/UserImage";
+import type { AutoresizeProps } from "~/modules/create/cv-components/Autoresize";
+import type { DividerProps } from "~/modules/create/cv-components/Divider";
+import type { GroupProps } from "~/modules/create/cv-components/Group";
+import type { ImageProps } from "~/components/UserImage";
 import type { SectionId } from "./sections";
-import type { ListProps } from "~/modules/create/components/List";
+import type { ListProps } from "~/modules/create/cv-components/List";
 import { dbIds } from "../constants";
-import { IconGroupProps } from "~/modules/create/components/IconGroup";
-import { NameProps } from "~/modules/create/components/Name";
+import { IconGroupProps } from "~/modules/create/cv-components/IconGroup";
+import { NameProps } from "~/modules/create/cv-components/Name";
 
 export type TypeOfComponent = keyof NormalizedComponents;
 
@@ -36,7 +36,11 @@ export type NormalizedComponents = { [P in Text["type"]]: Text } & {
 } & { [P in IconGroup["type"]]: IconGroup } & { [P in Name["type"]]: Name };
 
 export type NormalizedComponent =
-  NormalizedComponents[keyof NormalizedComponents] & Obligatory; // obl missing in normalizedcomponents
+  NormalizedComponents[keyof NormalizedComponents] &
+    Obligatory & {
+      props: ObligatoryProps &
+        NormalizedComponents[keyof NormalizedComponents]["props"];
+    }; // obl missing in normalizedcomponents
 
 export type Obligatory = {
   // id: string | (typeof dbIds)[number];

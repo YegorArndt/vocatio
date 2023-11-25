@@ -36,6 +36,7 @@ export type DraftContext = {
     componentToChange: NormalizedComponent,
     type: TypeOfComponent
   ) => void;
+  rotate: (heading: NormalizedComponent, index: number) => void;
   removeComponent: (componentToRemove: NormalizedComponent) => void;
   draftState: DraftState;
   dispatchers: Dispatchers;

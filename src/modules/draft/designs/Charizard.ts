@@ -87,31 +87,11 @@ const leftComponents: RawComponent[] = [
     },
   },
   {
-    type: "text",
-    id: "skill 2",
+    type: "list",
+    id: "skills-list",
     props: {
-      value: "• first skill",
-    },
-  },
-  {
-    type: "text",
-    id: "skill 3",
-    props: {
-      value: "• second skill",
-    },
-  },
-  {
-    type: "text",
-    id: "skill 4",
-    props: {
-      value: "• third skill",
-    },
-  },
-  {
-    type: "text",
-    id: "skill 5",
-    props: {
-      value: "• fourth skill",
+      value: "React, Node.js, TypeScript, GraphQL, MongoDB, PostgreSQL",
+      label: "My skills",
     },
   },
 ];

@@ -16,6 +16,7 @@ import { getDefaults } from "./utils/getDefaults";
 import { RawDesign, Design } from "./types/design";
 import { init } from "./utils/init";
 import { remove, add, toggle, changeType } from "./utils/component-toolbar";
+import { rotateSectionByTitle } from "./utils/component-toolbar/rotate";
 
 const initialArg = {
   [actions.DOWNLOAD_FIRED]: false,
@@ -89,6 +90,17 @@ export const DraftContext = (props: DraftContextInput) => {
     newType: TypeOfComponent
   ) => setDesign((d) => changeType(d, c, newType));
 
+  const rotate = (heading: NormalizedComponent, index: number) => {
+    setDesign((d) =>
+      rotateSectionByTitle(
+        d,
+        heading.sectionId,
+        heading.props.value as string,
+        index
+      )
+    );
+  };
+
   const context: DraftContextType = {
     draftState: state,
     dispatchers: {
@@ -97,6 +109,7 @@ export const DraftContext = (props: DraftContextInput) => {
       setChangeDesignFired: (payload) =>
         dispatch({ type: actions.CHANGE_DESIGN_FIRED, payload }),
     },
+    rotate,
     design,
     updateDesign,
     addNewComponent,

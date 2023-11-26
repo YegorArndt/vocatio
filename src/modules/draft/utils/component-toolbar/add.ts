@@ -17,7 +17,8 @@ export const add = (
 
   if (!targetSection) return design;
 
-  const order = newComponent.order ?? clickedComponent.order + 1;
+  // TODO
+  const order = clickedComponent.order;
 
   let id = uuidv4();
 

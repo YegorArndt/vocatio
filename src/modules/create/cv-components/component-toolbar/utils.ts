@@ -1,5 +1,8 @@
 import { MenuProps } from "@szhsin/react-menu";
-import { TypeOfComponent } from "~/modules/draft/types/components";
+import {
+  NormalizedComponent,
+  TypeOfComponent,
+} from "~/modules/draft/types/components";
 import { Intrinsic } from "~/modules/draft/types/design";
 import { SectionId } from "~/modules/draft/types/sections";
 import {
@@ -24,13 +27,13 @@ export const getMenuProps = (
   transition: true,
   direction,
   menuClassName: "z-dropdown",
-  portal: true,
 });
 
-export const getComponentNameByType = (t: TypeOfComponent, id: string) => {
+export const getComponentNameByType = (c: NormalizedComponent, id: string) => {
   let word = "";
+  const { type: t } = c;
 
-  if (isGroup(t) || isIconGroup(t)) word = id.split("-")[0]!;
+  if (isGroup(t) || isIconGroup(t)) word = c.props.label ?? id.split("-")[0]!;
 
   if (isName(t)) word = "Name";
 
@@ -52,9 +55,9 @@ export const getComponentNameByType = (t: TypeOfComponent, id: string) => {
   return word;
 };
 
-export const getAddText = (t: TypeOfComponent, id: string) => {
-  if (isList(t)) return `Add after ${getComponentNameByType(t, id)}`;
-  if (isTimeline(t)) return `Add after Timeline`;
+export const getAddText = (c: NormalizedComponent, id: string) => {
+  if (isList(c.type)) return `Add after ${getComponentNameByType(c, id)}`;
+  if (isTimeline(c.type)) return `Add after Timeline`;
   else return null;
 };
 
@@ -90,4 +93,4 @@ export const toAllowedTypes = (intrinsic: Intrinsic, t: TypeOfComponent) => {
   return { filtered, filteredOut };
 };
 
-// export const getToolbarActions = (t: TypeOfComponent) => {};
+export const getToolbarActions = (t: TypeOfComponent, id: string) => {};

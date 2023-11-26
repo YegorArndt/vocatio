@@ -101,6 +101,8 @@ export const DraftContext = (props: DraftContextInput) => {
     );
   };
 
+  console.log(design);
+
   const context: DraftContextType = {
     draftState: state,
     dispatchers: {

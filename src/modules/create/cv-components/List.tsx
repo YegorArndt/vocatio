@@ -20,6 +20,10 @@ import {
 } from "@dnd-kit/sortable";
 import { ComponentValue } from "~/modules/draft/types/components";
 import cn from "classnames";
+import { Tooltip } from "react-tooltip";
+import { RiDeleteBin6Line, RiDragMove2Fill } from "react-icons/ri";
+import { Button } from "~/components/ui/buttons/Button";
+import { LuCopyPlus } from "react-icons/lu";
 
 export type ListProps = {
   value?: ComponentValue;
@@ -65,8 +69,10 @@ const getInitial = (
   return defaultItems;
 };
 
-const SortableItem = (props: ListItemProps) => {
-  const { id } = props;
+const SortableItem = (
+  props: ListItemProps & { addItem: () => void; deleteItem: () => void }
+) => {
+  const { id, addItem, deleteItem } = props;
   const {
     attributes,
     listeners,
@@ -87,11 +93,50 @@ const SortableItem = (props: ListItemProps) => {
       ref={setNodeRef}
       style={style}
       className="flex items-center gap-[0.5em]"
+      data-tooltip-id={id}
     >
-      <div className="cursor-grab" {...attributes} {...listeners}>
-        &bull;
-      </div>
+      <div className="cursor-grab">&bull;</div>
       <Autoresize {...props} />
+      <Tooltip
+        id={id}
+        place="top"
+        opacity={1}
+        style={{ paddingInline: 10, zIndex: 9999 }}
+        clickable
+        className="z-tooltip h-[30px] !p-0 [&>*]:h-full"
+        delayShow={400}
+        delayHide={600}
+        render={() => {
+          return (
+            <ul
+              className="flex-center [&>li+li]:border-left z-tooltip h-full w-full rounded-md clr-secondary [&_li]:h-full [&_li_button]:h-full [&_li_button]:px-3"
+              data-html2canvas-ignore
+            >
+              <li {...listeners} {...attributes}>
+                <Button baseCn="hover hover:text-[#fff] flex-center gap-2 common-transition">
+                  <RiDragMove2Fill />
+                </Button>
+              </li>
+              <li>
+                <Button
+                  baseCn="hover hover:text-[#fff] flex-center gap-2 common-transition"
+                  onClick={addItem}
+                >
+                  <LuCopyPlus />
+                </Button>
+              </li>
+              <li>
+                <Button
+                  onClick={deleteItem}
+                  className="sm common hover:bg-red hover:text-[#fff]"
+                >
+                  <RiDeleteBin6Line />
+                </Button>
+              </li>
+            </ul>
+          );
+        }}
+      />
     </li>
   );
 };
@@ -128,6 +173,27 @@ export const List = ({ items, value, className, id }: ListProps) => {
     return groups;
   }, [currentItems]);
 
+  const addItem = (index: number) => {
+    setItems((currentItems) => {
+      // Create a copy of the item at the specified index
+      const newItem = { ...currentItems[index] };
+      // Modify the id of the new item to make it unique
+      newItem.id = `item-${new Date().getTime()}`;
+
+      // Insert the new item below the clicked item
+      const updatedItems = [...currentItems];
+      updatedItems.splice(index + 1, 0, newItem);
+
+      return updatedItems;
+    });
+  };
+
+  const deleteItem = (itemId: string) => {
+    setItems((currentItems) =>
+      currentItems.filter((item) => item.id !== itemId)
+    );
+  };
+
   return (
     <DndContext
       sensors={sensors}
@@ -142,8 +208,13 @@ export const List = ({ items, value, className, id }: ListProps) => {
             strategy={verticalListSortingStrategy}
           >
             <ul className="flex flex-col gap-1">
-              {group.map((item) => (
-                <SortableItem key={item.id} {...item} />
+              {group.map((item, i) => (
+                <SortableItem
+                  key={item.id}
+                  addItem={() => addItem(i)}
+                  deleteItem={() => deleteItem(item.id!)}
+                  {...item}
+                />
               ))}
             </ul>
           </SortableContext>

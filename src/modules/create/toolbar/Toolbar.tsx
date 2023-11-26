@@ -144,14 +144,14 @@ export const Toolbar = (props: ToolbarProps) => {
       />
       <Button
         frontIcon={<FaTextHeight />}
-        text="Condense text contents"
+        text="Condense text"
         className="common hover flex-y gap-1"
       />
       <Divider />
       {headings && headings.length > 0 && (
         <>
           <span className="flex gap-2">
-            Change layout <Chip className="bg-sky sm clr-white">Beta</Chip>
+            Rearrange layout <Chip className="bg-sky sm clr-white">Beta</Chip>
           </span>
           <SortableSection items={headings || []} />
         </>

@@ -18,6 +18,8 @@ import { RiDeleteBin6Line, RiDragMove2Fill } from "react-icons/ri";
 import { IoTextSharp } from "react-icons/io5";
 import { IoChevronUpOutline } from "react-icons/io5";
 import { RxLetterCaseUppercase } from "react-icons/rx";
+import { LuCopyPlus } from "react-icons/lu";
+import { BsArrowsCollapse } from "react-icons/bs";
 
 import { Button } from "~/components/ui/buttons/Button";
 import { useDraftContext } from "~/modules/draft/DraftContext";
@@ -29,15 +31,14 @@ import {
   isTimeline,
   typedKeys,
 } from "~/modules/draft/utils/common";
-import { BsArrowsCollapse } from "react-icons/bs";
 import {
   getDirection,
   getComponentNameByType,
   toAllowedTypes,
   getAddText,
+  getMenuProps,
 } from "./utils";
 import { mergeWithIntrinsic } from "~/modules/utils/mergeWithIntrinsic";
-import { LuCopyPlus } from "react-icons/lu";
 
 type ComponentToolbarProps = PropsWithChildren<{
   dndRef: (node: HTMLElement | null) => void;
@@ -103,12 +104,9 @@ export const ComponentToolbar = (props: ComponentToolbarProps) => {
   const menuDirection = getDirection(sectionId);
 
   const canEditText = !isDecoration(type) && !isTimeline(type) && !isList(type);
-
   const canDuplicate =
     !isTimeline(type) && !isDecoration(type) && !isList(type);
-
   const canTurnInto = !isDecoration(type) && !isTimeline(type);
-
   const canDelete = !isTimeline(type);
 
   return (
@@ -140,9 +138,7 @@ export const ComponentToolbar = (props: ComponentToolbarProps) => {
                           <SmChevron menuDirection={menuDirection} />
                         </MenuButton>
                       }
-                      transition
-                      gap={5}
-                      direction={menuDirection}
+                      {...getMenuProps(menuDirection)}
                     >
                       {classNames.map(({ icon, label, className }) => {
                         const m = mergeWithIntrinsic(c, design);
@@ -164,7 +160,7 @@ export const ComponentToolbar = (props: ComponentToolbarProps) => {
                 )}
                 <li {...listeners} {...attributes}>
                   <Button baseCn="hover hover:text-[#fff] flex-center gap-2 common-transition">
-                    Move {getComponentNameByType(c.type, c.id)}
+                    Move {getComponentNameByType(c, c.id)}
                     <RiDragMove2Fill />
                   </Button>
                 </li>
@@ -182,13 +178,11 @@ export const ComponentToolbar = (props: ComponentToolbarProps) => {
                   <Menu
                     menuButton={
                       <MenuButton className="hover flex-center common-transition gap-2 hover:text-[#fff]">
-                        {getAddText(c.type, c.id) ?? <IoAddCircleSharp />}
+                        {getAddText(c, c.id) ?? <IoAddCircleSharp />}
                         <SmChevron menuDirection={menuDirection} />
                       </MenuButton>
                     }
-                    transition
-                    gap={5}
-                    direction={menuDirection}
+                    {...getMenuProps(menuDirection)}
                   >
                     {typedKeys(intrinsic).map((typeOfComponent) => {
                       if (isImage(typeOfComponent)) return;
@@ -230,9 +224,7 @@ export const ComponentToolbar = (props: ComponentToolbarProps) => {
                           Turn into <SmChevron menuDirection={menuDirection} />
                         </MenuButton>
                       }
-                      transition
-                      gap={5}
-                      direction={menuDirection}
+                      {...getMenuProps(menuDirection)}
                     >
                       {Object.entries(toAllowedTypes(intrinsic, c.type)).map(
                         ([key, types], i) =>

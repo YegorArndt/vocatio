@@ -6,7 +6,6 @@ import type { GroupProps } from "~/modules/create/cv-components/Group";
 import type { ImageProps } from "~/components/UserImage";
 import type { SectionId } from "./sections";
 import type { ListProps } from "~/modules/create/cv-components/List";
-import { dbIds } from "../constants";
 import { IconGroupProps } from "~/modules/create/cv-components/IconGroup";
 import { NameProps } from "~/modules/create/cv-components/Name";
 
@@ -47,7 +46,6 @@ export type Obligatory = {
   id: string;
   sectionId: SectionId;
   order: number;
-  modifierIds?: typeof dbIds;
 };
 
 export type ObligatoryProps = {

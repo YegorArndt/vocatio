@@ -440,15 +440,15 @@
     --content-width: 150ch;
     --full: minmax(var(--gap), 1fr);
     --content: min(var(--content-width), 100% - var(--gap) * 2);
-    --callout: minmax(0, 5rem);
+    --breakout: minmax(0, 5rem);
 
     grid-column: 2;
     display: grid;
     grid-template-columns:
       [full-start] var(--full)
-      [callout-start] var(--callout)
+      [breakout-start] var(--breakout)
       [content-start] var(--content) [content-end]
-      var(--callout) [callout-end]
+      var(--breakout) [breakout-end]
       var(--full) [full-end];
   }
 
@@ -456,8 +456,8 @@
     grid-column: content;
   }
 
-  .callout {
-    grid-column: callout;
+  .breakout {
+    grid-column: breakout;
   }
 
   .full {

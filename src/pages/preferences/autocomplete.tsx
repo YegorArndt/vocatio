@@ -11,7 +11,7 @@ const AutocompletePreferences = () => {
           and what should be adjusted.
         </p>
       </section>
-      <section className="callout bg-red">yo</section>
+      <section className="breakout bg-red">yo</section>
     </Layout>
   );
 };

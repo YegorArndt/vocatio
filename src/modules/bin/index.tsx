@@ -10,7 +10,7 @@ import { ComponentContext } from "../create/ComponentContext";
 import { ComponentFactory } from "../create/ComponentFactory";
 import { BlurImage } from "~/components/BlurImage";
 import { Portal } from "~/components/Portal";
-import { Checkbox } from "~/components/ui/Checkbox";
+import { Checkbox } from "~/components/ui/inputs/Checkbox";
 import { useForm } from "react-hook-form";
 import { Placeholder } from "~/components/Placeholder";
 

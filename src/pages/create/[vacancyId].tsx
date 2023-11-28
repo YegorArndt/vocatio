@@ -70,11 +70,11 @@ const CVBuilder = (props: CVBuilderProps) => {
           user={user}
         >
           {(context) => (
-            <Layout asideChildren={<Toolbar a4Ref={a4Ref} />}>
-              <div className="top-offset flex gap-[5rem] pl-[6rem]">
+            <Layout toolbar={<Toolbar a4Ref={a4Ref} />}>
+              <div className="two-col-grid">
                 <div
                   ref={a4Ref}
-                  className={cn("a4 z-a4", context.design.a4)}
+                  className={cn("a4 main-center z-a4", context.design.a4)}
                   style={{
                     height: a4Height * pages,
                     width: a4Width,
@@ -88,7 +88,9 @@ const CVBuilder = (props: CVBuilderProps) => {
           )}
         </DraftContext>
       ) : (
-        <CenterSpinner />
+        <Layout>
+          <CenterSpinner />
+        </Layout>
       )}
       {Array.from({ length: pages - 1 }).map((_, i) => (
         <PageBreak

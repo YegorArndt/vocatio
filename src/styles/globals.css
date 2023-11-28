@@ -10,7 +10,6 @@
 }
 
 :root {
-  --max-width: 68.75rem;
   --blue: rgba(0, 118, 255, 0.9);
   --gray: #eaeaea;
   --green: #2da44e;
@@ -61,6 +60,8 @@
   --scrollbar-track-color: #333;
   --scrollbar-thumb-color: #888;
   --skeleton: rgba(255, 255, 255, 0.13);
+
+  --input-border: #333;
 }
 
 [data-theme="light"] {
@@ -88,7 +89,7 @@
     text-rendering: optimizeSpeed;
     scroll-behavior: smooth;
     overscroll-behavior-y: contain;
-    overflow-x: hidden;
+    /* overflow-x: hidden; */
     display: flex;
     flex-direction: column;
     @apply bg-primary text-default clr-primary;
@@ -108,6 +109,7 @@
 
   h1 {
     @apply h1;
+    line-height: 120%;
   }
 
   h2 {
@@ -145,10 +147,6 @@
 }
 
 @layer components {
-  .top-offset {
-    @apply pt-16;
-  }
-
   .a4 {
     overflow-y: clip;
     display: grid;
@@ -270,33 +268,12 @@
 
   /* NEW  */
 
-  .container {
-    max-width: 78rem;
-    margin-inline: auto;
-    width: 100%;
-  }
-
-  .grid-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  }
-
-  .auto-grid {
-    --auto-grid-min-size: 200px;
-    display: grid;
-    grid-template-columns: repeat(
-      auto-fill,
-      minmax(var(--auto-grid-min-size), 1fr)
-    );
-    grid-gap: 1rem;
-  }
-
   .size-full {
     @apply h-full w-full;
   }
 
-  .reset {
-    @apply w-full outline-none;
+  .reset:is(input) {
+    @apply w-full bg-transparent outline-none;
   }
 
   .flex-center {
@@ -323,6 +300,14 @@
   }
 
   /* Buttons  */
+
+  .lg-width:is(button, a) {
+    width: 18.75rem;
+  }
+  .md-width:is(button, a) {
+    width: 9rem;
+  }
+
   :is(button, a)[class^="bg-"]:hover,
   :is(button, a)[class*=" bg-"]:hover {
     filter: brightness(1.1);
@@ -346,21 +331,74 @@
   }
 
   .sm:is(button, a) {
-    @apply h-8 px-2 text-default leading-5;
+    @apply h-8 px-3 text-default leading-5;
   }
 
   *:disabled:is(button, a) {
-    @apply cursor-not-allowed opacity-40;
+    background-color: hsla(0, 0%, 10%, 1);
+    color: hsla(0, 0%, 56%, 1);
+    border: hsla(0, 0%, 18%, 1);
+    cursor: not-allowed;
+  }
+
+  *:disabled:is(button, a):hover {
+    background-color: hsla(0, 0%, 10%, 1);
   }
 
   .primary {
     @apply inline-flex items-center justify-center rounded-md;
     background-color: white;
     color: black;
+    transition-property: border-color, background, color, transform, box-shadow,
+      filter;
+    transition-duration: 0.15s;
+    transition-timing-function: ease;
   }
 
   .primary:hover {
     background-color: #ccc;
+  }
+
+  /* INPUTS  */
+  .input-wrapper {
+    display: block;
+    position: relative;
+    width: 100%;
+    padding: 4px 10px;
+    padding-right: 0;
+
+    border-radius: 5px;
+    position: relative;
+    height: calc(9 * 4px);
+    display: inline-flex;
+    align-items: center;
+    background: #000;
+    color: #333;
+    border: 1px solid #333;
+    transition: border-color 0.2s ease, color 0.2s ease;
+  }
+
+  .input-wrapper:focus-within {
+    border-color: #888;
+  }
+
+  .text-input {
+    border-radius: 0;
+    border: none;
+    box-shadow: none;
+    box-sizing: border-box;
+    display: block;
+    padding: 0;
+    font-size: 14px;
+    line-height: 26px;
+    outline: 0;
+    width: 100%;
+    color: #fff;
+    background-color: transparent;
+    caret-color: #fff;
+    text-overflow: ellipsis;
+    -webkit-appearance: none;
+    appearance: none;
   }
 
   .skeleton {
@@ -377,5 +415,94 @@
     100% {
       background-position: -200% 0;
     }
+  }
+
+  /* GRIDS  */
+
+  .app-container {
+    --navbar-width: 240px;
+    --main-container: 1fr;
+
+    display: grid;
+    grid-template-columns:
+      var(--navbar-width)
+      var(--main-container);
+
+    @apply py-16;
+  }
+
+  .navbar {
+    grid-column: 1;
+  }
+
+  .main-container {
+    --gap: clamp(1rem, 6vw, 3rem);
+    --content-width: 150ch;
+    --full: minmax(var(--gap), 1fr);
+    --content: min(var(--content-width), 100% - var(--gap) * 2);
+    --callout: minmax(0, 5rem);
+
+    grid-column: 2;
+    display: grid;
+    grid-template-columns:
+      [full-start] var(--full)
+      [callout-start] var(--callout)
+      [content-start] var(--content) [content-end]
+      var(--callout) [callout-end]
+      var(--full) [full-end];
+  }
+
+  .content {
+    grid-column: content;
+  }
+
+  .callout {
+    grid-column: callout;
+  }
+
+  .full {
+    grid-column: full;
+  }
+
+  /* GRID UTILS  */
+
+  .two-col-grid {
+    --sm-gap: 1.5rem;
+    --gap: clamp(2rem, 12vw, 6rem);
+    --a4: 793px;
+    --right-aside: 1fr;
+
+    grid-column: full;
+    display: grid;
+    grid-template-columns:
+      var(--gap)
+      [a4-start] var(--a4) [a4-end]
+      var(--gap)
+      [right-aside-start] var(--right-aside) [right-aside-end]
+      var(--sm-gap);
+  }
+
+  .main-center {
+    grid-column: a4;
+  }
+
+  .right-aside {
+    grid-column: right-aside;
+  }
+
+  .card-grid {
+    --size: clamp(80px, 30%, 300px);
+
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(var(--size), 1fr));
+    grid-gap: 2rem;
+  }
+
+  .vacancies {
+    --size: 250px;
+  }
+
+  h1 + p {
+    margin-block: 0.5rem 2rem;
   }
 }

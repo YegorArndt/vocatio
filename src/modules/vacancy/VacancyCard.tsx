@@ -15,7 +15,7 @@ export const VacancyCard = (props: { vacancy: Vacancy }) => {
     header;
 
   return (
-    <div className="flex flex-col gap-5 ">
+    <div className="flex flex-col gap-5">
       <div className="clr-card relative rounded-md border bg-card shadow-md">
         <header className="flex flex-col gap-2 p-4">
           <h3 className="text-xl font-bold">{companyName}</h3>

@@ -1,22 +1,20 @@
 import { type ReactNode, type PropsWithChildren } from "react";
+import cn from "classnames";
 
-import { Aside } from "./Aside";
+import { Navbar } from "./Navbar";
 
 type LayoutProps = PropsWithChildren<{
   className?: string;
-  asideChildren?: ReactNode;
+  toolbar?: ReactNode;
 }>;
 
 export const Layout = (props: LayoutProps) => {
-  const { children, asideChildren } = props;
+  const { children, toolbar, className } = props;
 
   return (
-    <>
-      <div className="grid grid-cols-[240px_1fr] pb-[3rem]">
-        <div />
-        <Aside>{asideChildren}</Aside>
-        {children}
-      </div>
-    </>
+    <div className={cn("app-container", className)}>
+      <Navbar>{toolbar}</Navbar>
+      <main className="main-container">{children}</main>
+    </div>
   );
 };

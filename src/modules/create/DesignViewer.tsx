@@ -22,17 +22,17 @@ export const DesignViewer = () => {
   }, []);
 
   return (
-    <div className="z-layout grow border bg-secondary p-5">
+    <div className="right-aside border bg-secondary p-5">
       <input
         placeholder="Search designs here..."
-        className="reset w-5 bg-transparent"
+        className="reset"
         value={search}
         onChange={(e) => setSearch(e.target.value)}
         autoFocus
       />
       <br />
       <br />
-      <div className="auto-grid">
+      <div className="card-grid">
         {designs
           .filter((d) => d.name.toLowerCase().includes(search.toLowerCase()))
           .map((d) => (
@@ -40,8 +40,8 @@ export const DesignViewer = () => {
               <BlurImage
                 onClick={() => changeDesign(d)}
                 src={d.image}
-                height={250}
-                width={250}
+                height={200}
+                width={200}
                 alt={d.name}
                 className="transform cursor-pointer transition hover:-translate-y-1 motion-reduce:transition-none"
               />

@@ -19,26 +19,28 @@ export const Vacancies = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Layout>
-        {Boolean(isLoading || data?.length) && (
-          <div className="grid-container container gap-x-[2rem] gap-y-[3rem] pt-[5rem]">
-            {isLoading &&
-              Array.from({ length: 6 }, (_, i) => (
-                <VacancyCardSkeleton key={i} />
+        <div className="content">
+          {Boolean(isLoading || data?.length) && (
+            <div className="card-grid vacancies">
+              {isLoading &&
+                Array.from({ length: 12 }, (_, i) => (
+                  <VacancyCardSkeleton key={i} />
+                ))}
+              {data?.map((vacancy) => (
+                <VacancyCard key={vacancy.id} vacancy={vacancy} />
               ))}
-            {data?.map((vacancy) => (
-              <VacancyCard key={vacancy.id} vacancy={vacancy} />
-            ))}
-          </div>
-        )}
-        {Boolean(!isLoading && !data?.length) && (
-          <Placeholder
-            title="No vacancies found"
-            text="Use our Google Extension to add a new vacancy"
-            actionContent="Get Extension"
-            to="https://chrome.google.com/webstore/detail/Vocatio/bknmlolcaccbfcedimgmpnfcjadfelbn"
-            newTab
-          />
-        )}
+            </div>
+          )}
+          {Boolean(!isLoading && !data?.length) && (
+            <Placeholder
+              title="No vacancies found"
+              text="Use our Google Extension to add a new vacancy"
+              actionContent="Get Extension"
+              to="https://chrome.google.com/webstore/detail/Vocatio/bknmlolcaccbfcedimgmpnfcjadfelbn"
+              newTab
+            />
+          )}
+        </div>
       </Layout>
     </>
   );

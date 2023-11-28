@@ -44,7 +44,7 @@ export const Placeholder = (props: PlaceholderProps) => {
   );
 
   return (
-    <div className={cn("top-offset flex h-[80vh] justify-center", className)}>
+    <div className={cn("full flex h-[80vh] justify-center", className)}>
       <div className="flex-center flex-col gap-5 rounded-md bg-primary p-5 text-center">
         <span className="flex flex-col gap-1">
           <span className="h4">{title} 🐈</span>

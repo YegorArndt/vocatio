@@ -2,13 +2,14 @@ import { arrayMove } from "@dnd-kit/sortable";
 import { NormalizedComponent } from "../../types/components";
 import { Design } from "../../types/design";
 import { SectionId } from "../../types/sections";
+import { isHeading } from "../common";
 
 const createSections = (components: NormalizedComponent[]) => {
   const sections = [];
   let currentSection = [] as NormalizedComponent[];
 
   components.forEach((component) => {
-    if (component.type.includes("heading")) {
+    if (isHeading(component.type)) {
       if (currentSection.length > 0) {
         sections.push(currentSection);
       }

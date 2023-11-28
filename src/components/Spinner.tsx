@@ -49,7 +49,7 @@ export const Spinner = () => {
 };
 
 export const CenterSpinner = () => (
-  <div className="flex h-screen items-center justify-center">
+  <div className="full flex h-screen items-center justify-center">
     <Spinner />
   </div>
 );

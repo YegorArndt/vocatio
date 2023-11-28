@@ -35,7 +35,6 @@ export const Link = forwardRef(
         href={to}
         aria-label={text}
         ref={ref}
-        replace
         {...rest}
         {...shouldNewTab}
       >

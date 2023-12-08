@@ -4,7 +4,7 @@ import Head from "next/head";
 
 import { Layout } from "~/components/layout/Layout";
 import { Placeholder } from "~/components/Placeholder";
-import { CenterSpinner } from "~/components/Spinner";
+import { SpinnerWithLayout } from "~/components";
 
 /**
  * TODO: if data was cleared navigating to /create will cause errors bcs the data in LS is still there
@@ -33,9 +33,12 @@ export const Create = () => {
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Layout>
-        {isLoading ? <CenterSpinner /> : <Placeholder to="/vacancies" />}
-      </Layout>
+      {isLoading && <SpinnerWithLayout />}
+      {!isLoading && (
+        <Layout>
+          <Placeholder to="/vacancies" />
+        </Layout>
+      )}
     </>
   );
 };

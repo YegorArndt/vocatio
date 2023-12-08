@@ -58,12 +58,9 @@ export const DraftContext = (props: DraftContextInput) => {
   const [state, dispatch] = useReducer(reducer, initialArg);
 
   const defaults = getDefaults(user, defaultUserData, vacancy);
-  const jobTitle = vacancy.jobTitle || user.ownJobTitle || "";
-  const jobDescription = vacancy.description || "";
-
-  const initDesign = (d: RawDesign) =>
-    init(defaults, d, vacancy.id, jobTitle, jobDescription);
-
+  // const vacancyJobTitle = vacancy.jobTitle;
+  // const vacancyJobDescription = vacancy.description;
+  const initDesign = (d: RawDesign) => init(defaults, d, vacancy.id);
   const initialDesign = initDesign(Venusaur);
 
   const [design, setDesign] = useState<Design>(initialDesign);
@@ -100,8 +97,6 @@ export const DraftContext = (props: DraftContextInput) => {
       )
     );
   };
-
-  console.log(design);
 
   const context: DraftContextType = {
     draftState: state,

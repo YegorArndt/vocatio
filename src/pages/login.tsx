@@ -1,13 +1,15 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import { useEffect } from "react";
-import { SignInButton, useUser } from "@clerk/nextjs";
+import { useUser } from "@clerk/nextjs";
 import Cookies from "js-cookie";
 import { api } from "~/utils";
-import { Link } from "~/components/ui/buttons/Link";
+import { SpinnerWithLayout } from "~/components";
+import { useRouter } from "next/router";
 
 const LoginPage: NextPage = () => {
-  const { user, isSignedIn, isLoaded } = useUser();
+  const { user } = useUser();
+  const router = useRouter();
 
   /**
    * Get method to create a user
@@ -15,7 +17,8 @@ const LoginPage: NextPage = () => {
   const { mutate: createUser, isLoading: isCreatingUser } =
     api.users.create.useMutation({
       onSuccess: () => {
-        console.info("Have a wonderful day!");
+        console.info("✨ Have a wonderful day!");
+        void router.push("/vacancies");
       },
       onError: (error) => {
         const errorMessage = error.data?.zodError?.fieldErrors.content;
@@ -31,6 +34,7 @@ const LoginPage: NextPage = () => {
   useEffect(() => {
     if (user) {
       const sessionToken = Cookies.get("__session");
+
       if (sessionToken) {
         /**
          * Send token directly to content script via postMessage (extension).
@@ -41,13 +45,25 @@ const LoginPage: NextPage = () => {
         );
 
         /**
+         * Post message every miniute to keep the session alive.
+         */
+        setInterval(() => {
+          window.postMessage(
+            { type: "FROM_PAGE", token: sessionToken, userId: user.id },
+            "*"
+          );
+        });
+
+        /**
          * Having the token means that Clerk has authenticated the user.
          * Now we can create a user in our database.
          */
         createUser({
-          ownName: user.fullName || "Your name", //todo
-          ownImage: user.imageUrl,
-          ownEmail: user.emailAddresses[0]!.emailAddress,
+          name: user.fullName!,
+          image: user.imageUrl,
+          contact: {
+            email: user.emailAddresses[0]!.emailAddress,
+          },
         });
       }
     }
@@ -58,24 +74,7 @@ const LoginPage: NextPage = () => {
       <Head>
         <title>Log into Vocatio</title>
       </Head>
-      <section className="flex flex-col items-center gap-10 pt-40">
-        <h1 className="text-[2rem]">
-          {isLoaded
-            ? isSignedIn
-              ? "Success! You can safely go back."
-              : "It's impossible to save your data without knowing you."
-            : "Wait a sec..."}
-        </h1>
-        {isSignedIn ? (
-          <Link
-            text="Take me to dashboard"
-            to="/vacancies"
-            className="primary lg"
-          />
-        ) : (
-          <SignInButton mode="modal" />
-        )}
-      </section>
+      <SpinnerWithLayout text="Creating your account..." />
     </>
   );
 };

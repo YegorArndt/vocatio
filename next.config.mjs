@@ -8,7 +8,7 @@ await import("./src/env.mjs");
 const config = {
   reactStrictMode: true,
   images: {
-    domains: ["img.clerk.com", "media.licdn.com", "media.licdn.com"],
+    domains: ["img.clerk.com", "media.licdn.com"],
   },
   webpack: (config, { isServer }) => {
     if (!isServer) {

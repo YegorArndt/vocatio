@@ -11,6 +11,7 @@ export type LinkProps = PropsWithChildren<
     text?: string;
     baseCn?: string;
     className?: string;
+    id?: string;
   } & Omit<NextLinkProps, "href">
 >;
 

@@ -1,23 +1,16 @@
-import { BsLayoutWtf } from "react-icons/bs";
-import { TbAdjustments } from "react-icons/tb";
 import { NavigationLink } from "~/components";
+import { BiCustomize } from "react-icons/bi";
 
 export const preferencesToolbar = [
-  // {
-  //   text: "Adjust completely",
-  //   to: "/adjust-completely",
-  //   frontIcon: <VscCircleLargeFilled />,
-  // },
-  // {
-  //   text: "Adjust slightly",
-  //   to: "/adjust-slightly",
-  //   frontIcon: <FaAdjust />,
-  // },
-  { text: "Me", to: "/preferences/me", frontIcon: <BsLayoutWtf /> },
   {
-    text: "Customize autocomplete",
-    to: "/preferences/autocomplete",
-    frontIcon: <TbAdjustments />,
+    text: "Fine-tune",
+    to: "/preferences/fine-tune",
+    frontIcon: <span>✨</span>,
+  },
+  {
+    text: "Customize",
+    to: "/preferences/customize",
+    frontIcon: <BiCustomize />,
   },
 ].map((props) => (
   <NavigationLink

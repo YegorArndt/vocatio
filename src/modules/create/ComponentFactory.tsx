@@ -1,4 +1,3 @@
-import { UserImage } from "../../components/UserImage";
 import { useComponentContext } from "./ComponentContext";
 import { useDraftContext } from "../draft/DraftContext";
 import { mergeWithIntrinsic } from "../utils/mergeWithIntrinsic";
@@ -7,18 +6,19 @@ import {
   Group,
   IconGroup,
   Divider,
-  List,
   DecoratedTimeline,
   Name,
-} from "./cv-components";
-import { ComponentValue } from "../draft/types/components";
+} from "./intrinsic";
+import { List } from "./intrinsic/List";
+import { BlurImage } from "~/components";
+import { NormalizedType } from "../draft/types/components";
 
-const componentMapping = {
+const componentMapping: Record<NormalizedType, any> = {
   text: Autoresize,
   group: Group,
   "icon-group": IconGroup,
   divider: Divider,
-  image: UserImage,
+  image: BlurImage,
   list: List,
   "decorated-timeline": DecoratedTimeline,
   name: Name,
@@ -39,5 +39,5 @@ export const ComponentFactory = () => {
   const Component =
     componentMapping[c.type as keyof typeof componentMapping] || Autoresize;
 
-  return <Component id={c.id} {...(m.props as { value: ComponentValue })} />;
+  return <Component id={c.id} {...m.props} />;
 };

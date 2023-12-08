@@ -56,7 +56,7 @@ const SortableItem = ({ component }: { component: NormalizedComponent }) => {
       }}
       className={cn("rounded-lg p-2", bgColor, textColor)}
     >
-      <>{component.props.value}</>
+      {component.props.value}
     </div>
   );
 };
@@ -110,7 +110,7 @@ const SortableSection = ({ items }: { items: NormalizedComponent[] }) => {
 
 export const Toolbar = (props: ToolbarProps) => {
   const { a4Ref } = props;
-  const { user, defaultUserData, vacancy, design } = useDraftContext();
+  const { user, vacancy, design } = useDraftContext();
   const headings = design.sections?.left?.components.filter((c) =>
     isHeading(c.type)
   );
@@ -127,13 +127,7 @@ export const Toolbar = (props: ToolbarProps) => {
             width={15}
           />
         }
-        onClick={() =>
-          void downloadPdf(
-            a4Ref,
-            user?.ownName ?? defaultUserData.fullName!,
-            vacancy?.companyName
-          )
-        }
+        onClick={() => void downloadPdf(a4Ref, user.name, vacancy.companyName)}
         className="common hover flex-y gap-1"
       />
       <Bin />

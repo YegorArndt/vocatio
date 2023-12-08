@@ -1,15 +1,13 @@
-import { type Defaults } from "../constants";
 import type { RawDesign, Design } from "../types/design";
 import type { Sections } from "../types/sections";
 import { typedKeys } from "./common";
+import { Defaults } from "./getDefaults";
 import { normalize } from "./normalize";
 
 export const init = (
   defaults: Defaults,
   rawDesign: RawDesign,
-  vacancyId: string,
-  jobTitle: string,
-  jobDescription: string
+  vacancyId: string
 ): Design => {
   const initializedSections = {} as Sections;
   const { sections } = rawDesign;
@@ -18,8 +16,8 @@ export const init = (
     const section = sections[sectionId]!;
     const { components } = section;
 
-    const normalizedComponents = components.map((rc, i) => {
-      const normalized = normalize(
+    const normalizedComponents = components.map((rc, i) =>
+      normalize(
         {
           ...rc,
           order: i,
@@ -27,10 +25,8 @@ export const init = (
         },
         defaults,
         vacancyId
-      );
-
-      return normalized;
-    });
+      )
+    );
 
     initializedSections[sectionId] = {
       ...section,

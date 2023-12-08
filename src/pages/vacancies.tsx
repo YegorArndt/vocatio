@@ -1,8 +1,7 @@
 import Head from "next/head";
-import { Placeholder } from "~/components/Placeholder";
+import { SpinnerWithLayout, Placeholder } from "~/components";
 import { Layout } from "~/components/layout/Layout";
 import { VacancyCard } from "~/modules/vacancy/VacancyCard";
-import { VacancyCardSkeleton } from "~/modules/vacancy/VacancyCardSkeleton";
 import { api } from "~/utils/api";
 
 export const Vacancies = () => {
@@ -18,30 +17,29 @@ export const Vacancies = () => {
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Layout>
-        <div className="content">
-          {Boolean(isLoading || data?.length) && (
-            <div className="card-grid vacancies">
-              {isLoading &&
-                Array.from({ length: 12 }, (_, i) => (
-                  <VacancyCardSkeleton key={i} />
+      {isLoading && <SpinnerWithLayout />}
+      {!isLoading && (
+        <Layout>
+          <div className="content">
+            {data && data.length > 0 && (
+              <div className="card-grid vacancies">
+                {data?.map((vacancy) => (
+                  <VacancyCard key={vacancy.id} vacancy={vacancy} />
                 ))}
-              {data?.map((vacancy) => (
-                <VacancyCard key={vacancy.id} vacancy={vacancy} />
-              ))}
-            </div>
-          )}
-          {Boolean(!isLoading && !data?.length) && (
-            <Placeholder
-              title="No vacancies found"
-              text="Use our Google Extension to add a new vacancy"
-              actionContent="Get Extension"
-              to="https://chrome.google.com/webstore/detail/Vocatio/bknmlolcaccbfcedimgmpnfcjadfelbn"
-              newTab
-            />
-          )}
-        </div>
-      </Layout>
+              </div>
+            )}
+            {Boolean(!isLoading && !data?.length) && (
+              <Placeholder
+                title="No vacancies found"
+                text="Use our Google Extension to add a new vacancy"
+                actionContent="Get Extension"
+                to="https://chrome.google.com/webstore/detail/Vocatio/bknmlolcaccbfcedimgmpnfcjadfelbn"
+                newTab
+              />
+            )}
+          </div>
+        </Layout>
+      )}
     </>
   );
 };

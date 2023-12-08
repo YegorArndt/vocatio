@@ -1,9 +1,9 @@
 import { v4 as uuidv4 } from "uuid";
 
-import { Defaults } from "../../constants";
 import { NormalizedComponent, RawComponent } from "../../types/components";
 import { Design } from "../../types/design";
 import { normalize } from "../normalize";
+import { Defaults } from "../getDefaults";
 
 export const add = (
   design: Design,

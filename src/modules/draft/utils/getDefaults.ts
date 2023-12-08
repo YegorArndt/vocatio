@@ -1,37 +1,106 @@
 import type { UserResource } from "@clerk/types";
-import type { User, Vacancy } from "@prisma/client";
-import { items } from "~/modules/create/constants/frontend";
-import { type Defaults } from "../constants";
+import type { Vacancy } from "@prisma/client";
+import { omitBy, isNil } from "lodash-es";
+import { RouterOutputs } from "~/utils/api";
+
+export type Defaults = ReturnType<typeof getDefaults>;
+
+const findStringsInText = (text, entries) => {
+  const intersections = [];
+  const lowerCaseTextWords = text.toLowerCase().split(/\s+/);
+
+  let isJavaScriptFound = false;
+  let isTypeScriptFound = false;
+
+  for (const entry of entries) {
+    const lowercaseEntryWords = entry.name.toLowerCase().split(/\s+|\.+/); // Split by spaces and dots
+
+    const isMatch = lowercaseEntryWords.some((word) =>
+      lowerCaseTextWords.includes(word)
+    );
+
+    if (isMatch) {
+      if (lowercaseEntryWords.includes("javascript")) {
+        isJavaScriptFound = true;
+      } else if (lowercaseEntryWords.includes("typescript")) {
+        isTypeScriptFound = true;
+      }
+      intersections.push(entry);
+    }
+  }
+
+  // Apply the condition after completing the search
+  if (isJavaScriptFound && isTypeScriptFound) {
+    return intersections.filter(
+      (entry) => !entry.name.toLowerCase().includes("javascript")
+    );
+  }
+
+  return intersections;
+};
+
+const readonlyKeys = ["id", "createdAt", "updatedAt", "userId", "user"];
+const clean = (o: any, keys = readonlyKeys) =>
+  omitBy(o, (value, key) => keys.includes(key) || isNil(value));
 
 export const getDefaults = (
-  user: User,
+  user: RouterOutputs["users"]["get"],
   defaultUserData: UserResource,
   vacancy: Vacancy
-): Defaults => {
+) => {
+  const topSkills = findStringsInText(vacancy.requiredSkills!, user.skills);
+  const linkedin = `vocatio.io/${user.shortLinkedin?.shortUrl}.com`;
+
   return {
-    "user-name": user.ownName || defaultUserData.fullName,
-    "job-title": user.ownJobTitle || vacancy.jobTitle,
-    objective:
-      user.ownObjective ||
-      "I have over six years of experience as a full-stack developer, collaborating with sectors such as banking, cryptocurrency, advertising, and software development. I have also launched my own products as an entrepreneur. In my career, I've worked with major enterprises and taken on leadership roles. My focus has always been on teamwork, especially in challenging situations. I am committed to my work and am looking for opportunities to contribute to interesting projects, especially startups.",
-    email: defaultUserData.emailAddresses[0]?.emailAddress,
-    experience: user.ownExperienceYears || vacancy.requiredYears,
-    "skills-list": vacancy.requiredSkills,
-    country: user.ownCountry || vacancy.country,
-    address: vacancy.country,
-    phone: user.ownPhone || defaultUserData.phoneNumbers[0]?.phoneNumber,
-    linkedin: user.linkedInUrl,
-    github: user.githubUrl,
-    "education-duration": "2016-2020",
-    "education-degree": "Master degree",
-    "education-university": "MSU, Computer Science",
-    "english-level": "C1",
-    "russian-level": "C1",
-    "german-level": "C1",
-    "spanish-level": "C1",
-    city: user.ownCity || vacancy.country,
-    "user-image": user.ownImage || defaultUserData.imageUrl,
-    "user-stories": user?.ownObjective || items,
-    // "user-stories-highlights": user?.ownObjective || highlights,
+    logo: vacancy.image,
+    companyName: vacancy.companyName,
+    topSkills,
+    name: user.name || defaultUserData.fullName!,
+    jobTitle: vacancy.jobTitle || user.jobTitle!,
+    objective: user.objective || "",
+    email:
+      user.contact?.email ??
+      defaultUserData.emailAddresses[0]?.emailAddress ??
+      "Your email",
+    "phone-number":
+      user.contact?.phone || defaultUserData.phoneNumbers[0]?.phoneNumber,
+    contact: clean(user.contact) ?? {},
+    education: user.education ?? [],
+    experience: vacancy.requiredYearsMax,
+    employmentHistory: user.employmentHistory,
+    skills: user.skills ?? vacancy.requiredSkills,
+    location: user.contact?.location || vacancy.location,
+    country: user.contact?.country || vacancy.country,
+    address: user.contact?.address || vacancy.country,
+    phone: user.contact?.phone || defaultUserData.phoneNumbers[0]?.phoneNumber,
+    linkedin,
+    github: user.contact?.github,
+    languages: user.languages ?? vacancy.requiredLanguages,
+    city: user.contact?.city || vacancy.country,
+    userImage: user.image || defaultUserData.imageUrl,
   };
 };
+
+export const defaultsKeys = [
+  "userImage",
+  "topSkills",
+  "name",
+  "jobTitle",
+  "objective",
+  "email",
+  "phone-number",
+  "contact",
+  "experience",
+  "employmentHistory",
+  "skills",
+  "location",
+  "country",
+  "address",
+  "phone",
+  "linkedin",
+  "github",
+  "education",
+  "languages",
+  "city",
+  "image",
+];

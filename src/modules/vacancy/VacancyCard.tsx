@@ -5,85 +5,75 @@ import { vacancyUI } from "./constants";
 import { Accordion } from "./Accordion";
 import { IoEye } from "react-icons/io5";
 import { IoMdEyeOff } from "react-icons/io";
+import { LiaExternalLinkAltSolid } from "react-icons/lia";
 
 import { Button } from "~/components/ui/buttons/Button";
+import { BlurImage } from "~/components";
 
 export const VacancyCard = (props: { vacancy: Vacancy }) => {
   const { vacancy } = props;
   const { header, available, unavailable } = breakDown(vacancy);
-  const { companyName, jobTitle, age, sourceName, sourceUrl, createdAt } =
-    header;
+  const {
+    companyName,
+    jobTitle,
+    age,
+    sourceName,
+    sourceUrl,
+    createdAt,
+    image,
+  } = header;
 
   return (
     <div className="flex flex-col gap-5">
       <div className="clr-card relative rounded-md border bg-card shadow-md">
-        <header className="flex flex-col gap-2 p-4">
-          <h3 className="text-xl font-bold">{companyName}</h3>
-          <span className="italic">{jobTitle}</span>
-          {age && (
-            <small>
-              Posted on {sourceName}: {age.toDateString()}
-            </small>
-          )}
-          <small>
-            Added to your vacancies: {createdAt.toDateString()} (after{" "}
-            {age?.getUTCDate()} days)
-          </small>
-          {(sourceName || sourceUrl) && (
-            <div className="flex items-center gap-2">
-              {sourceName &&
-                vacancyUI[sourceName as keyof typeof vacancyUI].icon}
-              {sourceUrl && (
-                <Link
-                  text="View source"
-                  className="text-[13px] clr-blue"
-                  to={sourceUrl}
-                  newTab
-                />
-              )}
+        <header className="flex flex-col gap-8 p-4">
+          <div className="flex-y gap-5">
+            <BlurImage
+              src={image}
+              height={80}
+              width={80}
+              alt={companyName}
+              className="rounded-full"
+            />
+            <div className="flex flex-col gap-1">
+              <h3 className="text-xl font-bold">{companyName}</h3>
+              <em>{jobTitle}</em>
             </div>
-          )}
+            <Link
+              className="flex-y ml-auto gap-1 text-[1.5rem]"
+              to={sourceUrl!}
+              newTab
+            >
+              {vacancyUI[sourceName as keyof typeof vacancyUI].icon}
+              <LiaExternalLinkAltSolid />
+            </Link>
+          </div>
+          <div className="grid grid-cols-2">
+            <span>Posted on {sourceName}:</span>
+            <em> {age!.toDateString()}</em>
+            <span>You visited it:</span>
+            <em>{createdAt.toDateString()}</em>
+          </div>
         </header>
-        {[available, unavailable].map(
-          (items, index) =>
-            Boolean(items.length) && (
-              <Accordion
-                key={index}
-                trigger={(expanded, setExpanded) => (
-                  <div className="flex justify-between border-y p-4">
-                    {index === 0
-                      ? "🐈 Known about this vacancy"
-                      : "😿 Unknown about this vacancy"}
-                    <Button
-                      text={expanded ? "Hide" : "Show"}
-                      frontIcon={expanded ? <IoMdEyeOff /> : <IoEye />}
-                      onClick={() => setExpanded(!expanded)}
-                      className="common flex-center text-[13px] clr-blue"
-                    />
-                  </div>
-                )}
-              >
-                <ul className="flex flex-col gap-3 p-4">
-                  {items.map(({ text, icon, value }) =>
-                    index === 0 ? (
-                      <li key={text} className="flex-between">
-                        <span className="flex-center gap-2">
-                          {icon} {text}:
-                        </span>
-                        <span>{value?.toString()}</span>
-                      </li>
-                    ) : (
-                      <li key={text} className="flex">
-                        <span className="flex-center gap-2">
-                          {icon} {text}
-                        </span>
-                      </li>
-                    )
-                  )}
-                </ul>
-              </Accordion>
-            )
-        )}
+        <Accordion
+          trigger={(expanded, setExpanded) => (
+            <Button
+              text={expanded ? "Hide details" : "Show known details"}
+              className="border-top flex-y w-full justify-between border-y p-4 clr-blue"
+              onClick={() => setExpanded(!expanded)}
+              endIcon={expanded ? <IoMdEyeOff /> : <IoEye />}
+            />
+          )}
+        >
+          <ul className="grid grid-cols-2 gap-2 p-4">
+            {available.map(({ text, icon, value }) => (
+              <li key={text} className="flex-y gap-3">
+                <span className="flex-center">{icon}</span>
+                <span>{value?.toString()}</span>
+              </li>
+            ))}
+          </ul>
+        </Accordion>
       </div>
       <div className="grid grid-cols-1 gap-4">
         <Link

@@ -26,7 +26,7 @@ import type { NormalizedComponent } from "../draft/types/components";
 import type { Sections, SectionId, Section } from "../draft/types/sections";
 import { ComponentFactory } from "./ComponentFactory";
 import { typedKeys } from "../draft/utils/common";
-import { ComponentToolbar } from "./cv-components/component-toolbar";
+import { ComponentToolbar } from "./intrinsic/component-toolbar";
 
 export const getSectionIdByComponentId = (
   sections: Sections,
@@ -60,6 +60,12 @@ const SortableItem = (props: PropsWithChildren<Record<string, unknown>>) => {
     isDragging,
     active,
   } = useSortable({ id: c.id, data: c });
+  const {
+    toggleClassName,
+    addNewComponent,
+    changeComponentType,
+    removeComponent,
+  } = useDraftContext();
 
   const style = {
     transform: CSS.Translate.toString(transform),
@@ -73,8 +79,12 @@ const SortableItem = (props: PropsWithChildren<Record<string, unknown>>) => {
       dndRef={setNodeRef}
       listeners={listeners}
       attributes={attributes}
+      onAdd={addNewComponent}
+      onDuplicate={() => addNewComponent(c, c)}
+      onRemove={() => removeComponent(c)}
+      onChangeType={changeComponentType}
       style={style}
-      shouldHide={Boolean(active && active?.id !== c.id)}
+      // shouldHide={Boolean(active && active?.id !== c.id)}
     >
       {children}
     </ComponentToolbar>

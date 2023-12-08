@@ -1,28 +1,34 @@
-import type { Defaults } from "../constants";
-import { hydrate } from "./hydrate";
-import type { NormalizedComponent, RawComponent } from "../types/components";
-import type { SectionId } from "../types/sections";
+import type {
+  NormalizedComponent,
+  NormalizedProps,
+  RawComponent,
+} from "../types/components";
+import { SectionId } from "../types/sections";
+import { Defaults } from "./getDefaults";
 
-const defaultProps = {
-  className: "",
-  style: {},
-  value: "Sample text",
-  label: "Sample text",
+type ComponentToNormalize = RawComponent & {
+  order: number;
+  sectionId: SectionId;
 };
 
-const defaultComponent = {
+const defaultProps: NormalizedProps = {
+  className: "",
+  style: {},
+};
+
+const defaultComponent: NormalizedComponent = {
+  id: "",
+  type: "text",
   order: 0,
   sectionId: "left",
+  props: defaultProps,
 };
 
 /**
- * Assign default values to component.
+ * Standardizes the component.
  */
 export const normalize = (
-  c: (RawComponent | NormalizedComponent) & {
-    order: number;
-    sectionId: SectionId;
-  },
+  c: ComponentToNormalize,
   defaults: Defaults,
   vacancyId: string
 ) => {
@@ -32,7 +38,15 @@ export const normalize = (
     id: `${c.id}-${vacancyId}`,
     props: { ...defaultProps, ...c.props },
   };
-  const hydrated = hydrate(normalized, defaults, c.id);
 
-  return hydrated;
+  if (c.initializer) {
+    const initialized = c.initializer(defaults, normalized.props);
+
+    normalized.props = {
+      ...normalized.props,
+      ...initialized,
+    };
+  }
+
+  return normalized;
 };

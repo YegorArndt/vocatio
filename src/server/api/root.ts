@@ -4,6 +4,7 @@ import { vacanciesRouter } from "~/server/api/routers/vacancies";
 import { usersRouter } from "~/server/api/routers/users";
 import { cvsRouter } from "./routers/cvs";
 import { storiesRouter } from "./routers/stories";
+import { urlsRouter } from "./routers/urls";
 
 /**
  * This is the primary router for your server.
@@ -16,6 +17,7 @@ export const appRouter = createTRPCRouter({
   cvs: cvsRouter,
   users: usersRouter,
   stories: storiesRouter,
+  urls: urlsRouter,
 });
 
 // export type definition of API

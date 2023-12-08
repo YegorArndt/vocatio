@@ -1,19 +1,33 @@
 import { useRouter } from "next/router";
-import { type PropsWithChildren } from "react";
+import { useEffect, type PropsWithChildren } from "react";
+import { publicRoutes } from "~/constants";
 
 import { api } from "~/utils";
+import { SpinnerWithLayout } from "./Spinner";
+
+const Auth = (props: PropsWithChildren<Record<string, unknown>>) => {
+  const { children } = props;
+  const router = useRouter();
+  const { data: user, isLoading } = api.users.get.useQuery();
+
+  useEffect(() => {
+    if (!user && !isLoading) void router.push("/login");
+  }, [user, isLoading]);
+
+  if (isLoading) return <SpinnerWithLayout />;
+
+  if (!user) return null;
+
+  return <>{children}</>;
+};
 
 export const RouteGuard = (
   props: PropsWithChildren<Record<string, unknown>>
 ) => {
   const { children } = props;
   const router = useRouter();
-  const user = api.users.get.useQuery();
 
-  if (!user) {
-    void router.push("/login");
-    return null;
-  }
+  if (publicRoutes.includes(router.pathname)) return <>{children}</>;
 
-  return <>{children}</>;
+  return <Auth>{children}</Auth>;
 };

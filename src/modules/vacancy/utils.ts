@@ -22,11 +22,11 @@ export const breakDown = (vacancy: Vacancy) => {
     jobTitle,
     sourceName,
     sourceUrl,
-    description,
     id,
     userId,
     professionField,
     updatedAt,
+    image,
     ...relevant
   } = vacancy;
 
@@ -37,6 +37,7 @@ export const breakDown = (vacancy: Vacancy) => {
     createdAt,
     sourceUrl,
     sourceName,
+    image,
   };
 
   const available: Item[] = [];

@@ -7,6 +7,18 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Currency {
+  USD
+  EUR
+  GBP
+  CAD
+  AUD
+  RUB 
+  UAH 
+  BYN 
+}
+
+
 enum SourceName {
   LINKEDIN
   INDEED
@@ -55,13 +67,135 @@ enum ProfessionField {
   SCRUM_MASTER
 }
 
-enum LanguageLevel {
-  A1
-  A2
-  B1
-  B2
-  C1
-  C2
+enum SkillLevel {
+  BASIC
+  INTERMEDIATE
+  ADVANCED
+  EXPERT
+  NATIVE
+}
+
+model LanguageEntry {
+  id        String     @id @default(uuid())
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  name      String
+  level     SkillLevel
+  user      User       @relation(fields: [userId], references: [id])
+  userId    String
+}
+
+model SkillEntry {
+  id        String     @id @default(uuid())
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  name      String
+  level     SkillLevel
+  user      User       @relation(fields: [userId], references: [id])
+  userId    String
+}
+
+model EducationEntry {
+  id          String   @id @default(uuid())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  place       String
+  period      String
+  description String
+  image       String
+  title       String
+  user        User     @relation(fields: [userId], references: [id])
+  userId      String
+}
+
+model EmploymentHistoryEntry {
+  id          String   @id @default(uuid())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  place       String
+  period      String
+  description String
+  image       String
+  title       String
+  user        User     @relation(fields: [userId], references: [id])
+  userId      String
+}
+
+model RecommendationsEntry {
+  id          String   @id @default(uuid())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  place       String
+  period      String
+  description String
+  image       String
+  title       String
+  user        User     @relation(fields: [userId], references: [id])
+  userId      String
+}
+
+model AwardsEntry {
+  id          String   @id @default(uuid())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  place       String
+  period      String
+  description String
+  image       String
+  title       String
+  user        User     @relation(fields: [userId], references: [id])
+  userId      String
+}
+
+model CertificatesEntry {
+  id          String   @id @default(uuid())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  place       String
+  period      String
+  description String
+  image       String
+  title       String
+  user        User     @relation(fields: [userId], references: [id])
+  userId      String
+}
+
+model CustomMedia {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  name      String
+  url       String
+  contact   Contact? @relation(fields: [contactId], references: [id])
+  contactId String
+}
+
+model Contact {
+  id          String        @id @default(uuid())
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  email       String
+  location    String?
+  phone       String?
+  github      String?
+  linkedin    String?
+  indeed      String?
+  glassdoor   String?
+  hh          String?
+  facebook    String?
+  instagram   String?
+  twitter     String?
+  telegram    String?
+  skype       String?
+  vk          String?
+  website     String?
+  address     String?
+  country     String?
+  city        String?
+  zip         String?
+  customMedia CustomMedia[]
+  user        User          @relation(fields: [userId], references: [id])
+  userId      String        @unique
 }
 
 model User {
@@ -69,51 +203,28 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  // Own user data
-  ownName            String
-  ownImage           String
-  ownCountry         String?
-  ownEmail           String
-  ownPhone           String?
-  ownCity            String?
-  ownJobTitle        String?
-  ownExperienceYears Int?
-  ownStories         Story[]
-  ownObjective       String?
-  ownProfessionField ProfessionField?
-  ownLanguages       LanguageLevel[]
+  name     String
+  image    String
+  jobTitle String?
 
-  // Social media links
-  linkedInUrl  String?
-  indeedUrl    String?
-  glassdoorUrl String?
-  hhUrl        String?
-  githubUrl    String?
+  professionField ProfessionField?
 
-  // Desired job data
-  desiredProfessionField ProfessionField?
-  desiredRemote          Remote?
-  desiredSalaryMin       Int?
-  desiredSalaryMax       Int?
-  desiredSeniority       Seniority?
-  desiredEmploymentType  EmploymentType?
+  languages LanguageEntry[]
+  skills    SkillEntry[]
+
+  education         EducationEntry[]
+  employmentHistory EmploymentHistoryEntry[]
+  recommendations   RecommendationsEntry[]
+  awards            AwardsEntry[]
+  certificates      CertificatesEntry[]
+
+  objective String?
+
+  contact Contact?
+  shortLinkedin Url?
 
   // Cv data
   vacancies Vacancy[]
-  cvs       Cv[]
-}
-
-model Story {
-  id                 String   @id @default(uuid())
-  createdAt          DateTime @default(now())
-  updatedAt          DateTime @updatedAt
-  order              Int
-  periodOfEmployment String
-  companyName        String
-  jobTitle           String
-  story              String   @db.Text
-  user               User     @relation(fields: [userId], references: [id])
-  userId             String
 }
 
 model Vacancy {
@@ -122,107 +233,40 @@ model Vacancy {
   updatedAt         DateTime         @updatedAt
   user              User             @relation(fields: [userId], references: [id])
   userId            String
+  image             String?
   companyName       String?
   location          String?
   country           String?
   age               DateTime?
-  numApplicants     Int?
-  salaryMin         Int?
-  salaryMax         Int?
+  numApplicants     String?
+  salaryMin         String?
+  salaryMax         String?
+  isAnnualSalary    Boolean?        @default(false) 
+  salaryCurrency    Currency?          @default(USD)
   jobTitle          String?
   description       String?          @db.Text
   professionField   ProfessionField?
   requiredRemote    Remote?
   requiredSeniority Seniority?
   employmentType    EmploymentType?
-  requiredYears     Int?
+  requiredYearsMin  String?
+  requiredYearsMax  String?
   requiredEducation String?
-  requiredLanguages String?
-  requiredSkills    String?
-  sourceUrl         String?
+  requiredLanguages String[]
+  requiredSkills    String
+  sourceUrl         String
   sourceName        SourceName?
-  cvs               Cv[]
 
   @@unique([companyName, jobTitle])
 }
 
-enum ComponentName {
-  // Inputs & Textareas
-  TEXT
-  DATE
-  SELECT
-  PHONE_NUMBER
-  LOCATION
-  PHONE_NUMBER_WITH_LABEL
-  LOCATION_WITH_LABEL
-  TEXT_WITH_LABEL
-  DATE_WITH_LABEL
-  SELECT_WITH_LABEL
-  URL // Has label by default
-  LANGUAGE // Has label by default
-  // Headings
-  H1
-  H2
-  H3
-  H4
-  H5
-  H6
-  H1_WITH_DIVIDER
-  H2_WITH_DIVIDER
-  H3_WITH_DIVIDER
-  H4_WITH_DIVIDER
-  H5_WITH_DIVIDER
-}
-
-model Component {
-  id        String        @id @default(uuid())
-  createdAt DateTime      @default(now())
-  updatedAt DateTime      @updatedAt
-  index     Int
-  component ComponentName
-  label     String
-  value     String
-  area      Area          @relation(fields: [areaId], references: [id])
-  areaId    String
-}
-
-model Area {
-  id         String      @id @default(uuid())
-  createdAt  DateTime    @default(now())
-  updatedAt  DateTime    @updatedAt
-  index      Int
-  components Component[]
-  // Add more properties in the future like color, width, height, coords, etc.
-  cv         Cv          @relation(fields: [cvId], references: [id])
-  cvId       String
-}
-
-model Cv {
+model Url {
   id        String   @id @default(uuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
-  // General user data for easy access
-  name            String
-  experienceYears Int
-  stories         String
-  jobTitle        String
-  objective       String
-  image           String?
-  country         String?
-  city            String?
-  seniority       Seniority?
-  remote          Remote?
-  email           String?
-  user            User       @relation(fields: [userId], references: [id])
-  userId          String
-  vacancy         Vacancy    @relation(fields: [vacancyId], references: [id])
-  vacancyId       String     @unique
-  areas           Area[]
-}
-
-model Url {
-  id        Int    @id @default(autoincrement())
-  original  String
-  shortCode String @unique
+  name      String
+  originalUrl       String
+  shortUrl          String
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String  @unique
 }

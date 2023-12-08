@@ -1,10 +1,12 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import jwt from "jsonwebtoken";
-import { PrismaClient, Vacancy } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
+import { VacancyDto } from "~/modules/extension/types";
+const fs = require("fs");
 
 const prisma = new PrismaClient();
-// const publicKey = fs.readFileSync("secret/public.pem", "utf8");
-const publicKey = process.env.CLERK_PEM_PUBLIC_KEY;
+// const publicKey = process.env.CLERK_PEM_PUBLIC_KEY;
+const publicKey = fs.readFileSync("secret/public.pem", "utf8");
 
 type Err = {
   name: string;
@@ -29,8 +31,9 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
     /**
      * Push to database
      */
-    const { data: vacancyFromExtension } = req.body as {
-      data: Vacancy;
+    const { vacancy, userId } = req.body as {
+      vacancy: VacancyDto;
+      userId: string;
     };
 
     /**
@@ -38,8 +41,8 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
      */
     const existingVacancy = await prisma.vacancy.findFirst({
       where: {
-        companyName: vacancyFromExtension.companyName,
-        jobTitle: vacancyFromExtension.jobTitle,
+        companyName: vacancy.companyName,
+        jobTitle: vacancy.jobTitle,
       },
     });
 
@@ -50,7 +53,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
       await prisma.vacancy.update({
         where: { id: existingVacancy.id },
         data: {
-          numApplicants: vacancyFromExtension.numApplicants,
+          numApplicants: vacancy.numApplicants,
         },
       });
 
@@ -62,18 +65,13 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
       /**
        * Create a new vacancy
        */
-      const { userId, ...rest } = vacancyFromExtension;
-
       await prisma.vacancy.create({
         data: {
-          ...rest,
-          user: {
-            connect: {
-              id: userId,
-            },
-          },
+          ...vacancy,
+          userId,
         },
       });
+
       res.status(200).json({ message: "You can navigate back to the app!" });
     }
   } catch (error) {

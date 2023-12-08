@@ -11,6 +11,7 @@ import { BsPersonWorkspace } from "react-icons/bs";
 import { GiOfficeChair } from "react-icons/gi";
 import { FaUniversity } from "react-icons/fa";
 import { HiLanguage } from "react-icons/hi2";
+import { MdWorkOutline } from "react-icons/md";
 
 export const vacancyUI = {
   salary: {
@@ -20,6 +21,10 @@ export const vacancyUI = {
   country: {
     text: "Country",
     icon: <FaGlobe />,
+  },
+  salaryCurrency: {
+    text: "Currency",
+    icon: <FaDollarSign />,
   },
   numApplicants: {
     text: "Applicants",
@@ -31,7 +36,7 @@ export const vacancyUI = {
   },
   employmentType: {
     text: "Employment type",
-    icon: <FaClock />,
+    icon: <MdWorkOutline />,
   },
   age: {
     text: "Age",

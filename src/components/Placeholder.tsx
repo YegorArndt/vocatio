@@ -16,12 +16,7 @@ type PlaceholderProps = {
 export const Placeholder = (props: PlaceholderProps) => {
   const {
     title = "Nothing yet",
-    text = (
-      <>
-        Click &quot;Get CV&quot; under a vacancy <br /> or just drag and drop it
-        into &quot;Create&quot; tab.
-      </>
-    ),
+    text = <>Click &quot;Get CV&quot; under a vacancy to start.</>,
     to,
     actionContent = "Get started",
     newTab,

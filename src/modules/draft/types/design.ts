@@ -1,8 +1,8 @@
-import type { NormalizedComponent, TypeOfComponent } from "./components";
+import type { NormalizedComponent, NormalizedType } from "./components";
 import type { RawSections, Sections } from "./sections";
 
 export type Intrinsic = Partial<
-  Record<TypeOfComponent, Partial<NormalizedComponent["props"]>>
+  Record<NormalizedType, Partial<NormalizedComponent["props"]>>
 >;
 
 export type Design = {

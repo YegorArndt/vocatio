@@ -1,26 +1,27 @@
-import type { ComponentValue } from "./types/components";
-
 export const dbIds = [
-  "user-name",
-  "job-title",
+  // Main
+  "name",
+  "jobTitle",
   "objective",
+
+  // Big entries
+  "education",
+  "employmentHistory",
+  "recommendations",
+  "awards",
+  "certificates",
+
+  // Contact
+  "contact",
   "email",
-  "experience",
-  "skills-list",
   "country",
   "city",
   "address",
   "phone",
   "linkedin",
   "github",
-  "education-duration",
-  "education-degree",
-  "education-university",
-  "english-level",
-  "german-level",
-  "russian-level",
-  "spanish-level",
-  "user-stories",
-];
 
-export type Defaults = Partial<Record<(typeof dbIds)[number], ComponentValue>>;
+  // Entries
+  "languages",
+  "skills",
+];

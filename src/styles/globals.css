@@ -2,13 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-@font-face {
-  font-family: "logo";
-  src: url("/logo.ttf") format("truetype");
-  font-weight: normal;
-  font-style: normal;
-}
-
 :root {
   --blue: rgba(0, 118, 255, 0.9);
   --gray: #eaeaea;
@@ -83,6 +76,10 @@
 }
 
 @layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
   body,
   #__next {
     min-height: 100vh;
@@ -173,14 +170,6 @@
 
   .heading-3 {
     line-height: 120%;
-  }
-
-  .text {
-    line-height: 170%;
-  }
-
-  .a4 * {
-    /* box-sizing: border-box; */
   }
 
   .top-left {
@@ -499,10 +488,15 @@
   }
 
   .vacancies {
-    --size: 250px;
+    --size: 320px;
   }
 
-  h1 + p {
+  *:is(h1, h2, h3) + p {
     margin-block: 0.5rem 2rem;
+  }
+
+  .guide {
+    @apply font-thin tracking-wide;
+    font-size: 1rem;
   }
 }

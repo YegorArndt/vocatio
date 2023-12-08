@@ -1,3 +1,6 @@
+import cn from "classnames";
+import { Divider } from "./layout/Divider";
+
 export const Spinner = () => {
   return (
     <div className="lds-ring">
@@ -10,8 +13,8 @@ export const Spinner = () => {
           .lds-ring {
             display: inline-block;
             position: relative;
-            width: 80px;
-            height: 80px;
+            width: 24px;
+            height: 24px;
           }
           .lds-ring div {
             box-sizing: border-box;
@@ -48,8 +51,42 @@ export const Spinner = () => {
   );
 };
 
-export const CenterSpinner = () => (
-  <div className="full flex h-screen items-center justify-center">
-    <Spinner />
-  </div>
+export const LineStack = (props: { className?: string }) => {
+  const { className } = props;
+
+  return (
+    <div className={cn("flex w-1/2 flex-col gap-3", className)}>
+      {Array.from({ length: 5 }).map((_, i) => (
+        <div key={i} className="skeleton h-2 w-full rounded-md" />
+      ))}
+    </div>
+  );
+};
+
+const NavbarSkeleton = () => (
+  <nav className="navbar border-right fixed inset-0 flex h-screen w-[240px] flex-col bg-secondary px-4">
+    <header className="flex-y gap-3 !py-3">
+      🐈 <i className="skeleton h-2 w-full rounded-full" />
+    </header>
+    <LineStack />
+    <Divider className="my-5" />
+    <LineStack />
+  </nav>
 );
+
+export const SpinnerWithLayout = (props: { text?: string }) => {
+  const { text } = props;
+  return (
+    <div className="app-container overflow-hidden !p-0">
+      <NavbarSkeleton />
+      <main className="main-container">
+        <div className="content flex-center h-screen">
+          <div className="flex-center flex-col gap-4">
+            <Spinner />
+            {text}
+          </div>
+        </div>
+      </main>
+    </div>
+  );
+};

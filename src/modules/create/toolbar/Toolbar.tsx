@@ -1,4 +1,4 @@
-import { RefObject, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { CSS } from "@dnd-kit/utilities";
 
 import { BlurImage } from "~/components/BlurImage";
@@ -27,10 +27,6 @@ import {
 import { isHeading } from "~/modules/draft/utils/common";
 import cn from "classnames";
 import { NormalizedComponent } from "~/modules/draft/types/components";
-
-type ToolbarProps = {
-  a4Ref: RefObject<HTMLDivElement>;
-};
 
 const SortableItem = ({ component }: { component: NormalizedComponent }) => {
   const { setNodeRef, attributes, listeners, transform, transition } =
@@ -108,9 +104,8 @@ const SortableSection = ({ items }: { items: NormalizedComponent[] }) => {
   );
 };
 
-export const Toolbar = (props: ToolbarProps) => {
-  const { a4Ref } = props;
-  const { user, vacancy, design } = useDraftContext();
+export const Toolbar = () => {
+  const { user, vacancy, design, a4Ref } = useDraftContext();
   const headings = design.sections?.left?.components.filter((c) =>
     isHeading(c.type)
   );

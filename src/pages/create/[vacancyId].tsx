@@ -14,6 +14,8 @@ import { DesignViewer } from "~/modules/create/DesignViewer";
 import { PageBreak } from "~/modules/create/PageBreak";
 import { SpinnerWithLayout } from "~/components";
 
+const { log } = console;
+
 type CVBuilderProps = {
   vacancyId: string;
 };
@@ -43,20 +45,24 @@ const CVBuilder = (props: CVBuilderProps) => {
     return () => observer.disconnect();
   }, [a4Ref.current]);
 
-  // Get data
+  /**
+   * Fetch data.
+   */
   const { user: defaultUserData } = useUser();
-
-  const { data: vacancy, isLoading: vacancyLoading } =
-    api.vacancies.getById.useQuery({
-      id: vacancyId,
-    });
-
-  const { data: user, isLoading: userLoading } = api.users.get.useQuery();
+  const { data: vacancy } = api.vacancies.getById.useQuery({
+    id: vacancyId,
+  });
+  const { data: user } = api.users.get.useQuery();
 
   return (
     <>
       <Head>
-        <title>Create a CV - Vocatio</title>
+        <title>
+          {vacancy?.companyName
+            ? `CV for ${vacancy.companyName}`
+            : "Preview CV"}{" "}
+          - Vocatio
+        </title>
         <meta
           name="description"
           content="Free CV AI builder. Generate CVs tailored to the job you want."
@@ -65,12 +71,13 @@ const CVBuilder = (props: CVBuilderProps) => {
       </Head>
       {vacancy && user && defaultUserData ? (
         <DraftContext
+          a4Ref={a4Ref}
           defaultUserData={defaultUserData}
           vacancy={vacancy}
           user={user}
         >
           {(context) => (
-            <Layout toolbar={<Toolbar a4Ref={a4Ref} />}>
+            <Layout toolbar={<Toolbar />}>
               <div className="two-col-grid">
                 <div
                   ref={a4Ref}
@@ -80,7 +87,7 @@ const CVBuilder = (props: CVBuilderProps) => {
                     width: a4Width,
                   }}
                 >
-                  <DndProvider />
+                  <DndProvider sections={context.design.sections} />
                 </div>
                 <DesignViewer />
               </div>

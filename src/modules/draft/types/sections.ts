@@ -1,3 +1,4 @@
+import { Defaults } from "../utils/getDefaults";
 import type { NormalizedComponent, RawComponent } from "./components";
 
 export type SectionId =
@@ -8,11 +9,11 @@ export type SectionId =
   | "top-left"
   | "top-right"
   | "bottom-left"
-  | "bottom-right";
+  | "bottom-right"
+  | keyof Defaults;
 
 export type Section = {
   id: SectionId;
-  order: number;
   components: NormalizedComponent[];
   className: string;
 };
@@ -21,7 +22,6 @@ export type Sections = Partial<Record<SectionId, Section>>;
 
 export type RawSection = {
   id: SectionId;
-  order: number;
   components: RawComponent[];
   className: string;
 };

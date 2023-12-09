@@ -7,11 +7,11 @@ import {
   IconGroup,
   Divider,
   DecoratedTimeline,
-  Name,
 } from "./intrinsic";
 import { List } from "./intrinsic/List";
 import { BlurImage } from "~/components";
 import { NormalizedType } from "../draft/types/components";
+import { DndProvider } from "./DndProvider";
 
 const componentMapping: Record<NormalizedType, any> = {
   text: Autoresize,
@@ -21,7 +21,7 @@ const componentMapping: Record<NormalizedType, any> = {
   image: BlurImage,
   list: List,
   "decorated-timeline": DecoratedTimeline,
-  name: Name,
+  entries: DndProvider,
 };
 
 /**

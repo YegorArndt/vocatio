@@ -1,45 +1,22 @@
 import type { Vacancy, User } from "@prisma/client";
-import type { ReactNode } from "react";
-import * as actions from "../actions";
+import type { ReactNode, RefObject } from "react";
 import type { UserResource } from "@clerk/types";
-import type {
-  NormalizedComponent,
-  RawComponent,
-  TypeOfComponent,
-} from "./components";
-import type { Defaults } from "../constants";
-import type { Design, RawDesign } from "./design";
 
-export type DraftContextInput = {
-  defaultUserData: UserResource;
-  vacancy: Vacancy;
-  user: User;
-  children: (a: DraftContext) => ReactNode;
+import type { Design, RawDesign } from "./design";
+import { type Defaults } from "../utils/getDefaults";
+
+export type DraftContextInput = Pick<
+  DraftContextOutput,
+  "user" | "vacancy" | "defaultUserData" | "a4Ref"
+> & {
+  children: (a: DraftContextOutput) => ReactNode;
 };
 
-export type DraftState = Partial<Record<keyof typeof actions, boolean>>;
-export type Dispatchers = Record<
-  "setDownloadFired" | "setChangeDesignFired",
-  (payload?: boolean) => void
->;
-
-export type DraftContext = {
+export type DraftContextOutput = {
   design: Design;
-  updateDesign: (updateFn: (d: Design) => Design) => void;
+  a4Ref: RefObject<HTMLDivElement>;
+  updateDesign: () => void;
   changeDesign: (d: RawDesign) => void;
-  toggleClassName: (component: NormalizedComponent, className: string) => void;
-  addNewComponent: (
-    rc: RawComponent,
-    clickedComponent: NormalizedComponent
-  ) => void;
-  changeComponentType: (
-    componentToChange: NormalizedComponent,
-    type: TypeOfComponent
-  ) => void;
-  rotate: (heading: NormalizedComponent, index: number) => void;
-  removeComponent: (componentToRemove: NormalizedComponent) => void;
-  draftState: DraftState;
-  dispatchers: Dispatchers;
   user: User;
   vacancy: Vacancy;
   defaultUserData: UserResource;

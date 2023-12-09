@@ -5,28 +5,31 @@ import { ListProps } from "~/modules/create/intrinsic/List";
 import { Defaults } from "../utils/getDefaults";
 import { AutoresizeProps } from "~/modules/create/intrinsic/Autoresize";
 import { SharedGroupProps } from "~/modules/create/intrinsic/groups/types";
+import { DndProviderProps } from "~/modules/create/DndProvider";
 
-type Initializer = (
-  data: Defaults,
-  prevProps: NormalizedProps
-) => Partial<NormalizedProps>;
+export type ComponentToNormalize = RawComponent & {
+  sectionId: SectionId;
+};
 
-export type NormalizedProps = {
+type Initializer = (data: Defaults) => Partial<NormalizedProps>;
+
+export type NormalizedProps = Partial<
+  ListProps & AutoresizeProps & SharedGroupProps & DndProviderProps
+> & {
   className: string;
   style: CSSProperties;
-} & Partial<ListProps & AutoresizeProps & SharedGroupProps>;
+  tooltip: string;
+};
 
 export type NormalizedComponent = {
   id: string;
   type: NormalizedType;
   sectionId: SectionId;
-  order: number;
   props: NormalizedProps;
 };
 
 export type RawComponent = Pick<NormalizedComponent, "type" | "id"> & {
-  props?: Partial<NormalizedProps>;
-  initializer?: Initializer;
+  props?: Partial<NormalizedProps> | Initializer;
 };
 
 export type NormalizedType =
@@ -34,9 +37,7 @@ export type NormalizedType =
   | `heading-${number}`
   | "group"
   | "divider"
-  | "list"
   | "url"
   | "image"
-  | "decorated-timeline"
   | "icon-group"
-  | "name";
+  | "entries";

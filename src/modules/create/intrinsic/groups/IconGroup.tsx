@@ -58,7 +58,7 @@ const BlurIcon = (props: ImageProps) => {
 
 export const IconGroup = (props: SharedGroupProps) => {
   const {
-    text,
+    value,
     smallTextClassName,
     smallText,
     className,
@@ -112,7 +112,7 @@ export const IconGroup = (props: SharedGroupProps) => {
           ))}
       </Menu>
       <div className="flex flex-col">
-        <Autoresize value={text} />
+        <Autoresize value={value} />
         {smallText && (
           <small className={smallTextClassName}>
             <Autoresize value={smallText} />

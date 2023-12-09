@@ -4,7 +4,7 @@ import { CSSProperties } from "react";
 export type SharedGroupProps = {
   id: string;
   label: string;
-  text: string;
+  value: string;
   image: string;
   smallText?: string;
   smallTextClassName?: string;

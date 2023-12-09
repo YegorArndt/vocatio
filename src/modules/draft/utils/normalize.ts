@@ -1,25 +1,34 @@
 import type {
+  ComponentToNormalize,
   NormalizedComponent,
   NormalizedProps,
-  RawComponent,
+  NormalizedType,
 } from "../types/components";
-import { SectionId } from "../types/sections";
+import { typedKeys } from "./common";
 import { Defaults } from "./getDefaults";
 
-type ComponentToNormalize = RawComponent & {
-  order: number;
-  sectionId: SectionId;
+const tooltips: Record<NormalizedType, string> = {
+  text: "Text",
+  "heading-1": "Heading 1",
+  "heading-2": "Heading 2",
+  "heading-3": "Heading 3",
+  group: "Group",
+  divider: "Divider",
+  url: "URL",
+  image: "Image",
+  "icon-group": "Icon Group",
+  entries: "Entries",
 };
 
 const defaultProps: NormalizedProps = {
   className: "",
   style: {},
+  tooltip: "",
 };
 
 const defaultComponent: NormalizedComponent = {
   id: "",
   type: "text",
-  order: 0,
   sectionId: "left",
   props: defaultProps,
 };
@@ -32,20 +41,32 @@ export const normalize = (
   defaults: Defaults,
   vacancyId: string
 ) => {
-  const normalized = {
+  const p = typeof c.props === "function" ? c.props(defaults) : c.props;
+
+  const normalized: NormalizedComponent = {
     ...defaultComponent,
     ...c,
     id: `${c.id}-${vacancyId}`,
-    props: { ...defaultProps, ...c.props },
+    props: { ...defaultProps, tooltip: tooltips[c.type] ?? "", ...p },
   };
 
-  if (c.initializer) {
-    const initialized = c.initializer(defaults, normalized.props);
+  let { sections } = normalized.props;
 
-    normalized.props = {
-      ...normalized.props,
-      ...initialized,
-    };
+  if (sections) {
+    const newSections = typedKeys(sections).reduce((acc, key) => {
+      const section = sections![key];
+      if (!section) return acc;
+
+      const newSection = {
+        ...section,
+        components: section.components.map((c) =>
+          normalize(c, defaults, vacancyId)
+        ),
+      };
+      return { ...acc, [key]: newSection };
+    }, {});
+
+    normalized.props.sections = newSections;
   }
 
   return normalized;

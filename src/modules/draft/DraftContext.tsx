@@ -1,52 +1,37 @@
-import { createContext, useContext, useReducer, useState } from "react";
+import { createContext, useContext, useState } from "react";
 
-import * as actions from "./actions";
 import { Venusaur } from "./designs/Venusaur";
-import type {
-  NormalizedComponent,
-  RawComponent,
-  TypeOfComponent,
-} from "./types/components";
-import type {
-  DraftState,
-  DraftContextInput,
-  DraftContext as DraftContextType,
-} from "./types";
-import { getDefaults } from "./utils/getDefaults";
-import { RawDesign, Design } from "./types/design";
+import type { DraftContextInput, DraftContextOutput } from "./types";
+import type { RawDesign, Design } from "./types/design";
 import { init } from "./utils/init";
-import { remove, add, toggle, changeType } from "./utils/component-toolbar";
-import { rotateSectionByTitle } from "./utils/component-toolbar/rotate";
+import { getDefaults } from "./utils/getDefaults";
 
-const initialArg = {
-  [actions.DOWNLOAD_FIRED]: false,
-  [actions.CHANGE_DESIGN_FIRED]: false,
-};
+const { log } = console;
 
-const reducer = (
-  state: DraftState,
-  action: {
-    type: keyof typeof actions;
-    payload?: boolean;
+/**
+ * Utilize React's internal props to get the SOTA of the current design.
+ */
+const updateSections = (a4Ref: DraftContextInput["a4Ref"]) => {
+  const a4 = a4Ref.current;
+  if (!a4) return;
+
+  let id = null; // __reactProps$<id>
+
+  for (let i = 0, keys = Object.keys(a4); i < keys.length; i++) {
+    if ((id = keys[i]?.match(/^__reactProps[^$]*(\$.+)$/))) {
+      id = `__reactProps${id[1]}`;
+      break;
+    }
   }
-): DraftState => {
-  const { type, payload } = action;
-  const newValue = typeof payload === "boolean" ? payload : !state[type];
 
-  if (!actions[type]) return state;
+  if (!id) return;
 
-  const newState = { ...state };
+  const { sections } = a4Ref.current[id].children.props;
 
-  // Set all other actions to false.
-  Object.keys(state).forEach((key) => {
-    if (key !== type) newState[key as keyof typeof actions] = false;
-    else newState[key] = newValue;
-  });
-
-  return newState;
+  return sections;
 };
 
-const Context = createContext({} as DraftContextType);
+const Context = createContext({} as DraftContextOutput);
 
 export const useDraftContext = () => {
   const draft = useContext(Context);
@@ -54,65 +39,28 @@ export const useDraftContext = () => {
 };
 
 export const DraftContext = (props: DraftContextInput) => {
-  const { children, defaultUserData, vacancy, user } = props;
-  const [state, dispatch] = useReducer(reducer, initialArg);
+  const { children, defaultUserData, vacancy, user, a4Ref } = props;
 
   const defaults = getDefaults(user, defaultUserData, vacancy);
-  // const vacancyJobTitle = vacancy.jobTitle;
-  // const vacancyJobDescription = vacancy.description;
   const initDesign = (d: RawDesign) => init(defaults, d, vacancy.id);
   const initialDesign = initDesign(Venusaur);
 
   const [design, setDesign] = useState<Design>(initialDesign);
 
-  const updateDesign = (updateFn: (d: Design) => Design) => {
-    setDesign((d) => updateFn(d));
-  };
+  const updateDesign = () =>
+    setDesign((d) => ({
+      ...d,
+      sections: updateSections(a4Ref),
+    }));
 
   const changeDesign = (d: RawDesign) => setDesign(initDesign(d));
 
-  const addNewComponent = (
-    nc: RawComponent,
-    clickedComponent: NormalizedComponent
-  ) => setDesign((d) => add(d, vacancy.id, defaults, nc, clickedComponent));
+  log(design.sections.left?.components);
 
-  const removeComponent = (c: NormalizedComponent) =>
-    setDesign((d) => remove(d, c, vacancy.id));
-
-  const toggleClassName = (c: NormalizedComponent, className: string) =>
-    setDesign((d) => toggle(d, c, className));
-
-  const changeComponentType = (
-    c: NormalizedComponent,
-    newType: TypeOfComponent
-  ) => setDesign((d) => changeType(d, c, newType));
-
-  const rotate = (heading: NormalizedComponent, index: number) => {
-    setDesign((d) =>
-      rotateSectionByTitle(
-        d,
-        heading.sectionId,
-        heading.props.value as string,
-        index
-      )
-    );
-  };
-
-  const context: DraftContextType = {
-    draftState: state,
-    dispatchers: {
-      setDownloadFired: (payload) =>
-        dispatch({ type: actions.DOWNLOAD_FIRED, payload }),
-      setChangeDesignFired: (payload) =>
-        dispatch({ type: actions.CHANGE_DESIGN_FIRED, payload }),
-    },
-    rotate,
+  const context: DraftContextOutput = {
+    a4Ref,
     design,
     updateDesign,
-    addNewComponent,
-    removeComponent,
-    toggleClassName,
-    changeComponentType,
     changeDesign,
     user,
     vacancy,

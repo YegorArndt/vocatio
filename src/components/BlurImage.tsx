@@ -7,7 +7,7 @@ type BlurImageProps = {
 } & ImageProps;
 
 export const BlurImage = (props: BlurImageProps) => {
-  const { className, height, width, ...rest } = props;
+  const { className, height, width, alt = "", ...rest } = props;
   const [isLoading, setIsLoading] = useState(true);
 
   return (
@@ -21,6 +21,7 @@ export const BlurImage = (props: BlurImageProps) => {
             ? "scale-110 blur-2xl grayscale"
             : "scale-100 blur-0 grayscale-0"
         )}
+        alt={alt}
         {...rest}
         onLoadingComplete={() => setIsLoading(false)}
         draggable={false}

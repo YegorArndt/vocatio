@@ -22,10 +22,10 @@ export const DesignViewer = () => {
   }, []);
 
   return (
-    <div className="right-aside border bg-secondary p-5">
+    <div className="right-aside z-layout border bg-secondary p-5">
       <input
         placeholder="Search designs here..."
-        className="reset"
+        className="bg-transparent outline-none"
         value={search}
         onChange={(e) => setSearch(e.target.value)}
         autoFocus

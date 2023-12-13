@@ -45,6 +45,7 @@ const config = {
         skeleton: "var(--skeleton)",
         border: "var(--border-clr)",
         disabled: "var(--clr-disabled)",
+        input: "var(--input-clr)",
       },
       backgroundColor: {
         base: "var(--bg-base)",
@@ -57,6 +58,11 @@ const config = {
         hover: "var(--bg-hover)",
         card: "var(--bg-card)",
         border: "var(--border-clr)",
+        input: "var(--input-bg)",
+      },
+      ringColor: {
+        input: "var(--input-ring)",
+        "input-wrapper": "var(--input-wrapper-ring)",
       },
       fontSize: {
         small: "clamp(0.625rem, 0.5946rem + 0.0833vw, 0.75rem)",
@@ -148,6 +154,7 @@ const config = {
       addUtilities({ ...textColorClasses, ...headingClasses });
     }),
     require("@tailwindcss/aspect-ratio"),
+    // require("@tailwindcss/forms"),
   ],
 };
 

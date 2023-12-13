@@ -13,7 +13,7 @@ export const Vacancies = () => {
         <title>Vacancies - Vocatio</title>
         <meta
           name="description"
-          content="Free CV AI builder. Generate CVs tailored to the job you want."
+          content="Free CV AI builder. Generate CVs tailored to the job description."
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>

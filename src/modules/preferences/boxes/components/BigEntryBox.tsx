@@ -1,16 +1,21 @@
 import { api } from "~/utils";
-import { Button } from "~/components/ui/buttons/Button";
 import { Text } from "~/components/ui/inputs/Text";
 import { BlurImage } from "~/components";
-import { startCase } from "lodash-es";
 import { Wrapper } from "./Wrapper";
 import { DbBigEntry, FineTuneBoxProps } from "../types";
-import { FineTuneLink } from "./FineTuneLink";
 import { FormContext } from "../../FormContext";
-import { title } from "process";
 import { typedKeys } from "~/modules/draft/utils/common";
 import { BigEntry } from "~/modules/extension/types";
 import { LineStack } from "~/components/Spinner";
+import { Textarea } from "~/components/ui/inputs/Textarea";
+import { SaveButton } from "~/components/SaveButton";
+import { FcCheckmark } from "react-icons/fc";
+import { Button } from "~/components/ui/buttons/Button";
+import { TbRestore } from "react-icons/tb";
+import { RiDeleteBin6Line } from "react-icons/ri";
+import { useEffect, useState } from "react";
+
+const { log } = console;
 
 const filterForClient = (entries: DbBigEntry[]): BigEntry[] => {
   return entries.map((e) => {
@@ -26,71 +31,137 @@ const filterForClient = (entries: DbBigEntry[]): BigEntry[] => {
 
 export const BigEntryBox = (props: FineTuneBoxProps) => {
   const { entryFor } = props;
-  const { data: user, isLoading, isFetching } = api.users.get.useQuery();
+  const {
+    data: user,
+    isLoading: userLoading,
+    isFetching,
+  } = api.users.get.useQuery();
+  const {
+    mutate,
+    isSuccess,
+    isLoading: userUpdating,
+    reset: resetCache,
+  } = api.users.update.useMutation();
+  const [entries, setEntries] = useState<BigEntry[]>([]);
 
-  const entryNameForUser = startCase(entryFor);
-  const entries = user && user[entryFor] && filterForClient(user[entryFor]);
+  useEffect(() => {
+    if (userLoading || !user) return;
+    const entries = user[entryFor] && filterForClient(user[entryFor]);
+    setEntries(entries);
+  }, [user]);
 
   /**
    * Show skeleton if the user fine-tunes the box for the first time.
    */
   const isHydrating =
     user &&
-    !isLoading &&
+    !userLoading &&
     isFetching &&
     Object.keys(user[entryFor]).length === 0;
 
+  const onSubmit = (values: (typeof entries)[number]) => {
+    const payload = entries?.map((e) => {
+      const { place, title } = values;
+      const { place: p, title: t } = e;
+
+      if (p === place && t === title) {
+        return { ...e, ...values };
+      }
+
+      return e;
+    });
+
+    mutate({
+      [entryFor]: payload,
+    });
+  };
+
   return (
-    <Wrapper>
-      <header className="flex-between">
-        <h4 id={entryFor}>{entryNameForUser}</h4>
-        <FineTuneLink entryFor={entryFor} />
-      </header>
-      <section className="flex flex-col gap-8">
-        {isHydrating && <LineStack className="w-full gap-5 [&>*]:h-5" />}
-        {isLoading && <LineStack className="w-full gap-5 [&>*]:h-5" />}
-        {!isLoading &&
-          entries?.map((entry, i) => (
-            <FormContext
-              key={entry.title}
-              form={{
-                defaultValues: entry,
-              }}
-            >
-              {({ control, formState }) => (
-                <div className="grid grid-cols-2">
-                  <header className="flex-between">
+    <Wrapper entryFor={entryFor} className="pb-8">
+      {isHydrating && <LineStack className="w-full gap-5 [&>*]:h-5" />}
+      {userLoading && <LineStack className="w-full gap-5 [&>*]:h-5" />}
+      {!userLoading &&
+        entries?.map((entry, i) => (
+          <FormContext
+            key={entry.place + entry.period}
+            form={{
+              defaultValues: entry,
+            }}
+          >
+            {(
+              { control, formState, reset: resetForm },
+              submit,
+              updateDefaults
+            ) => (
+              <div className="grid grid-cols-[3fr_4fr] gap-4">
+                <header className="flex-y gap-4">
+                  <BlurImage
+                    src={entry.image}
+                    alt={entry.place}
+                    width={100}
+                    height={100}
+                  />
+                  <div className="flex flex-col gap-3">
+                    <Text name="place" control={control} />
                     <div className="flex-y gap-4">
-                      <BlurImage
-                        src={entry.image}
-                        alt={title}
-                        width={100}
-                        height={100}
-                      />
-                      <Text name="place" control={control} />
+                      <SaveButton
+                        className="secondary ml-0 rounded-full"
+                        isLoading={userUpdating}
+                        isSuccess={isSuccess}
+                        disabled={!formState.isDirty || userUpdating}
+                        reset={resetCache}
+                        onClick={() => submit(onSubmit)}
+                      >
+                        <FcCheckmark />
+                      </SaveButton>
+                      <Button
+                        className="secondary sm rounded-full"
+                        onClick={resetForm}
+                      >
+                        <TbRestore />
+                      </Button>
+                      <Button
+                        className="secondary sm rounded-full"
+                        onClick={() => {
+                          const { place, title } = entry;
+                          setEntries((prev) =>
+                            prev?.filter((e) => {
+                              const { place: p, title: t } = e;
+                              return !(p === place && t === title);
+                            })
+                          );
+                        }}
+                      >
+                        <RiDeleteBin6Line />
+                      </Button>
                     </div>
-                  </header>
-                  <form className="flex flex-col gap-2">
-                    {typedKeys(entry).map(
-                      (name) =>
-                        name !== "image" && (
-                          <Text key={name} name={name} control={control} />
-                        )
-                    )}
-                  </form>
-                </div>
-              )}
-            </FormContext>
-          ))}
-      </section>
-      <footer className="border-top flex-between w-full py-4">
-        <span className="clr-disabled">Add more if you need to.</span>
-        <Button
-          text="Save"
-          //   disabled={!formState.isDirty}
-          className="primary sm ml-auto w-1/5"
-        />
-      </footer>
+                  </div>
+                </header>
+                <form className="flex flex-col gap-2">
+                  {typedKeys(entry).map((name) => {
+                    const shouldRender = name !== "image" && name !== "place";
+
+                    if (!shouldRender) return null;
+
+                    const isDescription = name === "description";
+
+                    const props = {
+                      key: name,
+                      name,
+                      control,
+                      placeholder: isDescription
+                        ? `Missing description. Hit enter to generate one.`
+                        : `Missing ${name}`,
+                    };
+                    const Component = isDescription ? Textarea : Text;
+
+                    return <Component {...props} />;
+                  })}
+                </form>
+              </div>
+            )}
+          </FormContext>
+        ))}
     </Wrapper>
   );
 };

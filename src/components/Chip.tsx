@@ -9,5 +9,11 @@ type ChipProps = PropsWithChildren<{
 export const Chip = (props: ChipProps) => {
   const { text, children = text, className } = props;
 
-  return <div className={cn("chip", className)}>{children}</div>;
+  return (
+    <div
+      className={cn("flex items-center justify-center rounded-lg", className)}
+    >
+      {children}
+    </div>
+  );
 };

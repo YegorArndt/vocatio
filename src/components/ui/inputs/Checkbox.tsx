@@ -1,7 +1,5 @@
-import cn from "classnames";
 import { MouseEventHandler } from "react";
 import { Control, FieldValues, useController } from "react-hook-form";
-import { IoMdCheckmark } from "react-icons/io";
 
 type CheckboxProps<T extends FieldValues = FieldValues> = {
   name: string;
@@ -13,24 +11,25 @@ type CheckboxProps<T extends FieldValues = FieldValues> = {
 };
 
 export const Checkbox = (props: CheckboxProps) => {
-  const { control, name, height = "h-5", width = "w-5", onClick } = props;
+  const { control, name, label, onClick } = props;
   const { field } = useController({ control, name });
 
   return (
-    <label
-      className={cn("relative cursor-pointer border", height, width)}
-      onClick={onClick}
-    >
+    <div className="flex items-center">
       <input
+        id={name}
         type="checkbox"
-        className="size-full absolute inset-0 cursor-pointer opacity-0"
+        className="text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:bg-gray-700 dark:border-gray-600 h-4 w-4 rounded focus:ring-2"
         {...field}
       />
-      {field.value && (
-        <IoMdCheckmark
-          className={cn("rounded-sm bg-white text-black", height, width)}
-        />
+      {label && (
+        <label
+          htmlFor={name}
+          className="text-gray-900 dark:text-gray-300 ms-2 text-sm font-medium"
+        >
+          {label}
+        </label>
       )}
-    </label>
+    </div>
   );
 };

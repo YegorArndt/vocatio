@@ -1,31 +1,38 @@
-import { startCase } from "lodash-es";
-import { useForm } from "react-hook-form";
+import { isNil, startCase } from "lodash-es";
 import { api } from "~/utils";
-import { typedEntries } from "../../../draft/utils/common";
+import { typedEntries, typedKeys } from "../../../draft/utils/common";
 import { Text } from "~/components/ui/inputs/Text";
-import { Fragment } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { Button } from "~/components/ui/buttons/Button";
-import { Contact, User } from "@prisma/client";
+import { Contact } from "@prisma/client";
 import { Wrapper } from "./Wrapper";
 import { FormContext } from "../../FormContext";
 import { LineStack } from "~/components/Spinner";
 import { Linkedin } from "~/components/icons";
 import { Blur } from "~/components/Blur";
 import { Link } from "~/components/ui/buttons/Link";
-import { Chip } from "~/components";
+import { SaveButton } from "~/components/SaveButton";
+import { ComingSoon } from "~/components/ComingSoon";
+import { LuCopyPlus } from "react-icons/lu";
+import { Menu, MenuButton, MenuItem } from "@szhsin/react-menu";
+
+const { log } = console;
 
 type ContactValueType = string | Date | null;
 
-const toDefinedEntries = (obj: Record<string, unknown>) => {
-  return Object.fromEntries(
-    Object.entries(obj).filter(([, value]) => value != null)
-  );
-};
+const separateEntries = (obj: Record<string, unknown>) => {
+  const definedEntries = {};
+  const undefinedEntries = {};
 
-const getUndefinedEntries = (obj: Record<string, unknown>) => {
-  return Object.fromEntries(
-    Object.entries(obj).filter(([, value]) => (value = null))
-  );
+  Object.entries(obj).forEach(([key, value]) => {
+    if (isNil(value)) {
+      undefinedEntries[key] = value;
+    } else {
+      definedEntries[key] = value;
+    }
+  });
+
+  return { definedEntries, undefinedEntries };
 };
 
 const filterForClient = (contact?: Contact | null) => {
@@ -51,29 +58,50 @@ const filterForClient = (contact?: Contact | null) => {
 };
 
 export const ContactBox = () => {
-  const { data: user, isLoading } = api.users.get.useQuery();
+  const {
+    data: user,
+    isLoading: userLoading,
+    isFetched,
+  } = api.users.get.useQuery();
+  const {
+    data,
+    mutate,
+    isLoading: userUpdating,
+    isSuccess,
+    reset,
+  } = api.users.update.useMutation();
+
   const { data: url } = api.urls.get.useQuery();
   const { mutate: createUrl } = api.urls.create.useMutation();
 
-  const contact = filterForClient(user?.contact);
+  const [defaultValues, setDefaultValues] = useState<Partial<Contact> | null>(
+    null
+  );
+  const [options, setOptions] = useState<Partial<Contact> | null>(null);
 
-  const definedEntries: Partial<User> = toDefinedEntries(contact);
-  const undefinedKeys = getUndefinedEntries(contact);
+  useEffect(() => {
+    if (user?.contact && !defaultValues) {
+      const { definedEntries, undefinedEntries } = separateEntries(
+        filterForClient(user.contact)
+      );
+      setDefaultValues(definedEntries);
+      setOptions(undefinedEntries);
+    }
+  }, [user, userLoading]);
 
-  const { control, formState } = useForm({ defaultValues: definedEntries });
+  const onSubmit = (values: typeof defaultValues) => {
+    mutate({ contact: values });
+  };
 
   return (
-    <Wrapper>
-      <header className="flex-between">
-        <h4 id="contact">Contact</h4>
-      </header>
-      {isLoading && <LineStack />}
-      {!isLoading && (
+    <Wrapper entryFor="contact">
+      {userLoading && <LineStack />}
+      {!userLoading && (
         <>
           <section className="flex-between">
             <h6 className="flex-y gap-2 font-semibold">
               <Blur element={<Linkedin fontSize={30} />} /> Short Linkedin Url
-              <Chip text="Beta" className="bg-sky clr-white" />
+              <ComingSoon />
             </h6>
             <Link
               text={`✨ vocatio.io/${url?.shortUrl}.com`}
@@ -86,44 +114,94 @@ export const ContactBox = () => {
             <div className="clr-disabled">
               This URL is shown in your CVs instead of the large
               <br />
-              https://www.linkedin.com/in/
-              {user?.contact?.linkedin}.
+              <code>
+                https://www.linkedin.com/in/
+                {user?.contact?.linkedin}.
+              </code>
               <br />
               Whenever someone (likely a recruiter) clicks on this link, you
               will be notified.{" "}
             </div>
-            <Button
-              text="Regenerate"
-              onClick={void createUrl}
-              className="primary sm ml-auto w-1/5"
-            />
+            <div className="flex flex-col gap-3">
+              <Button
+                text="Regenerate"
+                onClick={void createUrl}
+                className="primary sm"
+              />
+              <Button
+                text="Disable"
+                onClick={void createUrl}
+                className="sm common rounded-md bg-red"
+              />
+            </div>
           </footer>
         </>
       )}
-      {!isLoading && (
+      {defaultValues && (
         <FormContext
           form={{
-            defaultValues: definedEntries,
+            defaultValues,
           }}
         >
-          {({ control }) => (
+          {(
+            { control, formState, handleSubmit, getValues },
+            submit,
+            updateDefaults
+          ) => (
             <>
               <form className="grid grid-cols-2 gap-3">
-                {Object.keys(definedEntries).map((key) => (
+                {typedKeys(defaultValues).map((key) => (
                   <Fragment key={key}>
                     <label htmlFor={key}>{startCase(key)}</label>
                     <Text id={key} name={key} control={control} />
                   </Fragment>
                 ))}
               </form>
+              {options && Object.keys(options).length > 0 && (
+                <Menu
+                  menuButton={
+                    <MenuButton className="secondary lg flex-y ml-4 w-1/3 gap-3">
+                      <LuCopyPlus /> Add more
+                    </MenuButton>
+                  }
+                  transition
+                  gap={5}
+                  direction="left"
+                >
+                  {typedKeys(options).map((key) => (
+                    <MenuItem
+                      key={key}
+                      onClick={() => {
+                        if (!options) return;
+
+                        const newDefaultValues = {
+                          ...defaultValues,
+                          [key]: "",
+                        };
+
+                        setOptions((prev) => {
+                          const { [key]: _, ...rest } = prev;
+                          return rest;
+                        });
+                        setDefaultValues(newDefaultValues);
+                        updateDefaults(newDefaultValues);
+                      }}
+                    >
+                      {startCase(key)}
+                    </MenuItem>
+                  ))}
+                </Menu>
+              )}
               <footer className="border-top flex-between py-4">
                 <span className="clr-disabled">
                   Expand to add more contact information.
                 </span>
-                <Button
-                  text="Save"
-                  disabled={!formState.isDirty}
-                  className="primary sm ml-auto w-1/5"
+                <SaveButton
+                  isLoading={userUpdating}
+                  isSuccess={isSuccess}
+                  reset={reset}
+                  disabled={!formState.isDirty || userUpdating}
+                  onClick={() => submit(onSubmit)}
                 />
               </footer>
             </>

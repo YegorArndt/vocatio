@@ -11,4 +11,5 @@ export const getMenuProps = (
   transition: true,
   direction,
   menuClassName: "z-dropdown",
+  portal: true,
 });

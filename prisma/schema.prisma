@@ -119,6 +119,8 @@ model EmploymentHistoryEntry {
   title       String
   user        User     @relation(fields: [userId], references: [id])
   userId      String
+  // draft draft? @relation(fields: [draftId], references: [id])
+  draftId String?
 }
 
 model RecommendationsEntry {
@@ -225,6 +227,25 @@ model User {
 
   // Cv data
   vacancies Vacancy[]
+  cvs Cv[]
+  drafts Draft[]
+}
+
+// AI generated cv representation
+model Draft {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  jobTitle String?
+  // employmentHistory EmploymentHistoryEntry[]
+  objective String?
+
+  user User @relation(fields: [userId], references: [id])
+  userId String 
+  
+  vacancy Vacancy @relation(fields: [vacancyId], references: [id])
+  vacancyId String @unique
 }
 
 model Vacancy {
@@ -244,8 +265,12 @@ model Vacancy {
   isAnnualSalary    Boolean?        @default(false) 
   salaryCurrency    Currency?          @default(USD)
   jobTitle          String?
-  description       String?          @db.Text
   professionField   ProfessionField?
+
+  summary  String          @db.Text
+  description       String          @db.Text
+  requiredSkills    String
+  
   requiredRemote    Remote?
   requiredSeniority Seniority?
   employmentType    EmploymentType?
@@ -253,13 +278,31 @@ model Vacancy {
   requiredYearsMax  String?
   requiredEducation String?
   requiredLanguages String[]
-  requiredSkills    String
+  
   sourceUrl         String
   sourceName        SourceName?
+
+  draft            Draft?
 
   @@unique([companyName, jobTitle])
 }
 
+model Cv {
+  id           String   @id @default(uuid())
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  user         User     @relation(fields: [userId], references: [id])
+  userId       String
+  name         String
+  a4           String
+  sections     Json
+  intrinsic    Json
+  font         String
+  image        String
+  pokemonImage String
+}
+
+ 
 model Url {
   id        String   @id @default(uuid())
   createdAt DateTime @default(now())

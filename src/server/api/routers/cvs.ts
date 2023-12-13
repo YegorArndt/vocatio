@@ -1,40 +1,42 @@
-import { z } from "zod";
-import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 import { TRPCError } from "@trpc/server";
+import { z } from "zod";
+import { createTRPCRouter, privateProcedure } from "~/server/api/trpc";
+
+const schema = z.object({
+  id: z.string(),
+  name: z.string(),
+  sections: z.record(z.any()),
+  intrinsic: z.record(z.any()),
+  a4: z.string(),
+  font: z.string(),
+  image: z.string(),
+  pokemonImage: z.string(),
+});
 
 export const cvsRouter = createTRPCRouter({
-  getAll: publicProcedure.query(async ({ ctx }) => {
+  create: privateProcedure.input(schema).mutation(async ({ ctx, input }) => {
     const { userId } = ctx;
 
-    if (!userId)
+    if (!userId) {
       throw new TRPCError({
         code: "UNAUTHORIZED",
-        message: "You are not authorized to perform this action",
+        message: "You must be logged in to create a user record",
       });
+    }
 
-    const cvs = await ctx.prisma.cv.findMany({
-      where: { userId },
-      take: 100,
-      orderBy: [{ createdAt: "desc" }],
+    const newCv = await ctx.prisma.cv.upsert({
+      where: {
+        id: input.id,
+      },
+      update: {
+        ...input,
+      },
+      create: {
+        ...input,
+        userId,
+      },
     });
 
-    return cvs;
+    return newCv;
   }),
-
-  getByVacancyId: publicProcedure
-    .input(
-      z.object({
-        vacancyId: z.string(),
-      })
-    )
-    .query(async ({ ctx, input }) => {
-      const { vacancyId } = input;
-
-      const vacancy = await ctx.prisma.vacancy.findUnique({
-        where: { id: vacancyId },
-        include: { cvs: true },
-      });
-
-      return vacancy?.cvs ?? [];
-    }),
 });

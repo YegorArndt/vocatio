@@ -1,11 +1,11 @@
 import { type CSSProperties } from "react";
 
 import type { SectionId } from "./sections";
-import { ListProps } from "~/modules/create/intrinsic/List";
-import { Defaults } from "../utils/getDefaults";
-import { AutoresizeProps } from "~/modules/create/intrinsic/Autoresize";
-import { SharedGroupProps } from "~/modules/create/intrinsic/groups/types";
-import { DndProviderProps } from "~/modules/create/DndProvider";
+import type { ListProps } from "~/modules/create/intrinsic/List";
+import type { Defaults } from "../utils/getDefaults";
+import type { AutoresizeProps } from "~/modules/create/intrinsic/Autoresize";
+import type { SharedGroupProps } from "~/modules/create/intrinsic/groups/types";
+import type { DndProviderProps } from "~/modules/create/DndProvider";
 
 export type ComponentToNormalize = RawComponent & {
   sectionId: SectionId;

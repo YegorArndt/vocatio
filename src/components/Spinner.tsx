@@ -1,7 +1,17 @@
 import cn from "classnames";
+import { type CSSProperties } from "react";
+
 import { Divider } from "./layout/Divider";
 
-export const Spinner = () => {
+export type DecoProps = {
+  className?: string;
+  size?: number;
+  style?: CSSProperties;
+};
+
+export const Spinner = (props: DecoProps) => {
+  const { className, size = 24 } = props;
+
   return (
     <div className="lds-ring">
       <div></div>
@@ -13,15 +23,15 @@ export const Spinner = () => {
           .lds-ring {
             display: inline-block;
             position: relative;
-            width: 24px;
-            height: 24px;
+            width: ${size}px;
+            height: ${size}px;
           }
           .lds-ring div {
             box-sizing: border-box;
             display: block;
             position: absolute;
-            width: 24px;
-            height: 24px;
+            width: ${size}px;
+            height: ${size}px;
             margin: 1px;
             border: 2px solid #fff;
             border-radius: 50%;
@@ -51,7 +61,7 @@ export const Spinner = () => {
   );
 };
 
-export const LineStack = (props: { className?: string }) => {
+export const LineStack = (props: DecoProps) => {
   const { className } = props;
 
   return (

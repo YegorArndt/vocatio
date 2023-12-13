@@ -3,7 +3,9 @@ import { type AppType } from "next/app";
 import Head from "next/head";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Inter } from "next/font/google";
+import { ToastContainer } from "react-toastify";
 
+import "react-toastify/dist/ReactToastify.css";
 import "@szhsin/react-menu/dist/index.css";
 import "@szhsin/react-menu/dist/transitions/slide.css";
 
@@ -57,6 +59,7 @@ const MyApp: AppType = ({ Component, pageProps }) => {
       </Head>
       <RouteGuard>
         <Component {...pageProps} />
+        <ToastContainer theme="dark" position="bottom-left" />
       </RouteGuard>
     </ClerkProvider>
   );

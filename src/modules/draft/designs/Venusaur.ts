@@ -15,7 +15,7 @@ const topLeft: RawComponent[] = [
       src: data.userImage,
       height: 200,
       width: 200,
-      className: "rounded-full z-1 relative",
+      className: "rounded-full",
     }),
   },
   // {
@@ -209,6 +209,7 @@ const right: RawComponent[] = [
                     sectionId: entry.id,
                     props: {
                       value: entry.description,
+                      // .replaceAll("·", "\n · "),
                       tooltip: "Description",
                     },
                   },
@@ -243,7 +244,7 @@ export const Venusaur: RawDesign = {
       id: "top-left",
       components: topLeft,
       className:
-        "top-left [&>*:first-child]:mt-[2rem] flex flex-col items-center bg-[#323B4C] text-[#fff] [&_.image]:mx-auto [&_div:not(:first-child)>.heading-2]:mt-3 [&_.text]:mb-1 [&_.text]:text-[14px] [&>*:last-child]:mb-[5rem]",
+        "top-left [&>*:first-child]:mt-[2rem] flex flex-col items-center bg-[#323B4C] text-[#fff] [&_.image]:mx-auto [&_div:not(:first-child)>.heading-2]:mt-3 [&_.text]:mb-1 [&_.text]:text-[14px] [&>*:last-child]:mb-[3rem]",
     },
     "top-right": {
       id: "top-right",

@@ -1,6 +1,9 @@
-import { motion } from "framer-motion";
 import cn from "classnames";
-import { type CSSProperties } from "react";
+import { useCallback, type CSSProperties, FormEvent } from "react";
+import { AnimatedDiv } from "~/components/AnimatedDiv";
+import { useDraftContext } from "~/modules/draft/DraftContext";
+import { useComponentContext } from "../ComponentContext";
+import { debounce } from "lodash-es";
 
 export type AutoresizeProps = {
   value?: string;
@@ -9,22 +12,34 @@ export type AutoresizeProps = {
 };
 
 export const Autoresize = (props: AutoresizeProps) => {
-  const { value, style, className } = props;
+  let { value, style, className } = props;
+  const c = useComponentContext();
+  const { updateDesign } = useDraftContext();
 
   if (!value) return null;
 
+  const debouncedUpdateDesign = useCallback(
+    debounce((text) => {
+      const newProps = { ...c.props, value: text };
+      c.props = newProps;
+      updateDesign();
+    }, 500),
+    []
+  );
+
   return (
-    <motion.div
-      initial={{ opacity: 0, y: -10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, ease: "easeOut" }}
+    <AnimatedDiv
       contentEditable
       data-placeholder={value}
       className={cn("break-words", className)}
       style={style}
       suppressContentEditableWarning
+      onInput={(e: FormEvent<HTMLDivElement>) => {
+        const { textContent } = e.currentTarget;
+        debouncedUpdateDesign(textContent);
+      }}
     >
       {value}
-    </motion.div>
+    </AnimatedDiv>
   );
 };

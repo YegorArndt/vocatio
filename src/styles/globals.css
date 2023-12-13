@@ -21,8 +21,16 @@
   --bg-secondary: #202020;
 
   --bg-hover: rgba(255, 255, 255, 0.055);
+
+  --bg-test: hsla(0, 0%, 12%, 1);
+
   --bg-card: #252525;
   --clr-card: rgba(255, 255, 255, 0.81);
+
+  --input-bg: #000;
+  --input-clr: #fff;
+  --input-ring: #333;
+  --input-wrapper-ring: #888;
 
   --border-clr: rgba(255, 255, 255, 0.13);
 
@@ -32,47 +40,6 @@
   --scrollbar-track-color: #333;
   --scrollbar-thumb-color: #888;
   --skeleton: rgba(255, 255, 255, 0.13);
-}
-
-[data-theme="dark"] {
-  --bg-base: #000;
-  --clr-base: #fff;
-
-  --bg-primary: #000;
-  --clr-primary: #fff;
-  --bg-primary-hover: #333;
-
-  --bg-secondary: #111111;
-  --clr-secondary: #888;
-  --bg-secondary-hover: #333;
-  --clr-secondary-hover: #fff;
-
-  --border-clr: #333;
-  --border-hover-clr: #888;
-
-  --scrollbar-track-color: #333;
-  --scrollbar-thumb-color: #888;
-  --skeleton: rgba(255, 255, 255, 0.13);
-
-  --input-border: #333;
-}
-
-[data-theme="light"] {
-  --bg-base: #fff;
-  --clr-base: #000;
-
-  --bg-primary: #fafafa;
-  --clr-primary: #0a0a0a;
-  --bg-primary-hover: #ccc;
-
-  --bg-secondary: var(--gray);
-  --clr-secondary: #444;
-
-  --border-clr: var(--gray);
-  --border-hover-clr: #444;
-
-  --scrollbar-track-color: lightgray;
-  --scrollbar-thumb-color: darkgray;
 }
 
 @layer base {
@@ -152,7 +119,7 @@
     width: 793px;
     flex-shrink: 0;
 
-    @apply relative;
+    @apply relative z-a4;
   }
 
   .heading-1,
@@ -185,12 +152,7 @@
     grid-area: 2 / 2 / 3 / 3;
   }
 
-  /* Chips  */
-  .chip {
-    @apply flex items-center justify-center rounded-lg;
-  }
-
-  /* Content editable div */
+  /* Content editable placeholder */
   [contentEditable="true"]:empty:before {
     content: attr(data-placeholder);
     @apply pointer-events-none select-none clr-secondary;
@@ -199,20 +161,37 @@
   .divider {
     margin: 0;
   }
+
+  /* Select  */
+  .my-react-select-container .my-react-select__control {
+    @apply border-2 border-neutral-300 bg-white hover:border-neutral-400 dark:border-neutral-700 dark:bg-neutral-700 dark:hover:border-neutral-500;
+  }
+
+  .my-react-select-container .my-react-select__control--is-focused {
+    @apply border-neutral-500 shadow-none hover:border-neutral-500 dark:border-neutral-400 dark:hover:border-neutral-400;
+  }
+
+  .my-react-select-container .my-react-select__menu {
+    @apply border-2 border-neutral-300 bg-neutral-100 dark:border-neutral-600 dark:bg-neutral-700;
+  }
+
+  .my-react-select-container .my-react-select__option {
+    @apply bg-neutral-100 text-neutral-600 hover:bg-neutral-200 dark:bg-neutral-700 dark:text-neutral-200 dark:hover:bg-neutral-800;
+  }
+
+  .my-react-select-container .my-react-select__indicator-separator {
+    @apply bg-neutral-400;
+  }
+
+  .my-react-select-container .my-react-select__input-container,
+  .my-react-select-container .my-react-select__placeholder,
+  .my-react-select-container .my-react-select__single-value {
+    @apply text-neutral-600 dark:text-neutral-200;
+  }
+  /* END Select  */
 }
 
 @layer utilities {
-  /* Chips  */
-
-  .lg:is(.chip) {
-    @apply h-10 p-2 text-medium leading-6;
-  }
-
-  .sm:is(.chip) {
-    height: 1.25rem;
-    @apply px-3 text-small;
-  }
-
   .border {
     border: 1px solid var(--border-clr);
   }
@@ -234,35 +213,12 @@
     border-right: 1px solid var(--border-clr);
   }
 
-  .dashed-bg {
-    background-image: repeating-linear-gradient(
-        0deg,
-        #26374c 0,
-        #26374c 2px,
-        transparent 2px,
-        transparent 4px
-      ),
-      repeating-linear-gradient(
-        90deg,
-        #26374c 0,
-        #26374c 2px,
-        transparent 2px,
-        transparent 4px
-      );
-  }
-
   .bg-sky {
     background: linear-gradient(to right, #3a0287, #3b7eb4);
   }
 
-  /* NEW  */
-
   .size-full {
     @apply h-full w-full;
-  }
-
-  .reset:is(input) {
-    @apply w-full bg-transparent outline-none;
   }
 
   .flex-center {
@@ -289,14 +245,6 @@
   }
 
   /* Buttons  */
-
-  .lg-width:is(button, a) {
-    width: 18.75rem;
-  }
-  .md-width:is(button, a) {
-    width: 9rem;
-  }
-
   :is(button, a)[class^="bg-"]:hover,
   :is(button, a)[class*=" bg-"]:hover {
     filter: brightness(1.1);
@@ -316,7 +264,7 @@
   }
 
   .lg:is(button, a) {
-    @apply h-10 px-3 text-medium leading-6;
+    @apply h-10 px-3 leading-6;
   }
 
   .sm:is(button, a) {
@@ -348,6 +296,28 @@
     background-color: #ccc;
   }
 
+  .secondary {
+    @apply border bg-neutral-400 text-neutral-600   hover:bg-neutral-200 dark:bg-neutral-700 dark:text-neutral-200 dark:hover:bg-neutral-800;
+    transition-property: border-color, background, color, transform, box-shadow,
+      filter;
+    transition-duration: 0.15s;
+    transition-timing-function: ease;
+  }
+
+  .outlined {
+    @apply inline-flex items-center justify-center rounded-md border;
+    background-color: transparent;
+    color: white;
+    transition-property: border-color, background, color, transform, box-shadow,
+      filter;
+    transition-duration: 0.15s;
+    transition-timing-function: ease;
+  }
+
+  .outlined:hover {
+    border-color: #fff;
+  }
+
   /* INPUTS  */
   .input-wrapper {
     display: block;
@@ -355,7 +325,6 @@
     width: 100%;
     padding: 4px 10px;
     padding-right: 0;
-
     border-radius: 5px;
     position: relative;
     height: calc(9 * 4px);
@@ -384,7 +353,7 @@
     width: 100%;
     color: #fff;
     background-color: transparent;
-    caret-color: #fff;
+    caret-color: currentColor;
     text-overflow: ellipsis;
     -webkit-appearance: none;
     appearance: none;
@@ -491,12 +460,57 @@
     --size: 320px;
   }
 
+  /* Title & Subtitle combo  */
   *:is(h1, h2, h3) + p {
     margin-block: 0.5rem 2rem;
   }
 
-  .guide {
-    @apply font-thin tracking-wide;
-    font-size: 1rem;
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    20% {
+      transform: rotate(360deg);
+      animation-timing-function: cubic-bezier(
+        0.55,
+        0.055,
+        0.675,
+        0.19
+      ); /* Very fast start */
+    }
+    40% {
+      transform: rotate(720deg);
+      animation-timing-function: cubic-bezier(
+        0.215,
+        0.61,
+        0.355,
+        1
+      ); /* Slow down */
+    }
+    60% {
+      transform: rotate(1080deg);
+      animation-timing-function: cubic-bezier(
+        0.55,
+        0.055,
+        0.675,
+        0.19
+      ); /* Very fast start */
+    }
+    80% {
+      transform: rotate(1440deg);
+      animation-timing-function: cubic-bezier(
+        0.215,
+        0.61,
+        0.355,
+        1
+      ); /* Slow down */
+    }
+    100% {
+      transform: rotate(1800deg);
+    }
+  }
+
+  .spin-animation {
+    animation: spin 3s infinite; /* Adjusted time for faster rotation */
   }
 }

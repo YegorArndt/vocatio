@@ -1,0 +1,2 @@
+        role: "user",
+        content: `I'm applying to ${vacancy.companyName} as ${vacancy.jobTitle}. Tailor my professional summary to fit this role. My summary: ${objective}. Role's requirements: ${vacancy.requiredSkills}. Make it concise and professional.`,

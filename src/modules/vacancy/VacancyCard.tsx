@@ -10,6 +10,8 @@ import { LiaExternalLinkAltSolid } from "react-icons/lia";
 import { Button } from "~/components/ui/buttons/Button";
 import { BlurImage } from "~/components";
 
+const { log } = console;
+
 export const VacancyCard = (props: { vacancy: Vacancy }) => {
   const { vacancy } = props;
   const { header, available, unavailable } = breakDown(vacancy);
@@ -30,8 +32,8 @@ export const VacancyCard = (props: { vacancy: Vacancy }) => {
           <div className="flex-y gap-5">
             <BlurImage
               src={image}
-              height={80}
-              width={80}
+              height={70}
+              width={70}
               alt={companyName}
               className="rounded-full"
             />
@@ -51,7 +53,7 @@ export const VacancyCard = (props: { vacancy: Vacancy }) => {
           <div className="grid grid-cols-2">
             <span>Posted on {sourceName}:</span>
             <em> {age!.toDateString()}</em>
-            <span>You visited it:</span>
+            <span>Visited:</span>
             <em>{createdAt.toDateString()}</em>
           </div>
         </header>

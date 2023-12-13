@@ -9,8 +9,19 @@ type Item = {
 
 export type Falsy<T> = T | null | undefined;
 
-const getSalaryRange = (min: Falsy<number>, max: Falsy<number>) =>
-  min && max ? `${min} - ${max} (annually or monthly)` : null;
+const getSalaryRange = (
+  min: Falsy<number>,
+  max: Falsy<number>,
+  isAnnualSalary: boolean
+) => {
+  const isValid = min && max;
+  if (!isValid) return null;
+
+  const salary = min === max ? min : `${min} - ${max}`;
+  const salaryType = isAnnualSalary ? "annually" : "monthly";
+
+  return `${salary} ${salaryType}`;
+};
 
 export const breakDown = (vacancy: Vacancy) => {
   const {
@@ -27,6 +38,9 @@ export const breakDown = (vacancy: Vacancy) => {
     professionField,
     updatedAt,
     image,
+    // requiredSkills,
+    // description,
+    isAnnualSalary,
     ...relevant
   } = vacancy;
 
@@ -43,7 +57,7 @@ export const breakDown = (vacancy: Vacancy) => {
   const available: Item[] = [];
   const unavailable: Item[] = [];
 
-  const salary = getSalaryRange(salaryMin, salaryMax);
+  const salary = getSalaryRange(salaryMin, salaryMax, isAnnualSalary);
   const salaryUi = vacancyUI.salary;
   const salaryArray = salary ? available : unavailable;
   salaryArray.push({ ...salaryUi, value: salary });

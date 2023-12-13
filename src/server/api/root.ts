@@ -2,9 +2,10 @@ import { createTRPCRouter } from "~/server/api/trpc";
 import { gptRouter } from "~/server/api/routers/gpt";
 import { vacanciesRouter } from "~/server/api/routers/vacancies";
 import { usersRouter } from "~/server/api/routers/users";
-import { cvsRouter } from "./routers/cvs";
-import { storiesRouter } from "./routers/stories";
 import { urlsRouter } from "./routers/urls";
+import { hfRouter } from "./routers/hf";
+import { draftsRouter } from "./routers/drafts";
+import { cvsRouter } from "./routers/cvs";
 
 /**
  * This is the primary router for your server.
@@ -14,10 +15,11 @@ import { urlsRouter } from "./routers/urls";
 export const appRouter = createTRPCRouter({
   gpt: gptRouter,
   vacancies: vacanciesRouter,
-  cvs: cvsRouter,
   users: usersRouter,
-  stories: storiesRouter,
   urls: urlsRouter,
+  hf: hfRouter,
+  drafts: draftsRouter,
+  cvs: cvsRouter,
 });
 
 // export type definition of API

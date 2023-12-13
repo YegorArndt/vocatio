@@ -53,15 +53,16 @@ const CVBuilder = (props: CVBuilderProps) => {
     id: vacancyId,
   });
   const { data: user } = api.users.get.useQuery();
+  const { data: draft } = api.drafts.getByVacancyId.useQuery({ vacancyId });
+
+  const isFetched = vacancy && user && defaultUserData && draft;
 
   return (
     <>
       <Head>
         <title>
-          {vacancy?.companyName
-            ? `CV for ${vacancy.companyName}`
-            : "Preview CV"}{" "}
-          - Vocatio
+          {vacancy?.companyName ? `CV for ${vacancy.companyName}` : "Loading"} -
+          Vocatio
         </title>
         <meta
           name="description"
@@ -69,19 +70,19 @@ const CVBuilder = (props: CVBuilderProps) => {
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      {vacancy && user && defaultUserData ? (
+      {isFetched ? (
         <DraftContext
           a4Ref={a4Ref}
           defaultUserData={defaultUserData}
           vacancy={vacancy}
-          user={user}
+          user={{ ...user, ...draft }}
         >
           {(context) => (
             <Layout toolbar={<Toolbar />}>
               <div className="two-col-grid">
                 <div
                   ref={a4Ref}
-                  className={cn("a4 main-center z-a4", context.design.a4)}
+                  className={cn("a4 main-center", context.design.a4)}
                   style={{
                     height: a4Height * pages,
                     width: a4Width,
@@ -119,6 +120,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
     throw new Error("VacancyId is not a string");
 
   await ssg.vacancies.getById.prefetch({ id: vacancyId });
+  await ssg.drafts.getByVacancyId.prefetch({ vacancyId });
 
   return {
     props: {

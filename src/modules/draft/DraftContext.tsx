@@ -55,8 +55,6 @@ export const DraftContext = (props: DraftContextInput) => {
 
   const changeDesign = (d: RawDesign) => setDesign(initDesign(d));
 
-  log(design.sections.left?.components);
-
   const context: DraftContextOutput = {
     a4Ref,
     design,

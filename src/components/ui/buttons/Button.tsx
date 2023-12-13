@@ -1,5 +1,11 @@
 import cn from "classnames";
-import type { ButtonHTMLAttributes, PropsWithChildren, ReactNode } from "react";
+import {
+  forwardRef,
+  type ButtonHTMLAttributes,
+  type PropsWithChildren,
+  type ReactNode,
+  Ref,
+} from "react";
 
 export type ButtonProps = {
   text?: string;
@@ -8,23 +14,25 @@ export type ButtonProps = {
   endIcon?: ReactNode;
 } & ButtonHTMLAttributes<HTMLButtonElement>;
 
-export const Button = (props: PropsWithChildren<ButtonProps>) => {
-  const {
-    type = "button",
-    text,
-    children = text,
-    baseCn,
-    className,
-    frontIcon,
-    endIcon,
-    ...rest
-  } = props;
+export const Button = forwardRef(
+  (props: PropsWithChildren<ButtonProps>, ref: Ref<HTMLButtonElement>) => {
+    const {
+      type = "button",
+      text,
+      children = text,
+      baseCn,
+      className,
+      frontIcon,
+      endIcon,
+      ...rest
+    } = props;
 
-  return (
-    <button type={type} className={cn(baseCn, className)} {...rest}>
-      {frontIcon && <span className="mr-2">{frontIcon}</span>}
-      {children}
-      {endIcon && <span className="ml-2">{endIcon}</span>}
-    </button>
-  );
-};
+    return (
+      <button type={type} ref={ref} className={cn(baseCn, className)} {...rest}>
+        {frontIcon && <span className="mr-2">{frontIcon}</span>}
+        {children}
+        {endIcon && <span className="ml-2">{endIcon}</span>}
+      </button>
+    );
+  }
+);

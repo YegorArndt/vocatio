@@ -6,7 +6,25 @@ import {
   publicProcedure,
 } from "~/server/api/trpc";
 
-const SkillLevelEnum = z.enum(["BASIC", "INTERMEDIATE", "ADVANCED", "EXPERT"]);
+const { log } = console;
+
+const entries = [
+  "education",
+  "employmentHistory",
+  "recommendations",
+  "certifications",
+  "awards",
+  "languages",
+  "skills",
+];
+
+const SkillLevelEnum = z.enum([
+  "BASIC",
+  "INTERMEDIATE",
+  "ADVANCED",
+  "EXPERT",
+  "NATIVE",
+]);
 
 const ProfessionFieldEnum = z.enum([
   "FRONTEND",
@@ -59,26 +77,28 @@ const UpdateSchema = z.object({
   name: z.string().optional(),
   image: z.string().optional(),
   country: z.string().optional(),
-  contact: z.object({
-    email: z.string(),
-    phone: z.string().optional(),
-    github: z.string().optional(),
-    linkedin: z.string().optional(),
-    indeed: z.string().optional(),
-    glassdoor: z.string().optional(),
-    hh: z.string().optional(),
-    facebook: z.string().optional(),
-    instagram: z.string().optional(),
-    twitter: z.string().optional(),
-    telegram: z.string().optional(),
-    skype: z.string().optional(),
-    vk: z.string().optional(),
-    website: z.string().optional(),
-    address: z.string().optional(),
-    country: z.string().optional(),
-    city: z.string().optional(),
-    zip: z.string().optional(),
-  }),
+  contact: z
+    .object({
+      email: z.string(),
+      phone: z.string().optional(),
+      github: z.string().optional(),
+      linkedin: z.string().optional(),
+      indeed: z.string().optional(),
+      glassdoor: z.string().optional(),
+      hh: z.string().optional(),
+      facebook: z.string().optional(),
+      instagram: z.string().optional(),
+      twitter: z.string().optional(),
+      telegram: z.string().optional(),
+      skype: z.string().optional(),
+      vk: z.string().optional(),
+      website: z.string().optional(),
+      address: z.string().optional(),
+      country: z.string().optional(),
+      city: z.string().optional(),
+      zip: z.string().optional(),
+    })
+    .optional(),
   jobTitle: z.string().optional(),
   professionField: ProfessionFieldEnum.optional(),
   languages: SkillSchema.optional(),
@@ -200,93 +220,74 @@ export const usersRouter = createTRPCRouter({
         });
       }
 
-      const {
-        contact,
-        languages = [],
-        skills = [],
-        education = [],
-        employmentHistory = [],
-        recommendations = [],
-        awards = [],
-        certificates = [],
-        ...rest
-      } = input;
+      const definedUser = {};
+
+      Object.entries(input).forEach(([key, value]) => {
+        if (key === "contact") {
+          definedUser[key] = {
+            update: value,
+          };
+        }
+        if (entries.includes(key) && Array.isArray(value)) {
+          definedUser[key] = {
+            deleteMany: {},
+            createMany: {
+              data: value,
+            },
+          };
+        } else if (
+          value !== null &&
+          value !== undefined &&
+          value !== "" &&
+          key !== "contact"
+        ) {
+          definedUser[key] = value;
+        }
+      });
 
       const updatedUser = await ctx.prisma.user.update({
-        where: {
-          id: userId,
-        },
-        data: {
-          ...rest,
-          contact: {
-            update: contact,
-          },
-          languages: {
-            create: languages,
-            updateMany: languages.map((language) => ({
-              where: {
-                id: language.id,
-              },
-              data: language,
-            })),
-          },
-          skills: {
-            create: skills,
-            updateMany: skills.map((skill) => ({
-              where: {
-                id: skill.id,
-              },
-              data: skill,
-            })),
-          },
-          education: {
-            create: education,
-            updateMany: education.map((entry) => ({
-              where: {
-                id: entry.id,
-              },
-              data: entry,
-            })),
-          },
-          employmentHistory: {
-            create: employmentHistory,
-            updateMany: employmentHistory.map((entry) => ({
-              where: {
-                id: entry.id,
-              },
-              data: entry,
-            })),
-          },
-          recommendations: {
-            create: recommendations,
-            updateMany: recommendations.map((entry) => ({
-              where: {
-                id: entry.id,
-              },
-              data: entry,
-            })),
-          },
-          awards: {
-            create: awards,
-            updateMany: awards.map((entry) => ({
-              where: {
-                id: entry.id,
-              },
-              data: entry,
-            })),
-          },
-          certificates: {
-            create: certificates,
-            updateMany: certificates.map((entry) => ({
-              where: {
-                id: entry.id,
-              },
-              data: entry,
-            })),
-          },
-        },
+        where: { id: userId },
+        data: definedUser,
       });
 
       return updatedUser;
+    }),
+
+  getByVacancyId: publicProcedure
+    .input(
+      z.object({
+        vacancyId: z.string(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const { vacancyId } = input;
+
+      const vacancy = await ctx.prisma.vacancy.findUnique({
+        where: {
+          id: vacancyId,
+        },
+      });
+
+      if (!vacancy) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Vacancy does not exist",
+        });
+      }
+
+      const user = await ctx.prisma.user.findUnique({
+        where: {
+          id: vacancy.userId,
+        },
+      });
+
+      if (!user) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "User does not exist",
+        });
+      }
+
+      return user.id;
     }),
 });

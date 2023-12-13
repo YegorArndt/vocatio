@@ -17,6 +17,7 @@ export type EntryFor =
 
 export type FineTuneBoxProps = {
   entryFor: EntryFor;
+  className?: string;
 };
 
 export type DbEntry = LanguageEntry | SkillEntry;

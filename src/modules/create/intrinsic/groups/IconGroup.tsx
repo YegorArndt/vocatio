@@ -7,7 +7,6 @@ import {
   MenuHeader,
   MenuItem,
 } from "@szhsin/react-menu";
-import { IoCloudUploadOutline } from "react-icons/io5";
 
 import { Autoresize } from "~/modules/create/intrinsic/Autoresize";
 import {
@@ -20,12 +19,18 @@ import {
   Twitter,
   Vk,
   X,
+  Glassdoor,
+  Gmail,
+  LinkedinColor,
 } from "~/components/icons";
 import { typedKeys } from "~/modules/draft/utils/common";
 import { Blur } from "~/components/Blur";
 import { ImageProps } from "next/image";
 import { SharedGroupProps } from "./types";
-import Image from "next/image";
+import { BlurImage } from "~/components";
+import { startCase } from "lodash-es";
+import { useDraftContext } from "~/modules/draft/DraftContext";
+import { useComponentContext } from "../../ComponentContext";
 
 const icons = {
   email: Email,
@@ -37,12 +42,14 @@ const icons = {
   twitter: Twitter,
   vk: Vk,
   x: X,
-  upload: IoCloudUploadOutline,
+  glassdoor: Glassdoor,
+  gmail: Gmail,
+  linkedinColor: LinkedinColor,
 };
 
 const BlurIcon = (props: ImageProps) => {
-  const { src, height = 20, width = 20, alt, className } = props;
-  const Icon = icons[src] || Image;
+  let { src, height = 20, width = 20, alt, className } = props;
+  const Icon = icons[src] || BlurImage;
   const icon = (
     <Icon
       src={src}
@@ -67,7 +74,16 @@ export const IconGroup = (props: SharedGroupProps) => {
     imageProps,
     ...rest
   } = props;
+
   const [filter, setFilter] = useState("");
+  const c = useComponentContext();
+  const { updateDesign } = useDraftContext();
+
+  const onImageChange = (key: keyof typeof icons) => {
+    const newProps = { ...c.props, image: key };
+    c.props = newProps;
+    updateDesign();
+  };
 
   return (
     <div className={className} {...rest}>
@@ -105,9 +121,10 @@ export const IconGroup = (props: SharedGroupProps) => {
             <MenuItem
               key={i}
               className="flex items-center gap-4 first-letter:capitalize hover:bg-transparent"
+              onClick={() => onImageChange(i)}
             >
               <BlurIcon {...rest} src={i} />
-              {i}
+              {startCase(i)}
             </MenuItem>
           ))}
       </Menu>

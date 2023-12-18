@@ -13,9 +13,9 @@ enum Currency {
   GBP
   CAD
   AUD
-  RUB 
-  UAH 
-  BYN 
+  RUB
+  UAH
+  BYN
 }
 
 enum Adjustable {
@@ -23,11 +23,10 @@ enum Adjustable {
   employmentHistory
   professionalSummary
   skills
-  location 
+  location
   languages
   education
 }
-
 
 enum SourceName {
   LINKEDIN
@@ -78,7 +77,7 @@ enum ProfessionField {
 }
 
 enum SkillLevel {
-  BEGINNER 
+  BEGINNER
   BASIC
   INTERMEDIATE
   ADVANCED
@@ -120,35 +119,35 @@ model EducationEntry {
 }
 
 model EmploymentHistoryEntry {
-  id          String   @id @default(uuid())
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  place       String
-  period      String
-  description String
-  descriptionSummary String // To minimize costs of OpenAI API
-  skills String[]
-  image       String
-  title       String
-  user        User     @relation(fields: [userId], references: [id])
-  userId      String
+  id                          String                        @id @default(uuid())
+  createdAt                   DateTime                      @default(now())
+  updatedAt                   DateTime                      @updatedAt
+  place                       String
+  period                      String
+  description                 String
+  descriptionSummary          String // To minimize costs of OpenAI API
+  skills                      String[]
+  image                       String
+  title                       String
+  user                        User                          @relation(fields: [userId], references: [id])
+  userId                      String
   draftEmploymentHistoryEntry DraftEmploymentHistoryEntry[]
 }
 
 model DraftEmploymentHistoryEntry {
-  id          String   @id @default(uuid())
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  place       String
-  period      String
-  description String
-  skills String[]
-  image       String
-  title       String
-  originalEmploymentHistoryEntry EmploymentHistoryEntry @relation(fields: [originalEmploymentHistoryEntryId], references: [id])
+  id                               String                 @id @default(uuid())
+  createdAt                        DateTime               @default(now())
+  updatedAt                        DateTime               @updatedAt
+  place                            String
+  period                           String
+  description                      String
+  skills                           String[]
+  image                            String
+  title                            String
+  originalEmploymentHistoryEntry   EmploymentHistoryEntry @relation(fields: [originalEmploymentHistoryEntryId], references: [id])
   originalEmploymentHistoryEntryId String
-  draft       Draft?   @relation(fields: [draftId], references: [id])
-  draftId     String?
+  draft                            Draft?                 @relation(fields: [draftId], references: [id])
+  draftId                          String?
 }
 
 model RecommendationsEntry {
@@ -250,58 +249,55 @@ model User {
 
   professionalSummary String? // TODO short version
 
-  contact Contact?
+  contact       Contact?
   shortLinkedin Url?
 
-  // Cv data
-  vacancies Vacancy[]
-  cvs Cv[]
-  drafts Draft[]
+  vacancies Vacancy[] @relation("UserVacancy")
+  cvs       Cv[]
+  drafts    Draft[]
 
-  adjustSlightly Adjustable[]
+  adjustSlightly   Adjustable[]
   adjustCompletely Adjustable[]
 }
 
-// AI generated cv representation
 model Draft {
   id        String   @id @default(uuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  jobTitle String?
+  professionalSummary         String?
+  jobTitle                    String?
   draftEmploymentHistoryEntry DraftEmploymentHistoryEntry[]
-  professionalSummary String?
 
-  user User @relation(fields: [userId], references: [id])
-  userId String 
-  
-  vacancy Vacancy @relation(fields: [vacancyId], references: [id])
-  vacancyId String @unique
+  // 2 relations total 
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+
+  vacancy   Vacancy @relation(fields: [vacancyId], references: [id])
+  vacancyId String
 }
 
 model Vacancy {
-  id                String           @id @default(uuid())
-  createdAt         DateTime         @default(now())
-  updatedAt         DateTime         @updatedAt
-  user              User             @relation(fields: [userId], references: [id])
-  userId            String
-  image             String?
-  companyName       String?
-  location          String?
-  country           String?
-  age               DateTime?
-  numApplicants     String?
-  salaryMin         String?
-  salaryMax         String?
-  isAnnualSalary    Boolean?        @default(false) 
-  salaryCurrency    Currency?          @default(USD)
-  jobTitle          String?
-  professionField   ProfessionField?
+  id              String           @id @default(uuid())
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  image           String?
+  companyName     String?
+  location        String?
+  country         String?
+  age             DateTime?
+  numApplicants   String?
+  salaryMin       String?
+  salaryMax       String?
+  isAnnualSalary  Boolean?         @default(false)
+  salaryCurrency  Currency?        @default(USD)
+  jobTitle        String?
+  professionField ProfessionField?
 
-  summary  String          @db.Text
-  description       String          @db.Text
-  requiredSkills    String
-  
+  summary        String @db.Text
+  description    String @db.Text
+  requiredSkills String
+
   requiredRemote    Remote?
   requiredSeniority Seniority?
   employmentType    EmploymentType?
@@ -309,11 +305,14 @@ model Vacancy {
   requiredYearsMax  String?
   requiredEducation String?
   requiredLanguages String[]
-  
-  sourceUrl         String
-  sourceName        SourceName?
 
-  draft            Draft?
+  sourceUrl  String
+  sourceName SourceName?
+
+  // 3 relations total
+  users  User[]  @relation("UserVacancy")
+  cvs    Cv[]
+  drafts Draft[]
 
   @@unique([companyName, jobTitle])
 }
@@ -322,24 +321,27 @@ model Cv {
   id           String   @id @default(uuid())
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
-  user         User     @relation(fields: [userId], references: [id])
-  userId       String
   name         String
   a4           String
   sections     Json
   intrinsic    Json
   image        String
   pokemonImage String
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  vacancyId String
+  vacancy   Vacancy @relation(fields: [vacancyId], references: [id])
 }
 
- 
 model Url {
-  id        String   @id @default(uuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  name      String
-  originalUrl       String
-  shortUrl          String
-  user      User     @relation(fields: [userId], references: [id])
-  userId    String  @unique
+  id          String   @id @default(uuid())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  name        String
+  originalUrl String
+  shortUrl    String
+  user        User     @relation(fields: [userId], references: [id])
+  userId      String   @unique
 }

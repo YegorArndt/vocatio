@@ -3,21 +3,50 @@ import { Button } from "~/components/ui/buttons/Button";
 import { downloadPdf } from "../utils";
 import { useDraftContext } from "../../draft/DraftContext";
 import { Bin } from "../../bin";
-import { BsArrowsCollapse } from "react-icons/bs";
-import { FaTextHeight } from "react-icons/fa6";
 import { IoIosCheckmarkCircleOutline } from "react-icons/io";
 import { Divider } from "~/components/layout/Divider";
 import { api } from "~/utils";
+import {
+  FocusableItem,
+  Menu,
+  MenuButton,
+  MenuDivider,
+  MenuItem,
+} from "@szhsin/react-menu";
+import { RiFontSansSerif } from "react-icons/ri";
+import { useState } from "react";
+import { BsArrowsCollapse } from "react-icons/bs";
+import { FaTextHeight } from "react-icons/fa";
+import { Chip } from "~/components";
 
 const { log } = console;
 
+const fonts = [
+  "Arial",
+  "Arial Black",
+  "Arial Narrow",
+  "Arial Rounded MT Bold",
+  "Calibri",
+  "Century Gothic",
+  "Franklin Gothic Medium",
+  "Futura",
+  "Geneva",
+  "Gill Sans",
+  "Helvetica",
+  "Impact",
+  "Lucida Grande",
+  "Optima",
+  "Segoe UI",
+  "Tahoma",
+  "Trebuchet MS",
+  "Verdana",
+  "Inter",
+];
+
 export const Toolbar = () => {
   const { user, vacancy, a4Ref, design, updateDesign } = useDraftContext();
-  const { mutate } = api.cvs.create.useMutation({
-    onSuccess: (data) => {
-      log(data);
-    },
-  });
+  const { mutate } = api.cvs.create.useMutation();
+  const [filter, setFilter] = useState("");
 
   const saveAsDraft = () => mutate(design);
 
@@ -37,15 +66,54 @@ export const Toolbar = () => {
         className="common hover flex-y gap-1"
       />
       <Bin />
+      <Menu
+        menuButton={
+          <MenuButton className="common hover flex-y gap-3">
+            <RiFontSansSerif /> {design.font}
+          </MenuButton>
+        }
+        direction="right"
+        transition
+      >
+        <FocusableItem>
+          {({ ref }) => (
+            <input
+              ref={ref}
+              type="text"
+              placeholder="Search fonts"
+              value={filter}
+              onChange={(e) => setFilter(e.target.value)}
+              className="bg-transparent p-2 outline-none"
+            />
+          )}
+        </FocusableItem>
+        <MenuDivider />
+        {fonts
+          .filter((font) => font.toLowerCase().includes(filter.toLowerCase()))
+          .map((font) => (
+            <MenuItem
+              key={font}
+              onClick={() =>
+                updateDesign({ font: font === "Inter" ? "inherit" : font })
+              }
+            >
+              {font}
+            </MenuItem>
+          ))}
+      </Menu>
       <Button
         frontIcon={<BsArrowsCollapse />}
+        endIcon={<Chip text="Soon" className="bg-sky px-1" />}
         text="Condense spacing"
         className="common hover flex-y gap-1"
+        disabled
       />
       <Button
         frontIcon={<FaTextHeight />}
         text="Condense text"
+        endIcon={<Chip text="Soon" className="bg-sky px-1" />}
         className="common hover flex-y gap-1"
+        disabled
       />
       <Divider />
       <Button

@@ -18,6 +18,16 @@ enum Currency {
   BYN 
 }
 
+enum Adjustable {
+  jobTitle
+  employmentHistory
+  professionalSummary
+  skills
+  location 
+  languages
+  education
+}
+
 
 enum SourceName {
   LINKEDIN
@@ -68,6 +78,7 @@ enum ProfessionField {
 }
 
 enum SkillLevel {
+  BEGINNER 
   BASIC
   INTERMEDIATE
   ADVANCED
@@ -115,12 +126,29 @@ model EmploymentHistoryEntry {
   place       String
   period      String
   description String
+  descriptionSummary String // To minimize costs of OpenAI API
+  skills String[]
   image       String
   title       String
   user        User     @relation(fields: [userId], references: [id])
   userId      String
-  // draft draft? @relation(fields: [draftId], references: [id])
-  draftId String?
+  draftEmploymentHistoryEntry DraftEmploymentHistoryEntry[]
+}
+
+model DraftEmploymentHistoryEntry {
+  id          String   @id @default(uuid())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  place       String
+  period      String
+  description String
+  skills String[]
+  image       String
+  title       String
+  originalEmploymentHistoryEntry EmploymentHistoryEntry @relation(fields: [originalEmploymentHistoryEntryId], references: [id])
+  originalEmploymentHistoryEntryId String
+  draft       Draft?   @relation(fields: [draftId], references: [id])
+  draftId     String?
 }
 
 model RecommendationsEntry {
@@ -220,7 +248,7 @@ model User {
   awards            AwardsEntry[]
   certificates      CertificatesEntry[]
 
-  objective String?
+  professionalSummary String? // TODO short version
 
   contact Contact?
   shortLinkedin Url?
@@ -229,6 +257,9 @@ model User {
   vacancies Vacancy[]
   cvs Cv[]
   drafts Draft[]
+
+  adjustSlightly Adjustable[]
+  adjustCompletely Adjustable[]
 }
 
 // AI generated cv representation
@@ -238,8 +269,8 @@ model Draft {
   updatedAt DateTime @updatedAt
 
   jobTitle String?
-  // employmentHistory EmploymentHistoryEntry[]
-  objective String?
+  draftEmploymentHistoryEntry DraftEmploymentHistoryEntry[]
+  professionalSummary String?
 
   user User @relation(fields: [userId], references: [id])
   userId String 
@@ -297,7 +328,6 @@ model Cv {
   a4           String
   sections     Json
   intrinsic    Json
-  font         String
   image        String
   pokemonImage String
 }

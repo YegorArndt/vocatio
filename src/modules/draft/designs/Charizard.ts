@@ -106,7 +106,7 @@ const rightComponents: RawComponent[] = [
   },
   {
     type: "text",
-    id: "objective",
+    id: "professionalSummary",
     props: {
       value:
         "I am a frontend developer with 3 years of experience. I am looking for a job in a company with a friendly team and interesting projects.",

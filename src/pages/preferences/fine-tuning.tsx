@@ -24,6 +24,9 @@ import { Layout } from "~/components/layout/Layout";
 import { Button } from "~/components/ui/buttons/Button";
 import { typedKeys } from "~/modules/draft/utils/common";
 import { preferencesToolbar } from "~/modules/preferences/constants";
+import { Chip } from "~/components";
+
+const { log } = console;
 
 type SectionIds = "adjust completely" | "adjust slightly" | "do not adjust";
 
@@ -31,6 +34,10 @@ type Item = {
   id: string;
   sectionId: SectionIds;
   label: string;
+};
+
+type Container = {
+  [key in SectionIds]: Item[];
 };
 
 const subtitles = {
@@ -43,8 +50,8 @@ const subtitles = {
 
 const recommended = {
   "adjust completely": ["job title"],
-  "adjust slightly": ["employment history", "objective", "education", "skills"],
-  "do not adjust": ["location", "languages"],
+  "adjust slightly": ["employment history", "professionalSummary", "skills"],
+  "do not adjust": ["location", "languages", "education"],
 };
 
 const SortableItem = ({ id, label }) => {
@@ -76,6 +83,8 @@ const Section = ({ id, items }: { id: SectionIds; items: Item[] }) => {
 
   // Style to ensure the section has a minimum height
 
+  const isBeta = id === "adjust slightly";
+
   return (
     <SortableContext
       id={id}
@@ -87,12 +96,14 @@ const Section = ({ id, items }: { id: SectionIds; items: Item[] }) => {
         className="flex flex-col gap-2 rounded-md border p-5"
       >
         <div>
-          <h3>{startCase(id)}</h3>
-          <p className="clr-disabled">{subtitles[id]}</p>
+          <h3 className="flex-y gap-3">
+            {startCase(id)}{" "}
+            {isBeta && <Chip text="Beta" className="bg-sky px-3 text-sm" />}
+          </h3>
+          <p className="h-11 clr-disabled">{subtitles[id]}</p>
         </div>
         {items.length > 0 &&
           items.map((props) => <SortableItem key={props.id} {...props} />)}
-
         {items.length === 0 && (
           <div className="clr-disabled">
             Recommended:
@@ -121,14 +132,9 @@ const initialContainers = {
       label: "Employment History",
     },
     {
-      id: "objective",
+      id: "professionalSummary",
       sectionId: "adjust slightly",
-      label: "Objective",
-    },
-    {
-      id: "education",
-      sectionId: "adjust slightly",
-      label: "Education",
+      label: "professionalSummary",
     },
     {
       id: "skills",
@@ -147,6 +153,11 @@ const initialContainers = {
       sectionId: "do not adjust",
       label: "Languages",
     },
+    {
+      id: "education",
+      sectionId: "adjust slightly",
+      label: "Education",
+    },
   ],
 };
 
@@ -162,8 +173,8 @@ const CustomizePage = () => {
     })
   );
 
-  const findContainer = (itemId) => {
-    return Object.keys(containers).find((containerId) =>
+  const findContainer = (itemId: string) => {
+    return typedKeys(containers).find((containerId) =>
       containers[containerId].some((item) => item.id === itemId)
     );
   };
@@ -172,7 +183,13 @@ const CustomizePage = () => {
     setActiveId(active.id as string);
   };
 
-  const handleDragOver = ({ active, over }) => {
+  const handleDragOver = ({
+    active,
+    over,
+  }: {
+    active: { id: string };
+    over: { id: string };
+  }) => {
     if (over) {
       const overContainerId = findContainer(over.id);
       const activeContainerId = findContainer(active.id);
@@ -195,7 +212,7 @@ const CustomizePage = () => {
             activeItems.splice(
               overIndex,
               0,
-              prev[activeContainerId].find((item) => item.id === active.id)
+              prev[activeContainerId].find((item) => item.id === active.id)!
             );
             newState[activeContainerId] = activeItems;
           } else {
@@ -213,24 +230,18 @@ const CustomizePage = () => {
     }
   };
 
-  const handleDragEnd = ({ active, over }) => {
-    // Logic to handle drag end, finalize item positions
-  };
-
   return (
     <Layout toolbar={preferencesToolbar}>
       <section className="content">
-        <h1>Customize how Vocatio makes adjustments.</h1>
+        <h1>Fine-tune Vocatio's adjustments.</h1>
         <p>
-          Drag and drop the items between the sections to customize the
-          adjustments.
+          Drag and drop to decide how AI should adjust your CV to the vacancy.
         </p>
         <DndContext
           sensors={sensors}
           collisionDetection={closestCenter}
           onDragStart={handleDragStart}
           onDragOver={handleDragOver}
-          onDragEnd={handleDragEnd}
         >
           <div className="grid grid-cols-3 gap-8">
             {typedKeys(containers).map((containerId) => (
@@ -252,10 +263,12 @@ const CustomizePage = () => {
             frontIcon={<TbRestore />}
             text="Restore defaults"
             className="primary sm min-w-[150px]"
+            onClick={() => setContainers(initialContainers)}
           />
         </footer>
       </section>
     </Layout>
   );
 };
+
 export default CustomizePage;

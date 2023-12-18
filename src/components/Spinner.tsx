@@ -1,13 +1,14 @@
 import cn from "classnames";
-import { type CSSProperties } from "react";
+import { PropsWithChildren, type CSSProperties, Fragment } from "react";
 
 import { Divider } from "./layout/Divider";
 
-export type DecoProps = {
+export type DecoProps = PropsWithChildren<{
   className?: string;
   size?: number;
   style?: CSSProperties;
-};
+  length?: number;
+}>;
 
 export const Spinner = (props: DecoProps) => {
   const { className, size = 24 } = props;
@@ -61,15 +62,75 @@ export const Spinner = (props: DecoProps) => {
   );
 };
 
-export const LineStack = (props: DecoProps) => {
+export const CardSkeleton = () => {
+  return (
+    <div className="flex flex-col rounded-md border bg-card [&>*]:p-4">
+      <header className="flex-y gap-8 [&>*]:rounded-full">
+        <i className="skeleton h-[70px] min-w-[70px]" />
+        <i className="skeleton h-5 w-full" />
+        <i className="skeleton h-5 w-8" />
+      </header>
+      <LineStack
+        length={3}
+        className="ml-1 !gap-0 [&>*:first-child]:max-w-[180px]"
+      />
+      <LineStack
+        length={1}
+        className="border-top border-bottom [&>*]:flex-row-reverse [&>*]:justify-between"
+      />
+      <LineStack className="!flex-row [&>*]:basis-[30%]" />
+    </div>
+  );
+};
+
+export const CardStack = (props: DecoProps) => {
+  const { className, length = 6 } = props;
+
+  return (
+    <div className={cn("card-grid", className)}>
+      {Array.from({ length }).map((_, i) => (
+        <CardSkeleton key={i} />
+      ))}
+    </div>
+  );
+};
+
+export const Line = (props: DecoProps) => {
   const { className } = props;
 
   return (
-    <div className={cn("flex w-1/2 flex-col gap-3", className)}>
-      {Array.from({ length: 5 }).map((_, i) => (
-        <div key={i} className="skeleton h-2 w-full rounded-md" />
+    <div className={cn("flex-y h-5 w-full gap-2", className)}>
+      <div className="skeleton h-3 w-3 rounded-full" />
+      <p className="skeleton h-2 w-1/2 rounded-full" />
+    </div>
+  );
+};
+
+export const LineStack = (props: DecoProps) => {
+  const { className, length = 2 } = props;
+
+  return (
+    <div className={cn("flex flex-col gap-2", className)}>
+      {Array.from({ length }).map((_, i) => (
+        <Line key={i} />
       ))}
     </div>
+  );
+};
+
+export const Lines = () => {
+  return (
+    <Fragment>
+      <Line />
+      <Divider />
+      <LineStack />
+      <Divider className="mt-4" />
+      <Line />
+      <Divider />
+      <LineStack length={5} />
+      <Divider className="mt-4" />
+      <Line />
+    </Fragment>
   );
 };
 
@@ -97,6 +158,55 @@ export const SpinnerWithLayout = (props: { text?: string }) => {
           </div>
         </div>
       </main>
+    </div>
+  );
+};
+
+export const EntryHydrationSkeleton = () => {
+  return (
+    <div className="flex flex-col gap-5">
+      <div className="grid grid-cols-2 gap-5">
+        {Array.from({ length: 4 }).map((_, i) => (
+          <div className="skeleton h-11 rounded-md" />
+        ))}
+      </div>
+      <div className="skeleton h-11 w-full rounded-md" />
+      <footer className="border-top flex-between [&>*]:skeleton py-5 [&>*]:rounded-md">
+        <div className="h-5 w-[200px]" />
+        <div className="h-8 w-[150px]" />
+      </footer>
+    </div>
+  );
+};
+
+export const BigEntryHydrationSkeleton = () => {
+  return (
+    <div className="flex flex-col gap-5">
+      <div className="grid grid-cols-[2fr_3fr] gap-9">
+        <section className="flex-y gap-3">
+          <div className="skeleton h-[100px] min-w-[100px] rounded-md" />
+          <div className="flex w-full flex-col gap-2">
+            <div className="skeleton h-8 w-full rounded-md" />
+            <div className="flex-y gap-2">
+              {Array.from({ length: 3 }).map((_, i) => (
+                <div className="skeleton h-5 w-5 rounded-md" />
+              ))}
+            </div>
+          </div>
+        </section>
+        <section className="flex flex-col gap-3">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <div
+              className={cn("skeleton h-8 rounded-md", {
+                "h-[114px]": i === 2,
+              })}
+            />
+          ))}
+        </section>
+      </div>
+      <footer className="border-top [&>*]:skeleton py-5 [&>*]:rounded-md">
+        <div className="ml-auto h-8 w-[150px]" />
+      </footer>
     </div>
   );
 };

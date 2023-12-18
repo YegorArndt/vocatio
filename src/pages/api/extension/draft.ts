@@ -1,13 +1,42 @@
 import { ChatCompletionRequestMessage, Configuration, OpenAIApi } from "openai";
 import { NextApiRequest, NextApiResponse } from "next";
-import { PrismaClient, Vacancy } from "@prisma/client";
+import {
+  DraftEmploymentHistoryEntry,
+  PrismaClient,
+  Vacancy,
+} from "@prisma/client";
 import { HfInference } from "@huggingface/inference";
+import jwt from "jsonwebtoken";
+import { pick } from "lodash-es";
+
 const fs = require("fs");
+
+const { log } = console;
 
 type RequestBody = {
   vacancy: Vacancy;
   userId: string;
   shouldGenerateDraft: boolean;
+};
+
+const extractEnhanced = (enhancedContent: string) => {
+  if (!enhancedContent) return null;
+
+  // Split the response into summary and histories
+  const [summary, historiesContent] = enhancedContent.split(/(?=@0)/, 2);
+
+  // Extract employment histories into an object
+  const histories = {};
+  const historyRegex = /@(\d+): ([\s\S]*?)(?=@\d+:|$)/g;
+  let match;
+
+  while ((match = historyRegex.exec(historiesContent)) !== null) {
+    const historyIndex = match[1];
+    const historyText = match[2].trim();
+    histories[historyIndex] = historyText;
+  }
+
+  return { summary: summary.trim(), histories };
 };
 
 const publicKey = fs.readFileSync("secret/public.pem", "utf8");
@@ -42,11 +71,11 @@ export default async function handler(
     if (req.method !== "POST")
       return res.status(405).send({ message: "Only POST requests allowed" });
 
-    // if (!publicKey) throw new Error("Public key not found");
+    if (!publicKey) throw new Error("Public key not found");
     /**
      * Verify token
      */
-    // jwt.verify(token, publicKey);
+    jwt.verify(token, publicKey);
 
     const {
       vacancy,
@@ -118,32 +147,55 @@ export default async function handler(
     /**
      * 2. Create Draft User Object.
      */
-    const objective = user.objective || "";
+    const professionalSummary = user.professionalSummary || "";
+    const employmentHistories = user.employmentHistory.map(
+      (x, i) => `@${i}: ${x.descriptionSummary}`
+    );
     const messages: ChatCompletionRequestMessage[] = [
       {
         role: "user",
-        content: `Revise my professional summary for a job application, keeping it personalized and concise.
+        content: `Revise my professional summary, and employment histories for a job application.
 
         Original Summary:
-        ${objective}
+        ${professionalSummary}
+        Employment Histories:
+        ${employmentHistories}
         
         Job Details:
-        
         Company Name: ${vacancy.companyName}.
         Job Title: ${vacancy.jobTitle}.
         Job Requirements: ${vacancy.requiredSkills}.
+
         Request:
-        Adapt my summary to fit the job, addressing the company. Max 5 sentences, professional tone.`,
+        Adapt my summary to fit the job, addressing the company. Max 5 sentences for summary. Adapt my employment histories to fit the job. Prefix histories with "@" and its number. Keep professional tone.`,
       },
     ];
-    const enhancedObjective = await applyGpt(messages);
+    const enhanced = await applyGpt(messages);
+    const { summary: enhancedSummary = professionalSummary, histories } =
+      extractEnhanced(enhanced?.content);
+
+    log("mmm bitch", histories);
+
+    const draftEmploymentHistoryEntry: Partial<DraftEmploymentHistoryEntry>[] =
+      user.employmentHistory.map((entry, index) => {
+        const matchFromEnhanced = histories[index];
+
+        return {
+          ...pick(entry, ["skills", "period", "place", "title", "image"]),
+          originalEmploymentHistoryEntryId: entry.id,
+          description: matchFromEnhanced || entry.description,
+        };
+      });
 
     await prisma.draft.create({
       data: {
-        objective: enhancedObjective?.content ?? objective,
+        professionalSummary: enhancedSummary,
         jobTitle: vacancy.jobTitle,
         userId,
         vacancyId: newVacancy.id,
+        draftEmploymentHistoryEntry: {
+          create: draftEmploymentHistoryEntry,
+        },
       },
     });
 

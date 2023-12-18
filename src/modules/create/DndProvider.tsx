@@ -216,11 +216,8 @@ export const DndProvider = (props: DndProviderProps) => {
             newProps.className ? newProps.className.split(" ") : []
           );
 
-          if (classSet.has(className)) {
-            classSet.delete(className);
-          } else {
-            classSet.add(className);
-          }
+          if (classSet.has(className)) classSet.delete(className);
+          else classSet.add(className);
 
           newProps.className = Array.from(classSet).join(" ");
           newComponent.props = newProps;

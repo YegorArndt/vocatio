@@ -49,15 +49,16 @@ export const getDefaults = (
   vacancy: Vacancy
 ) => {
   const topSkills = findStringsInText(vacancy.requiredSkills!, user.skills);
-  const linkedin = `vocatio.io/${user.shortLinkedin?.shortUrl}.com`;
+  const linkedin = `vocat.io/${user.shortLinkedin?.shortUrl}.com`;
 
   return {
+    vacancy,
     logo: vacancy.image,
     companyName: vacancy.companyName,
     topSkills,
     name: user.name || defaultUserData.fullName!,
     jobTitle: vacancy.jobTitle || user.jobTitle!,
-    objective: user.objective || "",
+    professionalSummary: user.professionalSummary || "",
     email:
       user.contact?.email ??
       defaultUserData.emailAddresses[0]?.emailAddress ??
@@ -86,7 +87,7 @@ export const defaultsKeys = [
   "topSkills",
   "name",
   "jobTitle",
-  "objective",
+  "professionalSummary",
   "email",
   "phone-number",
   "contact",

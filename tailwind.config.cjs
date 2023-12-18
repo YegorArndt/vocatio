@@ -9,24 +9,6 @@ const plugin = require("tailwindcss/plugin");
 const config = {
   content: ["./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
-    screens: {
-      "up-lg": { min: "942px" },
-      "down-lg": { max: "940px" },
-      "up-md": { min: "913px" },
-      "down-md": { max: "539px" },
-      "up-sm": { min: "551px" },
-      "down-sm": { max: "324px" },
-      "up-desktop": { min: "1281px" },
-      "down-desktop": { max: "1279px" },
-      "up-tablet": { min: "821px" },
-      "down-tablet": { max: "767px" },
-      "up-phone": { min: "421px" },
-      "down-phone": { max: "299px" },
-      phone: { min: "300px", max: "420px" },
-      tablet: { min: "768px", max: "820px" },
-      sm: { min: "325px", max: "550px" },
-      md: { min: "540px", max: "912px" },
-    },
     extend: {
       colors: {
         base: "var(--clr-base)",
@@ -60,16 +42,9 @@ const config = {
         border: "var(--border-clr)",
         input: "var(--input-bg)",
       },
-      ringColor: {
-        input: "var(--input-ring)",
-        "input-wrapper": "var(--input-wrapper-ring)",
-      },
       fontSize: {
-        small: "clamp(0.625rem, 0.5946rem + 0.0833vw, 0.75rem)",
         default: "clamp(0.75rem, 0.7232rem + 0.1429vw, 0.875rem)",
-        medium: "clamp(0.875rem, 0.8310rem + 0.2167vw, 1rem);",
       },
-      fontFamily: {},
       zIndex: {
         modal: 50,
         dropdown: 49,

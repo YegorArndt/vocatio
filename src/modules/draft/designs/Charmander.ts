@@ -40,7 +40,7 @@ const bodyLeft: RawComponent[] = [
   },
   {
     type: "text",
-    id: "objective",
+    id: "professionalSummary",
   },
   {
     type: "heading-3",

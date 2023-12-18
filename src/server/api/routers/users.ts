@@ -108,7 +108,7 @@ const UpdateSchema = z.object({
   recommendations: EntrySchema.optional(),
   awards: EntrySchema.optional(),
   certificates: EntrySchema.optional(),
-  objective: z.string().optional(),
+  professionalSummary: z.string().optional(),
 });
 
 export type UserUpdateInput = z.infer<typeof UpdateSchema>;

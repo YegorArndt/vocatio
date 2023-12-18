@@ -3,6 +3,8 @@ import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 import { Configuration, OpenAIApi } from "openai";
 
+const { log } = console;
+
 const configuration = new Configuration({
   apiKey: process.env.OPENAI_API_KEY,
 });
@@ -12,42 +14,33 @@ export const applyGpt = async (content: string) => {
   const response = await openai.createChatCompletion({
     model: "gpt-3.5-turbo-1106",
     messages: [{ role: "user", content }],
-    temperature: 0.7,
-    max_tokens: 300,
   });
 
   return response?.data?.choices?.[0]?.message;
 };
 
 export const gptRouter = createTRPCRouter({
-  enhance: publicProcedure
+  adjust: publicProcedure
     .input(
       z.object({
-        vacancyId: z.string(),
-        // employmentHistoryDescription: z.string(),
+        context: z.string(),
+        textToAdjust: z.string(),
       })
     )
-    .query(async ({ input, ctx }) => {
-      const { vacancyId } = input;
+    .mutation(async ({ input, ctx }) => {
+      const { context, textToAdjust } = input;
 
-      if (!vacancyId)
+      if (!context || !textToAdjust)
         throw new TRPCError({
           code: "BAD_REQUEST",
-          message: "Missing vacancyId.",
+          message: "Missing arguments.",
         });
 
-      const user = await ctx.prisma.user.findUnique({
-        where: { id: "user_2ZEYNMvmeOEDARE0SSqtQnPvi6h" },
-        include: { employmentHistory: true },
-      });
-      const first = user?.objective;
+      const prompt = `Employment history: ${textToAdjust}. Required skills: ${context}. Rewrite employment history using key words from required skills. Ignore everything about education. Write in the first person. Avoid opening or closing phrases.`;
 
-      const vacancy = await ctx.prisma.vacancy.findUnique({
-        where: { id: vacancyId },
-      });
+      log(prompt);
 
-      const content = `Adjust this objective ${first} to this vacancy ${vacancy?.description}`;
-      const enhanced = await applyGpt(content);
+      const enhanced = await applyGpt(prompt);
 
       if (!enhanced)
         throw new TRPCError({
@@ -55,6 +48,6 @@ export const gptRouter = createTRPCRouter({
           message: "Failed to get completion from OpenAI.",
         });
 
-      return enhanced;
+      return enhanced.content;
     }),
 });

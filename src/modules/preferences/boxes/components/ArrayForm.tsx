@@ -15,7 +15,7 @@ type ArrayFormProps = {
 
 export const ArrayForm = (props: ArrayFormProps) => {
   const { labelOptions, valueOptions } = props;
-  const { control } = useFormContext();
+  const { control, getValues } = useFormContext();
   const { fields, remove, insert } = useFieldArray({
     control,
     name: "entries",
@@ -34,6 +34,9 @@ export const ArrayForm = (props: ArrayFormProps) => {
                 control={control}
                 name={`entries.${index}.name`}
                 options={labelOptions}
+                noOptionsMessage={() =>
+                  "Type your custom skill or visit advanced fine-tuning to get suggestions"
+                }
               />
               <div className="flex-y gap-2">
                 <Select

@@ -11,10 +11,12 @@ export type TextProps<T extends FieldValues = FieldValues> = {
   placeholder?: string;
   id?: string;
   className?: string;
+  disabled?: boolean;
 };
 
 export const Text = (props: TextProps) => {
-  const { name, control, onClick, placeholder, id, className } = props;
+  const { name, control, onClick, placeholder, id, className, disabled } =
+    props;
   const { field } = useController({ control, name });
 
   return (
@@ -28,6 +30,7 @@ export const Text = (props: TextProps) => {
         autoCorrect="off"
         placeholder={placeholder}
         id={id}
+        disabled={disabled}
         {...field}
       />
     </div>

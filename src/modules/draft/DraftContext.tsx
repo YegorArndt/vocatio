@@ -47,10 +47,11 @@ export const DraftContext = (props: DraftContextInput) => {
 
   const [design, setDesign] = useState<Design>(initialDesign);
 
-  const updateDesign = () =>
+  const updateDesign = (newDesign?: Partial<Design>) =>
     setDesign((d) => ({
       ...d,
       sections: updateSections(a4Ref),
+      ...newDesign,
     }));
 
   const changeDesign = (d: RawDesign) => setDesign(initDesign(d));

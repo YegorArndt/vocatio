@@ -1,20 +1,24 @@
-import { isNil, startCase } from "lodash-es";
+import cn from "classnames";
+import { get, isNil, startCase } from "lodash-es";
 import { api } from "~/utils";
 import { typedEntries, typedKeys } from "../../../draft/utils/common";
 import { Text } from "~/components/ui/inputs/Text";
-import { Fragment, useEffect, useState } from "react";
-import { Button } from "~/components/ui/buttons/Button";
+import { useEffect, useState } from "react";
 import { Contact } from "@prisma/client";
 import { Wrapper } from "./Wrapper";
 import { FormContext } from "../../FormContext";
 import { LineStack } from "~/components/Spinner";
-import { Linkedin } from "~/components/icons";
-import { Blur } from "~/components/Blur";
-import { Link } from "~/components/ui/buttons/Link";
 import { SaveButton } from "~/components/SaveButton";
-import { ComingSoon } from "~/components/ComingSoon";
-import { LuCopyPlus } from "react-icons/lu";
-import { Menu, MenuButton, MenuItem } from "@szhsin/react-menu";
+import {
+  FocusableItem,
+  Menu,
+  MenuButton,
+  MenuHeader,
+  MenuItem,
+} from "@szhsin/react-menu";
+import { LuPlusCircle } from "react-icons/lu";
+import { icons } from "~/constants";
+import { AnimatedDiv } from "~/components/AnimatedDiv";
 
 const { log } = console;
 
@@ -58,22 +62,15 @@ const filterForClient = (contact?: Contact | null) => {
 };
 
 export const ContactBox = () => {
+  const { data: user, isLoading: userLoading } = api.users.get.useQuery();
   const {
-    data: user,
-    isLoading: userLoading,
-    isFetched,
-  } = api.users.get.useQuery();
-  const {
-    data,
     mutate,
     isLoading: userUpdating,
     isSuccess,
     reset,
   } = api.users.update.useMutation();
 
-  const { data: url } = api.urls.get.useQuery();
-  const { mutate: createUrl } = api.urls.create.useMutation();
-
+  const [filter, setFilter] = useState("");
   const [defaultValues, setDefaultValues] = useState<Partial<Contact> | null>(
     null
   );
@@ -96,106 +93,87 @@ export const ContactBox = () => {
   return (
     <Wrapper entryFor="contact">
       {userLoading && <LineStack />}
-      {!userLoading && (
-        <>
-          <section className="flex-between">
-            <h6 className="flex-y gap-2 font-semibold">
-              <Blur element={<Linkedin fontSize={30} />} /> Short Linkedin Url
-              <ComingSoon />
-            </h6>
-            <Link
-              text={`✨ vocatio.io/${url?.shortUrl}.com`}
-              to={`https://localhost:3000/${url?.shortUrl}.com`}
-              className="hover:underline"
-              newTab
-            />
-          </section>
-          <footer className="border-top border-bottom flex-between py-4">
-            <div className="clr-disabled">
-              This URL is shown in your CVs instead of the large
-              <br />
-              <code>
-                https://www.linkedin.com/in/
-                {user?.contact?.linkedin}.
-              </code>
-              <br />
-              Whenever someone (likely a recruiter) clicks on this link, you
-              will be notified.{" "}
-            </div>
-            <div className="flex flex-col gap-3">
-              <Button
-                text="Regenerate"
-                onClick={void createUrl}
-                className="primary sm"
-              />
-              <Button
-                text="Disable"
-                onClick={void createUrl}
-                className="sm common rounded-md bg-red"
-              />
-            </div>
-          </footer>
-        </>
-      )}
       {defaultValues && (
         <FormContext
           form={{
             defaultValues,
           }}
         >
-          {(
-            { control, formState, handleSubmit, getValues },
-            submit,
-            updateDefaults
-          ) => (
+          {({ control, formState }, submit, updateDefaults) => (
             <>
-              <form className="grid grid-cols-2 gap-3">
+              <form className="flex flex-col gap-3">
                 {typedKeys(defaultValues).map((key) => (
-                  <Fragment key={key}>
+                  <AnimatedDiv key={key} className="grid grid-cols-2 gap-3">
                     <label htmlFor={key}>{startCase(key)}</label>
-                    <Text id={key} name={key} control={control} />
-                  </Fragment>
+                    <Text
+                      id={key}
+                      name={key}
+                      control={control}
+                      placeholder="Leave blank if not needed"
+                    />
+                  </AnimatedDiv>
                 ))}
               </form>
               {options && Object.keys(options).length > 0 && (
                 <Menu
                   menuButton={
-                    <MenuButton className="secondary lg flex-y ml-4 w-1/3 gap-3">
-                      <LuCopyPlus /> Add more
+                    <MenuButton className="secondary lg flex-y ml-4 w-1/3 gap-3 rounded-md">
+                      <LuPlusCircle />
+                      Add more
                     </MenuButton>
                   }
                   transition
-                  gap={5}
+                  gap={10}
                   direction="left"
                 >
-                  {typedKeys(options).map((key) => (
-                    <MenuItem
-                      key={key}
-                      onClick={() => {
-                        if (!options) return;
+                  <MenuHeader>Type to filter</MenuHeader>
+                  <FocusableItem>
+                    {({ ref }) => (
+                      <input
+                        ref={ref}
+                        type="text"
+                        placeholder="Type to filter"
+                        value={filter}
+                        onChange={(e) => setFilter(e.target.value)}
+                        className={cn(
+                          "border-gray-300 focus:border-gray-500 w-full border-b bg-transparent p-2 focus:outline-none"
+                        )}
+                      />
+                    )}
+                  </FocusableItem>
+                  {typedKeys(options)
+                    .filter((key) =>
+                      key.toUpperCase().includes(filter.trim().toUpperCase())
+                    )
+                    .map((key) => {
+                      const Icon = get(icons, key) ?? icons.diamond;
 
-                        const newDefaultValues = {
-                          ...defaultValues,
-                          [key]: "",
-                        };
+                      return (
+                        <MenuItem
+                          key={key}
+                          onClick={() => {
+                            if (!options) return;
 
-                        setOptions((prev) => {
-                          const { [key]: _, ...rest } = prev;
-                          return rest;
-                        });
-                        setDefaultValues(newDefaultValues);
-                        updateDefaults(newDefaultValues);
-                      }}
-                    >
-                      {startCase(key)}
-                    </MenuItem>
-                  ))}
+                            const newDefaultValues = {
+                              ...defaultValues,
+                              [key]: options[key],
+                            };
+
+                            setOptions((prev) => {
+                              const { [key]: _, ...rest } = prev;
+                              return rest;
+                            });
+                            setDefaultValues(newDefaultValues);
+                            updateDefaults(newDefaultValues);
+                          }}
+                        >
+                          <Icon /> &nbsp;&nbsp;{startCase(key)}
+                        </MenuItem>
+                      );
+                    })}
                 </Menu>
               )}
               <footer className="border-top flex-between py-4">
-                <span className="clr-disabled">
-                  Expand to add more contact information.
-                </span>
                 <SaveButton
                   isLoading={userUpdating}
                   isSuccess={isSuccess}

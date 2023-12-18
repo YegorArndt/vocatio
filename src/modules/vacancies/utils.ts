@@ -38,8 +38,8 @@ export const breakDown = (vacancy: Vacancy) => {
     professionField,
     updatedAt,
     image,
-    // requiredSkills,
-    // description,
+    requiredSkills,
+    description,
     isAnnualSalary,
     ...relevant
   } = vacancy;

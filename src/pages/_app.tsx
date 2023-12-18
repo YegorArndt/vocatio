@@ -11,7 +11,7 @@ import "@szhsin/react-menu/dist/transitions/slide.css";
 
 import { api } from "~/utils";
 import "~/styles/globals.css";
-import { RouteGuard } from "~/components";
+import { ModalFactory } from "~/modules/modal/ModalFactory";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -34,11 +34,11 @@ const useTheme = () => {
   useEffect(() => {
     localStorage.setItem("theme", theme);
     /**
-     * Set it on html
+     * Set it on body
      */
-    const htmlTag = document.documentElement;
-    htmlTag.dataset.theme = theme;
-    htmlTag.classList.add(inter.className);
+    const body = document.body;
+    body.dataset.theme = theme;
+    body.classList.add(inter.className);
   }, [theme]);
 
   return [theme, setTheme] as const;
@@ -57,10 +57,9 @@ const MyApp: AppType = ({ Component, pageProps }) => {
         />
         <link rel="icon" href="/fav.webp" />
       </Head>
-      <RouteGuard>
-        <Component {...pageProps} />
-        <ToastContainer theme="dark" position="bottom-left" />
-      </RouteGuard>
+      <Component {...pageProps} />
+      <ToastContainer theme="dark" position="bottom-left" />
+      <ModalFactory />
     </ClerkProvider>
   );
 };

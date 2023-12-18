@@ -9,6 +9,7 @@ import {
   ReactNode,
   forwardRef,
 } from "react";
+import { HiOutlineArrowPath } from "react-icons/hi2";
 import { Tooltip } from "react-tooltip";
 import { FaBold } from "react-icons/fa6";
 import { FaItalic } from "react-icons/fa";
@@ -30,11 +31,12 @@ import { RxLetterCaseUppercase } from "react-icons/rx";
 import { LuCopyPlus } from "react-icons/lu";
 import { BsArrowsCollapse, BsArrowsExpand } from "react-icons/bs";
 
-import { Button, ButtonProps } from "~/components/ui/buttons/Button";
+import { Button } from "~/components/ui/buttons/Button";
 import { useDraftContext } from "~/modules/draft/DraftContext";
 import { useComponentContext } from "../../ComponentContext";
 import {
   isDecoration,
+  isEntries,
   isImage,
   isText,
   typedKeys,
@@ -42,7 +44,7 @@ import {
 import { getDirection, getMenuProps } from "./utils";
 import { mergeWithIntrinsic } from "~/modules/utils/mergeWithIntrinsic";
 import { useCrudContext } from "../../DndProvider";
-import { debounce } from "lodash-es";
+import { debounce, startCase } from "lodash-es";
 import { BlurImage, Chip } from "~/components";
 import { SlMagicWand } from "react-icons/sl";
 import { useForm } from "react-hook-form";
@@ -51,6 +53,7 @@ import { TfiWrite } from "react-icons/tfi";
 import { api } from "~/utils";
 import { toast } from "react-toastify";
 import Image from "next/image";
+import { BUTTON_CN, ToolbarButton } from "./ToolbarButton";
 
 const { log } = console;
 
@@ -131,10 +134,7 @@ const Mb = forwardRef((props: MbProps, ref) => {
   const { text, icon, children = text, className, ...rest } = props;
   return (
     <MenuButton
-      className={cn(
-        "flex-center hover common-transition gap-2 hover:text-[#fff]",
-        className
-      )}
+      className={cn("gap-2", BUTTON_CN, className)}
       ref={ref}
       {...rest}
     >
@@ -142,18 +142,6 @@ const Mb = forwardRef((props: MbProps, ref) => {
     </MenuButton>
   );
 });
-
-/**
- * Toolbar button.
- */
-const ToolbarButton = (props: ButtonProps) => {
-  return (
-    <Button
-      baseCn="hover flex-center common-transition gap-2 hover:text-[#fff]"
-      {...props}
-    />
-  );
-};
 
 const ACTIVE = "bg-gray transition";
 
@@ -177,9 +165,8 @@ export const ComponentToolbar = (props: ComponentToolbarProps) => {
 
   const menuDirection = getDirection(sectionId);
 
-  const canEditText = !isDecoration(type);
-  const canDuplicate = !isDecoration(type);
-  const canTurnInto = !isDecoration(type);
+  const canEditText = !isDecoration(type) && !isEntries(type);
+  const canTurnInto = !isDecoration(type) && !isEntries(type);
   const canGpt = isText(type);
 
   /**
@@ -243,13 +230,19 @@ export const ComponentToolbar = (props: ComponentToolbarProps) => {
   /**
    * Get AI methods.
    */
-
-  // const { mutate, data, isLoading } = api.gpt.getCompletion.useMutation();
-
-  const { mutate: applyCondensation, status } = api.hf.condense.useMutation({
+  const { mutate: applyCondensation } = api.hf.condense.useMutation({
     onSuccess: (condensed) => {
       notifyOnSuccess();
       const newProps = { ...c.props, value: condensed };
+      c.props = newProps;
+      updateDesign();
+    },
+  });
+
+  const { mutate: applyElaboration } = api.hf.elaborate.useMutation({
+    onSuccess: (elaborated) => {
+      notifyOnSuccess();
+      const newProps = { ...c.props, value: `${c.props.value} ${elaborated}` };
       c.props = newProps;
       updateDesign();
     },
@@ -273,6 +266,15 @@ export const ComponentToolbar = (props: ComponentToolbarProps) => {
     },
   });
 
+  const { mutate: applyAdjustment } = api.gpt.adjust.useMutation({
+    onSuccess: (value) => {
+      notifyOnSuccess();
+      const newProps = { ...c.props, value };
+      c.props = newProps;
+      updateDesign();
+    },
+  });
+
   /**
    * Compose TS methods.
    */
@@ -284,6 +286,14 @@ export const ComponentToolbar = (props: ComponentToolbarProps) => {
     const { length } = text;
     const lengthMinus20Percent = Math.max(length * 0.8, 56);
     applyCondensation({ text, length: lengthMinus20Percent });
+  };
+
+  const elaborate = async () => {
+    const text = c.props.value;
+    if (!text) return;
+
+    notifyOnStart();
+    applyElaboration({ text });
   };
 
   const convert = async (target: "bulletPoints" | "text") => {
@@ -301,6 +311,17 @@ export const ComponentToolbar = (props: ComponentToolbarProps) => {
 
     notifyOnStart();
     applyCustom({ text, userCommand });
+  };
+
+  const adjust = async () => {
+    const text = c.props.value;
+    if (!text) return;
+
+    notifyOnStart();
+    applyAdjustment({
+      context: vacancy.requiredSkills,
+      textToAdjust: c.props.summary!,
+    });
   };
 
   return (
@@ -327,12 +348,17 @@ export const ComponentToolbar = (props: ComponentToolbarProps) => {
       {children}
       <Tooltip
         id={id}
-        place="top"
+        place={
+          !["left", "right"].includes(c.sectionId) && c.type === "entries"
+            ? "bottom"
+            : "top"
+        }
         hidden={isTyping}
         opacity={1}
         globalCloseEvents={{ clickOutsideAnchor: true }}
-        className={cn("z-tooltip h-[40px] !px-0 py-3 [&>*]:h-full", {
+        className={cn("z-tooltip h-[40px] border !p-0 [&>*]:h-full", {
           hidden: isTyping,
+          "-translate-y-[0.5rem]": ["left", "right"].includes(c.sectionId),
         })}
         clickable
         openOnClick
@@ -341,7 +367,7 @@ export const ComponentToolbar = (props: ComponentToolbarProps) => {
         render={() => {
           return (
             <ul
-              className="flex-center [&>li+li]:border-left h-full w-full rounded-md clr-secondary [&_li]:h-full [&_li_button]:h-full [&_li_button]:px-3"
+              className="flex-center [&>li+li]:border-left size-full rounded-md clr-secondary [&_li]:h-full"
               data-html2canvas-ignore
             >
               {canEditText && (
@@ -378,13 +404,11 @@ export const ComponentToolbar = (props: ComponentToolbarProps) => {
                   endIcon={<RiDragMove2Fill />}
                 />
               </li>
-              {canDuplicate && (
-                <li>
-                  <ToolbarButton onClick={() => addComponent(c)}>
-                    <LuCopyPlus />
-                  </ToolbarButton>
-                </li>
-              )}
+              <li>
+                <ToolbarButton onClick={() => addComponent(c)}>
+                  <LuCopyPlus />
+                </ToolbarButton>
+              </li>
               <li>
                 <Menu
                   menuButton={
@@ -395,13 +419,23 @@ export const ComponentToolbar = (props: ComponentToolbarProps) => {
                   }
                   {...getMenuProps(menuDirection)}
                 >
+                  <MenuHeader className="normal-case">Add below</MenuHeader>
+                  <MenuDivider />
                   {typedKeys(intrinsic).map((typeOfComponent) => {
                     if (isImage(typeOfComponent)) return;
 
                     return (
                       <Mi
                         key={typeOfComponent}
-                        text={typeOfComponent}
+                        icon={
+                          <BlurImage
+                            src={`/intrinsic/${typeOfComponent}.png`}
+                            height={50}
+                            width={50}
+                            alt=""
+                          />
+                        }
+                        text={startCase(typeOfComponent)}
                         onClick={() =>
                           addComponent({ ...c, type: typeOfComponent })
                         }
@@ -411,15 +445,17 @@ export const ComponentToolbar = (props: ComponentToolbarProps) => {
                 </Menu>
               </li>
               <li>
-                <ToolbarButton onClick={() => removeComponent(c)}>
-                  <RiDeleteBin6Line />
-                </ToolbarButton>
+                <ToolbarButton
+                  text={`Delete ${c?.props?.tooltip}`}
+                  frontIcon={<RiDeleteBin6Line />}
+                  onClick={() => removeComponent(c)}
+                />
               </li>
               {canGpt && (
                 <li>
                   <Menu
                     menuButton={
-                      <Button className="flex-center">
+                      <Button className={BUTTON_CN}>
                         <BlurImage
                           src="/gpt-logo.jpg"
                           height={30}
@@ -433,13 +469,21 @@ export const ComponentToolbar = (props: ComponentToolbarProps) => {
                     <MenuHeader className="flex-center">
                       <Chip text="Beta" className="bg-sky w-11 clr-white" />
                     </MenuHeader>
-                    <Mi icon={<SlMagicWand />} text="Adjust to vacancy" />
+                    <Mi
+                      icon={<SlMagicWand />}
+                      text="Adjust to vacancy"
+                      onClick={adjust}
+                    />
                     <Mi
                       icon={<BsArrowsCollapse />}
                       text="Condense"
                       onClick={condense}
                     />
-                    <Mi icon={<BsArrowsExpand />} text="Elaborate" />
+                    <Mi
+                      icon={<BsArrowsExpand />}
+                      text="Elaborate"
+                      onClick={elaborate}
+                    />
                     <MenuDivider />
                     <SubMenu
                       label={
@@ -482,26 +526,6 @@ export const ComponentToolbar = (props: ComponentToolbarProps) => {
                         onClick={custom}
                       />
                     </Mi>
-                    {/* <MenuDivider />
-                    <MenuHeader>Emphasize</MenuHeader>
-                    {[
-                      "My role in company's success",
-                      "How I used tech stack specified",
-                      "What hard skills I learned at the company",
-                      "What soft skills I learned at the company",
-                    ].map((option) => (
-                      <MenuItem>
-                        <Checkbox
-                          control={control}
-                          name={option}
-                          label={option}
-                        />
-                      </MenuItem>
-                    ))}
-                    <MenuDivider />
-                    <MenuHeader className="normal-case">
-                      Max. one selection recommended
-                    </MenuHeader> */}
                   </Menu>
                 </li>
               )}
@@ -510,11 +534,40 @@ export const ComponentToolbar = (props: ComponentToolbarProps) => {
                   <Menu
                     menuButton={
                       <Mb>
-                        Turn into <SmChevron menuDirection={menuDirection} />
+                        <HiOutlineArrowPath />
+                        <SmChevron menuDirection={menuDirection} />
                       </Mb>
                     }
                     {...getMenuProps(menuDirection)}
-                  ></Menu>
+                  >
+                    <MenuHeader className="normal-case">Turn into</MenuHeader>
+                    <MenuDivider />
+                    {typedKeys(intrinsic).map((typeOfComponent) => {
+                      if (
+                        typeOfComponent === type ||
+                        typeOfComponent === "image"
+                      )
+                        return;
+
+                      return (
+                        <Mi
+                          key={typeOfComponent}
+                          text={startCase(typeOfComponent)}
+                          icon={
+                            <BlurImage
+                              src={`/intrinsic/${typeOfComponent}.png`}
+                              height={50}
+                              width={50}
+                              alt=""
+                            />
+                          }
+                          onClick={() =>
+                            changeComponentType(c, typeOfComponent)
+                          }
+                        />
+                      );
+                    })}
+                  </Menu>
                 </li>
               )}
             </ul>

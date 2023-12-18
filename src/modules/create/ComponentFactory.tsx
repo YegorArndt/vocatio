@@ -1,26 +1,17 @@
 import { useComponentContext } from "./ComponentContext";
 import { useDraftContext } from "../draft/DraftContext";
 import { mergeWithIntrinsic } from "../utils/mergeWithIntrinsic";
-import {
-  Autoresize,
-  Group,
-  IconGroup,
-  Divider,
-  DecoratedTimeline,
-} from "./intrinsic";
-import { List } from "./intrinsic/List";
+import { Autoresize, IconGroup, Divider } from "./intrinsic";
 import { BlurImage } from "~/components";
 import { NormalizedType } from "../draft/types/components";
 import { DndProvider } from "./DndProvider";
 
 const componentMapping: Record<NormalizedType, any> = {
   text: Autoresize,
-  group: Group,
+  group: IconGroup,
   "icon-group": IconGroup,
   divider: Divider,
   image: BlurImage,
-  list: List,
-  "decorated-timeline": DecoratedTimeline,
   entries: DndProvider,
 };
 

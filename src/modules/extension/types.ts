@@ -101,13 +101,14 @@ export type BigEntry = {
   description: string;
   image: string;
   title: string;
+  skills?: string[];
 };
 
 export type User = {
   name: string;
   image: string;
   jobTitle: string;
-  objective: string;
+  professionalSummary: string;
   location: string;
 
   professionField: ProfessionField;

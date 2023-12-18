@@ -12,6 +12,7 @@ export type LinkProps = PropsWithChildren<
     baseCn?: string;
     className?: string;
     id?: string;
+    endIcon?: ReactNode;
   } & Omit<NextLinkProps, "href">
 >;
 
@@ -25,6 +26,7 @@ export const Link = forwardRef(
       children = text,
       baseCn,
       className,
+      endIcon,
       ...rest
     } = props;
 
@@ -41,6 +43,7 @@ export const Link = forwardRef(
       >
         {frontIcon && <span className="mr-2">{frontIcon}</span>}
         {children}
+        {endIcon && <span className="ml-2">{endIcon}</span>}
       </NextLink>
     );
   }

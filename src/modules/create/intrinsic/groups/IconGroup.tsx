@@ -9,20 +9,6 @@ import {
 } from "@szhsin/react-menu";
 
 import { Autoresize } from "~/modules/create/intrinsic/Autoresize";
-import {
-  Email,
-  Phone,
-  Website,
-  Location,
-  Linkedin,
-  Github,
-  Twitter,
-  Vk,
-  X,
-  Glassdoor,
-  Gmail,
-  LinkedinColor,
-} from "~/components/icons";
 import { typedKeys } from "~/modules/draft/utils/common";
 import { Blur } from "~/components/Blur";
 import { ImageProps } from "next/image";
@@ -31,21 +17,7 @@ import { BlurImage } from "~/components";
 import { startCase } from "lodash-es";
 import { useDraftContext } from "~/modules/draft/DraftContext";
 import { useComponentContext } from "../../ComponentContext";
-
-const icons = {
-  email: Email,
-  phone: Phone,
-  location: Location,
-  website: Website,
-  linkedin: Linkedin,
-  github: Github,
-  twitter: Twitter,
-  vk: Vk,
-  x: X,
-  glassdoor: Glassdoor,
-  gmail: Gmail,
-  linkedinColor: LinkedinColor,
-};
+import { icons } from "~/constants";
 
 const BlurIcon = (props: ImageProps) => {
   let { src, height = 20, width = 20, alt, className } = props;
@@ -72,6 +44,7 @@ export const IconGroup = (props: SharedGroupProps) => {
     id,
     image,
     imageProps,
+    label,
     ...rest
   } = props;
 
@@ -87,52 +60,56 @@ export const IconGroup = (props: SharedGroupProps) => {
 
   return (
     <div className={className} {...rest}>
-      <Menu
-        menuButton={
-          <MenuButton>
-            <BlurIcon src={image} {...imageProps} />
-          </MenuButton>
-        }
-        direction="left"
-        gap={25}
-        transition
-        portal
-      >
-        <MenuHeader>Change to</MenuHeader>
-        <FocusableItem className="mb-2">
-          {({ ref }) => (
-            <input
-              ref={ref}
-              type="text"
-              placeholder="Type to filter"
-              value={filter}
-              className={cn(
-                "border-gray-300 focus:border-gray-500 w-full border-b bg-transparent p-2 focus:outline-none"
-              )}
-              onChange={(e) => setFilter(e.target.value)}
-            />
-          )}
-        </FocusableItem>
-        {typedKeys(icons)
-          .filter((iconKey) =>
-            iconKey.toUpperCase().includes(filter.trim().toUpperCase())
-          )
-          .map((i) => (
-            <MenuItem
-              key={i}
-              className="flex items-center gap-4 first-letter:capitalize hover:bg-transparent"
-              onClick={() => onImageChange(i)}
-            >
-              <BlurIcon {...rest} src={i} />
-              {startCase(i)}
-            </MenuItem>
-          ))}
-      </Menu>
+      {c.type === "icon-group" ? (
+        <Menu
+          menuButton={
+            <MenuButton>
+              <BlurIcon src={image} {...imageProps} />
+            </MenuButton>
+          }
+          direction="left"
+          gap={25}
+          transition
+          portal
+        >
+          <MenuHeader>Change to</MenuHeader>
+          <FocusableItem className="mb-2">
+            {({ ref }) => (
+              <input
+                ref={ref}
+                type="text"
+                placeholder="Type to filter"
+                value={filter}
+                className={cn(
+                  "border-gray-300 focus:border-gray-500 w-full border-b bg-transparent p-2 focus:outline-none"
+                )}
+                onChange={(e) => setFilter(e.target.value)}
+              />
+            )}
+          </FocusableItem>
+          {typedKeys(icons)
+            .filter((iconKey) =>
+              iconKey.toUpperCase().includes(filter.trim().toUpperCase())
+            )
+            .map((i) => (
+              <MenuItem
+                key={i}
+                className="flex items-center gap-4 first-letter:capitalize hover:bg-transparent"
+                onClick={() => onImageChange(i)}
+              >
+                <BlurIcon {...rest} src={i} />
+                {startCase(i)}
+              </MenuItem>
+            ))}
+        </Menu>
+      ) : (
+        <Autoresize type="label" value={label} />
+      )}
       <div className="flex flex-col">
         <Autoresize value={value} />
         {smallText && (
           <small className={smallTextClassName}>
-            <Autoresize value={smallText} />
+            <Autoresize key="smallText" value={smallText} />
           </small>
         )}
       </div>

@@ -5,34 +5,14 @@ import { createTRPCRouter, publicProcedure } from "../trpc";
 
 const { log } = console;
 
-const filterApiResponse = (response: string) => {
-  // Define a regex for bullet points (dash or asterisk, text, followed by a dot)
-  const bulletPointRegex = /[-*]\s[^-*]+\./g;
-
-  // Extract all bullet points
-  const bulletPoints = response.match(bulletPointRegex) || [];
-
-  // Join the extracted bullet points
-  const filteredResponse = bulletPoints.join("\n").trim();
-
-  // Optional: Remove common closing phrases
-  const closingPhraseRegex = /i hope this helps\.?$/i;
-  return filteredResponse.replace(closingPhraseRegex, "").trim();
-};
-
 const inference = new HfInference(process.env.HF_API_KEY);
-
-// const model = "gpt2";
-// const model = "facebook/bart-large-cnn";
-// const model = "google/flan-t5-base";
-const model = "pszemraj/led-large-book-summary";
 
 export const hfRouter = createTRPCRouter({
   condense: publicProcedure
     .input(
       z.object({
         text: z.string(),
-        length: z.number(),
+        length: z.number().optional(),
       })
     )
     .mutation(async ({ input }) => {
@@ -53,6 +33,32 @@ export const hfRouter = createTRPCRouter({
         });
 
       return condensed.summary_text;
+    }),
+
+  elaborate: publicProcedure
+    .input(
+      z.object({
+        text: z.string(),
+      })
+    )
+    .mutation(async ({ input }) => {
+      const { text } = input;
+
+      const inputs = `[INST] Add some more contextually appropriate sentences to the text. Do not use numeration. Avoid closing or opening phrases. Make these changes to this text: [/INST]": ${text}"`;
+
+      const condensed = await inference.textGeneration({
+        model: "mistralai/Mixtral-8x7B-Instruct-v0.1",
+        inputs,
+      });
+
+      if (!condensed)
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to get condensed.",
+        });
+
+      const cleaned = condensed.generated_text.replace(inputs, "").trim();
+      return cleaned;
     }),
 
   custom: publicProcedure
@@ -95,7 +101,7 @@ export const hfRouter = createTRPCRouter({
 
       const inputs =
         target === "bulletPoints"
-          ? `[INST] You're need to convert the following text to bullet points. Avoid closing or opening phrases. Use past tense. [/INST]": ${text}"`
+          ? `[INST] You need to convert the following text to bullet points. Avoid closing or opening phrases. Use past tense. [/INST]": ${text}"`
           : `[INST] You need to convert these bullet points to a compact text. Write in the first person. [/INST]": ${text.replaceAll(
               "-",
               "*"

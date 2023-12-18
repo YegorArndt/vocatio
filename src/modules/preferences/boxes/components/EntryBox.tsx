@@ -1,90 +1,30 @@
-import { startCase } from "lodash-es";
 import { api } from "~/utils";
 import { Wrapper } from "./Wrapper";
 import { FormContext } from "../../FormContext";
-import { FineTuneBoxProps } from "../types";
-import { LineStack } from "~/components/Spinner";
+import { EntryHydrationSkeleton } from "~/components/Spinner";
 import { ArrayForm } from "./ArrayForm";
 import { SaveButton } from "~/components/SaveButton";
 import { SkillEntry } from "@prisma/client";
+import { SelectProps } from "~/components/ui/inputs/Select";
+import { lowerCase, startCase } from "lodash-es";
 
 const { log } = console;
 
-const languages = [
-  "chinese",
-  "spanish",
-  "english",
-  "hindi",
-  "bengali",
-  "portuguese",
-  "russian",
-  "japanese",
-  "punjabi",
-  "marathi",
-  "telugu",
-  "wu chinese",
-  "turkish",
-  "korean",
-  "french",
-  "german",
-  "vietnamese",
-  "tamil",
-  "urdu",
-  "javanese",
-  "italian",
-  "egyptian arabic",
-  "gujarati",
-  "iranian persian",
-  "bhojpuri",
-  "southern min",
-  "hakka",
-  "jin chinese",
-  "hausa",
-  "kannada",
-  "indonesian",
-  "polish",
-  "yoruba",
-  "xiang chinese",
-  "malayalam",
-  "odia",
-  "maithili",
-  "burmese",
-  "eastern punjabi",
-  "sunda",
-  "sudanese arabic",
-  "algerian arabic",
-  "moroccan arabic",
-  "ukrainian",
-  "igbo",
-  "northern uzbek",
-  "sindhi",
-  "north levantine arabic",
-  "romanian",
-  "tagalog",
-  "dutch",
-  "sa'idi arabic",
-  "gan chinese",
-  "amharic",
-  "northern pashto",
-];
-
-const labelOptions = languages.map((l) => ({
-  label: startCase(l),
-  value: startCase(l),
-}));
-const valueOptions = [
-  { label: "Intermediate", value: "INTERMEDIATE" },
-  { label: "Advanced", value: "ADVANCED" },
-  { label: "Expert", value: "EXPERT" },
-];
 const getFieldArray = (entries: SkillEntry[]) =>
   entries.map((e) => ({
     name: { label: e.name, value: e.name },
-    level: { label: e.level, value: e.level },
+    level: { label: startCase(lowerCase(e.level)), value: e.level },
   }));
 
-export const EntryBox = (props: FineTuneBoxProps) => {
-  const { entryFor } = props;
+type EntryBoxProps = {
+  entryFor: "languages" | "skills";
+  labelOptions: SelectProps["options"][];
+  valueOptions: SelectProps["options"][];
+  className?: string;
+};
+
+export const EntryBox = (props: EntryBoxProps) => {
+  const { entryFor, labelOptions, valueOptions } = props;
   const {
     data: user,
     isLoading: userLoading,
@@ -121,8 +61,7 @@ export const EntryBox = (props: FineTuneBoxProps) => {
 
   return (
     <Wrapper entryFor={entryFor}>
-      {isHydrating && <LineStack className="w-full gap-5 [&>*]:h-5" />}
-      {userLoading && <LineStack className="w-full gap-5 [&>*]:h-5" />}
+      {isHydrating && <EntryHydrationSkeleton />}
       {!userLoading && !isHydrating && defaultValues.entries.length > 0 && (
         <FormContext
           form={{

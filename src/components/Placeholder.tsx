@@ -2,8 +2,9 @@ import cn from "classnames";
 import { Link } from "./ui/buttons/Link";
 import { Button } from "./ui/buttons/Button";
 import { FaWindowRestore } from "react-icons/fa";
+import { PropsWithChildren } from "react";
 
-type PlaceholderProps = {
+type PlaceholderProps = PropsWithChildren<{
   title?: React.ReactNode;
   text?: React.ReactNode;
   to?: string;
@@ -11,17 +12,18 @@ type PlaceholderProps = {
   newTab?: boolean;
   className?: string;
   onClick?: () => void;
-};
+}>;
 
 export const Placeholder = (props: PlaceholderProps) => {
   const {
     title = "Nothing yet",
-    text = <>Click &quot;Get CV&quot; under a vacancy to start.</>,
+    text = 'Start by clicking "Generate CV" under a vacancy',
     to,
     actionContent = "Get started",
     newTab,
     className,
     onClick,
+    children,
   } = props;
 
   const ActionElement = to ? (
@@ -39,13 +41,14 @@ export const Placeholder = (props: PlaceholderProps) => {
   );
 
   return (
-    <div className={cn("full flex h-[80vh] justify-center", className)}>
+    <div className={cn("flex h-[80vh] justify-center", className)}>
       <div className="flex-center flex-col gap-5 rounded-md bg-primary p-5 text-center">
         <span className="flex flex-col gap-1">
-          <span className="h4">{title} 🐈</span>
+          <span className="h4">{title}&nbsp; 🐈</span>
           <span>{text}</span>
         </span>
-        {ActionElement}
+        {actionContent && ActionElement}
+        {children}
       </div>
     </div>
   );

@@ -11,7 +11,7 @@ export type ComponentToNormalize = RawComponent & {
   sectionId: SectionId;
 };
 
-type Initializer = (data: Defaults) => Partial<NormalizedProps>;
+type PropsInitializer = (data: Defaults) => Partial<NormalizedProps>;
 
 export type NormalizedProps = Partial<
   ListProps & AutoresizeProps & SharedGroupProps & DndProviderProps
@@ -29,7 +29,7 @@ export type NormalizedComponent = {
 };
 
 export type RawComponent = Pick<NormalizedComponent, "type" | "id"> & {
-  props?: Partial<NormalizedProps> | Initializer;
+  props?: Partial<NormalizedProps> | PropsInitializer;
 };
 
 export type NormalizedType =

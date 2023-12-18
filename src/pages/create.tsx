@@ -4,7 +4,7 @@ import Head from "next/head";
 
 import { Layout } from "~/components/layout/Layout";
 import { Placeholder } from "~/components/Placeholder";
-import { SpinnerWithLayout } from "~/components";
+import { Spinner } from "~/components";
 
 /**
  * TODO: if data was cleared navigating to /create will cause errors bcs the data in LS is still there
@@ -16,11 +16,8 @@ export const Create = () => {
 
   useEffect(() => {
     const lastEdited = localStorage.getItem("last-edited-vacancy");
-    if (lastEdited) {
-      void router.push(`/create/${lastEdited}`);
-    } else {
-      setIsLoading(false);
-    }
+    if (lastEdited) void router.push(`/create/${lastEdited}`);
+    else setIsLoading(false);
   }, []);
 
   return (
@@ -33,12 +30,15 @@ export const Create = () => {
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      {isLoading && <SpinnerWithLayout />}
-      {!isLoading && (
-        <Layout>
-          <Placeholder to="/vacancies" />
-        </Layout>
-      )}
+      <Layout>
+        {isLoading ? (
+          <div className="content flex-center h-[85vh]">
+            <Spinner />
+          </div>
+        ) : (
+          <Placeholder to="/vacancies" className="content" />
+        )}
+      </Layout>
     </>
   );
 };

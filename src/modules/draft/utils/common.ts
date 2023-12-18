@@ -16,11 +16,9 @@ export const isDecoration = (t: NormalizedType) =>
 export const isTimeline = (t: NormalizedType) =>
   ["decorated-timeline"].includes(t);
 
-export const isList = (t: NormalizedType) => ["list"].includes(t);
+export const isEntries = (t: NormalizedType) => ["entries"].includes(t);
 
 export const isHeading = (t: NormalizedType) => t?.startsWith("heading");
-
-export const isName = (t: NormalizedType) => ["name"].includes(t);
 
 export const isGroup = (t: NormalizedType) => ["group"].includes(t);
 

@@ -1,15 +1,19 @@
 import cn from "classnames";
 import { startCase } from "lodash-es";
 import { type PropsWithChildren } from "react";
-import { FineTuneBoxProps } from "../types";
 import { FineTuneLink } from "./FineTuneLink";
+import { EntryFor } from "../types";
 
 const { log } = console;
 
-type BoxProps = PropsWithChildren<FineTuneBoxProps>;
+type WrapperProps = PropsWithChildren<{
+  omitLink?: boolean;
+  entryFor?: string;
+  className?: string;
+}>;
 
-export const Wrapper = (props: BoxProps) => {
-  const { children, entryFor, className } = props;
+export const Wrapper = (props: WrapperProps) => {
+  const { children, entryFor, className, omitLink } = props;
 
   return (
     <section
@@ -20,7 +24,7 @@ export const Wrapper = (props: BoxProps) => {
     >
       <header className="flex-between">
         <h4 id={entryFor}>{startCase(entryFor)}</h4>
-        <FineTuneLink entryFor={entryFor} />
+        {!omitLink && <FineTuneLink entryFor={entryFor as EntryFor} />}
       </header>
       {children}
     </section>

@@ -14,6 +14,8 @@ export type SelectProps<T extends FieldValues = FieldValues> = {
   className?: string;
   getOptionLabel?: (option: T) => string;
   getOptionValue?: (option: T) => string;
+  placeholder?: string;
+  noOptionsMessage?: () => string;
 };
 
 export const Select = (props: SelectProps) => {
@@ -24,7 +26,7 @@ export const Select = (props: SelectProps) => {
     <CreatableSelect
       id={name}
       options={options}
-      className={cn("my-react-select-container", className)}
+      className={cn("select-wrapper", className)}
       classNamePrefix="my-react-select"
       isClearable
       {...rest}

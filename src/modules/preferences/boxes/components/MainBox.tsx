@@ -4,13 +4,14 @@ import { typedKeys } from "../../../draft/utils/common";
 import { Text } from "~/components/ui/inputs/Text";
 import { Fragment } from "react";
 import { useUser } from "@clerk/nextjs";
-import { ProfessionField, User } from "@prisma/client";
+import { User } from "@prisma/client";
 import { Wrapper } from "./Wrapper";
 import { FormContext } from "../../FormContext";
 import { LineStack } from "~/components/Spinner";
 import { Textarea } from "~/components/ui/inputs/Textarea";
 import { SaveButton } from "~/components/SaveButton";
-import { ComingSoon } from "~/components";
+import { Link } from "~/components/ui/buttons/Link";
+import { HiOutlineExternalLink } from "react-icons/hi";
 
 const { log } = console;
 
@@ -27,8 +28,7 @@ export const MainBox = () => {
   const mainDefaults: Partial<User> = {
     name: user?.name || defaultUserData.user?.fullName || "",
     jobTitle: user?.jobTitle || "",
-    professionField: user?.professionField || ProfessionField.UI_UX_DESIGNER,
-    objective: user?.objective,
+    professionalSummary: user?.professionalSummary,
   };
 
   const onSubmit = (values: typeof mainDefaults) => {
@@ -49,39 +49,35 @@ export const MainBox = () => {
               <form className="grid grid-cols-2 gap-3">
                 {typedKeys(mainDefaults).map(
                   (key) =>
-                    key !== "objective" && (
+                    key !== "professionalSummary" && (
                       <Fragment key={key}>
                         <label htmlFor={key}>{startCase(key)}</label>
                         <Text id={key} name={key} control={control} />
                       </Fragment>
                     )
                 )}
-                <label
-                  htmlFor="objective"
-                  className="flex-y col-span-2 mt-5 text-[0.9rem] leading-9"
-                >
-                  <div>
-                    If need be you can dynamically insert the following
-                    information about the job posting into your objective:{` `}
-                    <code>
-                      {
-                        "{companyName}, {jobTitle}, {location}, {industry}, {companyLogo}"
-                      }
-                    </code>
-                  </div>
-                  <ComingSoon />
+                <label htmlFor="professionalSummary">
+                  Professional summary
                 </label>
                 <Textarea
-                  name="objective"
+                  name="professionalSummary"
                   control={control}
                   className="col-span-2"
                   rows={10}
                 />
               </form>
               <footer className="border-top flex-between col-span-2 w-full py-4">
-                <span className="clr-disabled">
-                  Please review the data we were able to get from LinkedIn and
-                  change it if needed.
+                <span className="inline-flex items-center clr-disabled">
+                  Take a look at&nbsp;
+                  <Link
+                    to="/preferences/advanced-fine-tuning"
+                    className="inline-flex items-center gap-1 underline"
+                    newTab
+                  >
+                    <HiOutlineExternalLink />
+                    Advanced Fine-tuning
+                  </Link>
+                  &nbsp; to further improve your Professional Summary.
                 </span>
                 <SaveButton
                   isLoading={userUpdating}

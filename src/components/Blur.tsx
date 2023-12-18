@@ -17,7 +17,11 @@ export const Blur = (props: BlurProps) => {
   const { element, className, ...rest } = props;
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => setIsLoading(false), []);
+  useEffect(() => {
+    const timer = setTimeout(() => setIsLoading(false));
+
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     <div className={cn("bg-gray-200 inline-block overflow-hidden", className)}>

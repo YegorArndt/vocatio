@@ -15,7 +15,7 @@ export type DraftContextInput = Pick<
 export type DraftContextOutput = {
   design: Design;
   a4Ref: RefObject<HTMLDivElement>;
-  updateDesign: () => void;
+  updateDesign: (d?: Partial<Design>) => void;
   changeDesign: (d: RawDesign) => void;
   user: User;
   vacancy: Vacancy;

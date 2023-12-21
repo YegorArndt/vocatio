@@ -11,12 +11,7 @@ import { ContactBox } from "~/modules/preferences/boxes/components/ContactBox";
 import { EntryBox } from "~/modules/preferences/boxes/components/EntryBox";
 import { ImageBox } from "~/modules/preferences/boxes/components/ImageBox";
 import { MainBox } from "~/modules/preferences/boxes/components/MainBox";
-import {
-  languageLabelsOptions,
-  languageValuesOptions,
-  languageValuesOptionsCefr,
-  preferencesToolbar,
-} from "~/modules/preferences/constants";
+import { preferencesToolbar } from "~/modules/preferences/constants";
 import { api } from "~/utils";
 import { Steps } from "~/modules/preferences/Steps";
 import { BigEntryBox } from "~/modules/preferences/boxes/components/BigEntryBox";
@@ -97,21 +92,17 @@ export const Preferences = () => {
                   <ContactBox />
                   <EntryBox
                     entryFor="languages"
-                    labelOptions={
-                      prefersCefr
-                        ? languageValuesOptionsCefr
-                        : languageLabelsOptions
-                    }
-                    valueOptions={languageValuesOptions}
+                    labelOptions={[]}
+                    valueOptions={[]}
                   />
                   <EntryBox
                     entryFor="skills"
-                    // labelOptions={languageLabelsOptions}
-                    valueOptions={languageValuesOptions}
+                    labelOptions={[]}
+                    valueOptions={[]}
                   />
                   <BigEntryBox entryFor="employmentHistory" />
                   <BigEntryBox entryFor="education" />
-                  <BigEntryBox entryFor="recommendations" />
+                  {/* <BigEntryBox entryFor="recommendations" /> */}
                 </div>
               )}
             </div>

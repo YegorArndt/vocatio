@@ -38,7 +38,7 @@ export const Blur = (props: BlurProps) => {
             base,
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             //@ts-ignore
-            element?.props?.className,
+            lelement?.props?.className,
             isLoading ? loading : notLoading
           ),
         }

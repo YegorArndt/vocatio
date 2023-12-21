@@ -37,7 +37,12 @@ export const FormContext = <TFieldValues extends FieldValues>(
     DefaultValues<TFieldValues>
   >(form.defaultValues);
 
-  const methods = useForm<TFieldValues>({ ...form, defaultValues });
+  const methods = useForm<TFieldValues>({
+    ...form,
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    defaultValues,
+  });
 
   const updateDefaults = useCallback(
     (newDefaults: Partial<DefaultValues<TFieldValues>>) => {

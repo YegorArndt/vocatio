@@ -7,14 +7,17 @@ type CheckboxProps<T extends FieldValues = FieldValues> = {
   height?: string;
   width?: string;
   label?: ReactNode;
-  control: Control<T>;
+  control: unknown;
   onClick?: MouseEventHandler<HTMLLabelElement>;
   className?: string;
   inputClassName?: string;
 };
 
 export const Checkbox = (props: CheckboxProps) => {
-  const { control, name, label, onClick, className, inputClassName } = props;
+  const { control, name, label, onClick, className, inputClassName } =
+    props as {
+      control: Control<FieldValues>;
+    } & CheckboxProps<FieldValues>;
   const { field } = useController({ control, name });
 
   return (

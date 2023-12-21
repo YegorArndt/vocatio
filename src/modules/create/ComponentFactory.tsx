@@ -3,15 +3,13 @@ import { useDraftContext } from "../draft/DraftContext";
 import { mergeWithIntrinsic } from "../utils/mergeWithIntrinsic";
 import { Autoresize, IconGroup, Divider } from "./intrinsic";
 import { BlurImage } from "~/components";
-import { NormalizedType } from "../draft/types/components";
 
-const componentMapping: Record<NormalizedType, any> = {
+const componentMapping = {
   text: Autoresize,
   group: IconGroup,
   "icon-group": IconGroup,
   divider: Divider,
   image: BlurImage,
-  // entries: DndProvider,
 };
 
 /**
@@ -29,5 +27,16 @@ export const ComponentFactory = () => {
   const Component =
     componentMapping[c.type as keyof typeof componentMapping] || Autoresize;
 
-  return <Component id={c.id} {...m.props} />;
+  return Component ? (
+    <Component
+      id={c.id}
+      {...(m.props as unknown as {
+        label: string;
+        value: string;
+        image: string;
+        src: string;
+        alt: string;
+      })}
+    />
+  ) : null;
 };

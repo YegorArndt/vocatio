@@ -64,6 +64,7 @@ export enum EmploymentType {
   PART_TIME = "PART_TIME",
   CONTRACT = "CONTRACT",
 }
+
 export type VacancyDto = {
   image: string;
   companyName: string;
@@ -99,6 +100,7 @@ export type BigEntry = {
   place: string;
   period: string;
   description: string;
+  descriptionSummary?: string;
   image: string;
   title: string;
   skills?: string[];

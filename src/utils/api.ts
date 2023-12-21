@@ -16,15 +16,6 @@ const getBaseUrl = () => {
   return `http://localhost:${process.env.PORT ?? 3000}`; // dev SSR should use localhost
 };
 
-// const wsClient = createWSClient({
-//   url: `ws://localhost:3001`,
-// });
-
-// export const trpcClient = createTRPCProxyClient<AppRouter>({
-//   links: [wsLink<AppRouter>({ client: wsClient })],
-//   transformer: superjson,
-// });
-
 /** A set of type-safe react-query hooks for your tRPC API. */
 export const api = createTRPCNext<AppRouter>({
   config() {

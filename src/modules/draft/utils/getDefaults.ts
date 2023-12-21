@@ -1,11 +1,11 @@
 import type { UserResource } from "@clerk/types";
-import type { Vacancy } from "@prisma/client";
+import type { SkillEntry, Vacancy } from "@prisma/client";
 import { omitBy, isNil } from "lodash-es";
 import { RouterOutputs } from "~/utils/api";
 
 export type Defaults = ReturnType<typeof getDefaults>;
 
-const findStringsInText = (text, entries) => {
+const findStringsInText = (text: string, entries: SkillEntry[]) => {
   const intersections = [];
   const lowerCaseTextWords = text.toLowerCase().split(/\s+/);
 

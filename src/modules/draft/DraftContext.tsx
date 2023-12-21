@@ -5,6 +5,8 @@ import type { DraftContextInput, DraftContextOutput } from "./types";
 import type { RawDesign, Design } from "./types/design";
 import { init } from "./utils/init";
 import { getDefaults } from "./utils/getDefaults";
+import { get } from "lodash-es";
+import { Sections } from "./types/sections";
 
 const { log } = console;
 
@@ -26,9 +28,11 @@ const updateSections = (a4Ref: DraftContextInput["a4Ref"]) => {
 
   if (!id) return;
 
-  const { sections } = a4Ref.current[id].children.props;
+  const { sections } = get(a4Ref.current, `${id}.children.props`, {
+    sections: [],
+  });
 
-  return sections;
+  return sections as Sections;
 };
 
 const Context = createContext({} as DraftContextOutput);
@@ -50,7 +54,7 @@ export const DraftContext = (props: DraftContextInput) => {
   const updateDesign = (newDesign?: Partial<Design>) =>
     setDesign((d) => ({
       ...d,
-      sections: updateSections(a4Ref),
+      sections: updateSections(a4Ref) as Sections,
       ...newDesign,
     }));
 

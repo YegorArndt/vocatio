@@ -1,9 +1,10 @@
-import type { Vacancy, User } from "@prisma/client";
+import type { Vacancy } from "@prisma/client";
 import type { ReactNode, RefObject } from "react";
 import type { UserResource } from "@clerk/types";
 
 import type { Design, RawDesign } from "./design";
 import { type Defaults } from "../utils/getDefaults";
+import { RouterOutputs } from "~/utils/api";
 
 export type DraftContextInput = Pick<
   DraftContextOutput,
@@ -18,7 +19,7 @@ export type DraftContextOutput = {
   updateDesign: (d?: Partial<Design>) => void;
   persistToLs: (d: Design) => void;
   changeDesign: (d: RawDesign) => void;
-  user: User;
+  user: RouterOutputs["users"]["get"];
   vacancy: Vacancy;
   defaultUserData: UserResource;
   defaults: Defaults;

@@ -76,6 +76,7 @@ export default async function updateUser(
         const fullDescriptions = (value as User["employmentHistory"]).map(
           (x) => x.description
         );
+
         const descriptionSummaries = await Promise.allSettled(
           fullDescriptions.map((description) =>
             getDescriptionSummary(description)

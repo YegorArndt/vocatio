@@ -1,6 +1,6 @@
-import { NavigationLink } from "~/components";
+import { Chip, NavigationLink } from "~/components";
 import { GoDatabase } from "react-icons/go";
-import { AiBrain, Gpt } from "~/components/icons";
+import { Gpt } from "~/components/icons";
 import { startCase } from "lodash-es";
 
 export const preferencesToolbar = [
@@ -10,14 +10,11 @@ export const preferencesToolbar = [
     frontIcon: <GoDatabase />,
   },
   {
-    text: "Fine-tune",
+    text: "Fine-tuning",
     to: "/preferences/fine-tuning",
-    frontIcon: <AiBrain />,
-  },
-  {
-    text: "Advanced Fine-tuning",
-    to: "/preferences/advanced-fine-tuning",
     frontIcon: <Gpt />,
+    className: "disabled pointer-events-none",
+    endIcon: <Chip text="Soon" className="bg-sky px-3" />,
   },
 ].map((props) => (
   <NavigationLink

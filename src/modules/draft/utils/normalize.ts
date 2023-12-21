@@ -59,7 +59,7 @@ export const normalize = (
 
       const newSection = {
         ...section,
-        components: section.components.map((c) =>
+        components: section.components.map((c: ComponentToNormalize) =>
           normalize(c, defaults, vacancyId)
         ),
       };

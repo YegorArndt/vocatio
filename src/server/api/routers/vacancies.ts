@@ -2,6 +2,8 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 
+const { log } = console;
+
 /**
  * Creation is handled via Nextjs API route.
  * And triggered by extension.
@@ -17,13 +19,17 @@ export const vacanciesRouter = createTRPCRouter({
         message: "You are not authorized to perform this action",
       });
 
-    const vacancies = await ctx.prisma.vacancy.findMany({
-      where: { userId },
-      take: 100,
-      orderBy: [{ createdAt: "desc" }],
+    const user = await ctx.prisma.user.findUnique({
+      where: { id: userId },
+      include: {
+        vacancies: {
+          take: 100,
+          orderBy: [{ createdAt: "desc" }],
+        },
+      },
     });
 
-    return vacancies;
+    return user?.vacancies ?? [];
   }),
 
   getById: publicProcedure
@@ -44,7 +50,7 @@ export const vacanciesRouter = createTRPCRouter({
       const { id } = input;
 
       const vacancy = await ctx.prisma.vacancy.findUnique({
-        where: { id, userId },
+        where: { id },
       });
 
       if (!vacancy)

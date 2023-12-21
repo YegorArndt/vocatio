@@ -29,8 +29,8 @@ const mainNav = [
 
 export const Navbar = (props: PropsWithChildren<Record<string, unknown>>) => {
   const { children } = props;
-  const { user: clerkUser, isLoaded } = useUser();
-  const { data: user, isLoading: userLoading } = api.users.get.useQuery();
+  const { user: clerkUser } = useUser();
+  const { data: user } = api.users.get.useQuery();
   const router = useRouter();
 
   const name = clerkUser?.firstName || user?.name;

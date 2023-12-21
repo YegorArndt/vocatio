@@ -20,9 +20,8 @@ export const isEntries = (t: NormalizedType) => ["entries"].includes(t);
 
 export const isHeading = (t: NormalizedType) => t?.startsWith("heading");
 
-export const isGroup = (t: NormalizedType) => ["group"].includes(t);
-
-export const isIconGroup = (t: NormalizedType) => ["icon-group"].includes(t);
+export const isGroup = (t: NormalizedType) =>
+  ["icon-group", "group"].includes(t);
 
 export const isText = (t: NormalizedType) => ["text"].includes(t);
 

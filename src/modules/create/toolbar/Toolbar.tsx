@@ -2,8 +2,8 @@ import { BlurImage } from "~/components/BlurImage";
 import { Button } from "~/components/ui/buttons/Button";
 import { downloadPdf } from "../utils";
 import { useDraftContext } from "../../draft/DraftContext";
-import { Bin } from "../../bin";
 import { IoIosCheckmarkCircleOutline } from "react-icons/io";
+
 import { Divider } from "~/components/layout/Divider";
 import { api } from "~/utils";
 import {
@@ -18,8 +18,14 @@ import { useState } from "react";
 import { BsArrowsCollapse } from "react-icons/bs";
 import { FaTextHeight } from "react-icons/fa";
 import { Chip } from "~/components";
+import { FaClockRotateLeft } from "react-icons/fa6";
+import { SlMagnifier } from "react-icons/sl";
 
 const { log } = console;
+
+type ToolbarProps = {
+  openModal: () => void;
+};
 
 const fonts = [
   "Arial",
@@ -43,7 +49,8 @@ const fonts = [
   "Inter",
 ];
 
-export const Toolbar = () => {
+export const Toolbar = (props: ToolbarProps) => {
+  const { openModal } = props;
   const { user, vacancy, a4Ref, design, updateDesign } = useDraftContext();
   const { mutate } = api.cvs.create.useMutation();
   const [filter, setFilter] = useState("");
@@ -52,6 +59,12 @@ export const Toolbar = () => {
 
   return (
     <>
+      <Button
+        text="Review changes"
+        frontIcon={<SlMagnifier />}
+        className="common hover flex-y gap-1"
+        onClick={openModal}
+      />
       <Button
         text="Download PDF"
         frontIcon={
@@ -65,7 +78,6 @@ export const Toolbar = () => {
         onClick={() => void downloadPdf(a4Ref, user.name, vacancy.companyName)}
         className="common hover flex-y gap-1"
       />
-      <Bin />
       <Menu
         menuButton={
           <MenuButton className="common hover flex-y gap-3">
@@ -101,6 +113,13 @@ export const Toolbar = () => {
             </MenuItem>
           ))}
       </Menu>
+      <Button
+        text="Undo"
+        frontIcon={<FaClockRotateLeft />}
+        endIcon={<Chip text="Soon" className="bg-sky px-1" />}
+        className="common hover flex-y gap-1"
+        disabled
+      />
       <Button
         frontIcon={<BsArrowsCollapse />}
         endIcon={<Chip text="Soon" className="bg-sky px-1" />}

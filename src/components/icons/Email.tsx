@@ -9,6 +9,7 @@ const SvgEmail = (props: SVGProps<SVGSVGElement>) => (
     viewBox="3 6 26 20"
     width="1em"
     height="1em"
+    fill="currentColor"
     {...props}
   >
     <g data-name={1}>

@@ -12,6 +12,7 @@ import "@szhsin/react-menu/dist/transitions/slide.css";
 import { api } from "~/utils";
 import "~/styles/globals.css";
 import { ModalFactory } from "~/modules/modal/ModalFactory";
+import { useRouter } from "next/router";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -46,6 +47,13 @@ const useTheme = () => {
 
 const MyApp: AppType = ({ Component, pageProps }) => {
   const [theme, setTheme] = useTheme();
+  const { isError } = api.users.get.useQuery();
+
+  const router = useRouter();
+
+  useEffect(() => {
+    if (isError) router.push("/login");
+  }, [isError]);
 
   return (
     <ClerkProvider {...pageProps}>

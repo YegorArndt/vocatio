@@ -6,6 +6,7 @@ const SvgGmail = (props: SVGProps<SVGSVGElement>) => (
     width="1em"
     height="1em"
     viewBox="0 0 48 48"
+    fill="currentColor"
     {...props}
   >
     <path fill="#4caf50" d="m45 16.2-5 2.75-5 4.75V40h7a3 3 0 0 0 3-3z" />

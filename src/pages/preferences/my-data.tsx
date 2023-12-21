@@ -20,6 +20,7 @@ import {
 import { api } from "~/utils";
 import { Steps } from "~/modules/preferences/Steps";
 import { BigEntryBox } from "~/modules/preferences/boxes/components/BigEntryBox";
+import { usePostMessage } from "~/hooks/usePostMessage";
 
 const icons = [
   {
@@ -46,6 +47,8 @@ export const Preferences = () => {
 
   const hasLkd = !!user?.contact?.linkedin;
 
+  usePostMessage();
+
   return (
     <>
       <Head>
@@ -64,12 +67,12 @@ export const Preferences = () => {
               <h1>
                 {hasLkd
                   ? "Review your data. Did we get it right?"
-                  : "Don't type it manually. Value your time."}
+                  : "Import your data from LinkedIn."}
               </h1>
               <p>
                 {hasLkd
                   ? "Vocatio will fallback to it when generating your CVs."
-                  : "Currently we only support LinkedIn. We're working on adding more sources like Glassdoor, Indeed, HeadHunter, Built-In, and your current CV upload."}
+                  : "Don't type it manually. Value your time."}
               </p>
               {hasLkd && (
                 <div className="flex-y mb-6 gap-2">

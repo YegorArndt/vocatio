@@ -6,6 +6,7 @@ const SvgLinkedinColor = (props: SVGProps<SVGSVGElement>) => (
     width="1em"
     height="1em"
     viewBox="0 0 48 48"
+    fill="currentColor"
     {...props}
   >
     <path

@@ -1,15 +1,14 @@
 import { useRouter } from "next/router";
 import { useEffect } from "react";
-import { SpinnerWithLayout } from "~/components";
 
 const Home = () => {
   const router = useRouter();
 
   useEffect(() => {
-    void router.push("/vacancies");
+    void router.push("/login");
   }, []);
 
-  return <SpinnerWithLayout />;
+  return null;
 };
 
 export default Home;

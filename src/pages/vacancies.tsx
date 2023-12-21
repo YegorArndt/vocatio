@@ -1,21 +1,22 @@
 import Head from "next/head";
 import { Fragment, ReactNode } from "react";
-import { GoSortAsc } from "react-icons/go";
 import { FormProvider, UseFormRegister, useForm } from "react-hook-form";
-import { FaDollarSign, FaLayerGroup } from "react-icons/fa";
-import { CiCalendarDate, CiFilter } from "react-icons/ci";
 import { IoIosArrowDown } from "react-icons/io";
-import { lowerCase, startCase } from "lodash-es";
 import { type Vacancy } from "@prisma/client";
 
-import { Placeholder, Chip } from "~/components";
-import { Divider } from "~/components/layout/Divider";
 import { Layout } from "~/components/layout/Layout";
 import { api } from "~/utils/api";
+import { startCase, lowerCase } from "lodash-es";
+import { CiCalendarDate, CiFilter } from "react-icons/ci";
+import { FaDollarSign, FaLayerGroup } from "react-icons/fa";
+import { GoSortAsc } from "react-icons/go";
+import { Chip, Placeholder } from "~/components";
+import { Lines, CardStack } from "~/components/Spinner";
+import { Divider } from "~/components/layout/Divider";
 import { Checkbox } from "~/components/ui/inputs/Checkbox";
 import { Text } from "~/components/ui/inputs/Text";
-import { CardStack, Lines } from "~/components/Spinner";
-import { VacanciesGrid } from "~/modules/vacancies/VacanciesGrid";
+import { usePostMessage } from "~/hooks/usePostMessage";
+import { CuratedVacancies } from "~/modules/vacancies/CuratedVacancies";
 
 const { log } = console;
 
@@ -63,18 +64,20 @@ const getFilters = (vacancies: Vacancy[], key: keyof Vacancy) => {
 };
 
 export const Vacancies = () => {
-  const { data: vacancies, isLoading: vacanciesLoading } =
-    api.vacancies.getAll.useQuery();
-
-  /**
-   *  Start fetching ASAP.
-   */
+  const {
+    data: vacancies,
+    isLoading: vacanciesLoading,
+    isRefetching,
+    refetch,
+  } = api.vacancies.getAll.useQuery();
   api.drafts.getAll.useQuery();
 
   const methods = useForm({
     defaultValues,
   });
   const { control, register } = methods;
+
+  usePostMessage();
 
   return (
     <>
@@ -127,11 +130,6 @@ export const Vacancies = () => {
                         control={control}
                       />
                     ))}
-                    {/* <Checkbox
-                      label="No CV generated"
-                      name="cvGenerated"
-                      control={control}
-                    /> */}
                     <Divider className="mt-4" />
                     <ToolbarEntry
                       text={
@@ -149,7 +147,7 @@ export const Vacancies = () => {
         }
       >
         <div className="content flex flex-col gap-8">
-          {(vacanciesLoading || vacancies) && (
+          {(vacanciesLoading || !!vacancies?.length) && (
             <Text
               control={control}
               name="search"
@@ -160,7 +158,10 @@ export const Vacancies = () => {
           {vacanciesLoading && <CardStack className="vacancies" />}
           {!vacanciesLoading && vacancies && vacancies.length > 0 && (
             <FormProvider {...methods}>
-              <VacanciesGrid vacancies={vacancies} />
+              <div className="card-grid vacancies">
+                {/* {isRefetching && <CardSkeleton />} */}
+                <CuratedVacancies vacancies={vacancies} />
+              </div>
             </FormProvider>
           )}
           {!!(!vacanciesLoading && !vacancies?.length) && (

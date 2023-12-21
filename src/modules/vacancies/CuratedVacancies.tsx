@@ -72,7 +72,7 @@ const filterVacancies = (
   });
 };
 
-export const VacanciesGrid = (props: { vacancies: Vacancy[] }) => {
+export const CuratedVacancies = (props: { vacancies: Vacancy[] }) => {
   const { vacancies } = props;
   const { watch, getValues, formState } = useFormContext();
 
@@ -89,11 +89,7 @@ export const VacanciesGrid = (props: { vacancies: Vacancy[] }) => {
     shouldSort: false,
   });
 
-  return (
-    <div className="card-grid vacancies">
-      {fuse.search(watch("search") || "a").map(({ item }) => (
-        <VacancyCard key={item.id} vacancy={item} />
-      ))}
-    </div>
-  );
+  return fuse
+    .search(watch("search") || "a")
+    .map(({ item }) => <VacancyCard key={item.id} vacancy={item} />);
 };

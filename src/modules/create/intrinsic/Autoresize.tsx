@@ -12,10 +12,19 @@ export type AutoresizeProps = {
   className?: string;
   style?: CSSProperties;
   type?: "value" | "label" | "smallText";
+  smallText?: string;
+  smallTextClassName?: string;
 };
 
 export const Autoresize = (props: AutoresizeProps) => {
-  let { value, style, className, type = "value" } = props;
+  let {
+    value,
+    style,
+    className,
+    type = "value",
+    smallText,
+    smallTextClassName,
+  } = props;
   const initialValue = useRef(value);
   const divRef = useRef<HTMLDivElement>(null);
   const c = useComponentContext();
@@ -36,7 +45,7 @@ export const Autoresize = (props: AutoresizeProps) => {
     <AnimatedDiv
       contentEditable
       data-placeholder={value}
-      className={cn("whitespace-pre-wrap break-words", className)}
+      className={cn("!block whitespace-pre-wrap break-words", className)}
       style={style}
       suppressContentEditableWarning
       onInput={(e: FormEvent<HTMLDivElement>) => {

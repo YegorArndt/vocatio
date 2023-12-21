@@ -7,6 +7,7 @@ import { SaveButton } from "~/components/SaveButton";
 import { SkillEntry } from "@prisma/client";
 import { SelectProps } from "~/components/ui/inputs/Select";
 import { lowerCase, startCase } from "lodash-es";
+import { PropsWithChildren } from "react";
 
 const { log } = console;
 
@@ -16,15 +17,15 @@ const getFieldArray = (entries: SkillEntry[]) =>
     level: { label: startCase(lowerCase(e.level)), value: e.level },
   }));
 
-type EntryBoxProps = {
+type EntryBoxProps = PropsWithChildren<{
   entryFor: "languages" | "skills";
   labelOptions: SelectProps["options"][];
   valueOptions: SelectProps["options"][];
   className?: string;
-};
+}>;
 
 export const EntryBox = (props: EntryBoxProps) => {
-  const { entryFor, labelOptions, valueOptions } = props;
+  const { entryFor, labelOptions, valueOptions, children } = props;
   const {
     data: user,
     isLoading: userLoading,
@@ -75,7 +76,9 @@ export const EntryBox = (props: EntryBoxProps) => {
                 valueOptions={valueOptions}
               />
               <footer className="border-top flex-between w-full py-4">
-                <span className="clr-disabled">Add more if you need to.</span>
+                {children || (
+                  <span className="clr-disabled">Add more if you need to.</span>
+                )}
                 <SaveButton
                   isLoading={userUpdating}
                   isSuccess={isSuccess}

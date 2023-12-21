@@ -1,10 +1,11 @@
+import cn from "classnames";
 import type { Vacancy } from "@prisma/client";
 import { Link } from "../../components/ui/buttons/Link";
 import { vacancyUI } from "./constants";
 import { Accordion } from "./Accordion";
 import { IoEye, IoLocationOutline } from "react-icons/io5";
 import { IoMdEyeOff } from "react-icons/io";
-import { LiaExternalLinkAltSolid, LiaTimesSolid } from "react-icons/lia";
+import { LiaExternalLinkAltSolid } from "react-icons/lia";
 import { FaClockRotateLeft } from "react-icons/fa6";
 
 import { Button } from "~/components/ui/buttons/Button";
@@ -59,8 +60,9 @@ export const VacancyCard = (props: VacancyCardProps) => {
     summary,
   } = vacancy;
   const [isLastEdited, setIsLastEdited] = useState(false);
-  const { data: drafts, isLoading: draftsLoading } =
-    api.drafts.getAll.useQuery();
+  const { data: drafts, isError } = api.drafts.getAll.useQuery();
+
+  const hasCv = drafts?.some((d) => d.vacancyId === vacancy.id) && !isError;
 
   useEffect(() => {
     const lastEdited = localStorage.getItem("last-edited-vacancy");
@@ -68,8 +70,6 @@ export const VacancyCard = (props: VacancyCardProps) => {
 
     if (isLastEdited) setIsLastEdited(true);
   }, []);
-
-  const hasCv = drafts?.some((d) => d.vacancyId === vacancy.id);
 
   return (
     <div>
@@ -106,14 +106,11 @@ export const VacancyCard = (props: VacancyCardProps) => {
           </div>
           <section className="flex flex-col gap-1">
             <div className="flex-y gap-2">
-              {draftsLoading ? (
-                <Spinner />
-              ) : hasCv ? (
-                <FcCheckmark />
-              ) : (
-                <LiaTimesSolid color="red" />
-              )}{" "}
-              {draftsLoading ? "Generating CV..." : "CV generated"}
+              {hasCv && <FcCheckmark />}
+              {hasCv && "CV generated"}
+              {!hasCv && <Spinner size={14} />}
+              {!hasCv && "Generating CV..."}
+              {isError && "Error generating CV"}
             </div>
             <div className="flex-y gap-2">
               {vacancyUI[sourceName as keyof typeof vacancyUI].icon} Posted:
@@ -160,14 +157,13 @@ export const VacancyCard = (props: VacancyCardProps) => {
           <Link
             to={`create/${vacancy.id}`}
             frontIcon={<Gpt />}
-            text={
-              isLastEdited
-                ? "Back to editing"
-                : hasCv
-                ? "View CV"
-                : "Generate CV"
-            }
-            className="flex-y hover:underline"
+            text={hasCv ? "View CV" : "Generating CV..."}
+            baseCn="flex-y hover:underline"
+            className={cn({
+              "clr-disabled": !hasCv,
+              "pointer-events-none": !hasCv,
+            })}
+            disabled={!hasCv}
           />
           <Button
             text="Start thread"

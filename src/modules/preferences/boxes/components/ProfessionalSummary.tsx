@@ -29,7 +29,7 @@ export const ProfessionalSummary = () => {
         </p>
         <div className="flex-y gap-5 font-semibold">
           {args.map((arg) => (
-            <CopyToClipboard text={`{${arg}}`}>
+            <CopyToClipboard key={arg} text={`{${arg}}`}>
               <Chip
                 text={`{${arg}}`}
                 className="bg-border px-3 py-1 transition-all hover:scale-105"
@@ -48,9 +48,7 @@ export const ProfessionalSummary = () => {
           {({ control, formState }) => (
             <section className="flex flex-col gap-5">
               <div className="flex flex-col gap-3">
-                <label htmlFor="professionalSummary">
-                  Professional summary
-                </label>
+                <label htmlFor="professionalSummary">Your summary</label>
                 <Textarea
                   name="professionalSummary"
                   control={control}
@@ -71,7 +69,8 @@ export const ProfessionalSummary = () => {
       )}
       <footer className="border-top flex-between py-4">
         <span className="clr-disabled">
-          The Summary you're seeing here will be used during CV generation.
+          The Summary you're seeing will be used as starting point during CV
+          generation.
         </span>
       </footer>
     </Wrapper>

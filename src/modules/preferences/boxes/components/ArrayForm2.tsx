@@ -50,7 +50,7 @@ export const ArrayForm2 = () => {
         </header>
         <form className="flex flex-col gap-2">
           {typedKeys(field).map((name) => {
-            const shouldRender = !["name", "image", "id"].includes(name);
+            const shouldRender = !["place", "image", "id"].includes(name);
 
             if (!shouldRender) return null;
 

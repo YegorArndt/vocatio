@@ -14,29 +14,12 @@ import { DesignViewer } from "~/modules/create/DesignViewer";
 import { PageBreak } from "~/modules/create/PageBreak";
 import { toast } from "react-toastify";
 import { FcCheckmark } from "react-icons/fc";
-import { lowerCase, startCase } from "lodash-es";
 import { Button } from "~/components/ui/buttons/Button";
 import { ModalFactory } from "~/modules/modal/ModalFactory";
 import { Diff } from "~/modules/create/Diff";
 import { Lines } from "~/components/Spinner";
 
 const { log } = console;
-
-const AdjustmentBlock = (props: { title: string; changes: string[] }) => {
-  const { title, changes } = props;
-
-  return (
-    <div className="flex flex-col gap-2">
-      <div className="font-bold">{title}</div>
-      {changes.map((change) => (
-        <div key={change} className="flex-y gap-2">
-          <FcCheckmark />
-          {startCase(lowerCase(change))}
-        </div>
-      ))}
-    </div>
-  );
-};
 
 const a4Height = 1122;
 const a4Width = 793;
@@ -61,6 +44,62 @@ const CVBuilder = (props: { vacancyId: string }) => {
 
   const isReady = vacancy && user && defaultUserData && draft;
 
+  const openModal = () =>
+    ModalFactory.open("diff", {
+      className: "!w-[1500px]",
+      children: (
+        <Diff
+          vacancy={vacancy}
+          professionalSummary={{
+            old: user.professionalSummary,
+            new: draft?.professionalSummary,
+          }}
+          employmentHistory={{
+            old: user.employmentHistory,
+            new: draft.employmentHistory,
+          }}
+          jobTitle={{
+            old: user.jobTitle,
+            new: draft?.jobTitle,
+          }}
+        />
+      ),
+    });
+
+  const notifyOnMount = () => {
+    toast(
+      <div className="flex flex-col gap-2">
+        <h3>Changes made to 🎉</h3>
+        <div className="flex flex-col gap-2">
+          {[
+            "Employment History",
+            "Professional Summary",
+            "Skills",
+            "Job Title",
+          ].map((changed) => (
+            <div key={changed} className="flex-y gap-2">
+              <FcCheckmark />
+              {changed}
+            </div>
+          ))}
+        </div>
+        <Button
+          text="Click to view changes"
+          className="sm mt-3 rounded-md bg-blue clr-white"
+          onClick={() => {
+            toast.dismiss("diff");
+            openModal();
+          }}
+        />
+      </div>,
+      {
+        autoClose: false,
+        toastId: "diff",
+        closeOnClick: false,
+      }
+    );
+  };
+
   useEffect(() => {
     /**
      * Save the last edited vacancy.
@@ -69,68 +108,13 @@ const CVBuilder = (props: { vacancyId: string }) => {
   }, []);
 
   useEffect(() => {
-    if (!user || !draft || !vacancy) return;
+    if (!user || !draft || !vacancy || user.vacancies.length > 1) return;
 
     /**
-     * Notify the user that changes have been made.
+     * Notify the user about changes made.
      */
-    const changes = {
-      slightly: ["employmentHistory", "skills"],
-      completely: ["jobTitle"],
-    };
 
-    const notifyOnMount = (changes: {
-      slightly: string[];
-      completely: string[];
-    }) => {
-      toast(
-        <div className="flex flex-col gap-2">
-          <h3>Changes made 🎉</h3>
-          <AdjustmentBlock
-            title="Slightly adjusted:"
-            changes={changes.slightly}
-          />
-          <AdjustmentBlock
-            title="Completely adjusted:"
-            changes={changes.completely}
-          />
-          <Button
-            text="Click to view changes"
-            className="sm mt-3 rounded-md bg-blue clr-white"
-            onClick={() => {
-              toast.dismiss("diff");
-              ModalFactory.open("diff", {
-                className: "!w-[1500px] overflow-hidden",
-                children: (
-                  <Diff
-                    vacancy={vacancy}
-                    professionalSummary={{
-                      old: user.professionalSummary,
-                      new: draft?.professionalSummary,
-                    }}
-                    employmentHistory={{
-                      old: user.employmentHistory,
-                      new: user?.employmentHistory,
-                    }}
-                    jobTitle={{
-                      old: user.jobTitle,
-                      new: draft?.jobTitle,
-                    }}
-                  />
-                ),
-              });
-            }}
-          />
-        </div>,
-        {
-          autoClose: false,
-          toastId: "diff",
-          closeOnClick: false,
-        }
-      );
-    };
-
-    notifyOnMount(changes);
+    notifyOnMount();
 
     return () => {
       toast.dismiss("diff");
@@ -151,14 +135,11 @@ const CVBuilder = (props: { vacancyId: string }) => {
     return () => observer.disconnect();
   }, [a4Ref.current]);
 
-  log(draft);
-
   return (
     <>
       <Head>
         <title>
-          {vacancy?.companyName ? `CV for ${vacancy.companyName}` : "Loading"} -
-          Vocatio
+          {vacancy?.companyName ? `CV for ${vacancy.companyName}` : "Loading"}
         </title>
         <meta
           name="description"
@@ -174,7 +155,7 @@ const CVBuilder = (props: { vacancyId: string }) => {
           user={{ ...user, ...draft }}
         >
           {(context) => (
-            <Layout toolbar={<Toolbar />}>
+            <Layout toolbar={<Toolbar openModal={openModal} />}>
               <div className="two-col-grid">
                 <div
                   ref={a4Ref}

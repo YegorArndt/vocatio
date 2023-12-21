@@ -1,7 +1,6 @@
 import { type CSSProperties } from "react";
 
 import type { SectionId } from "./sections";
-import type { ListProps } from "~/modules/create/intrinsic/List";
 import type { Defaults } from "../utils/getDefaults";
 import type { AutoresizeProps } from "~/modules/create/intrinsic/Autoresize";
 import type { SharedGroupProps } from "~/modules/create/intrinsic/groups/types";
@@ -14,7 +13,7 @@ export type ComponentToNormalize = RawComponent & {
 type PropsInitializer = (data: Defaults) => Partial<NormalizedProps>;
 
 export type NormalizedProps = Partial<
-  ListProps & AutoresizeProps & SharedGroupProps & DndProviderProps
+  AutoresizeProps & SharedGroupProps & DndProviderProps
 > & {
   className: string;
   style: CSSProperties;
@@ -37,7 +36,6 @@ export type NormalizedType =
   | `heading-${number}`
   | "group"
   | "divider"
-  | "url"
   | "image"
   | "icon-group"
   | "entries";

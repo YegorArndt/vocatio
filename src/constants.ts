@@ -12,6 +12,7 @@ import {
   Diamond,
   Location,
   Email,
+  Bird,
 } from "./components/icons";
 
 export const publicRoutes = [
@@ -34,4 +35,5 @@ export const icons = {
   gmail: Gmail,
   linkedinColor: LinkedinColor,
   diamond: Diamond,
+  bird: Bird,
 };

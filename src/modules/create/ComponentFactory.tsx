@@ -4,7 +4,6 @@ import { mergeWithIntrinsic } from "../utils/mergeWithIntrinsic";
 import { Autoresize, IconGroup, Divider } from "./intrinsic";
 import { BlurImage } from "~/components";
 import { NormalizedType } from "../draft/types/components";
-import { DndProvider } from "./DndProvider";
 
 const componentMapping: Record<NormalizedType, any> = {
   text: Autoresize,
@@ -12,7 +11,7 @@ const componentMapping: Record<NormalizedType, any> = {
   "icon-group": IconGroup,
   divider: Divider,
   image: BlurImage,
-  entries: DndProvider,
+  // entries: DndProvider,
 };
 
 /**

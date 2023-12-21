@@ -318,6 +318,17 @@
     background-color: hsla(0, 0%, 10%, 1);
   }
 
+  *.disabled:is(button, a) {
+    background-color: hsla(0, 0%, 10%, 1);
+    color: hsla(0, 0%, 56%, 1);
+    border: hsla(0, 0%, 18%, 1);
+    cursor: not-allowed;
+  }
+
+  *.disabled:is(button, a):hover {
+    background-color: hsla(0, 0%, 10%, 1);
+  }
+
   /* INPUTS  */
   .input-wrapper {
     display: block;

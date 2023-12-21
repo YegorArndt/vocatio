@@ -13,6 +13,7 @@ export type LinkProps = PropsWithChildren<
     className?: string;
     id?: string;
     endIcon?: ReactNode;
+    disabled?: boolean;
   } & Omit<NextLinkProps, "href">
 >;
 

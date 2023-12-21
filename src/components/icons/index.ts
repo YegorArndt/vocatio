@@ -1,6 +1,8 @@
 export { default as AiBrain } from "./AiBrain";
+export { default as Bird } from "./Bird";
 export { default as Diamond } from "./Diamond";
 export { default as Email } from "./Email";
+export { default as Garbage } from "./Garbage";
 export { default as Github } from "./Github";
 export { default as Glassdoor } from "./Glassdoor";
 export { default as Gmail } from "./Gmail";

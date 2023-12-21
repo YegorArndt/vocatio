@@ -16,6 +16,7 @@ export type DraftContextOutput = {
   design: Design;
   a4Ref: RefObject<HTMLDivElement>;
   updateDesign: (d?: Partial<Design>) => void;
+  persistToLs: (d: Design) => void;
   changeDesign: (d: RawDesign) => void;
   user: User;
   vacancy: Vacancy;

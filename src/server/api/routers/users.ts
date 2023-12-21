@@ -54,6 +54,7 @@ const EntrySchema = z.array(
     place: z.string(),
     period: z.string(),
     description: z.string(),
+    descriptionSummary: z.string().optional(),
     image: z.string(),
     title: z.string(),
     employmentHistoryId: z.string().optional(),
@@ -135,6 +136,7 @@ export const usersRouter = createTRPCRouter({
         skills: true,
         recommendations: true,
         shortLinkedin: true,
+        vacancies: true,
       },
     });
 
@@ -245,6 +247,8 @@ export const usersRouter = createTRPCRouter({
         }
       });
 
+      log(definedUser);
+
       const updatedUser = await ctx.prisma.user.update({
         where: { id: userId },
         data: definedUser,
@@ -260,11 +264,15 @@ export const usersRouter = createTRPCRouter({
       })
     )
     .query(async ({ ctx, input }) => {
+      const { userId } = ctx;
       const { vacancyId } = input;
 
       const vacancy = await ctx.prisma.vacancy.findUnique({
         where: {
           id: vacancyId,
+        },
+        include: {
+          users: true,
         },
       });
 
@@ -275,11 +283,7 @@ export const usersRouter = createTRPCRouter({
         });
       }
 
-      const user = await ctx.prisma.user.findUnique({
-        where: {
-          id: vacancy.userId,
-        },
-      });
+      const user = vacancy.users.find((user) => user.id === userId);
 
       if (!user) {
         throw new TRPCError({
@@ -288,6 +292,6 @@ export const usersRouter = createTRPCRouter({
         });
       }
 
-      return user.id;
+      return user;
     }),
 });

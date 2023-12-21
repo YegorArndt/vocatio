@@ -10,8 +10,6 @@ import { FormContext } from "../../FormContext";
 import { LineStack } from "~/components/Spinner";
 import { Textarea } from "~/components/ui/inputs/Textarea";
 import { SaveButton } from "~/components/SaveButton";
-import { Link } from "~/components/ui/buttons/Link";
-import { HiOutlineExternalLink } from "react-icons/hi";
 
 const { log } = console;
 
@@ -66,18 +64,11 @@ export const MainBox = () => {
                   rows={10}
                 />
               </form>
-              <footer className="border-top flex-between col-span-2 w-full py-4">
+              <footer className="border-top flex-between col-span-2 w-full gap-3 py-4">
                 <span className="inline-flex items-center clr-disabled">
-                  Take a look at&nbsp;
-                  <Link
-                    to="/preferences/advanced-fine-tuning"
-                    className="inline-flex items-center gap-1 underline"
-                    newTab
-                  >
-                    <HiOutlineExternalLink />
-                    Advanced Fine-tuning
-                  </Link>
-                  &nbsp; to further improve your Professional Summary.
+                  In the future you'll be able to dynamically insert company
+                  name, logo, and more, and regulate what changes ChatGPT makes
+                  to further improve your Professional Summary.
                 </span>
                 <SaveButton
                   isLoading={userUpdating}

@@ -2,8 +2,9 @@ import { v4 as uuidv4 } from "uuid";
 import type { NormalizedComponent, RawComponent } from "../types/components";
 import type { RawDesign } from "../types/design";
 import { capitalize, startCase } from "lodash-es";
-import { getSkillsOverlap, heading } from "./utils";
+import { heading } from "./utils";
 import { typedEntries } from "../utils/common";
+import cn from "classnames";
 
 const VenusaurId = uuidv4();
 
@@ -186,7 +187,7 @@ const right: RawComponent[] = [
     type: "entries",
     id: "employmentHistory",
     props: (data) => {
-      const components = data.employmentHistory.map((entry) => {
+      const components = data.employmentHistory.map((entry, index) => {
         return {
           type: "entries",
           id: entry.id,
@@ -206,11 +207,12 @@ const right: RawComponent[] = [
                       value: entry.place,
                       label: entry.title,
                       summary: entry.descriptionSummary,
-                      image: entry.image || "diamond",
+                      image: entry.image || "bird",
                       smallText: entry.period,
                       smallTextClassName: "font-thin",
-                      className:
-                        "font-bold text-[1rem] grid grid-cols-[50px,1fr] gap-2 items-center",
+                      className: cn(
+                        "font-bold text-[1rem] grid grid-cols-[50px,1fr]"
+                      ),
                       tooltip: "Company image & name",
                     },
                   },
@@ -234,10 +236,7 @@ const right: RawComponent[] = [
                       label: entry.title,
                       summary: entry.descriptionSummary,
                       image: "diamond",
-                      smallText: getSkillsOverlap(
-                        entry.skills,
-                        data.vacancy.description.split(" ")
-                      ),
+                      smallText: entry.skills.join(", "),
                       smallTextClassName: "font-thin",
                       className:
                         "font-bold text-[1rem] grid grid-cols-[25px,1fr] items-center mt-[8px]",

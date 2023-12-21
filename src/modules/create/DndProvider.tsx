@@ -139,7 +139,11 @@ const Section = (props: Section & Pick<DndProviderProps, "decorated">) => {
         {components.map((c, i) => (
           <ComponentContext.Provider key={c.id} value={c}>
             <SortableItem index={i} decorated={decorated}>
-              <ComponentFactory />
+              {c.type === "entries" ? (
+                <DndProvider {...c.props} />
+              ) : (
+                <ComponentFactory />
+              )}
             </SortableItem>
           </ComponentContext.Provider>
         ))}

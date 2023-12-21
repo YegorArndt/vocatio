@@ -21,16 +21,11 @@ import { icons } from "~/constants";
 
 const BlurIcon = (props: ImageProps) => {
   let { src, height = 20, width = 20, alt, className } = props;
-  const Icon = icons[src] || BlurImage;
-  const icon = (
-    <Icon
-      src={src}
-      height={height}
-      width={width}
-      className={className}
-      draggable={false}
-    />
-  );
+  const Icon = icons[src as keyof typeof icons];
+
+  const pps = { height, width, alt, className };
+
+  const icon = Icon ? <Icon {...pps} /> : <BlurImage {...pps} src={src} />;
 
   return <Blur element={icon} />;
 };
@@ -64,7 +59,7 @@ export const IconGroup = (props: SharedGroupProps) => {
         <Menu
           menuButton={
             <MenuButton>
-              <BlurIcon src={image} {...imageProps} />
+              <BlurIcon src={image} {...(imageProps as { alt: string })} />
             </MenuButton>
           }
           direction="left"
@@ -97,7 +92,11 @@ export const IconGroup = (props: SharedGroupProps) => {
                 className="flex items-center gap-4 first-letter:capitalize hover:bg-transparent"
                 onClick={() => onImageChange(i)}
               >
-                <BlurIcon {...rest} src={i} />
+                <BlurIcon
+                  {...rest}
+                  {...(imageProps as { alt: string })}
+                  src={i}
+                />
                 {startCase(i)}
               </MenuItem>
             ))}

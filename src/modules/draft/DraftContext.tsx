@@ -54,12 +54,17 @@ export const DraftContext = (props: DraftContextInput) => {
       ...newDesign,
     }));
 
+  const persistToLs = (d: Design) => {
+    localStorage.setItem(`cv-${vacancy.id}`, JSON.stringify(d));
+  };
+
   const changeDesign = (d: RawDesign) => setDesign(initDesign(d));
 
   const context: DraftContextOutput = {
     a4Ref,
     design,
     updateDesign,
+    persistToLs,
     changeDesign,
     user,
     vacancy,

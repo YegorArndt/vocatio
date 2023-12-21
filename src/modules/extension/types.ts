@@ -64,7 +64,7 @@ export enum EmploymentType {
   PART_TIME = "PART_TIME",
   CONTRACT = "CONTRACT",
 }
-export type VacancyDto = Partial<{
+export type VacancyDto = {
   image: string;
   companyName: string;
   location: string;
@@ -84,11 +84,11 @@ export type VacancyDto = Partial<{
   requiredYearsMin: string;
   requiredYearsMax: string;
   requiredEducation: string;
-  requiredLanguages: string | null;
-  requiredSkills: string | null;
+  requiredLanguages: string[];
+  requiredSkills: string;
   sourceUrl: string;
   sourceName: SourceName;
-}>;
+};
 
 export type Entry = {
   name: string;

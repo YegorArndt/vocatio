@@ -1,42 +1,99 @@
 import { ChatCompletionRequestMessage, Configuration, OpenAIApi } from "openai";
 import { NextApiRequest, NextApiResponse } from "next";
-import {
-  DraftEmploymentHistoryEntry,
-  PrismaClient,
-  Vacancy,
-} from "@prisma/client";
+import { DraftEmploymentHistoryEntry, PrismaClient } from "@prisma/client";
 import { HfInference } from "@huggingface/inference";
 import jwt from "jsonwebtoken";
-import { pick } from "lodash-es";
+import { pick, shuffle } from "lodash-es";
+import { VacancyDto } from "~/modules/extension/types";
 
 const fs = require("fs");
 
 const { log } = console;
 
+//TODO: different openai requests for different available subsets of user data.
+// they might have only a professional summary for example, or only employment histories...
 type RequestBody = {
-  vacancy: Vacancy;
+  vacancy: VacancyDto;
   userId: string;
   shouldGenerateDraft: boolean;
 };
 
-const extractEnhanced = (enhancedContent: string) => {
-  if (!enhancedContent) return null;
+export const getSkillsOverlap = (
+  vacancyDescription: string,
+  skillsArray: string[]
+): string[] => {
+  const lowerCaseDescription = vacancyDescription.toLowerCase();
+
+  // Determine the maximum number of skills to match
+  const maxSkills = skillsArray.length > 8 ? 8 : skillsArray.length;
+
+  // Helper function to check if a skill is an exact match.
+  const isExactMatch = (skill: string, description: string) =>
+    description.includes(skill.toLowerCase().trim());
+
+  // Helper function to check if a skill is a partial match.
+  const isPartialMatch = (skill: string, description: string) =>
+    skill
+      .toLowerCase()
+      .trim()
+      .split(/\s+/)
+      .some((word) => description.includes(word));
+
+  // Find exact matches first.
+  const exactMatches = skillsArray.filter((skill) =>
+    isExactMatch(skill, lowerCaseDescription)
+  );
+
+  // Find partial matches, excluding the exact matches.
+  const partialMatches = skillsArray.filter(
+    (skill) =>
+      isPartialMatch(skill, lowerCaseDescription) &&
+      !exactMatches.includes(skill)
+  );
+
+  // Combine exact and partial matches.
+  const combinedMatches = new Set([...exactMatches, ...partialMatches]);
+
+  // Shuffle and fill the array if there are less than maxSkills.
+  if (combinedMatches.size < maxSkills) {
+    const shuffledSkills = shuffle(skillsArray);
+    for (const skill of shuffledSkills) {
+      if (!combinedMatches.has(skill)) {
+        combinedMatches.add(skill);
+        if (combinedMatches.size === maxSkills) break;
+      }
+    }
+  }
+
+  return Array.from(combinedMatches);
+};
+
+const extractEnhanced = (enhancedContent: string | undefined) => {
+  if (!enhancedContent) return { successfullyEnhanced: false };
+
+  // Remove "Summary:" and "Employment Histories:" from content
+  enhancedContent = enhancedContent.replace(
+    /Professional Summary:|Summary:|Employment Histories:/g,
+    ""
+  );
 
   // Split the response into summary and histories
   const [summary, historiesContent] = enhancedContent.split(/(?=@0)/, 2);
 
+  if (!summary || !historiesContent) return { successfullyEnhanced: false };
+
   // Extract employment histories into an object
-  const histories = {};
+  const histories = {} as Record<string, string>;
   const historyRegex = /@(\d+): ([\s\S]*?)(?=@\d+:|$)/g;
   let match;
 
   while ((match = historyRegex.exec(historiesContent)) !== null) {
-    const historyIndex = match[1];
-    const historyText = match[2].trim();
+    const historyIndex = match[1] as string;
+    const historyText = match[2]!.trim();
     histories[historyIndex] = historyText;
   }
 
-  return { summary: summary.trim(), histories };
+  return { summary: summary.trim(), histories, successfullyEnhanced: true };
 };
 
 const publicKey = fs.readFileSync("secret/public.pem", "utf8");
@@ -50,7 +107,7 @@ const openai = new OpenAIApi(configuration);
 
 export const applyGpt = async (messages: ChatCompletionRequestMessage[]) => {
   const response = await openai.createChatCompletion({
-    model: "gpt-3.5-turbo-1106",
+    model: "gpt-3.5-turbo",
     messages,
   });
 
@@ -122,30 +179,35 @@ export default async function handler(
     }
 
     /**
-     * Otherwise create a new vacancy and a Draft User Object for it.
+     * Otherwise create both Vacancy and Draft.
      */
+    const newVacancy = await prisma.vacancy.create({
+      data: {
+        ...vacancy,
+        users: {
+          connect: [{ id: userId }],
+        },
+      },
+    });
 
     /**
-     * 1. Generate vacancy summary.
+     * Use OS-HF AI to generate vacancy summary.
      */
-    const { summary_text: summary } = await inference.summarization({
+    const { summary_text: vacancySummary } = await inference.summarization({
       model: "sshleifer/distilbart-cnn-12-6",
       inputs: `Vacancy description: ${vacancy.description}. Vacancy requirements: ${vacancy.requiredSkills}.`,
     });
 
-    const newVacancy = await prisma.vacancy.create({
-      data: {
-        ...vacancy,
-        summary,
-        userId,
-      },
+    await prisma.vacancy.update({
+      where: { id: newVacancy.id },
+      data: { summary: vacancySummary },
     });
 
     if (!shouldGenerateDraft)
       return res.status(200).json({ message: "Vacancy added" });
 
     /**
-     * 2. Create Draft User Object.
+     * 2. Create Draft.
      */
     const professionalSummary = user.professionalSummary || "";
     const employmentHistories = user.employmentHistory.map(
@@ -153,39 +215,55 @@ export default async function handler(
     );
     const messages: ChatCompletionRequestMessage[] = [
       {
-        role: "user",
-        content: `Revise my professional summary, and employment histories for a job application.
+        role: "system",
+        content: `You apply for job. Revise your professional summary & employment histories for job application.
+          Summary:
+          ${professionalSummary}
 
-        Original Summary:
-        ${professionalSummary}
-        Employment Histories:
-        ${employmentHistories}
-        
-        Job Details:
-        Company Name: ${vacancy.companyName}.
-        Job Title: ${vacancy.jobTitle}.
-        Job Requirements: ${vacancy.requiredSkills}.
+          Employment Histories:
+          ${employmentHistories.join("\n")}
 
-        Request:
-        Adapt my summary to fit the job, addressing the company. Max 5 sentences for summary. Adapt my employment histories to fit the job. Prefix histories with "@" and its number. Keep professional tone.`,
+          Job to apply for:
+            Company Name: ${vacancy.companyName}.
+            Job title: ${vacancy.jobTitle}.
+            Job requirements: ${vacancy.requiredSkills || vacancySummary}
+      
+            Task: identify keywords, skills, phrases & technologies from job requirements.
+            Reword summary to include those. Reword histories making educated assumptions on when relevant skill or technology could've been used. Prefix histories with "@" and its number. 
+          `,
       },
     ];
+
     const enhanced = await applyGpt(messages);
-    const { summary: enhancedSummary = professionalSummary, histories } =
-      extractEnhanced(enhanced?.content);
 
-    log("mmm bitch", histories);
+    const {
+      summary: enhancedSummary = professionalSummary,
+      histories,
+      successfullyEnhanced,
+    } = extractEnhanced(enhanced?.content);
 
-    const draftEmploymentHistoryEntry: Partial<DraftEmploymentHistoryEntry>[] =
-      user.employmentHistory.map((entry, index) => {
-        const matchFromEnhanced = histories[index];
+    let draftEntries: Partial<DraftEmploymentHistoryEntry>[] =
+      user.employmentHistory.map((entry) => {
+        const skills = getSkillsOverlap(vacancy.description, entry.skills);
 
         return {
-          ...pick(entry, ["skills", "period", "place", "title", "image"]),
+          ...pick(entry, ["period", "place", "title", "image"]),
           originalEmploymentHistoryEntryId: entry.id,
+          skills,
+        };
+      });
+
+    if (successfullyEnhanced) {
+      draftEntries = draftEntries.map((entry, index) => {
+        const matchFromEnhanced =
+          histories![index.toString() as keyof typeof histories];
+
+        return {
+          ...entry,
           description: matchFromEnhanced || entry.description,
         };
       });
+    }
 
     await prisma.draft.create({
       data: {
@@ -193,8 +271,8 @@ export default async function handler(
         jobTitle: vacancy.jobTitle,
         userId,
         vacancyId: newVacancy.id,
-        draftEmploymentHistoryEntry: {
-          create: draftEmploymentHistoryEntry,
+        employmentHistory: {
+          create: draftEntries as DraftEmploymentHistoryEntry[],
         },
       },
     });

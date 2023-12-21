@@ -1,31 +1,44 @@
 import cn from "classnames";
-import {
-  EducationEntry,
-  EmploymentHistoryEntry,
-  Vacancy,
-} from "@prisma/client";
-import { ReactNode } from "react";
+import { EmploymentHistoryEntry, Vacancy } from "@prisma/client";
+import { PropsWithChildren, ReactNode, useEffect, useState } from "react";
 import { BlurImage } from "~/components";
-import { Button } from "~/components/ui/buttons/Button";
 import { LiaExternalLinkAltSolid } from "react-icons/lia";
 import { vacancyUI } from "../vacancies/constants";
 import { Link } from "~/components/ui/buttons/Link";
 
 const { log } = console;
 
-type DiffProps = {
-  vacancy: Vacancy;
+type TopLeftProps = {
+  professionalSummary: {
+    old: string;
+    new: ReactNode;
+    count: number;
+  };
   jobTitle: {
     old: string;
     new: string;
   };
-  professionalSummary: {
-    old: string;
-    new: string;
-  };
+};
+
+type TopRightProps = {
+  vacancy: Vacancy;
+  highlightedDescription: ReactNode;
+};
+
+type DiffProps = {
+  vacancy: Vacancy;
   employmentHistory: {
     old: EmploymentHistoryEntry[];
     new: EmploymentHistoryEntry[];
+  };
+  professionalSummary: {
+    old: string;
+    new: string;
+    count?: number;
+  };
+  jobTitle: {
+    old: string;
+    new: string;
   };
 };
 
@@ -34,6 +47,16 @@ type HighlightKeywordsProps = {
   keywords: string[];
   className?: string;
 };
+
+type EntryProps = PropsWithChildren<{
+  count: number;
+  description: ReactNode;
+  className?: string;
+}> &
+  Partial<EmploymentHistoryEntry>;
+
+const beforeRed = "bg-[#ffdce0] clr-black rounded-md p-3";
+const afterGreen = "bg-[#E7FFEB] clr-black rounded-md p-3";
 
 const commonWordsToIgnore = new Set([
   "the",
@@ -51,11 +74,58 @@ const commonWordsToIgnore = new Set([
   "with",
   "as",
   "by",
+  "was",
+  "that",
+  "were",
+  "are",
+  "have",
+  "from",
+  "like",
+  "will",
+  "be",
+  "which",
 ]);
+
+const getInterleaved = (
+  employmentHistory: {
+    new: EmploymentHistoryEntry[];
+    old: EmploymentHistoryEntry[];
+  },
+  keywords: string[]
+) => {
+  let newHighlightedCount = 0;
+
+  const withHighlights = employmentHistory.new.map((entry) => {
+    const currentCount = highlightKeywords({
+      text: entry.description,
+      keywords,
+    }).count;
+    newHighlightedCount += currentCount;
+
+    return {
+      ...entry,
+      description: highlightKeywords({
+        text: entry.description,
+        keywords,
+      }).highlighted,
+      count: currentCount,
+    };
+  });
+
+  const copy = { ...employmentHistory, new: withHighlights };
+
+  const interleaved = [];
+
+  for (let i = 0; i < copy.old.length; i++) {
+    interleaved.push(copy.old[i]);
+    interleaved.push(copy.new[i]);
+  }
+
+  return { interleaved, newHighlightedCount };
+};
 
 const highlightKeywords = (props: HighlightKeywordsProps) => {
   const { text, keywords, className = "bg-[#C7FBD5]" } = props;
-
   // Splitting text into words
   const words = text.split(" ");
   const splitKeywords = keywords
@@ -69,23 +139,21 @@ const highlightKeywords = (props: HighlightKeywordsProps) => {
       const match =
         kw.toLowerCase() === word.toLowerCase() &&
         !commonWordsToIgnore.has(word.toLowerCase());
-      if (match) {
-        highlightedKeywords.add(word.toLowerCase());
-      }
+      if (match) highlightedKeywords.add(word.toLowerCase());
+
       return match;
     });
-    const key = `word-${index}`;
 
     if (isKeyword) {
       return (
-        <span key={key} className={cn("p-1", className)}>
+        <span key={index} className={cn("p-1", className)}>
           {word}
         </span>
       );
     }
 
     return (
-      <span key={key}>
+      <span key={index}>
         {word}
         {index < words.length - 1 ? " " : ""}
       </span>
@@ -98,146 +166,178 @@ const highlightKeywords = (props: HighlightKeywordsProps) => {
   };
 };
 
-const DiffEntry = (props: {
-  title: string;
-  old: ReactNode;
-  new: ReactNode;
-  highlightedCount?: number;
+const HighlightedCount = (props: {
+  count: number;
+  what?: string;
+  className?: string;
 }) => {
-  const { title, old, new: _new, highlightedCount } = props;
+  const { count, what = "keywords", className } = props;
 
   return (
-    <section className="flex flex-col gap-3">
-      <h3 className="text-center">{title}</h3>
-      <div className="flex flex-col gap-5">
-        {[old, _new].map((reactNode, index) => (
-          <div key={index} className="flex flex-col gap-2">
-            <span className="font-semibold">
-              {index === 0 ? "Before" : "After"}
-              {index === 1 && !!highlightedCount && (
-                <span> (~{highlightedCount} keywords highlighted 🎉)</span>
-              )}
-            </span>
-            <div
-              className={cn("rounded-md p-3 clr-black", {
-                "bg-[#ffdce0]": index === 0,
-                "bg-[#E7FFEB]": index === 1,
-              })}
-            >
-              {reactNode}
-            </div>
-          </div>
-        ))}
-        <Button
-          text="I prefer the before version"
-          className="flex-y primary sm mr-auto"
-        />
+    count > 0 && (
+      <div className={className}>
+        &nbsp;(~{count} {what} highlighted 🎉)
+      </div>
+    )
+  );
+};
+
+const TopLeft = (props: TopLeftProps) => {
+  const { professionalSummary, jobTitle } = props;
+
+  return (
+    <section>
+      <h3>Professional Summary</h3>
+      <div className="mt-3 flex flex-col gap-2">
+        <span>Before</span>
+        <div className={`rounded-md ${beforeRed} p-3 clr-black`}>
+          <p>{professionalSummary.old}</p>
+        </div>
+      </div>
+      <div className="mt-3 flex flex-col gap-2">
+        <span className="flex-y gap-1">
+          After
+          <HighlightedCount count={professionalSummary.count} />
+        </span>
+        <div className={`${afterGreen} rounded-md p-3`}>
+          <p>{professionalSummary.new}</p>
+        </div>
+      </div>
+
+      <h3 className="mt-5">Job Title</h3>
+      <div className="flex flex-col gap-2">
+        <span className="mt-3">Before</span>
+        <div className={`rounded-md ${beforeRed} p-3 clr-black`}>
+          <p>{jobTitle.old}</p>
+        </div>
+      </div>
+
+      <div className="flex flex-col gap-2">
+        <span className="mt-3">After</span>
+        <div className={`rounded-md ${afterGreen} p-3 clr-black`}>
+          <p>{jobTitle.new}</p>
+        </div>
       </div>
     </section>
   );
 };
 
-const CvEntry = (props: {
-  isOld: boolean;
-  entry: EducationEntry | EmploymentHistoryEntry;
-}) => {
-  const { entry, isOld } = props;
+const TopRight = (props: TopRightProps) => {
+  const { vacancy, highlightedDescription } = props;
 
   return (
-    <div className="mb-5 flex flex-col gap-3">
-      <header>
-        <BlurImage
-          src={entry.image}
-          alt="Missing image"
-          height={50}
-          width={50}
-        />
+    <section className="flex h-full flex-col gap-3 overflow-auto rounded-md border p-5">
+      <header className="flex-y gap-5">
+        {vacancy.image && (
+          <BlurImage
+            src={vacancy.image}
+            alt={vacancy.companyName ?? "Company logo"}
+            height={50}
+            width={50}
+            className="rounded-full"
+          />
+        )}
+        <span className="text-lg">
+          {vacancy.companyName} - {vacancy.jobTitle}
+          <Link to={vacancy.sourceUrl} className="flex-y" newTab>
+            {vacancyUI[vacancy.sourceName as keyof typeof vacancyUI].icon}
+            <LiaExternalLinkAltSolid />
+          </Link>
+        </span>
       </header>
-      <section>{entry.description}</section>
-      {entry.skills && (
-        <footer
-          className={cn("rounded-md p-3", {
-            "bg-[#ffeef0]": isOld,
-            "bg-[#0A320B]": !isOld,
-            "clr-white": !isOld,
-          })}
-        >
-          <p className="font-bold">
-            {isOld ? "Previous" : "Highlighted"} skills:
-          </p>
-          {entry.skills.map((s) => s + " ")}
-        </footer>
-      )}
-    </div>
+      <span>{highlightedDescription}</span>
+      <h3>AI generated job summary</h3>
+      <span>{vacancy.summary}</span>
+    </section>
+  );
+};
+
+const Entry = (props: EntryProps) => {
+  const { count, description, children, image, place, className } = props;
+  const isAfter = typeof description !== "string";
+
+  return (
+    <section className={cn("mb-5 flex flex-col gap-3")}>
+      <span className="flex-y gap-2">
+        {isAfter ? "After" : "Before"}
+        {isAfter && <HighlightedCount count={count} />}
+      </span>
+      <div className={className}>
+        <header className="flex-y gap-2 font-semibold">
+          {image && (
+            <BlurImage src={image} alt="Missing image" height={50} width={50} />
+          )}
+          <span className="text-lg">{place}</span>
+        </header>
+        <section>{description}</section>
+        {children}
+      </div>
+    </section>
   );
 };
 
 export const Diff = (props: DiffProps) => {
-  const { professionalSummary, employmentHistory, jobTitle, vacancy } = props;
+  let { vacancy, professionalSummary, employmentHistory, jobTitle } = props;
+  const [highlightedSum, setHighlightedSum] = useState(0);
 
-  const keywords = [
-    jobTitle.new,
-    vacancy.companyName,
-    vacancy.employmentType,
-    vacancy.description,
-    vacancy.requiredSkills,
-  ];
+  const keywords = [vacancy.description, vacancy.requiredSkills];
 
-  const { highlighted: userSummary, count: summaryHighlightedCount } =
+  const { highlighted: summaryHighlighted, count: summaryCount } =
     highlightKeywords({
       text: professionalSummary.new,
       keywords,
     });
 
-  const { highlighted: vacancyDescription } = highlightKeywords({
-    text: vacancy.description,
-    keywords: professionalSummary.new.split(" "),
-    className: "bg-border",
-  });
+  const { highlighted: vacancyHighlighted, count: vacancyCount } =
+    highlightKeywords({
+      text: vacancy.description,
+      keywords: professionalSummary.new!.split(" "),
+      className: "bg-border",
+    });
+
+  const { interleaved, newHighlightedCount } = getInterleaved(
+    employmentHistory,
+    keywords
+  );
+
+  useEffect(() => {
+    setHighlightedSum(newHighlightedCount + summaryCount + vacancyCount);
+  }, []);
 
   return (
-    <div className="flex h-full flex-col gap-8">
-      <div className="grid h-full grid-cols-2 gap-8">
-        <h1 className="col-span-2 text-center">Review changes</h1>
-        <section className="min-h-full overflow-auto">
-          <DiffEntry
-            title="Professional Summary"
-            old={professionalSummary.old}
-            new={userSummary}
-            highlightedCount={summaryHighlightedCount}
+    <div className="flex h-full flex-col gap-8 overflow-auto">
+      <div className="flex flex-col gap-2">
+        <h1 className="text-center">Review changes</h1>
+        <HighlightedCount
+          count={highlightedSum}
+          what="total keywords"
+          className="ml-5 pb-7 text-center text-sm"
+        />
+      </div>
+      <div className="grid grid-cols-2 gap-4">
+        <TopLeft
+          professionalSummary={{
+            ...professionalSummary,
+            new: summaryHighlighted,
+            count: summaryCount,
+          }}
+          jobTitle={jobTitle}
+        />
+        <TopRight
+          vacancy={vacancy}
+          highlightedDescription={vacancyHighlighted}
+        />
+        <h3 className="col-span-2 mt-5">Employment History</h3>
+        {interleaved.map((entry, index) => (
+          <Entry
+            key={entry!.id}
+            {...(entry as EntryProps)}
+            className={cn({
+              [afterGreen]: index % 2 === 1,
+              [beforeRed]: index % 2 === 0,
+            })}
           />
-          <DiffEntry title="Job Title" {...jobTitle} />
-          <DiffEntry
-            title="Employment History"
-            old={employmentHistory.old.map((entry) => (
-              <CvEntry key={entry.id} isOld entry={entry} />
-            ))}
-            new={employmentHistory.new.map((entry) => (
-              <CvEntry key={entry.id} entry={entry} />
-            ))}
-          />
-        </section>
-        <section className="flex h-full flex-col gap-3 overflow-auto rounded-md border p-5">
-          <header className="flex-y gap-5">
-            <BlurImage
-              src={vacancy.image}
-              alt={vacancy.companyName}
-              height={50}
-              width={50}
-              className="rounded-full"
-            />
-            <span className="text-lg">
-              {vacancy.companyName} - {vacancy.jobTitle}
-              <Link to={vacancy.sourceUrl} className="flex-y" newTab>
-                {vacancyUI[vacancy.sourceName as keyof typeof vacancyUI].icon}
-                <LiaExternalLinkAltSolid />
-              </Link>
-            </span>
-          </header>
-          <span>{vacancyDescription}</span>
-          <h3>AI generated job summary</h3>
-          <span>{vacancy.summary}</span>
-        </section>
+        ))}
       </div>
     </div>
   );

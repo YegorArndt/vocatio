@@ -6,28 +6,14 @@ import {
   type HTMLAttributes,
   type PropsWithChildren,
   useCallback,
-  ReactNode,
-  forwardRef,
 } from "react";
 import { HiOutlineArrowPath } from "react-icons/hi2";
 import { Tooltip } from "react-tooltip";
-import { FaBold } from "react-icons/fa6";
-import { FaItalic } from "react-icons/fa";
 import cn from "classnames";
-import { FaUnderline } from "react-icons/fa6";
 import { IoAddCircleSharp } from "react-icons/io5";
-import {
-  Menu,
-  MenuButton,
-  MenuDivider,
-  MenuHeader,
-  MenuItem,
-  SubMenu,
-} from "@szhsin/react-menu";
+import { MenuDivider, MenuHeader, SubMenu } from "@szhsin/react-menu";
 import { RiDeleteBin6Line, RiDragMove2Fill } from "react-icons/ri";
 import { IoTextSharp } from "react-icons/io5";
-import { IoChevronUpOutline } from "react-icons/io5";
-import { RxLetterCaseUppercase } from "react-icons/rx";
 import { LuCopyPlus } from "react-icons/lu";
 import { BsArrowsCollapse, BsArrowsExpand } from "react-icons/bs";
 
@@ -37,11 +23,12 @@ import { useComponentContext } from "../../ComponentContext";
 import {
   isDecoration,
   isEntries,
+  isGroup,
+  isHeading,
   isImage,
   isText,
   typedKeys,
 } from "~/modules/draft/utils/common";
-import { getDirection, getMenuProps } from "./utils";
 import { mergeWithIntrinsic } from "~/modules/utils/mergeWithIntrinsic";
 import { useCrudContext } from "../../DndProvider";
 import { debounce, startCase } from "lodash-es";
@@ -53,7 +40,15 @@ import { TfiWrite } from "react-icons/tfi";
 import { api } from "~/utils";
 import { toast } from "react-toastify";
 import Image from "next/image";
-import { BUTTON_CN, ToolbarButton } from "./ToolbarButton";
+import {
+  BUTTON_CN,
+  SmChevron,
+  ToolbarButton,
+  textClassNames,
+} from "./constants";
+import { CustomMenu } from "~/components/external/CustomMenu";
+import { CustomMenuButton } from "~/components/external/CustomMenuButton";
+import { CustomMenuItem } from "~/components/external/CustomMenuItem";
 
 const { log } = console;
 
@@ -66,84 +61,47 @@ type ComponentToolbarProps = PropsWithChildren<{
 }> &
   HTMLAttributes<HTMLDivElement>;
 
-const classNames = [
-  {
-    icon: <FaBold />,
-    label: "Bold",
-    className: "font-bold",
-  },
-  {
-    icon: <FaItalic />,
-    label: "Italic",
-    className: "italic",
-  },
-  {
-    icon: <FaUnderline />,
-    label: "Underline",
-    className: "underline",
-  },
-  {
-    icon: <BsArrowsCollapse style={{ transform: "rotate(90deg)" }} />,
-    label: "Center",
-    className: "text-center",
-  },
-  {
-    icon: <RxLetterCaseUppercase />,
-    label: "Upper",
-    className: "uppercase",
-  },
-];
-
-const SmChevron = (p: { menuDirection: "top" | "bottom" }) => (
-  <IoChevronUpOutline
-    size={8}
-    style={{
-      transform: p.menuDirection === "top" ? undefined : "rotate(180deg)",
-    }}
-  />
-);
-
 /**
- * Menu item.
+ * Toast on AI actions.
  */
-type MiProps = PropsWithChildren<{
-  text?: string;
-  icon?: ReactNode;
-  className?: string;
-  onClick?: () => void;
-}>;
-const Mi = (props: MiProps) => {
-  const { text, icon, children = text, className, ...rest } = props;
-  return (
-    <MenuItem className={cn("flex-y gap-2", className as string)} {...rest}>
-      {icon} {children}
-    </MenuItem>
+const notifyOnStart = () => {
+  toast(
+    <div className="flex-y gap-2">
+      <Image
+        src="/gpt-logo.jpg"
+        height={30}
+        width={30}
+        alt="GPT Logo"
+        className="spin-animation rounded-full"
+      />
+      I'm on it...
+    </div>,
+    {
+      autoClose: false,
+      toastId: "start",
+    }
   );
 };
 
-/**
- * Menu button.
- */
-type MbProps = PropsWithChildren<{
-  text?: string;
-  icon?: ReactNode;
-  className?: string;
-  onClick?: () => void;
-}>;
-const Mb = forwardRef((props: MbProps, ref) => {
-  const { text, icon, children = text, className, ...rest } = props;
-  return (
-    <MenuButton
-      className={cn("gap-2", BUTTON_CN, className)}
-      ref={ref}
-      {...rest}
-    >
-      {icon} {children}
-    </MenuButton>
+const notifyOnSuccess = () => {
+  toast.dismiss("start");
+  toast(
+    <div className="flex-y gap-2">
+      <Image
+        src="/gpt-logo.jpg"
+        height={30}
+        width={30}
+        alt="GPT Logo"
+        className="rounded-full"
+      />
+      Done! Hope you like it. 🤞
+    </div>,
+    {
+      toastId: "success",
+      autoClose: 4000,
+    }
   );
-});
-
-const ACTIVE = "bg-gray transition";
+};
 
 export const ComponentToolbar = (props: ComponentToolbarProps) => {
   const { dndRef, listeners, attributes, children, decorated, index, ...rest } =
@@ -158,58 +116,14 @@ export const ComponentToolbar = (props: ComponentToolbarProps) => {
   } = useCrudContext();
   const { design, vacancy, updateDesign } = useDraftContext();
 
-  const { type, id, sectionId } = c;
+  const { type, id } = c;
   const { intrinsic } = design;
 
   const { control, watch } = useForm();
 
-  const menuDirection = getDirection(sectionId);
-
   const canEditText = !isDecoration(type) && !isEntries(type);
   const canTurnInto = !isDecoration(type) && !isEntries(type);
   const canGpt = isText(type);
-
-  /**
-   * Toast on AI actions.
-   */
-  const notifyOnStart = () => {
-    toast(
-      <div className="flex-y gap-2">
-        <Image
-          src="/gpt-logo.jpg"
-          height={30}
-          width={30}
-          alt="GPT Logo"
-          className="spin-animation rounded-full"
-        />
-        I'm on it...
-      </div>,
-      {
-        autoClose: false,
-        toastId: "start",
-      }
-    );
-  };
-
-  const notifyOnSuccess = () => {
-    toast.dismiss("start");
-    toast(
-      <div className="flex-y gap-2">
-        <Image
-          src="/gpt-logo.jpg"
-          height={30}
-          width={30}
-          alt="GPT Logo"
-          className="rounded-full"
-        />
-        Done! Hope you like it. 🤞
-      </div>,
-      {
-        toastId: "success",
-        autoClose: 4000,
-      }
-    );
-  };
 
   /**
    * Hide tooltips on typing.
@@ -372,30 +286,32 @@ export const ComponentToolbar = (props: ComponentToolbarProps) => {
             >
               {canEditText && (
                 <li>
-                  <Menu
+                  <CustomMenu
                     menuButton={
-                      <Mb>
+                      <CustomMenuButton>
                         <IoTextSharp />
-                        <SmChevron menuDirection={menuDirection} />
-                      </Mb>
+                        <SmChevron />
+                      </CustomMenuButton>
                     }
-                    {...getMenuProps(menuDirection)}
                   >
-                    {classNames.map(({ icon, label, className }) => {
+                    {textClassNames.map(({ icon, label, className }) => {
                       const m = mergeWithIntrinsic(c, design);
 
                       return (
-                        <Mi
-                          icon={icon}
-                          text={label}
-                          className={cn({
-                            [ACTIVE]: m.props.className.includes(className),
-                          })}
+                        <CustomMenuItem
+                          key={className}
                           onClick={() => toggleClassName(m, className)}
-                        />
+                          className={cn({
+                            "bg-gray transition":
+                              m.props.className.includes(className),
+                          })}
+                        >
+                          {icon}
+                          {label}
+                        </CustomMenuItem>
                       );
                     })}
-                  </Menu>
+                  </CustomMenu>
                 </li>
               )}
               <li {...listeners} {...attributes}>
@@ -410,14 +326,13 @@ export const ComponentToolbar = (props: ComponentToolbarProps) => {
                 </ToolbarButton>
               </li>
               <li>
-                <Menu
+                <CustomMenu
                   menuButton={
-                    <Mb>
+                    <CustomMenuButton>
                       <IoAddCircleSharp />
-                      <SmChevron menuDirection={menuDirection} />
-                    </Mb>
+                      <SmChevron />
+                    </CustomMenuButton>
                   }
-                  {...getMenuProps(menuDirection)}
                 >
                   <MenuHeader className="normal-case">Add below</MenuHeader>
                   <MenuDivider />
@@ -425,24 +340,27 @@ export const ComponentToolbar = (props: ComponentToolbarProps) => {
                     if (isImage(typeOfComponent)) return;
 
                     return (
-                      <Mi
+                      <CustomMenuItem
                         key={typeOfComponent}
-                        icon={
-                          <BlurImage
-                            src={`/intrinsic/${typeOfComponent}.png`}
-                            height={50}
-                            width={50}
-                            alt=""
-                          />
-                        }
-                        text={startCase(typeOfComponent)}
                         onClick={() =>
-                          addComponent({ ...c, type: typeOfComponent })
+                          addComponent({
+                            ...c,
+                            type: typeOfComponent,
+                            sectionId: c.sectionId,
+                          })
                         }
-                      />
+                      >
+                        <BlurImage
+                          src={`/intrinsic/${typeOfComponent}.png`}
+                          height={50}
+                          width={50}
+                          alt=""
+                        />
+                        {startCase(typeOfComponent)}
+                      </CustomMenuItem>
                     );
                   })}
-                </Menu>
+                </CustomMenu>
               </li>
               <li>
                 <ToolbarButton
@@ -453,7 +371,7 @@ export const ComponentToolbar = (props: ComponentToolbarProps) => {
               </li>
               {canGpt && (
                 <li>
-                  <Menu
+                  <CustomMenu
                     menuButton={
                       <Button className={BUTTON_CN}>
                         <BlurImage
@@ -464,26 +382,19 @@ export const ComponentToolbar = (props: ComponentToolbarProps) => {
                         />
                       </Button>
                     }
-                    {...getMenuProps(menuDirection)}
                   >
                     <MenuHeader className="flex-center">
                       <Chip text="Beta" className="bg-sky w-11 clr-white" />
                     </MenuHeader>
-                    <Mi
-                      icon={<SlMagicWand />}
-                      text="Adjust to vacancy"
-                      onClick={adjust}
-                    />
-                    <Mi
-                      icon={<BsArrowsCollapse />}
-                      text="Condense"
-                      onClick={condense}
-                    />
-                    <Mi
-                      icon={<BsArrowsExpand />}
-                      text="Elaborate"
-                      onClick={elaborate}
-                    />
+                    <CustomMenuItem onClick={adjust}>
+                      <SlMagicWand /> Adjust to vacancy
+                    </CustomMenuItem>
+                    <CustomMenuItem onClick={condense}>
+                      <BsArrowsCollapse /> Condense
+                    </CustomMenuItem>
+                    <CustomMenuItem onClick={elaborate}>
+                      <BsArrowsExpand /> Elaborate
+                    </CustomMenuItem>
                     <MenuDivider />
                     <SubMenu
                       label={
@@ -493,14 +404,12 @@ export const ComponentToolbar = (props: ComponentToolbarProps) => {
                         </span>
                       }
                     >
-                      <Mi
-                        text="To a bullet list"
-                        onClick={() => convert("bulletPoints")}
-                      />
-                      <Mi
-                        text="To a thorough description"
-                        onClick={() => convert("text")}
-                      />
+                      <CustomMenuItem onClick={() => convert("bulletPoints")}>
+                        <BsArrowsCollapse /> To a bullet list
+                      </CustomMenuItem>
+                      <CustomMenuItem onClick={() => convert("text")}>
+                        <BsArrowsExpand /> To a thorough description
+                      </CustomMenuItem>
                     </SubMenu>
                     <MenuDivider />
                     <MenuHeader>Or</MenuHeader>
@@ -511,63 +420,66 @@ export const ComponentToolbar = (props: ComponentToolbarProps) => {
                       className="my-2 ml-4 !w-[85%] border !bg-white !px-4 [&>*]:!cursor-[black] [&>*]:!clr-black"
                       onClickCapture={(e) => e.stopPropagation()}
                     />
-                    <Mi className="hover:bg-transparent">
-                      <Button
-                        frontIcon={
-                          <BlurImage
-                            src="/gpt-logo.jpg"
-                            height={20}
-                            width={20}
-                            alt=""
-                          />
-                        }
-                        text="Apply"
-                        className="sm flex-y hover:bg-test rounded-md border bg-black clr-white"
-                        onClick={custom}
+                    <CustomMenuItem onClick={custom}>
+                      <BlurImage
+                        src="/gpt-logo.jpg"
+                        height={20}
+                        width={20}
+                        alt=""
                       />
-                    </Mi>
-                  </Menu>
+                      Apply
+                    </CustomMenuItem>
+                  </CustomMenu>
                 </li>
               )}
               {canTurnInto && (
                 <li>
-                  <Menu
+                  <CustomMenu
                     menuButton={
-                      <Mb>
+                      <CustomMenuButton>
                         <HiOutlineArrowPath />
-                        <SmChevron menuDirection={menuDirection} />
-                      </Mb>
+                        <SmChevron />
+                      </CustomMenuButton>
                     }
-                    {...getMenuProps(menuDirection)}
                   >
                     <MenuHeader className="normal-case">Turn into</MenuHeader>
                     <MenuDivider />
                     {typedKeys(intrinsic).map((typeOfComponent) => {
                       if (
                         typeOfComponent === type ||
-                        typeOfComponent === "image"
+                        isDecoration(typeOfComponent)
+                      )
+                        return;
+
+                      if (
+                        (isText(type) || isHeading(type)) &&
+                        isGroup(typeOfComponent)
+                      )
+                        return;
+                      if (
+                        isGroup(type) &&
+                        (isText(typeOfComponent) || isHeading(typeOfComponent))
                       )
                         return;
 
                       return (
-                        <Mi
+                        <CustomMenuItem
                           key={typeOfComponent}
-                          text={startCase(typeOfComponent)}
-                          icon={
-                            <BlurImage
-                              src={`/intrinsic/${typeOfComponent}.png`}
-                              height={50}
-                              width={50}
-                              alt=""
-                            />
-                          }
                           onClick={() =>
                             changeComponentType(c, typeOfComponent)
                           }
-                        />
+                        >
+                          <BlurImage
+                            src={`/intrinsic/${typeOfComponent}.png`}
+                            height={50}
+                            width={50}
+                            alt=""
+                          />
+                          {startCase(typeOfComponent)}
+                        </CustomMenuItem>
                       );
                     })}
-                  </Menu>
+                  </CustomMenu>
                 </li>
               )}
             </ul>

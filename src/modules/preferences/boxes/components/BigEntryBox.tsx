@@ -9,6 +9,7 @@ import { EducationEntry, EmploymentHistoryEntry } from ".prisma/client";
 import { FormContext } from "../../FormContext";
 import { ArrayForm2 } from "./ArrayForm2";
 import { SaveButton } from "~/components/SaveButton";
+import { omit } from "lodash-es";
 
 const { log } = console;
 
@@ -16,13 +17,7 @@ const getFieldArray = (
   entries: (EmploymentHistoryEntry | EducationEntry)[]
 ): BigEntry[] => {
   return entries.map((e) => {
-    return {
-      place: e.place,
-      image: e.image,
-      title: e.title,
-      description: e.description,
-      period: e.period,
-    };
+    return omit(e, "id", "createdAt", "updatedAt", "skills", "userId");
   });
 };
 
@@ -58,20 +53,8 @@ export const BigEntryBox = (props: {
   const onSubmit = (values: typeof defaultValues) => {
     const { entries } = values;
 
-    //TODO
-    const payload = entries?.map((e) => {
-      const { place, title } = e;
-      const { place: p, title: t } = e;
-
-      if (p === place && t === title) {
-        return { ...e, ...values };
-      }
-
-      return e;
-    });
-
     mutate({
-      [entryFor]: payload,
+      [entryFor]: entries,
     });
   };
 

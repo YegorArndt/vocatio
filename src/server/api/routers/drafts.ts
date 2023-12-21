@@ -44,7 +44,7 @@ export const draftsRouter = createTRPCRouter({
           vacancyId,
         },
         include: {
-          draftEmploymentHistoryEntry: true,
+          employmentHistory: true,
         },
       });
 

@@ -30,7 +30,7 @@ export const Modal = (props: ModalProps) => {
               exit={{ opacity: 0, y: 50 }}
               transition={{ duration: 0.3 }}
               className={cn(
-                "z-modal flex h-3/4 w-5/12 flex-col rounded-md bg-primary [&>*]:px-5 [&>*]:py-3",
+                "z-modal flex h-3/4 w-5/12 flex-col rounded-md bg-primary [&>*]:px-5 [&>*]:py-3 ",
                 className
               )}
               onClick={(e) => e.stopPropagation()}

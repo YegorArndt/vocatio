@@ -11,13 +11,6 @@ export default authMiddleware({
       return NextResponse.redirect(
         "https://splendid-amoeba-59.accounts.dev/sign-in?redirect_url=https%3A%2F%2Fchirp-mu-rust-60.vercel.app%2Flogin"
       );
-      // if (req.url === "/onboarding") {
-      //   return redirectToSignUp({ returnBackUrl: "/login" });
-      // } else if (req.url === "/dashboard") {
-      //   return redirectToSignIn({ returnBackUrl: "/dashboard" });
-      // }
-    } else {
-      // return NextResponse.redirect("http://localhost:3000/login");
     }
   },
 });

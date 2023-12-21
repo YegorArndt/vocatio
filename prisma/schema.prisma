@@ -131,7 +131,6 @@ model EmploymentHistoryEntry {
   title                       String
   user                        User                          @relation(fields: [userId], references: [id])
   userId                      String
-  draftEmploymentHistoryEntry DraftEmploymentHistoryEntry[]
 }
 
 model DraftEmploymentHistoryEntry {
@@ -144,8 +143,7 @@ model DraftEmploymentHistoryEntry {
   skills                           String[]
   image                            String
   title                            String
-  originalEmploymentHistoryEntry   EmploymentHistoryEntry @relation(fields: [originalEmploymentHistoryEntryId], references: [id])
-  originalEmploymentHistoryEntryId String
+  originalEmploymentHistoryEntryId String // Carefully! This is a reference to the original employment history entry
   draft                            Draft?                 @relation(fields: [draftId], references: [id])
   draftId                          String?
 }
@@ -267,7 +265,7 @@ model Draft {
 
   professionalSummary         String?
   jobTitle                    String?
-  draftEmploymentHistoryEntry DraftEmploymentHistoryEntry[]
+  employmentHistory DraftEmploymentHistoryEntry[]
 
   // 2 relations total 
   user   User   @relation(fields: [userId], references: [id])
@@ -294,7 +292,7 @@ model Vacancy {
   jobTitle        String?
   professionField ProfessionField?
 
-  summary        String @db.Text
+  summary        String? @db.Text
   description    String @db.Text
   requiredSkills String
 

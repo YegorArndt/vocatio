@@ -3,12 +3,12 @@ import { ModalNames } from "./constants";
 import { Modal } from "./Modal";
 import { typedKeys } from "../draft/utils/common";
 
-export type Component = React.ComponentClass<any> | React.FC<any>;
+export type Component = React.ComponentClass<unknown> | React.FC<unknown>;
 
 export type OnOpen = {
   component: Component;
   componentId: string;
-  props?: { [key: string]: unknown };
+  props?: Record<string, unknown>;
 };
 
 type ModalState = {
@@ -16,7 +16,7 @@ type ModalState = {
   props: Record<string, unknown>;
 };
 
-type State = Readonly<{ [id: string]: ModalState }>;
+type State = Readonly<Record<string, ModalState>>;
 
 export class ModalFactory extends React.Component<
   Record<string, unknown>,
@@ -86,7 +86,7 @@ export class ModalFactory extends React.Component<
                 <Modal
                   key={modalId}
                   {...modalState.props}
-                  onClose={() => ModalFactory.close(modalId as string)}
+                  onClose={() => ModalFactory.close(modalId)}
                   isOpen
                 />
               ) : null;

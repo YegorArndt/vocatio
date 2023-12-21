@@ -71,8 +71,8 @@ export const ProfessionalSummary = () => {
       )}
       <footer className="border-top flex-between py-4">
         <span className="clr-disabled">
-          The Summary you're seeing will be used as starting point during CV
-          generation.
+          The Summary you&apos;re seeing will be used as starting point during
+          CV generation.
         </span>
       </footer>
     </Wrapper>

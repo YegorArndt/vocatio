@@ -20,7 +20,7 @@ import { useComponentContext } from "../../ComponentContext";
 import { icons } from "~/constants";
 
 const BlurIcon = (props: ImageProps) => {
-  let { src, height = 20, width = 20, alt, className } = props;
+  const { src, height = 20, width = 20, alt, className } = props;
   const Icon = icons[src as keyof typeof icons];
 
   const pps = { height, width, alt, className };

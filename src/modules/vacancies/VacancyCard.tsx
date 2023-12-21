@@ -98,7 +98,7 @@ export const VacancyCard = (props: VacancyCardProps) => {
             </div>
             <Link
               className="flex-y ml-auto gap-1 text-[1.5rem]"
-              to={sourceUrl!}
+              to={sourceUrl}
               newTab
             >
               {vacancyUI[sourceName as keyof typeof vacancyUI].icon}
@@ -135,17 +135,22 @@ export const VacancyCard = (props: VacancyCardProps) => {
         >
           <ul className="flex flex-col gap-2 p-4">
             {[
+              // eslint-disable-next-line react/jsx-key
               [
+                // eslint-disable-next-line react/jsx-key
                 <FaDollarSign />,
                 getSalaryRange(salaryMin, salaryMax, isAnnualSalary!),
               ],
+              // eslint-disable-next-line react/jsx-key
               [<IoLocationOutline />, location],
+              // eslint-disable-next-line react/jsx-key
               [<MdWorkOutline />, startCase(lowerCase(employmentType!))],
+              // eslint-disable-next-line react/jsx-key
               [<BsPersonWorkspace />, startCase(lowerCase(requiredSeniority!))],
             ].map(
-              ([icon, value]) =>
+              ([icon, value], i) =>
                 !!value && (
-                  <li key={value.toString()} className="flex-y gap-3">
+                  <li key={i} className="flex-y gap-3">
                     {icon}
                     {value}
                   </li>

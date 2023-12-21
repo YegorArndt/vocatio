@@ -52,7 +52,7 @@ const MyApp: AppType = ({ Component, pageProps }) => {
   const router = useRouter();
 
   useEffect(() => {
-    if (isError) router.push("/login");
+    if (isError) void router.push("/login");
   }, [isError]);
 
   return (

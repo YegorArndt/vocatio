@@ -25,7 +25,7 @@ const CopyToClipboard: React.FC<CopyToClipboardProps> = ({
 
   return (
     <div
-      onClick={() => copyTextToClipboard(text)}
+      onClick={() => void copyTextToClipboard(text)}
       style={{ cursor: "pointer", userSelect: "none" }}
     >
       {children || text}

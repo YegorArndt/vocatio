@@ -17,7 +17,7 @@ export type AutoresizeProps = {
 };
 
 export const Autoresize = (props: AutoresizeProps) => {
-  let {
+  const {
     value,
     style,
     className,
@@ -30,16 +30,17 @@ export const Autoresize = (props: AutoresizeProps) => {
   const c = useComponentContext();
   const { updateDesign } = useDraftContext();
 
-  if (!initialValue.current) return null;
-
   const debouncedUpdateDesign = useCallback(
     debounce((text) => {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      //@ts-ignore
       const newProps = { ...c.props, [type]: text };
       c.props = newProps;
       updateDesign(); // TODO: whitespace collapse
     }, 10000),
     []
   );
+  if (!initialValue.current) return null;
 
   return (
     <AnimatedDiv

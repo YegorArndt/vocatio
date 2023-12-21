@@ -17,6 +17,11 @@ const config = {
     "@typescript-eslint/consistent-type-definitions": "off",
     "@typescript-eslint/prefer-nullish-coalescing": "off",
 
+    // TODO
+    "@typescript-eslint/no-empty-function": "off",
+    "@typescript-eslint/no-unsafe-assignment": "off",
+    "@typescript-eslint/no-unsafe-return": "off",
+
     "@typescript-eslint/consistent-type-imports": [
       "warn",
       {

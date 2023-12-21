@@ -128,7 +128,7 @@ export const EntryBox = (props: EntryBoxProps) => {
                   isSuccess={isSuccess}
                   disabled={!formState.isDirty}
                   reset={reset}
-                  onClick={() => submit(onSubmit)}
+                  onClick={() => void submit(onSubmit)}
                 />
               </footer>
             </>

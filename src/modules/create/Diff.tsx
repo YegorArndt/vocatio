@@ -293,7 +293,7 @@ export const Diff = (props: DiffProps) => {
   const { highlighted: vacancyHighlighted, count: vacancyCount } =
     highlightKeywords({
       text: vacancy.description,
-      keywords: professionalSummary.new!.split(" "),
+      keywords: professionalSummary.new.split(" "),
       className: "bg-border",
     });
 

@@ -49,6 +49,8 @@ export const FormContext = <TFieldValues extends FieldValues>(
       const normalized = mapValues(newDefaults, (value) => {
         if (value == null) return "";
         if (typeof value === "number") return `${value}`;
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        //@ts-ignore
         return value;
       });
 

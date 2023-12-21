@@ -2,7 +2,6 @@ import Fuse from "fuse.js";
 import { VacancyCard } from "./VacancyCard";
 import { Vacancy } from "@prisma/client";
 import { useFormContext } from "react-hook-form";
-import { forIn, omit } from "lodash-es";
 
 const { log } = console;
 
@@ -74,22 +73,24 @@ const filterVacancies = (
 
 export const CuratedVacancies = (props: { vacancies: Vacancy[] }) => {
   const { vacancies } = props;
-  const { watch, getValues, formState } = useFormContext();
+  const { watch, getValues } = useFormContext();
 
-  const sortingCriteria = getSortingCriteria(watch("salary"), watch("date"));
-  const sortedVacancies = sortVacancies(vacancies, sortingCriteria);
+  // const sortingCriteria = getSortingCriteria(watch("salary"), watch("date"));
+  // const sortedVacancies = sortVacancies(vacancies, sortingCriteria);
 
-  const filters = forIn(omit(getValues(), ["salary", "date"]), (_, key) => ({
-    [key]: watch(key),
-  }));
-  const filteredVacancies = filterVacancies(sortedVacancies, filters);
+  // const filters = forIn(omit(getValues(), ["salary", "date"]), (_, key) => ({
+  //   [key]: watch(key),
+  // }));
+  // const filteredVacancies = filterVacancies(sortedVacancies, filters);
 
-  const fuse = new Fuse(filteredVacancies, {
+  const fuse = new Fuse(vacancies, {
     keys: fuseKeys,
     shouldSort: false,
   });
 
-  return fuse
-    .search(watch("search") || "a")
-    .map(({ item }) => <VacancyCard key={item.id} vacancy={item} />);
+  return (
+    vacancies
+      // .search(watch("search") || "a")
+      .map((vacancy) => <VacancyCard key={vacancy.id} vacancy={vacancy} />)
+  );
 };

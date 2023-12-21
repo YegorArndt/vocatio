@@ -17,3 +17,5 @@ export const AnimatedDiv = forwardRef(
     );
   }
 );
+
+AnimatedDiv.displayName = "AnimatedDiv";

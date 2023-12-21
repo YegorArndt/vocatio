@@ -196,8 +196,9 @@ export const DndProvider = (props: DndProviderProps) => {
       if (!section) return prev;
 
       const newSections = { ...prev };
-      newSections[sectionId as SectionId]!.components =
-        section.components.filter((c) => c.id !== component.id);
+      newSections[sectionId]!.components = section.components.filter(
+        (c) => c.id !== component.id
+      );
 
       return newSections;
     });
@@ -354,8 +355,8 @@ export const DndProvider = (props: DndProviderProps) => {
         // Move the active item within its section to the new position
         newSections[overSectionId as SectionId]!.components = arrayMove(
           newSections[overSectionId as SectionId]!.components,
-          activeIndex!,
-          overIndex!
+          activeIndex,
+          overIndex
         );
 
         // Update sectionId key of component

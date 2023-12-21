@@ -14,3 +14,5 @@ export const CustomMenuButton = forwardRef((props: MenuButtonProps, ref) => {
     />
   );
 });
+
+CustomMenuButton.displayName = "CustomMenuButton";

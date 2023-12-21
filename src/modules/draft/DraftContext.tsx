@@ -54,7 +54,7 @@ export const DraftContext = (props: DraftContextInput) => {
   const updateDesign = (newDesign?: Partial<Design>) =>
     setDesign((d) => ({
       ...d,
-      sections: updateSections(a4Ref) as Sections,
+      sections: updateSections(a4Ref)!,
       ...newDesign,
     }));
 

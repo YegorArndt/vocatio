@@ -18,8 +18,8 @@ export const FineTuning = () => {
           <div className="main-center">
             <h1>Fine-tuning.</h1>
             <p>
-              If you wish to further customize Vocatio's adjustments take a look
-              at the tools here.
+              If you wish to further customize Vocatio&apos;s adjustments take a
+              look at the tools here.
             </p>
             <div className="flex flex-col gap-8">
               <ProfessionalSummary />

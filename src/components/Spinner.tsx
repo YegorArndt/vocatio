@@ -167,7 +167,7 @@ export const EntryHydrationSkeleton = () => {
     <div className="flex flex-col gap-5">
       <div className="grid grid-cols-2 gap-5">
         {Array.from({ length: 4 }).map((_, i) => (
-          <div className="skeleton h-11 rounded-md" />
+          <div key={i} className="skeleton h-11 rounded-md" />
         ))}
       </div>
       <div className="skeleton h-11 w-full rounded-md" />
@@ -189,7 +189,7 @@ export const BigEntryHydrationSkeleton = () => {
             <div className="skeleton h-8 w-full rounded-md" />
             <div className="flex-y gap-2">
               {Array.from({ length: 3 }).map((_, i) => (
-                <div className="skeleton h-5 w-5 rounded-md" />
+                <div key={i} className="skeleton h-5 w-5 rounded-md" />
               ))}
             </div>
           </div>
@@ -197,6 +197,7 @@ export const BigEntryHydrationSkeleton = () => {
         <section className="flex flex-col gap-3">
           {Array.from({ length: 4 }).map((_, i) => (
             <div
+              key={i}
               className={cn("skeleton h-8 rounded-md", {
                 "h-[114px]": i === 2,
               })}

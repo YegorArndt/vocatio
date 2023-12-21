@@ -74,6 +74,8 @@ const left: RawComponent[] = [
         sectionId: "contact",
         props: {
           image: key,
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          //@ts-ignore
           value: key === "linkedin" ? data.linkedin : value,
           tooltip: startCase(key as string),
           label: startCase(key as string),

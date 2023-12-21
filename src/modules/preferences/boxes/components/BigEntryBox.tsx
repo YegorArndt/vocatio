@@ -88,7 +88,7 @@ export const BigEntryBox = (props: {
                 {({ form }) => (
                   <>
                     {form.fields.map((field, index) => (
-                      <Fragment>
+                      <Fragment key={index}>
                         <AnimatedDiv
                           key={field.id}
                           className="grid grid-cols-[3fr_4fr] gap-4"
@@ -126,7 +126,7 @@ export const BigEntryBox = (props: {
                             </div>
                           </header>
                           <form className="flex flex-col gap-2">
-                            {typedKeys(field).map((name) => {
+                            {typedKeys(field).map((name, i) => {
                               const shouldRender = ![
                                 "place",
                                 "image",
@@ -138,7 +138,6 @@ export const BigEntryBox = (props: {
                               const isDescription = name === "description";
 
                               const props = {
-                                key: name,
                                 name: `entries.${index}.${name}`,
                                 control,
                                 placeholder: isDescription
@@ -147,7 +146,7 @@ export const BigEntryBox = (props: {
                               };
                               const Component = isDescription ? Textarea : Text;
 
-                              return <Component {...props} />;
+                              return <Component key={name} {...props} />;
                             })}
                           </form>
                         </AnimatedDiv>
@@ -174,7 +173,7 @@ export const BigEntryBox = (props: {
                   isLoading={userUpdating}
                   disabled={!formState.isDirty}
                   reset={resetCache}
-                  onClick={() => submit(onSubmit)}
+                  onClick={() => void submit(onSubmit)}
                 />
               </footer>
             </>

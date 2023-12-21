@@ -40,15 +40,17 @@ const findStringsInText = (text: string, entries: SkillEntry[]) => {
 };
 
 const readonlyKeys = ["id", "createdAt", "updatedAt", "userId", "user"];
-const clean = (o: any, keys = readonlyKeys) =>
-  omitBy(o, (value, key) => keys.includes(key) || isNil(value));
+const clean = (
+  o: RouterOutputs["users"]["get"]["contact"],
+  keys = readonlyKeys
+) => omitBy(o, (value, key) => keys.includes(key) || isNil(value));
 
 export const getDefaults = (
   user: RouterOutputs["users"]["get"],
   defaultUserData: UserResource,
   vacancy: Vacancy
 ) => {
-  const topSkills = findStringsInText(vacancy.requiredSkills!, user.skills);
+  const topSkills = findStringsInText(vacancy.requiredSkills, user.skills);
   const linkedin = `vocat.io/${user.shortLinkedin?.shortUrl}.com`;
 
   return {

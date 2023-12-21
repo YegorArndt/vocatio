@@ -67,16 +67,16 @@ export const MainBox = () => {
               </form>
               <footer className="border-top flex-between col-span-2 w-full gap-3 py-4">
                 <span className="inline-flex items-center clr-disabled">
-                  In the future you'll be able to dynamically insert company
-                  name, logo, and more, and regulate what changes ChatGPT makes
-                  to further improve your Professional Summary.
+                  In the future you&apos;ll be able to dynamically insert
+                  company name, logo, and more, and regulate what changes
+                  ChatGPT makes to further improve your Professional Summary.
                 </span>
                 <SaveButton
                   isLoading={userUpdating}
                   isSuccess={isSuccess}
                   reset={reset}
                   disabled={!formState.isDirty || userUpdating}
-                  onClick={() => submit(onSubmit)}
+                  onClick={() => void submit(onSubmit)}
                 />
               </footer>
             </>

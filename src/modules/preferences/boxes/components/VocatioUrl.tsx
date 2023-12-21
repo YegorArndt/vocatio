@@ -66,7 +66,7 @@ export const VocatioUrl = () => {
       </div>
       <footer className="border-top flex-between py-4">
         <span className="clr-disabled">
-          In the future Vocatio release we'll shorten every URL for you
+          In the future Vocatio release we&apos;ll shorten every URL for you
           automatically.
         </span>
       </footer>

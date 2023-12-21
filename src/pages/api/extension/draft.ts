@@ -6,7 +6,7 @@ import jwt from "jsonwebtoken";
 import { pick, shuffle } from "lodash-es";
 import { VacancyDto } from "~/modules/extension/types";
 
-const fs = require("fs");
+// const fs = require("fs");
 
 const { log } = console;
 
@@ -88,7 +88,7 @@ const extractEnhanced = (enhancedContent: string | undefined) => {
   let match;
 
   while ((match = historyRegex.exec(historiesContent)) !== null) {
-    const historyIndex = match[1] as string;
+    const historyIndex = match[1]!;
     const historyText = match[2]!.trim();
     histories[historyIndex] = historyText;
   }
@@ -96,7 +96,8 @@ const extractEnhanced = (enhancedContent: string | undefined) => {
   return { summary: summary.trim(), histories, successfullyEnhanced: true };
 };
 
-const publicKey = fs.readFileSync("secret/public.pem", "utf8");
+// const publicKey = fs.readFileSync("secret/public.pem", "utf8");
+const publicKey = process.env.CLERK_PEM_PUBLIC_KEY;
 
 const prisma = new PrismaClient();
 const inference = new HfInference(process.env.HF_API_KEY);

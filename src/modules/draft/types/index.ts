@@ -1,4 +1,4 @@
-import type { Vacancy } from "@prisma/client";
+import type { Draft, Vacancy } from "@prisma/client";
 import type { ReactNode, RefObject } from "react";
 import type { UserResource } from "@clerk/types";
 
@@ -19,7 +19,7 @@ export type DraftContextOutput = {
   updateDesign: (d?: Partial<Design>) => void;
   persistToLs: (d: Design) => void;
   changeDesign: (d: RawDesign) => void;
-  user: RouterOutputs["users"]["get"];
+  user: RouterOutputs["users"]["get"] & Draft;
   vacancy: Vacancy;
   defaultUserData: UserResource;
   defaults: Defaults;

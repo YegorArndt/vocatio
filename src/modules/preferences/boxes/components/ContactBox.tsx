@@ -55,7 +55,7 @@ const filterForClient = (contact?: Contact) => {
     .filter(([key]) => !irrelevantKeys.has(key))
     .reduce(
       (obj: Partial<Record<keyof Contact, ContactValueType>>, [key, value]) => {
-        obj[key] = value as ContactValueType;
+        obj[key] = value!;
         return obj;
       },
       {}
@@ -180,7 +180,7 @@ export const ContactBox = () => {
                   isSuccess={isSuccess}
                   reset={reset}
                   disabled={!formState.isDirty || userUpdating}
-                  onClick={() => submit(onSubmit)}
+                  onClick={() => void submit(onSubmit)}
                 />
               </footer>
             </>

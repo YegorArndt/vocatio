@@ -18,6 +18,7 @@ import { Button } from "~/components/ui/buttons/Button";
 import { ModalFactory } from "~/modules/modal/ModalFactory";
 import { Diff } from "~/modules/create/Diff";
 import { Lines } from "~/components/Spinner";
+import { DraftContextInput } from "~/modules/draft/types";
 
 const { log } = console;
 
@@ -53,7 +54,7 @@ const CVBuilder = (props: { vacancyId: string }) => {
           vacancy={vacancy}
           professionalSummary={{
             old: user.professionalSummary!,
-            new: draft?.professionalSummary!,
+            new: draft.professionalSummary!,
           }}
           employmentHistory={{
             old: user.employmentHistory,
@@ -61,7 +62,7 @@ const CVBuilder = (props: { vacancyId: string }) => {
           }}
           jobTitle={{
             old: user.jobTitle!,
-            new: draft?.jobTitle!,
+            new: draft.jobTitle!,
           }}
         />
       ),
@@ -153,7 +154,7 @@ const CVBuilder = (props: { vacancyId: string }) => {
           a4Ref={a4Ref}
           defaultUserData={defaultUserData}
           vacancy={vacancy}
-          user={{ ...user, ...draft }}
+          user={{ ...user, ...draft } as unknown as DraftContextInput["user"]}
         >
           {(context) => (
             <Layout toolbar={<Toolbar openModal={openModal} />}>

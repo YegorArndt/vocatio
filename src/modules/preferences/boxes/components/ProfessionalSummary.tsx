@@ -15,6 +15,7 @@ export const ProfessionalSummary = () => {
     mutate,
     isSuccess,
     isLoading: userUpdating,
+    reset: resetCache,
   } = api.users.update.useMutation();
   const defaultValues = user
     ? { professionalSummary: user.professionalSummary }
@@ -58,6 +59,7 @@ export const ProfessionalSummary = () => {
               </div>
               <footer>
                 <SaveButton
+                  reset={resetCache}
                   isLoading={userUpdating}
                   isSuccess={isSuccess}
                   disabled={userUpdating || !formState.isDirty}

@@ -3,13 +3,9 @@ import { useEffect, useRef, useState } from "react";
 import { useDraftContext } from "~/modules/draft/DraftContext";
 import { BlurImage } from "../../components/BlurImage";
 import type { Design } from "~/modules/draft/types/design";
-import { Charizard } from "~/modules/draft/designs/Charizard";
-import { Charmander } from "~/modules/draft/designs/Charmander";
 import { Venusaur } from "~/modules/draft/designs/Venusaur";
-import { Raichu } from "~/modules/draft/designs/Raichu";
-import { Jigglypuff } from "~/modules/draft/designs/Jigglypuff";
 
-const designs = [Venusaur, Charizard, Charmander, Raichu, Jigglypuff];
+const designs = [Venusaur];
 
 export const DesignViewer = () => {
   const { changeDesign, design } = useDraftContext();

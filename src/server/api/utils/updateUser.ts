@@ -1,7 +1,7 @@
-import { HfInference } from "@huggingface/inference";
-import { EmploymentHistoryEntry, Prisma } from "@prisma/client";
 import { z } from "zod";
-import { RouterOutputs } from "~/utils/api";
+import { HfInference } from "@huggingface/inference";
+import { EmploymentHistoryEntry, type Prisma } from "@prisma/client";
+import { UserUpdateSchema } from "./schemas";
 
 const inference = new HfInference(process.env.HF_API_KEY);
 
@@ -14,123 +14,8 @@ const getDescriptionSummary = async (description: string) => {
   return res.summary_text;
 };
 
-const SkillLevel = z.enum([
-  "BASIC",
-  "INTERMEDIATE",
-  "ADVANCED",
-  "EXPERT",
-  "NATIVE",
-]);
-
-const ProfessionField = z.enum([
-  "FRONTEND",
-  "BACKEND",
-  "FULLSTACK",
-  "SECURITY",
-  "PROJECT_MANAGER",
-  "PRODUCT_MANAGER",
-  "DATA_SCIENTIST",
-  "DEVOPS",
-  "UI_UX_DESIGNER",
-  "SYSTEM_ADMINISTRATOR",
-  "DATABASE_ADMINISTRATOR",
-  "MOBILE_DEVELOPER",
-  "EMBEDDED_DEVELOPER",
-  "QA",
-  "NETWORK_ENGINEER",
-  "CLOUD_ENGINEER",
-  "MACHINE_LEARNING_ENGINEER",
-  "ANALYST",
-  "SCRUM_MASTER",
-]);
-
-const LanguageEntrySchema = z.object({
-  id: z.string(),
-  createdAt: z.date(),
-  updatedAt: z.date(),
-  name: z.string(),
-  level: SkillLevel,
-  userId: z.string(),
-});
-
-const SkillEntrySchema = z.object({
-  id: z.string(),
-  createdAt: z.date(),
-  updatedAt: z.date(),
-  name: z.string(),
-  level: SkillLevel,
-  userId: z.string(),
-});
-
-const EducationEntrySchema = z.object({
-  id: z.string().uuid(),
-  createdAt: z.date(),
-  updatedAt: z.date(),
-  place: z.string(),
-  period: z.string(),
-  description: z.string(),
-  image: z.string(),
-  title: z.string(),
-  userId: z.string().uuid(),
-});
-
-const EmploymentHistoryEntrySchema = z.object({
-  id: z.string().uuid(),
-  createdAt: z.string(),
-  updatedAt: z.string(),
-  place: z.string(),
-  period: z.string(),
-  description: z.string(),
-  descriptionSummary: z.string(),
-  skills: z.array(z.string()),
-  image: z.string(),
-  title: z.string(),
-  userId: z.string().uuid(),
-});
-
-const ContactSchema = z.object({
-  email: z.string(),
-  phone: z.string().optional(),
-  github: z.string().optional(),
-  linkedin: z.string().optional(),
-  indeed: z.string().optional(),
-  glassdoor: z.string().optional(),
-  hh: z.string().optional(),
-  facebook: z.string().optional(),
-  instagram: z.string().optional(),
-  twitter: z.string().optional(),
-  telegram: z.string().optional(),
-  skype: z.string().optional(),
-  vk: z.string().optional(),
-  website: z.string().optional(),
-  address: z.string().optional(),
-  country: z.string().optional(),
-  city: z.string().optional(),
-  zip: z.string().optional(),
-});
-
-const UserUpdateSchema = z
-  .object({
-    name: z.string(),
-    image: z.string(),
-    professionalSummary: z.string().optional(),
-
-    jobTitle: z.string().optional(),
-    professionField: ProfessionField.optional(),
-
-    languages: z.array(LanguageEntrySchema),
-    skills: z.array(SkillEntrySchema),
-    education: z.array(EducationEntrySchema),
-    employmentHistory: z.array(EmploymentHistoryEntrySchema),
-
-    contact: ContactSchema,
-  })
-  .partial();
-
-export type UserUpdateInput = z.infer<typeof UserUpdateSchema>;
-
 export const getUserUpdateArgs = async (
-  input: RouterOutputs["users"]["get"]
+  input: z.infer<typeof UserUpdateSchema>
 ) => {
   const {
     education,
@@ -139,6 +24,9 @@ export const getUserUpdateArgs = async (
     languages,
     skills,
     recommendations,
+    name,
+    jobTitle,
+    professionalSummary,
   } = input;
   const summarizedEmploymentHistory: EmploymentHistoryEntry[] = [];
 
@@ -169,6 +57,9 @@ export const getUserUpdateArgs = async (
     contact: {
       update: contact ? contact : undefined,
     },
+    name,
+    jobTitle,
+    professionalSummary,
     ...(recommendations && {
       recommendations: {
         deleteMany: {},

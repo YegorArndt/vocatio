@@ -8,7 +8,7 @@ const { log } = console;
 
 export type SelectProps<T extends FieldValues = FieldValues> = {
   name: string;
-  control: Control<T>;
+  control: unknown;
   options: Options<T>;
   onClick?: MouseEventHandler<HTMLLabelElement>;
   className?: string;
@@ -19,7 +19,9 @@ export type SelectProps<T extends FieldValues = FieldValues> = {
 };
 
 export const Select = (props: SelectProps) => {
-  const { control, name, options, onClick, className, ...rest } = props;
+  const { control, name, options, onClick, className, ...rest } = props as {
+    control: Control<FieldValues>;
+  } & SelectProps<FieldValues>;
   const { field } = useController({ control, name });
 
   return (

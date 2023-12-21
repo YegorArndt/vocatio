@@ -15,7 +15,7 @@ export type SectionId =
 export type Section = {
   id: SectionId;
   components: NormalizedComponent[];
-  className: string;
+  className?: string;
 };
 
 export type Sections = Partial<Record<SectionId, Section>>;

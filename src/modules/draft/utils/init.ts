@@ -20,7 +20,6 @@ export const init = (
       normalize(
         {
           ...rc,
-          order: i,
           sectionId,
         },
         defaults,

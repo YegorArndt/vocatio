@@ -13,7 +13,7 @@ export const UserImage = (props: ImageProps) => {
   const defaultUserData = useUser();
   const { data: user } = api.users.get.useQuery();
 
-  const src = user?.ownImage || defaultUserData.user?.imageUrl;
+  const src = user?.image || defaultUserData.user?.imageUrl;
 
   return (
     <div

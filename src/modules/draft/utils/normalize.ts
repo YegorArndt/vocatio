@@ -14,7 +14,6 @@ const tooltips: Record<NormalizedType, string> = {
   "heading-3": "Heading 3",
   group: "Group",
   divider: "Divider",
-  url: "URL",
   image: "Image",
   "icon-group": "Icon Group",
   entries: "Entries",
@@ -50,11 +49,11 @@ export const normalize = (
     props: { ...defaultProps, tooltip: tooltips[c.type] ?? "", ...p },
   };
 
-  let { sections } = normalized.props;
+  const { sections } = normalized.props;
 
   if (sections) {
     const newSections = typedKeys(sections).reduce((acc, key) => {
-      const section = sections![key];
+      const section = sections[key];
       if (!section) return acc;
 
       const newSection = {

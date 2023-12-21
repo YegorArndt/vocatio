@@ -4,7 +4,7 @@ import { Control, FieldValues, useController } from "react-hook-form";
 
 export type TextareaProps<T extends FieldValues = FieldValues> = {
   name: string;
-  control: Control<T>;
+  control: unknown;
   onClick?: MouseEventHandler<
     HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
   >;
@@ -20,7 +20,9 @@ export const Textarea = (props: TextareaProps) => {
     onClick,
     id = name,
     ...rest
-  } = props;
+  } = props as {
+    control: Control<FieldValues>;
+  } & TextareaProps<FieldValues>;
   const { field } = useController({ control, name });
 
   return (

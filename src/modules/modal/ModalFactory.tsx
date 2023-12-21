@@ -49,9 +49,23 @@ export class ModalFactory extends React.Component<
   static close = (id: string) => {
     const reference = ModalFactory.ref;
     if (reference && id) {
-      reference.setState((state) => ({
-        [id]: { ...state[id], isOpen: false },
-      }));
+      reference.setState((prevState) => {
+        // Ensure the existing modal state is present for the given id
+        if (!prevState[id]) {
+          return prevState;
+        }
+
+        // Create a new state object that updates only the specified id
+        const newState = {
+          ...prevState,
+          [id]: {
+            ...prevState[id],
+            isOpen: false,
+            props: prevState[id]!.props, // Ensure all properties of ModalState are included
+          },
+        };
+        return newState;
+      });
     }
   };
 
@@ -72,7 +86,7 @@ export class ModalFactory extends React.Component<
                 <Modal
                   key={modalId}
                   {...modalState.props}
-                  onClose={() => ModalFactory.close(modalId)}
+                  onClose={() => ModalFactory.close(modalId as string)}
                   isOpen
                 />
               ) : null;

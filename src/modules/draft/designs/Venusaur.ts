@@ -70,7 +70,7 @@ const left: RawComponent[] = [
     props: (data) => {
       const components = typedEntries(data.contact).map(([key, value]) => ({
         type: "icon-group",
-        id: key,
+        id: key as string,
         sectionId: "contact",
         props: {
           image: key,
@@ -78,7 +78,7 @@ const left: RawComponent[] = [
           tooltip: startCase(key as string),
           label: startCase(key as string),
         },
-      }));
+      })) as NormalizedComponent[];
       return {
         title: heading("Contact"),
         sections: {
@@ -134,7 +134,7 @@ const left: RawComponent[] = [
             },
           },
         },
-      }));
+      })) as NormalizedComponent[];
 
       return {
         title: heading("Education"),
@@ -193,6 +193,8 @@ const right: RawComponent[] = [
           id: entry.id,
           sectionId: entry.id,
           props: {
+            className: "",
+            style: {},
             tooltip: "Experience item",
             sections: {
               [entry.id]: {
@@ -248,7 +250,7 @@ const right: RawComponent[] = [
             },
           },
         };
-      });
+      }) as NormalizedComponent[];
 
       return {
         decorated: true,
@@ -312,10 +314,6 @@ export const Venusaur: RawDesign = {
     "icon-group": {
       className: "grid grid-cols-[20px,1fr] gap-3",
       imageProps: { height: 20, width: 20 },
-    },
-    image: {
-      height: 200,
-      width: 200,
     },
   },
   image: "/venusaur.png",

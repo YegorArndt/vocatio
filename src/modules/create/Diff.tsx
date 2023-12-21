@@ -4,7 +4,7 @@ import {
   EmploymentHistoryEntry,
   Vacancy,
 } from "@prisma/client";
-import { PropsWithChildren, ReactNode, useEffect, useState } from "react";
+import { PropsWithChildren, ReactNode } from "react";
 import { BlurImage } from "~/components";
 import { LiaExternalLinkAltSolid } from "react-icons/lia";
 import { vacancyUI } from "../vacancies/constants";
@@ -281,9 +281,7 @@ const Entry = (props: EntryProps) => {
 };
 
 export const Diff = (props: DiffProps) => {
-  let { vacancy, professionalSummary, employmentHistory, jobTitle } = props;
-  const [highlightedSum, setHighlightedSum] = useState(0);
-
+  const { vacancy, professionalSummary, employmentHistory, jobTitle } = props;
   const keywords = [vacancy.description, vacancy.requiredSkills];
 
   const { highlighted: summaryHighlighted, count: summaryCount } =
@@ -304,18 +302,14 @@ export const Diff = (props: DiffProps) => {
     keywords
   );
 
-  useEffect(() => {
-    setHighlightedSum(newHighlightedCount + summaryCount + vacancyCount);
-  }, []);
-
   return (
     <div className="flex h-full flex-col gap-8 overflow-auto">
       <div className="flex flex-col gap-2">
         <h1 className="text-center">Review changes</h1>
         <HighlightedCount
-          count={highlightedSum}
+          count={newHighlightedCount + summaryCount + vacancyCount}
           what="total keywords"
-          className="ml-5 pb-7 text-center text-sm"
+          className="ml-5 pb-7 text-center text-lg"
         />
       </div>
       <div className="grid grid-cols-2 gap-4">

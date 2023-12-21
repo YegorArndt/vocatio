@@ -5,6 +5,7 @@ const fs = require("fs");
 
 import { getUserUpdateArgs } from "~/server/api/utils/updateUser";
 import { RouterOutputs } from "~/utils/api";
+import { UserUpdateSchema } from "~/server/api/utils/schemas";
 
 const { log } = console;
 
@@ -33,9 +34,11 @@ export default async function updateUser(
       user: RouterOutputs["users"]["get"];
     };
 
+    const parsed = UserUpdateSchema.parse(user);
+
     const updatedUser = await prisma.user.update({
       where: { id: userId },
-      data: getUserUpdateArgs(user),
+      data: getUserUpdateArgs(parsed),
     });
 
     return res.status(200).json(updatedUser);

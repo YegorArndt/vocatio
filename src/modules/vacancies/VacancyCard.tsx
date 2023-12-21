@@ -10,7 +10,6 @@ import { FaClockRotateLeft } from "react-icons/fa6";
 
 import { Button } from "~/components/ui/buttons/Button";
 import { BlurImage, Chip, Spinner } from "~/components";
-import { Falsy } from "./utils";
 import { FaDollarSign } from "react-icons/fa";
 import { MdWorkOutline } from "react-icons/md";
 import { BsPersonWorkspace } from "react-icons/bs";
@@ -27,10 +26,12 @@ type VacancyCardProps = {
   vacancy: Vacancy;
 };
 
+type Nullable = string | null;
+
 const getSalaryRange = (
-  min: Falsy<string>,
-  max: Falsy<string>,
-  isAnnualSalary: Falsy<boolean>
+  min: Nullable,
+  max: Nullable,
+  isAnnualSalary: boolean
 ) => {
   const isValid = min && max;
   if (!isValid) return null;
@@ -136,11 +137,11 @@ export const VacancyCard = (props: VacancyCardProps) => {
             {[
               [
                 <FaDollarSign />,
-                getSalaryRange(salaryMin, salaryMax, isAnnualSalary),
+                getSalaryRange(salaryMin, salaryMax, isAnnualSalary!),
               ],
               [<IoLocationOutline />, location],
-              [<MdWorkOutline />, startCase(lowerCase(employmentType))],
-              [<BsPersonWorkspace />, startCase(lowerCase(requiredSeniority))],
+              [<MdWorkOutline />, startCase(lowerCase(employmentType!))],
+              [<BsPersonWorkspace />, startCase(lowerCase(requiredSeniority!))],
             ].map(
               ([icon, value]) =>
                 !!value && (

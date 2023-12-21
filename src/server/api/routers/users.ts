@@ -5,116 +5,47 @@ import {
   privateProcedure,
   publicProcedure,
 } from "~/server/api/trpc";
+import { getUserUpdateArgs } from "../utils/updateUser";
+import { UserUpdateSchema } from "../utils/schemas";
 
 const { log } = console;
 
-const entries = [
-  "education",
-  "employmentHistory",
-  "recommendations",
-  "certifications",
-  "awards",
-  "languages",
-  "skills",
-];
-
-const SkillLevelEnum = z.enum([
-  "BASIC",
-  "INTERMEDIATE",
-  "ADVANCED",
-  "EXPERT",
-  "NATIVE",
-]);
-
-const ProfessionFieldEnum = z.enum([
-  "FRONTEND",
-  "BACKEND",
-  "FULLSTACK",
-  "SECURITY",
-  "PROJECT_MANAGER",
-  "PRODUCT_MANAGER",
-  "DATA_SCIENTIST",
-  "DEVOPS",
-  "UI_UX_DESIGNER",
-  "SYSTEM_ADMINISTRATOR",
-  "DATABASE_ADMINISTRATOR",
-  "MOBILE_DEVELOPER",
-  "EMBEDDED_DEVELOPER",
-  "QA",
-  "NETWORK_ENGINEER",
-  "CLOUD_ENGINEER",
-  "MACHINE_LEARNING_ENGINEER",
-  "ANALYST",
-  "SCRUM_MASTER",
-]);
-
-const EntrySchema = z.array(
-  z.object({
-    id: z.string().optional(),
-    place: z.string(),
-    period: z.string(),
-    description: z.string(),
-    descriptionSummary: z.string().optional(),
-    image: z.string(),
-    title: z.string(),
-    employmentHistoryId: z.string().optional(),
-    recommendationsId: z.string().optional(),
-    awardsId: z.string().optional(),
-    certificatesId: z.string().optional(),
-  })
-);
-
-const SkillSchema = z.array(
-  z.object({
-    languageId: z.string().optional(),
-    skillId: z.string().optional(),
-    id: z.string().optional(),
-    name: z.string(),
-    level: SkillLevelEnum,
-  })
-);
-
-const UpdateSchema = z.object({
-  name: z.string().optional(),
-  image: z.string().optional(),
-  country: z.string().optional(),
-  contact: z
-    .object({
-      email: z.string(),
-      phone: z.string().optional(),
-      github: z.string().optional(),
-      linkedin: z.string().optional(),
-      indeed: z.string().optional(),
-      glassdoor: z.string().optional(),
-      hh: z.string().optional(),
-      facebook: z.string().optional(),
-      instagram: z.string().optional(),
-      twitter: z.string().optional(),
-      telegram: z.string().optional(),
-      skype: z.string().optional(),
-      vk: z.string().optional(),
-      website: z.string().optional(),
-      address: z.string().optional(),
-      country: z.string().optional(),
-      city: z.string().optional(),
-      zip: z.string().optional(),
-    })
-    .optional(),
-  jobTitle: z.string().optional(),
-  professionField: ProfessionFieldEnum.optional(),
-  languages: SkillSchema.optional(),
-  skills: SkillSchema.optional(),
-  education: EntrySchema.optional(),
-  employmentHistory: EntrySchema.optional(),
-  recommendations: EntrySchema.optional(),
-  awards: EntrySchema.optional(),
-  certificates: EntrySchema.optional(),
-  professionalSummary: z.string().optional(),
-});
-
-export type UserUpdateInput = z.infer<typeof UpdateSchema>;
-
 export const usersRouter = createTRPCRouter({
+  update: publicProcedure
+    .input(UserUpdateSchema)
+    .mutation(async ({ ctx, input }) => {
+      const { userId } = ctx;
+
+      if (!userId) {
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "You must be logged in to update a user record",
+        });
+      }
+
+      const user = await ctx.prisma.user.findUnique({
+        where: {
+          id: userId,
+        },
+      });
+
+      if (!user) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "User does not exist",
+        });
+      }
+
+      const data = await getUserUpdateArgs(input);
+
+      const updatedUser = await ctx.prisma.user.update({
+        where: { id: userId },
+        data,
+      });
+
+      return updatedUser;
+    }),
+
   get: publicProcedure.query(async ({ ctx }) => {
     const { userId } = ctx;
 
@@ -195,66 +126,6 @@ export const usersRouter = createTRPCRouter({
       });
 
       return newUser;
-    }),
-
-  update: publicProcedure
-    .input(UpdateSchema)
-    .mutation(async ({ ctx, input }) => {
-      const { userId } = ctx;
-
-      if (!userId) {
-        throw new TRPCError({
-          code: "UNAUTHORIZED",
-          message: "You must be logged in to update a user record",
-        });
-      }
-
-      const user = await ctx.prisma.user.findUnique({
-        where: {
-          id: userId,
-        },
-      });
-
-      if (!user) {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "User does not exist",
-        });
-      }
-
-      const definedUser = {};
-
-      Object.entries(input).forEach(([key, value]) => {
-        if (key === "contact") {
-          definedUser[key] = {
-            update: value,
-          };
-        }
-        if (entries.includes(key) && Array.isArray(value)) {
-          definedUser[key] = {
-            deleteMany: {},
-            createMany: {
-              data: value,
-            },
-          };
-        } else if (
-          value !== null &&
-          value !== undefined &&
-          value !== "" &&
-          key !== "contact"
-        ) {
-          definedUser[key] = value;
-        }
-      });
-
-      log(definedUser);
-
-      const updatedUser = await ctx.prisma.user.update({
-        where: { id: userId },
-        data: definedUser,
-      });
-
-      return updatedUser;
     }),
 
   getByVacancyId: publicProcedure

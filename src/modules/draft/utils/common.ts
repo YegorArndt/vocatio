@@ -13,9 +13,6 @@ export const typedEntries = <T extends object>(
 export const isDecoration = (t: NormalizedType) =>
   ["image", "divider"].includes(t);
 
-export const isTimeline = (t: NormalizedType) =>
-  ["decorated-timeline"].includes(t);
-
 export const isEntries = (t: NormalizedType) => ["entries"].includes(t);
 
 export const isHeading = (t: NormalizedType) => t?.startsWith("heading");

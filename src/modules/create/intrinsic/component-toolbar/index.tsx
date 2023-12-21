@@ -227,16 +227,16 @@ export const ComponentToolbar = (props: ComponentToolbarProps) => {
     applyCustom({ text, userCommand });
   };
 
-  const adjust = async () => {
-    const text = c.props.value;
-    if (!text) return;
+  // const adjust = async () => {
+  //   const text = c.props.value;
+  //   if (!text) return;
 
-    notifyOnStart();
-    applyAdjustment({
-      context: vacancy.requiredSkills,
-      textToAdjust: c.props.summary!,
-    });
-  };
+  //   notifyOnStart();
+  //   applyAdjustment({
+  //     context: vacancy.requiredSkills,
+  //     textToAdjust: c.props.summary,
+  //   });
+  // };
 
   return (
     <div
@@ -386,7 +386,7 @@ export const ComponentToolbar = (props: ComponentToolbarProps) => {
                     <MenuHeader className="flex-center">
                       <Chip text="Beta" className="bg-sky w-11 clr-white" />
                     </MenuHeader>
-                    <CustomMenuItem onClick={adjust}>
+                    <CustomMenuItem>
                       <SlMagicWand /> Adjust to vacancy
                     </CustomMenuItem>
                     <CustomMenuItem onClick={condense}>

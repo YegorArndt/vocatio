@@ -4,7 +4,7 @@ import cn from "classnames";
 
 export type TextProps<T extends FieldValues = FieldValues> = {
   name: string;
-  control: Control<T>;
+  control: unknown;
   onClick?: MouseEventHandler<
     HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
   >;
@@ -16,7 +16,9 @@ export type TextProps<T extends FieldValues = FieldValues> = {
 
 export const Text = (props: TextProps) => {
   const { name, control, onClick, placeholder, id, className, disabled } =
-    props;
+    props as {
+      control: Control<FieldValues>;
+    } & TextProps<FieldValues>;
   const { field } = useController({ control, name });
 
   return (

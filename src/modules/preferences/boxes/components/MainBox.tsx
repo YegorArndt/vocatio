@@ -10,6 +10,7 @@ import { FormContext } from "../../FormContext";
 import { LineStack } from "~/components/Spinner";
 import { Textarea } from "~/components/ui/inputs/Textarea";
 import { SaveButton } from "~/components/SaveButton";
+import { UserUpdateArgs } from "~/server/api/utils/schemas";
 
 const { log } = console;
 
@@ -30,7 +31,7 @@ export const MainBox = () => {
   };
 
   const onSubmit = (values: typeof mainDefaults) => {
-    mutate(values);
+    mutate(values as UserUpdateArgs);
   };
 
   return (

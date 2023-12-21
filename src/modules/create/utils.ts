@@ -41,7 +41,7 @@ export const animateLayoutChanges = (args: AnimateLayoutChanges) => {
 
 export const downloadPdf = async (
   a4Ref: RefObject<HTMLDivElement>,
-  userName: User["ownName"],
+  userName: User["name"],
   companyName: Vacancy["companyName"] = "cv"
 ) => {
   const a4 = a4Ref.current;

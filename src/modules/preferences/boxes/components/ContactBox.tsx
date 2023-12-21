@@ -1,5 +1,5 @@
 import cn from "classnames";
-import { get, isNil, startCase } from "lodash-es";
+import { assign, get, isNil, omit, startCase } from "lodash-es";
 import { api } from "~/utils";
 import { typedEntries, typedKeys } from "../../../draft/utils/common";
 import { Text } from "~/components/ui/inputs/Text";
@@ -19,27 +19,28 @@ import {
 import { LuPlusCircle } from "react-icons/lu";
 import { icons } from "~/constants";
 import { AnimatedDiv } from "~/components/AnimatedDiv";
+import { UserUpdateArgs } from "~/server/api/utils/schemas";
 
 const { log } = console;
 
-type ContactValueType = string | Date | null;
+type ContactValueType = string | Date;
 
 const separateEntries = (obj: Record<string, unknown>) => {
   const definedEntries = {};
   const undefinedEntries = {};
 
-  Object.entries(obj).forEach(([key, value]) => {
+  typedEntries(obj).forEach(([key, value]) => {
     if (isNil(value)) {
-      undefinedEntries[key] = value;
+      assign(undefinedEntries, { [key]: value });
     } else {
-      definedEntries[key] = value;
+      assign(definedEntries, { [key]: value });
     }
   });
 
   return { definedEntries, undefinedEntries };
 };
 
-const filterForClient = (contact?: Contact | null) => {
+const filterForClient = (contact?: Contact) => {
   if (!contact) return {};
 
   const irrelevantKeys = new Set([
@@ -86,8 +87,8 @@ export const ContactBox = () => {
     }
   }, [user, userLoading]);
 
-  const onSubmit = (values: typeof defaultValues) => {
-    mutate({ contact: values });
+  const onSubmit = (values: unknown) => {
+    mutate({ contact: values as UserUpdateArgs["contact"] });
   };
 
   return (
@@ -146,7 +147,7 @@ export const ContactBox = () => {
                       key.toUpperCase().includes(filter.trim().toUpperCase())
                     )
                     .map((key) => {
-                      const Icon = get(icons, key) ?? icons.diamond;
+                      const Icon = get(icons, key, icons.diamond);
 
                       return (
                         <MenuItem
@@ -160,8 +161,8 @@ export const ContactBox = () => {
                             };
 
                             setOptions((prev) => {
-                              const { [key]: _, ...rest } = prev;
-                              return rest;
+                              const without = omit(prev, key);
+                              return without;
                             });
                             setDefaultValues(newDefaultValues);
                             updateDefaults(newDefaultValues);

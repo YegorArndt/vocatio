@@ -2,20 +2,18 @@ import { api } from "~/utils";
 import { Wrapper } from "./Wrapper";
 import { FormContext } from "../../FormContext";
 import { EntryHydrationSkeleton } from "~/components/Spinner";
-import { ArrayForm } from "./ArrayForm";
 import { SaveButton } from "~/components/SaveButton";
 import { SkillEntry } from "@prisma/client";
-import { SelectProps } from "~/components/ui/inputs/Select";
+import { Select, SelectProps } from "~/components/ui/inputs/Select";
 import { lowerCase, startCase } from "lodash-es";
 import { PropsWithChildren } from "react";
+import { ArrayFormContext } from "../../ArrayFormContext";
+import { LuCopyPlus } from "react-icons/lu";
+import { RiDeleteBin6Line } from "react-icons/ri";
+import { AnimatedDiv } from "~/components/AnimatedDiv";
+import { Button } from "~/components/ui/buttons/Button";
 
 const { log } = console;
-
-const getFieldArray = (entries: SkillEntry[]) =>
-  entries.map((e) => ({
-    name: { label: e.name, value: e.name },
-    level: { label: startCase(lowerCase(e.level)), value: e.level },
-  }));
 
 type EntryBoxProps = PropsWithChildren<{
   entryFor: "languages" | "skills";
@@ -23,6 +21,12 @@ type EntryBoxProps = PropsWithChildren<{
   valueOptions: SelectProps["options"][];
   className?: string;
 }>;
+
+const getFieldArray = (entries: SkillEntry[]) =>
+  entries.map((e) => ({
+    name: { label: e.name, value: e.name },
+    level: { label: startCase(lowerCase(e.level)), value: e.level },
+  }));
 
 export const EntryBox = (props: EntryBoxProps) => {
   const { entryFor, labelOptions, valueOptions, children } = props;
@@ -69,12 +73,52 @@ export const EntryBox = (props: EntryBoxProps) => {
             defaultValues,
           }}
         >
-          {({ formState }, submit) => (
+          {({ formState, control }, submit) => (
             <>
-              <ArrayForm
-                labelOptions={labelOptions}
-                valueOptions={valueOptions}
-              />
+              <ArrayFormContext>
+                {({ form }) => (
+                  <form className="flex flex-col gap-3">
+                    {form.fields.map((field, index) => (
+                      <AnimatedDiv
+                        key={field.id}
+                        className="grid grid-cols-2 gap-3"
+                      >
+                        <Select
+                          control={control}
+                          name={`entries.${index}.name`}
+                          options={labelOptions}
+                          noOptionsMessage={() =>
+                            "Type your custom skill or visit advanced fine-tuning to get suggestions"
+                          }
+                        />
+                        <div className="flex-y gap-2">
+                          <Select
+                            control={control}
+                            name={`entries.${index}.level`}
+                            options={valueOptions}
+                            className="w-full"
+                          />
+                          <div className="flex-y gap-2">
+                            <Button onClick={() => form.remove(index)}>
+                              <RiDeleteBin6Line />
+                            </Button>
+                            <Button
+                              onClick={() => {
+                                form.insert(index + 1, {
+                                  name: field.name,
+                                  level: field.level,
+                                });
+                              }}
+                            >
+                              <LuCopyPlus />
+                            </Button>
+                          </div>
+                        </div>
+                      </AnimatedDiv>
+                    ))}
+                  </form>
+                )}
+              </ArrayFormContext>
               <footer className="border-top flex-between w-full py-4">
                 {children || (
                   <span className="clr-disabled">Add more if you need to.</span>

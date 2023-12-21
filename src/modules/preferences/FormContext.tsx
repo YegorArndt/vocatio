@@ -4,16 +4,15 @@ import {
   type FieldValues,
   type UseFormProps,
   type UseFormReturn,
-  type DeepPartial,
   useForm,
   FormProvider,
 } from "react-hook-form";
 
-type DefaultValues<T> = NonNullable<DeepPartial<T>>;
+type DefaultValues<T> = NonNullable<T>;
 
 type MandatoryDefaultValues<TFieldValues extends FieldValues> =
   UseFormProps<TFieldValues> & {
-    defaultValues: DefaultValues<TFieldValues>;
+    defaultValues: DefaultValues<NonNullable<TFieldValues>>;
   };
 
 interface IFormContextProps<TFieldValues extends FieldValues> {
@@ -34,9 +33,9 @@ export const FormContext = <TFieldValues extends FieldValues>(
 ) => {
   const { children, form } = props;
 
-  const [defaultValues, setDefaultValues] = useState<DeepPartial<TFieldValues>>(
-    form.defaultValues
-  );
+  const [defaultValues, setDefaultValues] = useState<
+    DefaultValues<TFieldValues>
+  >(form.defaultValues);
 
   const methods = useForm<TFieldValues>({ ...form, defaultValues });
 

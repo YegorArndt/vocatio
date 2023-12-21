@@ -24,19 +24,19 @@ export const cvsRouter = createTRPCRouter({
       });
     }
 
-    const newCv = await ctx.prisma.cv.upsert({
-      where: {
-        id: input.id,
-      },
-      update: {
-        ...input,
-      },
-      create: {
-        ...input,
-        userId,
-      },
-    });
+    // const newCv = await ctx.prisma.cv.upsert({
+    //   where: {
+    //     id: input.id,
+    //   },
+    //   update: {
+    //     ...input,
+    //   },
+    //   create: {
+    //     ...input,
+    //     userId,
+    //   },
+    // });
 
-    return newCv;
+    // return newCv;
   }),
 });

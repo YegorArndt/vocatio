@@ -1,5 +1,9 @@
 import cn from "classnames";
-import { EmploymentHistoryEntry, Vacancy } from "@prisma/client";
+import {
+  DraftEmploymentHistoryEntry,
+  EmploymentHistoryEntry,
+  Vacancy,
+} from "@prisma/client";
 import { PropsWithChildren, ReactNode, useEffect, useState } from "react";
 import { BlurImage } from "~/components";
 import { LiaExternalLinkAltSolid } from "react-icons/lia";
@@ -29,7 +33,7 @@ type DiffProps = {
   vacancy: Vacancy;
   employmentHistory: {
     old: EmploymentHistoryEntry[];
-    new: EmploymentHistoryEntry[];
+    new: DraftEmploymentHistoryEntry[];
   };
   professionalSummary: {
     old: string;
@@ -88,7 +92,7 @@ const commonWordsToIgnore = new Set([
 
 const getInterleaved = (
   employmentHistory: {
-    new: EmploymentHistoryEntry[];
+    new: DraftEmploymentHistoryEntry[];
     old: EmploymentHistoryEntry[];
   },
   keywords: string[]

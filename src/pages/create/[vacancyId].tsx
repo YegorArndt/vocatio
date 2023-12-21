@@ -44,28 +44,29 @@ const CVBuilder = (props: { vacancyId: string }) => {
 
   const isReady = vacancy && user && defaultUserData && draft;
 
-  const openModal = () =>
+  const openModal = () => {
+    if (!user || !draft || !vacancy) return;
     ModalFactory.open("diff", {
       className: "!w-[1500px]",
       children: (
         <Diff
           vacancy={vacancy}
           professionalSummary={{
-            old: user.professionalSummary,
-            new: draft?.professionalSummary,
+            old: user.professionalSummary!,
+            new: draft?.professionalSummary!,
           }}
           employmentHistory={{
             old: user.employmentHistory,
             new: draft.employmentHistory,
           }}
           jobTitle={{
-            old: user.jobTitle,
-            new: draft?.jobTitle,
+            old: user.jobTitle!,
+            new: draft?.jobTitle!,
           }}
         />
       ),
     });
-
+  };
   const notifyOnMount = () => {
     toast(
       <div className="flex flex-col gap-2">

@@ -18,15 +18,7 @@ enum Currency {
   BYN
 }
 
-enum Adjustable {
-  jobTitle
-  employmentHistory
-  professionalSummary
-  skills
-  location
-  languages
-  education
-}
+ 
 
 enum SourceName {
   LINKEDIN
@@ -253,9 +245,6 @@ model User {
   vacancies Vacancy[] @relation("UserVacancy")
   cvs       Cv[]
   drafts    Draft[]
-
-  adjustSlightly   Adjustable[]
-  adjustCompletely Adjustable[]
 }
 
 model Draft {

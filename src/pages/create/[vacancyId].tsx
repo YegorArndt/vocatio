@@ -5,20 +5,12 @@ import Head from "next/head";
 
 import { api } from "~/utils";
 import { generateSSGHelper } from "~/server/api/utils/generateSSGHelper";
-import { Toolbar } from "~/modules/create/toolbar/Toolbar";
-import { DraftContext } from "~/modules/draft/DraftContext";
-import { DndProvider } from "~/modules/create/DndProvider";
-import cn from "classnames";
-import { Layout } from "~/components/layout/Layout";
-import { DesignViewer } from "~/modules/create/DesignViewer";
 import { PageBreak } from "~/modules/create/PageBreak";
 import { toast } from "react-toastify";
 import { FcCheckmark } from "react-icons/fc";
 import { Button } from "~/components/ui/buttons/Button";
 import { ModalFactory } from "~/modules/modal/ModalFactory";
 import { Diff } from "~/modules/create/Diff";
-import { Lines } from "~/components/Spinner";
-import { DraftContextInput } from "~/modules/draft/types";
 
 const { log } = console;
 
@@ -116,7 +108,7 @@ const CVBuilder = (props: { vacancyId: string }) => {
      * Notify the user about changes made.
      */
 
-    notifyOnMount();
+    // notifyOnMount();
 
     return () => {
       toast.dismiss("diff");
@@ -141,7 +133,8 @@ const CVBuilder = (props: { vacancyId: string }) => {
     <>
       <Head>
         <title>
-          {vacancy?.companyName ? `CV for ${vacancy.companyName}` : "Loading"}
+          {/* {vacancy?.companyName ? `CV for ${vacancy.companyName}` : "Loading"} */}
+          Vocatio
         </title>
         <meta
           name="description"
@@ -149,7 +142,7 @@ const CVBuilder = (props: { vacancyId: string }) => {
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      {isReady ? (
+      {/* {isReady ? (
         <DraftContext
           a4Ref={a4Ref}
           defaultUserData={defaultUserData}
@@ -188,7 +181,7 @@ const CVBuilder = (props: { vacancyId: string }) => {
             <div className="right-aside skeleton rounded-md" />
           </div>
         </Layout>
-      )}
+      )} */}
       {Array.from({ length: pages - 1 }).map((_, i) => (
         <PageBreak
           key={i}

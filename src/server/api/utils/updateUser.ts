@@ -39,23 +39,23 @@ export const getUserUpdateArgs = async (
     const fullDescriptions = employmentHistory.map((x) => x.description);
 
     const descriptionSummaries = await Promise.allSettled(
-      fullDescriptions.map((description) => getDescriptionSummary(description))
+      fullDescriptions.map((description) => getDescriptionSummary(description!))
     );
 
     employmentHistory.forEach((x, i) => {
-      const withSummary: EmploymentHistoryEntry = {
+      const withSummary = {
         ...x,
         descriptionSummary:
           descriptionSummaries[i]?.status === "fulfilled"
             ? (descriptionSummaries[i] as PromiseFulfilledResult<string>)?.value
             : x.descriptionSummary || x.description,
-      };
+      } as EmploymentHistoryEntry;
 
       summarizedEmploymentHistory.push(withSummary);
     });
   }
 
-  const userUpdateArgs: Prisma.UserUpdateArgs["data"] = {
+  const userUpdateArgs = {
     contact: {
       update: contact ? contact : undefined,
     },
@@ -102,7 +102,7 @@ export const getUserUpdateArgs = async (
         },
       },
     }),
-  };
+  } as Prisma.UserUpdateArgs["data"];
 
   return userUpdateArgs;
 };

@@ -10,8 +10,8 @@ const fs = require("fs");
 
 const { log } = console;
 
-const publicKey = fs.readFileSync("secret/public.pem", "utf8");
-// const publicKey = process.env.CLERK_PEM_PUBLIC_KEY;
+// const publicKey = fs.readFileSync("secret/public.pem", "utf8");
+const publicKey = process.env.CLERK_PEM_PUBLIC_KEY;
 
 const prisma = new PrismaClient();
 const inference = new HfInference(process.env.HF_API_KEY);

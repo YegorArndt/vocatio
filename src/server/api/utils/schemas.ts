@@ -32,49 +32,57 @@ export const ProfessionField = z.enum([
   "SCRUM_MASTER",
 ]);
 
-export const LanguageEntrySchema = z.object({
-  id: z.string(),
-  createdAt: z.date(),
-  updatedAt: z.date(),
-  name: z.string(),
-  level: SkillLevel,
-  userId: z.string(),
-});
+export const LanguageEntrySchema = z
+  .object({
+    id: z.string(),
+    createdAt: z.date(),
+    updatedAt: z.date(),
+    name: z.string(),
+    level: SkillLevel,
+    userId: z.string(),
+  })
+  .partial();
 
-export const SkillEntrySchema = z.object({
-  id: z.string(),
-  createdAt: z.date(),
-  updatedAt: z.date(),
-  name: z.string(),
-  level: SkillLevel,
-  userId: z.string(),
-});
+export const SkillEntrySchema = z
+  .object({
+    id: z.string().optional(),
+    createdAt: z.date().optional(),
+    updatedAt: z.date().optional(),
+    name: z.string().optional(),
+    level: SkillLevel.optional(),
+    userId: z.string().optional(),
+  })
+  .partial();
 
-export const EducationEntrySchema = z.object({
-  id: z.string().uuid(),
-  createdAt: z.date(),
-  updatedAt: z.date(),
-  place: z.string(),
-  period: z.string(),
-  description: z.string(),
-  image: z.string(),
-  title: z.string(),
-  userId: z.string().uuid(),
-});
+export const EducationEntrySchema = z
+  .object({
+    id: z.string().uuid(),
+    createdAt: z.date(),
+    updatedAt: z.date(),
+    place: z.string(),
+    period: z.string(),
+    description: z.string(),
+    image: z.string(),
+    title: z.string(),
+    userId: z.string().uuid(),
+  })
+  .partial();
 
-export const EmploymentHistoryEntrySchema = z.object({
-  id: z.string().uuid(),
-  createdAt: z.date(),
-  updatedAt: z.date(),
-  place: z.string(),
-  period: z.string(),
-  description: z.string(),
-  descriptionSummary: z.string(),
-  skills: z.array(z.string()),
-  image: z.string(),
-  title: z.string(),
-  userId: z.string().uuid(),
-});
+export const EmploymentHistoryEntrySchema = z
+  .object({
+    id: z.string().uuid(),
+    createdAt: z.date(),
+    updatedAt: z.date(),
+    place: z.string(),
+    period: z.string(),
+    description: z.string(),
+    descriptionSummary: z.string(),
+    skills: z.array(z.string()),
+    image: z.string(),
+    title: z.string(),
+    userId: z.string().uuid(),
+  })
+  .partial();
 
 export const ContactSchema = z
   .object({
@@ -99,17 +107,19 @@ export const ContactSchema = z
   })
   .partial();
 
-const RecommendationsEntrySchema = z.object({
-  id: z.string().uuid(),
-  createdAt: z.date(),
-  updatedAt: z.date(),
-  place: z.string(),
-  period: z.string(),
-  description: z.string(),
-  image: z.string(),
-  title: z.string(),
-  userId: z.string().uuid(),
-});
+const RecommendationsEntrySchema = z
+  .object({
+    id: z.string().uuid(),
+    createdAt: z.date(),
+    updatedAt: z.date(),
+    place: z.string(),
+    period: z.string(),
+    description: z.string(),
+    image: z.string(),
+    title: z.string(),
+    userId: z.string().uuid(),
+  })
+  .partial();
 
 export const UserUpdateSchema = z
   .object({

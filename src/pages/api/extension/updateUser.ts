@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient } from "@prisma/client";
 import jwt from "jsonwebtoken";
-// const fs = require("fs");
+const fs = require("fs");
 
 import { getUserUpdateArgs } from "~/server/api/utils/updateUser";
 import { RouterOutputs } from "~/utils/api";
@@ -15,8 +15,8 @@ type Err = {
 };
 
 const prisma = new PrismaClient();
-// const publicKey = fs.readFileSync("secret/public.pem", "utf8");
-const publicKey = process.env.CLERK_PEM_PUBLIC_KEY;
+const publicKey = fs.readFileSync("secret/public.pem", "utf8");
+// const publicKey = process.env.CLERK_PEM_PUBLIC_KEY;
 
 export default async function updateUser(
   req: NextApiRequest,
@@ -39,7 +39,7 @@ export default async function updateUser(
 
     const updatedUser = await prisma.user.update({
       where: { id: userId },
-      data: getUserUpdateArgs(parsed),
+      data: await getUserUpdateArgs(parsed),
     });
 
     return res.status(200).json(updatedUser);

@@ -62,7 +62,7 @@ type EntryProps = PropsWithChildren<{
 const beforeRed = "bg-[#ffdce0] clr-black rounded-md p-3";
 const afterGreen = "bg-[#E7FFEB] clr-black rounded-md p-3";
 
-const commonWordsToIgnore = new Set([
+const ignoreList = new Set([
   "the",
   "and",
   "in",
@@ -88,6 +88,9 @@ const commonWordsToIgnore = new Set([
   "will",
   "be",
   "which",
+  "but",
+  "this",
+  "I",
 ]);
 
 const getInterleaved = (
@@ -142,7 +145,7 @@ const highlightKeywords = (props: HighlightKeywordsProps) => {
     const isKeyword = splitKeywords.some((kw) => {
       const match =
         kw.toLowerCase() === word.toLowerCase() &&
-        !commonWordsToIgnore.has(word.toLowerCase());
+        !ignoreList.has(word.toLowerCase());
       if (match) highlightedKeywords.add(word.toLowerCase());
 
       return match;

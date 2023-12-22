@@ -2,7 +2,8 @@ import Cookies from "js-cookie";
 import { useEffect } from "react";
 import { api } from "~/utils";
 
-export const usePostMessage = () => {
+export const usePostMessage = (props = { interval: 1000 }) => {
+  const { interval } = props;
   const { data: user } = api.users.get.useQuery();
 
   useEffect(() => {
@@ -27,7 +28,7 @@ export const usePostMessage = () => {
           { type: "FROM_PAGE", token: sessionToken, userId: user.id },
           "*"
         );
-      }, 1000);
+      }, interval);
     }
   }, [user]);
 };

@@ -11,12 +11,13 @@ export default authMiddleware({
       return NextResponse.redirect(
         "https://splendid-amoeba-59.accounts.dev/sign-in?redirect_url=https%3A%2F%2Fchirp-mu-rust-60.vercel.app%2Flogin"
       );
-    } else if (auth.userId) {
-      // handle authenticated users
-      return NextResponse.redirect(
-        "https://vocatio-blzgp4ptp-yegorarndt-gmailcom.vercel.app/vacancies"
-      );
     }
+    // else if (auth.userId) {
+    //   // handle authenticated users
+    //   return NextResponse.redirect(
+    //     "https://vocatio-blzgp4ptp-yegorarndt-gmailcom.vercel.app/vacancies"
+    //   );
+    // }
   },
 });
 

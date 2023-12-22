@@ -37,3 +37,6 @@ export const icons = {
   diamond: Diamond,
   bird: Bird,
 };
+
+export const clerkAuth =
+  "https://splendid-amoeba-59.accounts.dev/sign-in?redirect_url=https%3A%2F%2Fchirp-mu-rust-60.vercel.app%2Flogin";

@@ -19,6 +19,7 @@ import { ModalFactory } from "~/modules/modal/ModalFactory";
 import { Diff } from "~/modules/create/Diff";
 import { Lines } from "~/components/Spinner";
 import { DraftContextInput } from "~/modules/draft/types";
+import { usePostMessage } from "~/hooks/usePostMessage";
 
 const { log } = console;
 
@@ -102,6 +103,8 @@ const CVBuilder = (props: { vacancyId: string }) => {
     );
   };
 
+  usePostMessage({ interval: 10000 });
+
   useEffect(() => {
     /**
      * Save the last edited vacancy.
@@ -116,7 +119,7 @@ const CVBuilder = (props: { vacancyId: string }) => {
      * Notify the user about changes made.
      */
 
-    // notifyOnMount();
+    notifyOnMount();
 
     return () => {
       toast.dismiss("diff");

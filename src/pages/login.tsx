@@ -1,33 +1,86 @@
+import { useUser } from "@clerk/nextjs";
 import type { NextPage } from "next";
 import Head from "next/head";
-import { Fragment, useEffect } from "react";
-import { useUser } from "@clerk/nextjs";
-import { api } from "~/utils";
-import { Spinner } from "~/components";
 import { useRouter } from "next/router";
-import cn from "classnames";
+import type { UserResource } from "@clerk/types";
+
+import {
+  PropsWithChildren,
+  useState,
+  useEffect,
+  Children,
+  ReactElement,
+  cloneElement,
+} from "react";
+import { clerkAuth } from "~/constants";
+import { api } from "~/utils";
 import { AnimatedDiv } from "~/components/AnimatedDiv";
+import { Spinner } from "~/components";
 
-const LoginPage: NextPage = () => {
-  const { user: clerkUser, isSignedIn } = useUser();
-  const {
-    data: prismaUser,
-    isLoading: prismaUserLoading,
-    isError: prismaUserError,
-  } = api.users.get.useQuery();
-  const router = useRouter();
-  const { mutate: createUser, isLoading: isCreatingUser } =
-    api.users.create.useMutation();
+const { log } = console;
 
-  /**
-   * Create a user in our database when Clerk has authenticated the user.
-   */
+const MessageContainer = (
+  props: PropsWithChildren<{ className?: string; duration?: number }>
+) => {
+  const { children, className } = props;
+  const [currentMessageIndex, setCurrentMessageIndex] = useState(0);
+
   useEffect(() => {
-    if (!isSignedIn || prismaUserLoading) return;
+    const childArray = Children.toArray(children);
+
+    const displayNextMessage = (index: number) => {
+      if (index >= childArray.length) return;
+
+      const currentChild = childArray[index] as ReactElement;
+      const duration = currentChild.props.duration * 1000;
+
+      const timer = setTimeout(() => {
+        setCurrentMessageIndex(index + 1);
+        displayNextMessage(index + 1);
+      }, duration);
+
+      return timer;
+    };
+
+    const timer = displayNextMessage(0);
+
+    // Cleanup function to clear the timer
+    return () => clearTimeout(timer);
+  }, [children]);
+
+  return (
+    <div className={className}>
+      {Children.map(
+        children,
+        (child, index) =>
+          index === currentMessageIndex &&
+          child !== null &&
+          cloneElement(child as ReactElement, {
+            key: index,
+          })
+      )}
+    </div>
+  );
+};
+
+const PrismaLayer = (props: { clerkUser: UserResource }) => {
+  const { clerkUser } = props;
+
+  const { data: userExists } = api.users.exists.useQuery({
+    userId: clerkUser.id,
+  });
+
+  const { mutate: createUser } = api.users.create.useMutation();
+
+  const router = useRouter();
+
+  useEffect(() => {
+    if (userExists) void router.push("/vacancies");
+
     /**
-     * Create user in 1.5 seconds after error.
+     * Create user
      */
-    setTimeout(() => {
+    if (!userExists && clerkUser) {
       createUser({
         name: clerkUser.fullName!,
         image: clerkUser.imageUrl,
@@ -35,39 +88,34 @@ const LoginPage: NextPage = () => {
           email: clerkUser.emailAddresses[0]!.emailAddress,
         },
       });
-    }, 1500);
-  }, [isSignedIn]);
+    }
+  }, [userExists]);
+
+  return null;
+};
+
+const LoginPage: NextPage = () => {
+  const { user: clerkUser, isSignedIn } = useUser();
+  const router = useRouter();
 
   useEffect(() => {
-    if (!prismaUser) return;
-    /**
-     * Push to vacancies in one second. So that the user can see the welcome message.
-     */
-    setTimeout(() => {
-      void router.push("/vacancies");
-    }, 1700);
-  }, [prismaUser]);
+    if (isSignedIn === false) void router.push(clerkAuth);
+  }, [isSignedIn]);
 
   return (
     <>
       <Head>
         <title>Log into Vocatio</title>
       </Head>
-      <div className="flex-center h-screen w-screen flex-col gap-5">
-        {!prismaUser && (
-          <Fragment>
-            <Spinner />
-            {cn({
-              "Checking if account exists...":
-                prismaUserLoading && !isCreatingUser,
-              "Let's create an account for you": prismaUserError,
-              "Creating your account...": isCreatingUser,
-            })}
-          </Fragment>
-        )}
-        {prismaUser && (
-          <AnimatedDiv>Welcome and have a wonderful day ✨ </AnimatedDiv>
-        )}
+      <div className="flex-center h-screen">
+        <MessageContainer>
+          <AnimatedDiv duration={2}>Welcome to Vocatio</AnimatedDiv>
+          <AnimatedDiv duration={3} className="flex-y gap-2">
+            <Spinner size={15} />
+            Quick Sign In...
+          </AnimatedDiv>
+        </MessageContainer>
+        {clerkUser && <PrismaLayer clerkUser={clerkUser} />}
       </div>
     </>
   );

@@ -3,6 +3,8 @@ import { HfInference } from "@huggingface/inference";
 import { EmploymentHistoryEntry, type Prisma } from "@prisma/client";
 import { UserUpdateSchema } from "./schemas";
 
+const { log } = console;
+
 const inference = new HfInference(process.env.HF_API_KEY);
 
 const getDescriptionSummary = async (description: string) => {

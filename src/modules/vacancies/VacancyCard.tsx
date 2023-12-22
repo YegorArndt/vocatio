@@ -163,7 +163,7 @@ export const VacancyCard = (props: VacancyCardProps) => {
           <Link
             to={`create/${vacancy.id}`}
             frontIcon={<Gpt />}
-            text={hasCv ? "View CV" : "Generating CV..."}
+            text={hasCv ? "View CV" : "Generating CV... (reload if stuck)"}
             baseCn="flex-y hover:underline"
             className={cn({
               "clr-disabled": !hasCv,

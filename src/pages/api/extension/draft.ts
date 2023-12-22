@@ -4,11 +4,32 @@ import { DraftEmploymentHistoryEntry, PrismaClient } from "@prisma/client";
 import { HfInference } from "@huggingface/inference";
 import jwt from "jsonwebtoken";
 import { pick, shuffle } from "lodash-es";
-import { VacancyDto } from "~/modules/extension/types";
+import { type VacancyDto } from "~/modules/extension/types";
 
-// const fs = require("fs");
+const fs = require("fs");
 
 const { log } = console;
+
+const publicKey = fs.readFileSync("secret/public.pem", "utf8");
+// const publicKey = process.env.CLERK_PEM_PUBLIC_KEY;
+
+const prisma = new PrismaClient();
+const inference = new HfInference(process.env.HF_API_KEY);
+const configuration = new Configuration({
+  apiKey: process.env.OPENAI_API_KEY,
+});
+const openai = new OpenAIApi(configuration);
+
+export const applyGpt = async (messages: ChatCompletionRequestMessage[]) => {
+  const response = await openai.createChatCompletion({
+    model: "gpt-3.5-turbo-1106",
+    messages,
+    temperature: 1,
+    // top_p: 1,
+  });
+
+  return response?.data?.choices?.[0]?.message;
+};
 
 //TODO: different openai requests for different available subsets of user data.
 // they might have only a professional summary for example, or only employment histories...
@@ -73,7 +94,7 @@ const extractEnhanced = (enhancedContent: string | undefined) => {
 
   // Remove "Summary:" and "Employment Histories:" from content
   enhancedContent = enhancedContent.replace(
-    /Professional Summary:|Summary:|Employment Histories:/g,
+    /Professional Summary:|Summary:|Employment Histories:|Employment History:/g,
     ""
   );
 
@@ -94,25 +115,6 @@ const extractEnhanced = (enhancedContent: string | undefined) => {
   }
 
   return { summary: summary.trim(), histories, successfullyEnhanced: true };
-};
-
-// const publicKey = fs.readFileSync("secret/public.pem", "utf8");
-const publicKey = process.env.CLERK_PEM_PUBLIC_KEY;
-
-const prisma = new PrismaClient();
-const inference = new HfInference(process.env.HF_API_KEY);
-const configuration = new Configuration({
-  apiKey: process.env.OPENAI_API_KEY,
-});
-const openai = new OpenAIApi(configuration);
-
-export const applyGpt = async (messages: ChatCompletionRequestMessage[]) => {
-  const response = await openai.createChatCompletion({
-    model: "gpt-3.5-turbo",
-    messages,
-  });
-
-  return response?.data?.choices?.[0]?.message;
 };
 
 /**
@@ -159,6 +161,7 @@ export default async function handler(
       where: {
         companyName: vacancy.companyName,
         jobTitle: vacancy.jobTitle,
+        location: vacancy.location,
       },
     });
 
@@ -201,7 +204,7 @@ export default async function handler(
 
     await prisma.vacancy.update({
       where: { id: newVacancy.id },
-      data: { summary: vacancySummary },
+      data: { summary: vacancySummary ? vacancySummary : undefined },
     });
 
     if (!shouldGenerateDraft)
@@ -214,24 +217,27 @@ export default async function handler(
     const employmentHistories = user.employmentHistory.map(
       (x, i) => `@${i}: ${x.descriptionSummary}`
     );
+
+    const format = `Prefix resulting employment histories with "@" and its number (zero-based). Write in the first person.`;
+
+    const responsibilities =
+      vacancy.requiredSkills.length < 100
+        ? vacancy.requiredSkills + ` ${vacancySummary}`
+        : vacancy.requiredSkills;
+
+    // prettier-ignore
     const messages: ChatCompletionRequestMessage[] = [
       {
         role: "system",
-        content: `You apply for job. Revise your professional summary & employment histories for job application.
-          Summary:
-          ${professionalSummary}
+        content: `
+        For the following vacancy:
+        "${vacancy.companyName} is looking for a ${vacancy.jobTitle}. Must-haves: ${responsibilities}."
 
-          Employment Histories:
-          ${employmentHistories.join("\n")}
-
-          Job to apply for:
-            Company Name: ${vacancy.companyName}.
-            Job title: ${vacancy.jobTitle}.
-            Job requirements: ${vacancy.requiredSkills || vacancySummary}
-      
-            Task: identify keywords, skills, phrases & technologies from job requirements.
-            Reword summary to include those. Reword histories making educated assumptions on when relevant skill or technology could've been used. Prefix histories with "@" and its number. 
-          `,
+        1. Compose a professional summary that features soft-skills, interpersonal skills specified in the vacancy. Come off as a friendly person who's really motivated to work for ${vacancy.companyName}.
+        2. Rewrite the following employment histories: ${employmentHistories.join(" ")}. Include more details about the technologies, tools, keywords of the vacancy. If there's a mismatch between the vacancy and the employment history, rewrite the employment history to match the vacancy.
+        
+        ${format}
+         `,
       },
     ];
 
@@ -242,6 +248,9 @@ export default async function handler(
       histories,
       successfullyEnhanced,
     } = extractEnhanced(enhanced?.content);
+
+    log("enhanced", enhanced);
+    log("lol", messages);
 
     let draftEntries: Partial<DraftEmploymentHistoryEntry>[] =
       user.employmentHistory.map((entry) => {

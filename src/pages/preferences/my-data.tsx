@@ -17,6 +17,8 @@ import { Steps } from "~/modules/preferences/Steps";
 import { BigEntryBox } from "~/modules/preferences/boxes/components/BigEntryBox";
 import { usePostMessage } from "~/hooks/usePostMessage";
 
+const { log } = console;
+
 const icons = [
   {
     icon: <Glassdoor />,

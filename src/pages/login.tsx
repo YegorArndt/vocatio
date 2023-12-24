@@ -12,10 +12,10 @@ import {
   ReactElement,
   cloneElement,
 } from "react";
-import { clerkAuth } from "~/constants";
 import { api } from "~/utils";
 import { AnimatedDiv } from "~/components/AnimatedDiv";
 import { Spinner } from "~/components";
+import { clerkAuth } from "~/constants";
 
 const { log } = console;
 

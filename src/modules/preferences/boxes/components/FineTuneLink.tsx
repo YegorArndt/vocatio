@@ -12,9 +12,11 @@ export const FineTuneLink = (props: FineTuneLinkProps) => {
   const { entryFor, text } = props;
   const { data: user, isLoading } = api.users.get.useQuery();
 
+  const url = entryFor === "employmentHistory" ? "experience" : entryFor;
+
   const linkedinId = user?.contact?.linkedin;
   const to = Boolean(entryFor && linkedinId)
-    ? `https://www.linkedin.com/in/${linkedinId}/details/${entryFor}`
+    ? `https://www.linkedin.com/in/${linkedinId}/details/${url}`
     : "https://www.linkedin.com/in/";
 
   return isLoading ? null : (

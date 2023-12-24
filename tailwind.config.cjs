@@ -43,7 +43,7 @@ const config = {
         input: "var(--input-bg)",
       },
       fontSize: {
-        default: "clamp(0.75rem, 0.7232rem + 0.1429vw, 0.875rem)",
+        default: "0.875rem",
       },
       zIndex: {
         modal: 50,

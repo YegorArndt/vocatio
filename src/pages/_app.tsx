@@ -9,8 +9,8 @@ import "react-toastify/dist/ReactToastify.css";
 import "@szhsin/react-menu/dist/index.css";
 import "@szhsin/react-menu/dist/transitions/slide.css";
 
-import { api } from "~/utils";
 import "~/styles/globals.css";
+import { api } from "~/utils";
 import { ModalFactory } from "~/modules/modal/ModalFactory";
 
 const inter = Inter({ subsets: ["latin"] });

@@ -15,11 +15,7 @@ import {
   Bird,
 } from "./components/icons";
 
-export const publicRoutes = [
-  "/privacy-policy",
-  "/login",
-  "/api/extension/validateToken",
-];
+export const publicRoutes = ["/privacy-policy", "/login"];
 
 export const icons = {
   email: Email,
@@ -39,4 +35,4 @@ export const icons = {
 };
 
 export const clerkAuth =
-  "https://splendid-amoeba-59.accounts.dev/sign-in?redirect_url=https%3A%2F%2Fchirp-mu-rust-60.vercel.app%2Flogin";
+  "https://splendid-amoeba-59.accounts.dev/sign-in?redirect_url=https%3A%2F%2Fchirp-mu-rust-60.vercel.app%2Flogin#https://splendid-amoeba-59.accounts.dev/sign-in?redirect_url=https%3A%2F%2Fchirp-mu-rust-60.vercel.app%2Flogin";

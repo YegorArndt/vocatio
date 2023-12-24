@@ -24,7 +24,7 @@ export const applyGpt = async (messages: ChatCompletionRequestMessage[]) => {
   const response = await openai.createChatCompletion({
     model: "gpt-3.5-turbo-1106",
     messages,
-    temperature: 1,
+    // temperature: 1,
     // top_p: 1,
   });
 
@@ -100,6 +100,8 @@ const extractEnhanced = (enhancedContent: string | undefined) => {
 
   // Split the response into summary and histories
   const [summary, historiesContent] = enhancedContent.split(/(?=@0)/, 2);
+
+  log("test", historiesContent);
 
   if (!summary || !historiesContent) return { successfullyEnhanced: false };
 
@@ -218,7 +220,7 @@ export default async function handler(
       (x, i) => `@${i}: ${x.descriptionSummary}`
     );
 
-    const format = `Prefix resulting employment histories with "@" and its number (zero-based). Write in the first person.`;
+    const format = `Prefix resulting employment histories with "@" and its number (zero-based). Write in the first person. Translate the professional summary & employment histories to the vacancy language.`;
 
     const responsibilities =
       vacancy.requiredSkills.length < 100
@@ -234,8 +236,8 @@ export default async function handler(
         "${vacancy.companyName} is looking for a ${vacancy.jobTitle}. Must-haves: ${responsibilities}."
 
         1. Compose a professional summary that features soft-skills, interpersonal skills specified in the vacancy. Come off as a friendly person who's really motivated to work for ${vacancy.companyName}.
-        2. Rewrite the following employment histories: ${employmentHistories.join(" ")}. Include more details about the technologies, tools, keywords of the vacancy. If there's a mismatch between the vacancy and the employment history, rewrite the employment history to match the vacancy.
-        
+        2. Rewrite the following employment histories: ${employmentHistories.join(" ")}. Include more details about the technologies, tools, keywords of the vacancy.
+      
         ${format}
          `,
       },

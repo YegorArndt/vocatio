@@ -64,12 +64,8 @@ const getFilters = (vacancies: Vacancy[], key: keyof Vacancy) => {
 };
 
 export const Vacancies = () => {
-  const {
-    data: vacancies,
-    isLoading: vacanciesLoading,
-    isRefetching,
-    refetch,
-  } = api.vacancies.getAll.useQuery();
+  const { data: vacancies, isLoading: vacanciesLoading } =
+    api.vacancies.getAll.useQuery();
   api.drafts.getAll.useQuery();
 
   const methods = useForm({

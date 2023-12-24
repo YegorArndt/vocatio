@@ -329,16 +329,19 @@ export const Diff = (props: DiffProps) => {
           highlightedDescription={vacancyHighlighted}
         />
         <h3 className="col-span-2 mt-5">Employment History</h3>
-        {interleaved.map((entry, index) => (
-          <Entry
-            key={entry!.id}
-            {...(entry as EntryProps)}
-            className={cn({
-              [afterGreen]: index % 2 === 1,
-              [beforeRed]: index % 2 === 0,
-            })}
-          />
-        ))}
+        {interleaved.map(
+          (entry, index) =>
+            !!entry && (
+              <Entry
+                key={entry.id}
+                {...(entry as EntryProps)}
+                className={cn({
+                  [afterGreen]: index % 2 === 1,
+                  [beforeRed]: index % 2 === 0,
+                })}
+              />
+            )
+        )}
       </div>
     </div>
   );

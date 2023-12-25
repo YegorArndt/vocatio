@@ -1,4 +1,4 @@
-import { useUser } from "@clerk/nextjs";
+import { SignInButton, useUser } from "@clerk/nextjs";
 import type { NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
@@ -15,7 +15,7 @@ import {
 import { api } from "~/utils";
 import { AnimatedDiv } from "~/components/AnimatedDiv";
 import { Spinner } from "~/components";
-import { clerkAuth } from "~/constants";
+import { Button } from "~/components/ui/buttons/Button";
 
 const { log } = console;
 
@@ -95,27 +95,32 @@ const PrismaLayer = (props: { clerkUser: UserResource }) => {
 };
 
 const LoginPage: NextPage = () => {
-  const { user: clerkUser, isSignedIn } = useUser();
-  const router = useRouter();
-
-  useEffect(() => {
-    if (isSignedIn === false) void router.push(clerkAuth);
-  }, [isSignedIn]);
+  const { user: clerkUser, isSignedIn, isLoaded } = useUser();
 
   return (
     <>
       <Head>
         <title>Log into Vocatio</title>
       </Head>
-      <div className="flex-center h-screen">
-        <MessageContainer>
-          <AnimatedDiv duration={2}>Welcome to Vocatio</AnimatedDiv>
-          <AnimatedDiv duration={3} className="flex-y gap-2">
-            <Spinner size={15} />
-            Quick Sign In...
+      <div className="flex-center h-screen flex-col gap-4">
+        {!isLoaded && isSignedIn === undefined && (
+          <MessageContainer>
+            <AnimatedDiv duration={2}>Welcome to Vocatio</AnimatedDiv>
+            <AnimatedDiv duration={3} className="flex-y gap-2">
+              <Spinner size={15} />
+              Quick Sign In...
+            </AnimatedDiv>
+          </MessageContainer>
+        )}
+        {!isSignedIn && isLoaded && (
+          <AnimatedDiv className="flex-center flex-col gap-4">
+            Welcome to Vocatio
+            <SignInButton>
+              <Button text="Click here to sign in" className="primary sm" />
+            </SignInButton>
           </AnimatedDiv>
-        </MessageContainer>
-        {clerkUser && <PrismaLayer clerkUser={clerkUser} />}
+        )}
+        {isSignedIn && <PrismaLayer clerkUser={clerkUser} />}
       </div>
     </>
   );

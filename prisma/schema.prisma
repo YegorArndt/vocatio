@@ -301,7 +301,7 @@ model Vacancy {
   cvs    Cv[]
   drafts Draft[]
 
-  @@unique([companyName, jobTitle])
+  @@unique([companyName, jobTitle, location])
 }
 
 model Cv {

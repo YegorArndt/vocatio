@@ -22,7 +22,7 @@ const openai = new OpenAIApi(configuration);
 
 export const applyGpt = async (messages: ChatCompletionRequestMessage[]) => {
   const response = await openai.createChatCompletion({
-    model: "gpt-3.5-turbo-1106",
+    model: "gpt-4",
     messages,
     // temperature: 1,
     // top_p: 1,
@@ -44,9 +44,6 @@ export const getSkillsOverlap = (
   skillsArray: string[]
 ): string[] => {
   const lowerCaseDescription = vacancyDescription.toLowerCase();
-
-  // Determine the maximum number of skills to match
-  const maxSkills = skillsArray.length > 4 ? 4 : skillsArray.length;
 
   // Helper function to check if a skill is an exact match.
   const isExactMatch = (skill: string, description: string) =>
@@ -74,6 +71,9 @@ export const getSkillsOverlap = (
 
   // Combine exact and partial matches.
   const combinedMatches = new Set([...exactMatches, ...partialMatches]);
+
+  // Determine the maximum number of skills to match
+  const maxSkills = combinedMatches.size > 4 ? 4 : combinedMatches.size;
 
   // Shuffle and fill the array if there are less than maxSkills.
   if (combinedMatches.size < maxSkills) {
@@ -220,7 +220,7 @@ export default async function handler(
       (x, i) => `@${i}: ${x.descriptionSummary}`
     );
 
-    const format = `Prefix resulting employment histories with "@" and its number (zero-based). Write in the first person. Translate the professional summary & employment histories to the vacancy language.`;
+    const format = `Prefix resulting employment histories with "@" and its number (zero-based). Write in the first person. Translate the professional summary & employment histories to the vacancy language. Return only the summary & employment histories.`;
 
     const responsibilities =
       vacancy.requiredSkills.length < 100
@@ -231,13 +231,12 @@ export default async function handler(
     const messages: ChatCompletionRequestMessage[] = [
       {
         role: "system",
-        content: `
-        For the following vacancy:
-        "${vacancy.companyName} is looking for a ${vacancy.jobTitle}. Must-haves: ${responsibilities}."
+        content: `You're a resume writing expert. Adapt my professional summary & employment histories to vacancy.
 
-        1. Compose a professional summary that features soft-skills, interpersonal skills specified in the vacancy. Come off as a friendly person who's really motivated to work for ${vacancy.companyName}.
-        2. Rewrite the following employment histories: ${employmentHistories.join(" ")}. Include more details about the technologies, tools, keywords of the vacancy.
-      
+        Vacancy: ${vacancy.companyName} is looking for ${vacancy.jobTitle}. Key responsibilities: ${responsibilities}.
+        Summary to adapt: ${professionalSummary}
+        Employment histories: ${employmentHistories.join(" ")}
+
         ${format}
          `,
       },

@@ -16,6 +16,10 @@ export default authMiddleware({
     if (!auth.userId && !auth.isPublicRoute) {
       return NextResponse.redirect(redirectUrl);
     }
+
+    // else if (auth.userId) {
+    //   return NextResponse.redirect("/login");
+    // }
   },
 });
 

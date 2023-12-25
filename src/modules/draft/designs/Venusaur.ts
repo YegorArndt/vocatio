@@ -120,7 +120,6 @@ const left: RawComponent[] = [
                     smallTextClassName: "font-thin",
                     className:
                       "font-bold text-[1rem] grid grid-cols-[50px,1fr] gap-2 items-center",
-                    tooltip: entry.place,
                   },
                 },
                 {
@@ -215,7 +214,7 @@ const right: RawComponent[] = [
                       smallText: entry.period,
                       smallTextClassName: "font-thin",
                       className: cn(
-                        "font-bold text-[1rem] grid grid-cols-[50px,1fr]"
+                        "font-bold text-[16px] grid grid-cols-[50px,1fr]"
                       ),
                       tooltip: "Company image & name",
                     },
@@ -236,14 +235,13 @@ const right: RawComponent[] = [
                     sectionId: entry.id,
                     props: {
                       imageProps: { height: 25, width: 25 },
+                      className:
+                        "font-bold text-[14px] grid grid-cols-[25px,1fr] items-center mt-[8px]",
                       value: "Skills proven during tenure",
-                      label: entry.title,
-                      summary: entry.descriptionSummary,
+                      label: "Skills",
                       image: "diamond",
                       smallText: entry.skills.join(", "),
                       smallTextClassName: "font-thin",
-                      className:
-                        "font-bold text-[1rem] grid grid-cols-[25px,1fr] items-center mt-[8px]",
                       tooltip: "Skills",
                     },
                   },
@@ -264,6 +262,7 @@ const right: RawComponent[] = [
           },
         },
         tooltip: "Experience section",
+        className: "flex flex-col gap-4",
       };
     },
   },
@@ -305,10 +304,10 @@ export const Venusaur: RawDesign = {
     },
     "heading-2": {
       className:
-        "text-[29px] tracking-[-0.029375rem] font-bold border-b-2 border-current pb-[8px]",
+        "text-[29px] tracking-[-0.039375rem] font-bold border-b-2 border-current pb-[8px]",
     },
     text: {
-      className: "text-[13px]",
+      className: "text-[12px]",
     },
     group: {
       className: "grid grid-cols-[80px,1fr] gap-3",

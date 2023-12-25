@@ -2,6 +2,12 @@ import { authMiddleware } from "@clerk/nextjs/server";
 import { publicRoutes } from "./constants";
 import { NextResponse } from "next/server";
 
+const redirectUrl =
+  (process.env.NODE_ENV === "development"
+    ? process.env.NEXT_PUBLIC_REDIRECT_URL_DEV
+    : process.env.NEXT_PUBLIC_REDIRECT_URL_PROD) ||
+  "https://vocatio-blzgp4ptp-yegorarndt-gmailcom.vercel.app/login";
+
 export default authMiddleware({
   publicRoutes,
   ignoredRoutes: ["/api/extension/updateUser"],
@@ -10,11 +16,6 @@ export default authMiddleware({
     if (!auth.userId && !auth.isPublicRoute) {
       return NextResponse.redirect(
         "https://splendid-amoeba-59.accounts.dev/sign-in?redirect_url=https%3A%2F%2Fchirp-mu-rust-60.vercel.app%2Flogin"
-      );
-    } else if (auth.userId) {
-      // handle authenticated users
-      return NextResponse.redirect(
-        "https://vocatio-blzgp4ptp-yegorarndt-gmailcom.vercel.app/vacancies"
       );
     }
   },

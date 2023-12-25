@@ -51,7 +51,7 @@ export const getDefaults = (
   vacancy: Vacancy
 ) => {
   const topSkills = findStringsInText(vacancy.requiredSkills, user.skills);
-  const linkedin = `vocat.io/${user.shortLinkedin?.shortUrl}.com`;
+  // const linkedin = `vocat.io/${user.shortLinkedin?.shortUrl}.com`;
 
   return {
     vacancy,
@@ -76,7 +76,7 @@ export const getDefaults = (
     country: user.contact?.country || vacancy.country,
     address: user.contact?.address || vacancy.country,
     phone: user.contact?.phone || defaultUserData.phoneNumbers[0]?.phoneNumber,
-    linkedin,
+    linkedin: `linkedin.com/in/${user.contact?.linkedin}`,
     github: user.contact?.github,
     languages: user.languages ?? vacancy.requiredLanguages,
     city: user.contact?.city || vacancy.country,

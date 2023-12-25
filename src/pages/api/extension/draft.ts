@@ -10,8 +10,8 @@ const fs = require("fs");
 
 const { log } = console;
 
-// const publicKey = fs.readFileSync("secret/public.pem", "utf8");
-const publicKey = process.env.CLERK_PEM_PUBLIC_KEY;
+const publicKey = fs.readFileSync("secret/public.pem", "utf8");
+// const publicKey = process.env.CLERK_PEM_PUBLIC_KEY;
 
 const prisma = new PrismaClient();
 const inference = new HfInference(process.env.HF_API_KEY);
@@ -46,7 +46,7 @@ export const getSkillsOverlap = (
   const lowerCaseDescription = vacancyDescription.toLowerCase();
 
   // Determine the maximum number of skills to match
-  const maxSkills = skillsArray.length > 8 ? 8 : skillsArray.length;
+  const maxSkills = skillsArray.length > 4 ? 4 : skillsArray.length;
 
   // Helper function to check if a skill is an exact match.
   const isExactMatch = (skill: string, description: string) =>

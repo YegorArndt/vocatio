@@ -12,19 +12,10 @@ export type AutoresizeProps = {
   className?: string;
   style?: CSSProperties;
   type?: "value" | "label" | "smallText";
-  smallText?: string;
-  smallTextClassName?: string;
 };
 
 export const Autoresize = (props: AutoresizeProps) => {
-  const {
-    value,
-    style,
-    className,
-    type = "value",
-    smallText,
-    smallTextClassName,
-  } = props;
+  const { value, style, className, type = "value" } = props;
   const initialValue = useRef(value);
   const divRef = useRef<HTMLDivElement>(null);
   const c = useComponentContext();

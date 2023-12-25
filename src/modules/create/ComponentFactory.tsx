@@ -1,15 +1,16 @@
 import { useComponentContext } from "./ComponentContext";
 import { useDraftContext } from "../draft/DraftContext";
 import { mergeWithIntrinsic } from "../utils/mergeWithIntrinsic";
-import { Autoresize, IconGroup, Divider } from "./intrinsic";
-import { BlurImage } from "~/components";
+import { Group, Divider } from "./intrinsic";
+import { ImgHTMLAttributes } from "react";
+
+const PlainImage = (props: ImgHTMLAttributes<HTMLImageElement>) => (
+  <img {...props} />
+);
 
 const componentMapping = {
-  text: Autoresize,
-  group: IconGroup,
-  "icon-group": IconGroup,
   divider: Divider,
-  image: BlurImage,
+  image: PlainImage,
 };
 
 /**
@@ -25,7 +26,7 @@ export const ComponentFactory = () => {
   const m = mergeWithIntrinsic(c, design);
 
   const Component =
-    componentMapping[c.type as keyof typeof componentMapping] || Autoresize;
+    componentMapping[c.type as keyof typeof componentMapping] || Group;
 
   return Component ? (
     <Component

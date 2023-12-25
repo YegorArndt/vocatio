@@ -68,7 +68,7 @@
     This helps prevent cv texts from shifting down
   */
   img {
-    @apply inline-block;
+    @apply !inline-block;
   }
 
   h1 {

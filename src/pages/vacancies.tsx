@@ -1,19 +1,13 @@
 import Head from "next/head";
-import { Fragment, ReactNode } from "react";
+import { ReactNode } from "react";
 import { FormProvider, UseFormRegister, useForm } from "react-hook-form";
 import { IoIosArrowDown } from "react-icons/io";
 import { type Vacancy } from "@prisma/client";
 
 import { Layout } from "~/components/layout/Layout";
 import { api } from "~/utils/api";
-import { startCase, lowerCase } from "lodash-es";
-import { CiCalendarDate, CiFilter } from "react-icons/ci";
-import { FaDollarSign, FaLayerGroup } from "react-icons/fa";
-import { GoSortAsc } from "react-icons/go";
-import { Chip, Placeholder } from "~/components";
+import { Placeholder } from "~/components";
 import { Lines, CardStack } from "~/components/Spinner";
-import { Divider } from "~/components/layout/Divider";
-import { Checkbox } from "~/components/ui/inputs/Checkbox";
 import { Text } from "~/components/ui/inputs/Text";
 import { usePostMessage } from "~/hooks/usePostMessage";
 import { CuratedVacancies } from "~/modules/vacancies/CuratedVacancies";
@@ -85,63 +79,7 @@ export const Vacancies = () => {
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Layout
-        toolbar={
-          vacanciesLoading ? (
-            <Lines />
-          ) : (
-            vacancies &&
-            vacancies.length > 0 && (
-              <>
-                <ToolbarEntry text="Sort by" icon={<GoSortAsc />} />
-                <Divider />
-                <div className="flex-between gap-2">
-                  <ToolbarEntry text="Salary" icon={<FaDollarSign />} />
-                  <ToolbarRadio register={register} name="salary" />
-                </div>
-                <div className="flex-between gap-2">
-                  <ToolbarEntry text="Date posted" icon={<CiCalendarDate />} />
-                  <ToolbarRadio register={register} name="date" />
-                </div>
-                <Divider className="mt-4" />
-                <ToolbarEntry text="Filter by" icon={<CiFilter />} />
-                <Divider />
-                {!vacanciesLoading && vacancies && (
-                  <Fragment>
-                    {getFilters(vacancies, "requiredSeniority").map(
-                      (seniority) => (
-                        <Checkbox
-                          key={seniority}
-                          label={startCase(lowerCase(seniority)) + " jobs"}
-                          name={seniority}
-                          control={control}
-                        />
-                      )
-                    )}
-                    {getFilters(vacancies, "employmentType").map((et) => (
-                      <Checkbox
-                        key={et}
-                        label={startCase(lowerCase(et))}
-                        name={et}
-                        control={control}
-                      />
-                    ))}
-                    <Divider className="mt-4" />
-                    <ToolbarEntry
-                      text={
-                        <>
-                          Group by <Chip text="Soon" className="bg-sky px-3" />
-                        </>
-                      }
-                      icon={<FaLayerGroup />}
-                    />
-                  </Fragment>
-                )}
-              </>
-            )
-          )
-        }
-      >
+      <Layout toolbar={vacanciesLoading && <Lines />}>
         <div className="content flex flex-col gap-8">
           {(vacanciesLoading || !!vacancies?.length) && (
             <Text
@@ -176,3 +114,52 @@ export const Vacancies = () => {
 };
 
 export default Vacancies;
+
+{
+  /* <>
+<ToolbarEntry text="Sort by" icon={<GoSortAsc />} />
+<Divider />
+<div className="flex-between gap-2">
+  <ToolbarEntry text="Salary" icon={<FaDollarSign />} />
+  <ToolbarRadio register={register} name="salary" />
+</div>
+<div className="flex-between gap-2">
+  <ToolbarEntry text="Date posted" icon={<CiCalendarDate />} />
+  <ToolbarRadio register={register} name="date" />
+</div>
+<Divider className="mt-4" />
+<ToolbarEntry text="Filter by" icon={<CiFilter />} />
+<Divider />
+{!vacanciesLoading && vacancies && (
+  <Fragment>
+    {getFilters(vacancies, "requiredSeniority").map(
+      (seniority) => (
+        <Checkbox
+          key={seniority}
+          label={startCase(lowerCase(seniority)) + " jobs"}
+          name={seniority}
+          control={control}
+        />
+      )
+    )}
+    {getFilters(vacancies, "employmentType").map((et) => (
+      <Checkbox
+        key={et}
+        label={startCase(lowerCase(et))}
+        name={et}
+        control={control}
+      />
+    ))}
+    <Divider className="mt-4" />
+    <ToolbarEntry
+      text={
+        <>
+          Group by <Chip text="Soon" className="bg-sky px-3" />
+        </>
+      }
+      icon={<FaLayerGroup />}
+    />
+  </Fragment>
+)}
+</> */
+}

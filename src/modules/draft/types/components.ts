@@ -3,8 +3,8 @@ import { type CSSProperties } from "react";
 import type { SectionId } from "./sections";
 import type { Defaults } from "../utils/getDefaults";
 import type { AutoresizeProps } from "~/modules/create/intrinsic/Autoresize";
-import type { SharedGroupProps } from "~/modules/create/intrinsic/groups/types";
 import type { DndProviderProps } from "~/modules/create/DndProvider";
+import { GroupProps } from "~/modules/create/intrinsic/Group";
 
 export type ComponentToNormalize = RawComponent & {
   sectionId: SectionId;
@@ -13,11 +13,11 @@ export type ComponentToNormalize = RawComponent & {
 type PropsInitializer = (data: Defaults) => Partial<NormalizedProps>;
 
 export type NormalizedProps = Partial<
-  AutoresizeProps & SharedGroupProps & DndProviderProps
+  AutoresizeProps & GroupProps & DndProviderProps
 > & {
   className: string;
   style: CSSProperties;
-  tooltip: string;
+  tooltip?: string;
 };
 
 export type NormalizedComponent = {

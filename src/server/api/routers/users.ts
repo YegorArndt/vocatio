@@ -5,7 +5,7 @@ import {
   privateProcedure,
   publicProcedure,
 } from "~/server/api/trpc";
-import { getUserUpdateArgs } from "../utils/updateUser";
+import { getUserUpdateArgs } from "../utils/getUserUpdateArgs";
 import { UserUpdateSchema } from "../utils/schemas";
 
 const { log } = console;

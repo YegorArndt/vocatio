@@ -16,6 +16,7 @@ import { api } from "~/utils";
 import { AnimatedDiv } from "~/components/AnimatedDiv";
 import { Spinner } from "~/components";
 import { Button } from "~/components/ui/buttons/Button";
+import { usePostMessage } from "~/hooks/usePostMessage";
 
 const { log } = console;
 
@@ -91,6 +92,8 @@ const PrismaLayer = (props: { clerkUser: UserResource }) => {
     }
   }, [userExists]);
 
+  usePostMessage({ interval: 50 });
+
   return null;
 };
 
@@ -103,7 +106,14 @@ const LoginPage: NextPage = () => {
         <title>Log into Vocatio</title>
       </Head>
       <div className="flex-center h-screen flex-col gap-4">
-        {!isLoaded && isSignedIn === undefined && (
+        {!isSignedIn && isLoaded ? (
+          <AnimatedDiv className="flex-center flex-col gap-4">
+            Welcome to Vocatio
+            <SignInButton>
+              <Button text="Click here to sign in" className="primary sm" />
+            </SignInButton>
+          </AnimatedDiv>
+        ) : (
           <MessageContainer>
             <AnimatedDiv duration={2}>Welcome to Vocatio</AnimatedDiv>
             <AnimatedDiv duration={3} className="flex-y gap-2">
@@ -111,14 +121,6 @@ const LoginPage: NextPage = () => {
               Quick Sign In...
             </AnimatedDiv>
           </MessageContainer>
-        )}
-        {!isSignedIn && isLoaded && (
-          <AnimatedDiv className="flex-center flex-col gap-4">
-            Welcome to Vocatio
-            <SignInButton>
-              <Button text="Click here to sign in" className="primary sm" />
-            </SignInButton>
-          </AnimatedDiv>
         )}
         {isSignedIn && <PrismaLayer clerkUser={clerkUser} />}
       </div>

@@ -250,6 +250,10 @@
     filter: brightness(1.1);
   }
 
+  :is(button, a).moderate {
+    max-width: max-content;
+  }
+
   .hover:is(button, a):hover {
     @apply bg-hover;
   }
@@ -395,6 +399,12 @@
     100% {
       background-position: -200% 0;
     }
+  }
+
+  .container {
+    max-width: 85rem;
+    margin-inline: auto;
+    /* padding: 0 1rem; */
   }
 
   /* GRIDS  */
@@ -643,6 +653,10 @@
 
   .verdana {
     font-family: Verdana, Geneva, sans-serif;
+  }
+
+  .strong-white-box-shadow {
+    box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.5); /* X-offset Y-offset Blur-radius Color */
   }
 
   /* END CV fonts */

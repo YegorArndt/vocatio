@@ -1,19 +1,15 @@
 import { z } from "zod";
-import { HfInference } from "@huggingface/inference";
 import { EmploymentHistoryEntry, type Prisma } from "@prisma/client";
 import { UserUpdateSchema } from "./schemas";
+import { summarize, toBulletPoints } from "./hf";
 
 const { log } = console;
 
-const inference = new HfInference(process.env.HF_API_KEY);
-
 const getDescriptionSummary = async (description: string) => {
-  const res = await inference.summarization({
-    model: "sshleifer/distilbart-cnn-12-6",
-    inputs: description,
-  });
-
-  return res.summary_text;
+  const { summary_text } = await summarize(description);
+  const bullets = await toBulletPoints(summary_text);
+  log("bullets", bullets);
+  return summary_text;
 };
 
 export const getUserUpdateArgs = async (

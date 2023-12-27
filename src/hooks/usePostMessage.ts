@@ -1,10 +1,10 @@
+import { useUser } from "@clerk/nextjs";
 import Cookies from "js-cookie";
 import { useEffect } from "react";
-import { api } from "~/utils";
 
 export const usePostMessage = (props = { interval: 1000 }) => {
   const { interval } = props;
-  const { data: user } = api.users.get.useQuery();
+  const { user } = useUser();
 
   useEffect(() => {
     if (!user) return;
@@ -30,5 +30,12 @@ export const usePostMessage = (props = { interval: 1000 }) => {
         );
       }, interval);
     }
+
+    /**
+     * Remove interval on unmount.
+     */
+    return () => {
+      clearInterval(interval);
+    };
   }, [user]);
 };

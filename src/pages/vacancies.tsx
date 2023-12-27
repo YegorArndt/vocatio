@@ -9,8 +9,8 @@ import { api } from "~/utils/api";
 import { Placeholder } from "~/components";
 import { Lines, CardStack } from "~/components/Spinner";
 import { Text } from "~/components/ui/inputs/Text";
-import { usePostMessage } from "~/hooks/usePostMessage";
 import { CuratedVacancies } from "~/modules/vacancies/CuratedVacancies";
+import { usePostMessage } from "~/hooks/usePostMessage";
 
 const { log } = console;
 
@@ -65,7 +65,7 @@ export const Vacancies = () => {
   const methods = useForm({
     defaultValues,
   });
-  const { control, register } = methods;
+  const { control } = methods;
 
   usePostMessage();
 
@@ -85,8 +85,8 @@ export const Vacancies = () => {
             <Text
               control={control}
               name="search"
-              placeholder="Search for vacancies"
-              disabled={vacanciesLoading}
+              placeholder="Search, filtering, & sorting coming soon 🥰"
+              disabled
             />
           )}
           {vacanciesLoading && <CardStack className="vacancies" />}

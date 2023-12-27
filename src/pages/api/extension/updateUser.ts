@@ -3,7 +3,7 @@ import { PrismaClient } from "@prisma/client";
 import jwt from "jsonwebtoken";
 const fs = require("fs");
 
-import { getUserUpdateArgs } from "~/server/api/utils/updateUser";
+import { getUserUpdateArgs } from "~/server/api/utils/getUserUpdateArgs";
 import { RouterOutputs } from "~/utils/api";
 import { UserUpdateSchema } from "~/server/api/utils/schemas";
 

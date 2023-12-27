@@ -1,11 +1,16 @@
-import { HfInference } from "@huggingface/inference";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "../trpc";
+import {
+  clean,
+  hfFormat,
+  instruct,
+  summarize,
+  toBulletPoints,
+} from "../utils/hf";
+import { TextGenerationOutput } from "@huggingface/inference";
 
 const { log } = console;
-
-const inference = new HfInference(process.env.HF_API_KEY);
 
 export const hfRouter = createTRPCRouter({
   condense: publicProcedure
@@ -18,13 +23,7 @@ export const hfRouter = createTRPCRouter({
     .mutation(async ({ input }) => {
       const { text, length: max_length = 100 } = input;
 
-      const condensed = await inference.summarization({
-        model: "sshleifer/distilbart-cnn-12-6",
-        parameters: {
-          max_length,
-        },
-        inputs: text,
-      });
+      const condensed = await summarize(text, max_length);
 
       if (!condensed)
         throw new TRPCError({
@@ -44,20 +43,17 @@ export const hfRouter = createTRPCRouter({
     .mutation(async ({ input }) => {
       const { text } = input;
 
-      const inputs = `[INST] Add some more contextually appropriate sentences to the text. Do not use numeration. Avoid closing or opening phrases. Make these changes to this text: [/INST]": ${text}"`;
+      const inputs = `[INST] ${hfFormat}. Do not use numeration. Add 3 more contextually appropriate sentences to the text [/INST]:" ${text}"`;
 
-      const condensed = await inference.textGeneration({
-        model: "mistralai/Mixtral-8x7B-Instruct-v0.1",
-        inputs,
-      });
+      const elaborated = await instruct(inputs);
 
-      if (!condensed)
+      if (!elaborated)
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
-          message: "Failed to get condensed.",
+          message: "Failed to get elaborated.",
         });
 
-      const cleaned = condensed.generated_text.replace(inputs, "").trim();
+      const cleaned = clean(elaborated.generated_text, [inputs]);
       return cleaned;
     }),
 
@@ -71,20 +67,17 @@ export const hfRouter = createTRPCRouter({
     .mutation(async ({ input }) => {
       const { text, userCommand } = input;
 
-      const inputs = `[INST] ${userCommand}. Avoid closing or opening phrases. Make these changes to this text: [/INST]": ${text}"`;
+      const inputs = `[INST] ${hfFormat}. Make these changes "${userCommand}" to this text: [/INST]: "${text}"`;
 
-      const result = await inference.textGeneration({
-        model: "mistralai/Mixtral-8x7B-Instruct-v0.1",
-        inputs,
-      });
+      const custom = await instruct(inputs);
 
-      if (!result)
+      if (!custom)
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
-          message: "Failed to get condensed.",
+          message: "Failed to get custom.",
         });
 
-      const cleaned = result.generated_text.replace(inputs, "").trim();
+      const cleaned = clean(custom.generated_text, [inputs]);
 
       return cleaned;
     }),
@@ -99,26 +92,25 @@ export const hfRouter = createTRPCRouter({
     .mutation(async ({ input }) => {
       const { text, target } = input;
 
-      const inputs =
-        target === "bulletPoints"
-          ? `[INST] You need to convert the following text to bullet points. Avoid closing or opening phrases. Use past tense. [/INST]": ${text}"`
-          : `[INST] You need to convert these bullet points to a compact text. Write in the first person. [/INST]": ${text.replaceAll(
-              "-",
-              "*"
-            )}"`;
+      const isText = target === "text";
 
-      const result = await inference.textGeneration({
-        model: "mistralai/Mixtral-8x7B-Instruct-v0.1",
-        inputs,
-      });
+      const textPrompt = `[INST] You need to convert these bullet points to a compact text. Write in the first person. [/INST]": ${text}"`;
 
-      if (!result)
+      const converted = await (isText
+        ? instruct(textPrompt)
+        : toBulletPoints(text));
+
+      if (!converted)
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
-          message: "Failed to get result.",
+          message: "Failed to get converted.",
         });
 
-      const cleaned = result.generated_text.replace(inputs, "").trim();
+      const result = (
+        isText ? (converted as TextGenerationOutput).generated_text : converted
+      ) as string;
+
+      const cleaned = clean(result, [textPrompt]);
 
       return cleaned;
     }),

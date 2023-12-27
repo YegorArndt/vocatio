@@ -22,7 +22,7 @@ const openai = new OpenAIApi(configuration);
 
 export const applyGpt = async (messages: ChatCompletionRequestMessage[]) => {
   const response = await openai.createChatCompletion({
-    model: "gpt-4",
+    model: "gpt-3.5-turbo-1106",
     messages,
     // temperature: 1,
     // top_p: 1,
@@ -44,6 +44,8 @@ export const getSkillsOverlap = (
   skillsArray: string[]
 ): string[] => {
   const lowerCaseDescription = vacancyDescription.toLowerCase();
+
+  log("skillsArray", skillsArray);
 
   // Helper function to check if a skill is an exact match.
   const isExactMatch = (skill: string, description: string) =>
@@ -94,14 +96,12 @@ const extractEnhanced = (enhancedContent: string | undefined) => {
 
   // Remove "Summary:" and "Employment Histories:" from content
   enhancedContent = enhancedContent.replace(
-    /Professional Summary:|Summary:|Employment Histories:|Employment History:/g,
+    /Professional Summary:|Summary:|Employment Histories:|Employment History:/gi,
     ""
   );
 
   // Split the response into summary and histories
   const [summary, historiesContent] = enhancedContent.split(/(?=@0)/, 2);
-
-  log("test", historiesContent);
 
   if (!summary || !historiesContent) return { successfullyEnhanced: false };
 
@@ -216,7 +216,7 @@ export default async function handler(
      * 2. Create Draft.
      */
     const professionalSummary = user.professionalSummary || "";
-    const employmentHistories = user.employmentHistory.map(
+    const summarizedHistories = user.employmentHistory.map(
       (x, i) => `@${i}: ${x.descriptionSummary}`
     );
 
@@ -231,11 +231,11 @@ export default async function handler(
     const messages: ChatCompletionRequestMessage[] = [
       {
         role: "system",
-        content: `You're a resume writing expert. Adapt my professional summary & employment histories to vacancy.
+        content: `You're a resume writing expert. Adapt my professional summary & employment histories to vacancy. Include phrases, technologies, tools from vacancy.
 
         Vacancy: ${vacancy.companyName} is looking for ${vacancy.jobTitle}. Key responsibilities: ${responsibilities}.
-        Summary to adapt: ${professionalSummary}
-        Employment histories: ${employmentHistories.join(" ")}
+        Summary: ${professionalSummary}.
+        Employment histories: ${summarizedHistories.join(" ")}.
 
         ${format}
          `,
@@ -288,7 +288,9 @@ export default async function handler(
       },
     });
 
-    return res.status(200).json({ message: "Draft created" });
+    return res.status(200).json({
+      message: `CV for ${vacancy.companyName} generated. Tip: to see the results faster navigate to your vacancies right away.`,
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: error });

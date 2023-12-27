@@ -131,20 +131,19 @@ export const BigEntryBox = (props: {
                                 "place",
                                 "image",
                                 "id",
+                                "descriptionSummary",
                               ].includes(name);
 
                               if (!shouldRender) return null;
 
-                              const isDescription = name === "description";
-
                               const props = {
                                 name: `entries.${index}.${name}`,
                                 control,
-                                placeholder: isDescription
-                                  ? `Missing description`
-                                  : `Missing ${name}`,
+                                placeholder: `Missing ${name}`,
                               };
-                              const Component = isDescription ? Textarea : Text;
+
+                              const Component =
+                                name === "description" ? Textarea : Text;
 
                               return <Component key={name} {...props} />;
                             })}

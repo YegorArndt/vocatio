@@ -234,9 +234,9 @@ const right: RawComponent[] = [
                     id: `skills-${entry.id}`,
                     sectionId: entry.id,
                     props: {
-                      imageProps: { height: 25, width: 25 },
+                      imageProps: { height: 20, width: 20 },
                       className:
-                        "font-bold text-[14px] grid grid-cols-[25px,1fr] items-center mt-[8px]",
+                        "font-bold text-[14px] grid grid-cols-[20px,1fr] items-center mt-[8px]",
                       value: "Skills proven during tenure",
                       label: "Skills",
                       image: "diamond",

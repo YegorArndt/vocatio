@@ -15,7 +15,7 @@ import {
   Bird,
 } from "./components/icons";
 
-export const publicRoutes = ["/privacy-policy", "/login"];
+export const publicRoutes = ["/privacy-policy", "/login", "/landing"];
 
 export const icons = {
   email: Email,

@@ -18,6 +18,8 @@ const config = {
     "@typescript-eslint/prefer-nullish-coalescing": "off",
 
     // TODO
+    "@typescript-eslint/ban-ts-comment": "off",
+    "@typescript-eslint/no-var-requires": "off",
     "@typescript-eslint/no-empty-function": "off",
     "@typescript-eslint/no-unsafe-assignment": "off",
     "@typescript-eslint/no-unsafe-argument": "off",

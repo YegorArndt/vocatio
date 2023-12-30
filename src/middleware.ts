@@ -10,7 +10,7 @@ const redirectUrl =
 
 export default authMiddleware({
   publicRoutes,
-  ignoredRoutes: ["/api/extension/updateUser"],
+  ignoredRoutes: ["/api/extension/updateUser", "/api/extension/addVacancy"],
   afterAuth(auth, req, evt) {
     // handle users who aren't authenticated
     if (!auth.userId && !auth.isPublicRoute) {

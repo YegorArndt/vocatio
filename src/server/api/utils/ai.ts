@@ -1,6 +1,16 @@
-import { HfInference } from "@huggingface/inference";
+import { HfInference, TextGenerationArgs } from "@huggingface/inference";
+import {
+  type ChatCompletionRequestMessage,
+  Configuration,
+  OpenAIApi,
+} from "openai";
 
 export const inference = new HfInference(process.env.HF_API_KEY);
+
+const configuration = new Configuration({
+  apiKey: process.env.OPENAI_API_KEY,
+});
+const openai = new OpenAIApi(configuration);
 
 export const hfFormat =
   'Avoid closing or opening phrases like "Here is the changed text". Do not return my text itself. Write in the first person';
@@ -18,10 +28,14 @@ export const summarize = async (text: string, max_length?: number) =>
     inputs: text,
   });
 
-export const instruct = async (inputs: string) =>
+export const instruct = async (
+  inputs: string,
+  parameters?: TextGenerationArgs["parameters"]
+) =>
   await inference.textGeneration({
     model: "mistralai/Mixtral-8x7B-Instruct-v0.1",
     inputs,
+    parameters,
   });
 
 export const toBulletPoints = async (text: string) => {
@@ -41,7 +55,21 @@ export const toBulletPoints = async (text: string) => {
     "Bullet points:",
     "Revised:",
     "Bullet point conversion:",
+    "Converted bullet points:",
+    "Converted employment history in bullet points:",
+    "Converted to bullet points:",
+    "Bullet point version:",
+    "Revised as bullet points:",
   ]).replaceAll("*", "•");
 
   return cleaned;
+};
+
+export const applyGpt = async (messages: ChatCompletionRequestMessage[]) => {
+  const response = await openai.createChatCompletion({
+    model: "gpt-3.5-turbo-1106",
+    messages,
+  });
+
+  return response?.data?.choices?.[0]?.message?.content;
 };

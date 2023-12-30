@@ -13,7 +13,7 @@ export const ImageBox = () => {
     <Wrapper entryFor="image">
       <div className="flex justify-between pb-8">
         Your default CV image.
-        <br /> Anytime do &quot;Share with Vocatio&quot; to update.
+        <br /> Anytime do &quot;Import data&quot; to update.
         <BlurImage
           src={image!}
           height={150}

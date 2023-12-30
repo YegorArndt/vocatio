@@ -19,17 +19,6 @@ const topLeft: RawComponent[] = [
       className: "rounded-full",
     }),
   },
-  // {
-  //   type: "image",
-  //   id: "logo",
-  //   props: (data) => ({
-  //     src: data.logo,
-  //     className:
-  //       "absolute top-[2rem] left-[10rem] opacity-50 -z-1 rounded-full",
-  //     height: 100,
-  //     width: 100,
-  //   }),
-  // },
 ];
 
 const topRight: RawComponent[] = [

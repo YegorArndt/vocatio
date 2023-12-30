@@ -46,7 +46,7 @@ const Landing = () => {
                 Beautifully designed resumes tailored to your desired vacancy.
               </p>
               <Link
-                text="Generate my CV"
+                text="Start generating CVs"
                 className="primary sm w-1/3 min-w-[150px] whitespace-nowrap"
                 to="/login"
                 newTab
@@ -55,6 +55,7 @@ const Landing = () => {
             <div className="lg:card-grid hidden">
               {["venusaur", "raichu", "charizard"].map((cvName) => (
                 <BlurImage
+                  key={cvName}
                   src={`/${cvName}.png`}
                   height={300}
                   width={300}
@@ -181,12 +182,7 @@ const Landing = () => {
                   description:
                     "Choose between a variety of design templates. Seamlessly review how your data looks on different templates.",
                 },
-                {
-                  icon: <PiInfinity className="mr-2" />,
-                  title: "Endless employment histories",
-                  description:
-                    "That's a big deal. Being able to describe your employment histories in every possible detail you can remember poses a huge advantage over a static CV. Describe it only once in your life and the AI will always find what's relevant for the vacancy and leave out the rest.",
-                },
+
                 {
                   icon: <TbSum />,
                   title: "AI text summarizer",
@@ -223,6 +219,12 @@ const Landing = () => {
                   description:
                     "See what exactly changed between two versions of your CV.",
                 },
+                {
+                  icon: <PiInfinity className="mr-2" />,
+                  title: "Endless employment histories",
+                  description:
+                    "That's a big deal. Being able to describe your employment histories in every possible detail you can remember poses a huge advantage over a static CV. Describe it only once in your life and the AI will always find what's relevant for the vacancy, highlight it, and leave out the rest.",
+                },
               ].map(({ icon, title, description }) => (
                 <div key={title} className="grid gap-1 rounded-md border p-4">
                   <h3 className="flex-y gap-2 text-lg font-bold">
@@ -256,7 +258,7 @@ const Landing = () => {
                   name: "Free",
                   price: 0,
                   features: [
-                    "Skills highlighting",
+                    "Auto skills rearrangement (relevant skills first)",
                     "Access to all CV builder functionalities except AI features",
                     "Access to all design templates",
                   ],
@@ -283,7 +285,7 @@ const Landing = () => {
                   </span>
                   <div className="flex flex-col gap-2">
                     {features.map((feature) => (
-                      <span className="flex-y gap-2">
+                      <span key={feature} className="flex-y gap-2">
                         <PerkCheck />
                         {feature}
                       </span>
@@ -303,7 +305,7 @@ const Landing = () => {
       </main>
       <footer className="flex w-full shrink-0 flex-col items-center gap-2 border-t px-4 py-6 sm:flex-row md:px-6">
         <p className="text-gray-500 dark:text-gray-400 text-xs">
-          © SaaS Inc. All rights reserved.
+          © Vocatio Inc. All rights reserved.
         </p>
         <nav className="flex gap-4 sm:ml-auto sm:gap-6">
           <Link className="text-xs underline-offset-4 hover:underline" to="#">

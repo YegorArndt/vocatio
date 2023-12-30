@@ -12,7 +12,6 @@ import { Autoresize } from "~/modules/create/intrinsic/Autoresize";
 import { typedKeys } from "~/modules/draft/utils/common";
 import { Blur } from "~/components/Blur";
 import { ImageProps } from "next/image";
-import { BlurImage } from "~/components";
 import { rest, startCase } from "lodash-es";
 import { useDraftContext } from "~/modules/draft/DraftContext";
 import { useComponentContext } from "../ComponentContext";
@@ -42,7 +41,7 @@ const BlurIcon = (props: ImageProps) => {
 
   const pps = { height, width, alt, className };
 
-  const icon = Icon ? <Icon {...pps} /> : <BlurImage {...pps} src={src} />;
+  const icon = Icon ? <Icon {...pps} /> : <img {...pps} src={src as string} />;
 
   return <Blur element={icon} />;
 };
@@ -121,7 +120,12 @@ export const Group = (props: GroupProps) => {
   const c = useComponentContext();
 
   return (
-    <div className={cn(className)} {...rest}>
+    <div
+      className={cn(className, {
+        "!block": c.type === "text",
+      })}
+      {...rest}
+    >
       {c.type === "icon-group" && (
         <Icon image={image} imageProps={imageProps} />
       )}

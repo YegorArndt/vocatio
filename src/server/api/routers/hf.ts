@@ -7,7 +7,7 @@ import {
   instruct,
   summarize,
   toBulletPoints,
-} from "../utils/hf";
+} from "../utils/ai";
 import { TextGenerationOutput } from "@huggingface/inference";
 
 const { log } = console;

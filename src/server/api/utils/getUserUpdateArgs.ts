@@ -1,15 +1,14 @@
 import { z } from "zod";
 import { EmploymentHistoryEntry, type Prisma } from "@prisma/client";
 import { UserUpdateSchema } from "./schemas";
-import { summarize, toBulletPoints } from "./hf";
+import { summarize, toBulletPoints } from "./ai";
 
 const { log } = console;
 
 const getDescriptionSummary = async (description: string) => {
   const { summary_text } = await summarize(description);
   const bullets = await toBulletPoints(summary_text);
-  log("bullets", bullets);
-  return summary_text;
+  return bullets;
 };
 
 export const getUserUpdateArgs = async (
@@ -25,6 +24,7 @@ export const getUserUpdateArgs = async (
     name,
     jobTitle,
     professionalSummary,
+    image,
   } = input;
   const summarizedEmploymentHistory: EmploymentHistoryEntry[] = [];
 
@@ -57,6 +57,7 @@ export const getUserUpdateArgs = async (
     },
     name,
     jobTitle,
+    image,
     professionalSummary,
     ...(recommendations && {
       recommendations: {

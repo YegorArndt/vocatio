@@ -12,9 +12,6 @@ import cn from "classnames";
 import { Layout } from "~/components/layout/Layout";
 import { DesignViewer } from "~/modules/create/DesignViewer";
 import { PageBreak } from "~/modules/create/PageBreak";
-import { toast } from "react-toastify";
-import { FcCheckmark } from "react-icons/fc";
-import { Button } from "~/components/ui/buttons/Button";
 import { ModalFactory } from "~/modules/modal/ModalFactory";
 import { Diff } from "~/modules/create/Diff";
 import { Lines } from "~/components/Spinner";
@@ -26,7 +23,29 @@ const { log } = console;
 const a4Height = 1122;
 const a4Width = 793;
 
-const CVBuilder = (props: { vacancyId: string }) => {
+export const getStaticProps: GetStaticProps = async (context) => {
+  const ssg = generateSSGHelper();
+  const { vacancyId } = context.params || {};
+
+  if (typeof vacancyId !== "string")
+    throw new Error("VacancyId is not a string");
+
+  await ssg.vacancies.getById.prefetch({ id: vacancyId });
+  await ssg.drafts.getByVacancyId.prefetch({ vacancyId });
+
+  return {
+    props: {
+      trpcState: ssg.dehydrate(),
+      vacancyId,
+    },
+  };
+};
+
+export const getStaticPaths = () => {
+  return { paths: [], fallback: "blocking" };
+};
+
+const CvBuilder = (props: { vacancyId: string }) => {
   const { vacancyId } = props;
   const [pages, setPages] = useState(1);
 
@@ -43,8 +62,6 @@ const CVBuilder = (props: { vacancyId: string }) => {
   const { data: user, isLoading: userLoading } = api.users.get.useQuery();
   const { data: draft, isLoading: draftLoading } =
     api.drafts.getByVacancyId.useQuery({ vacancyId });
-
-  const isReady = vacancy && user && defaultUserData && draft;
 
   const openModal = () => {
     if (!user || !draft || !vacancy) return;
@@ -69,62 +86,6 @@ const CVBuilder = (props: { vacancyId: string }) => {
       ),
     });
   };
-  const notifyOnMount = () => {
-    toast(
-      <div className="flex flex-col gap-2">
-        <h3>Changes made to 🎉</h3>
-        <div className="flex flex-col gap-2">
-          {[
-            "Employment History",
-            "Professional Summary",
-            "Skills",
-            "Job Title",
-          ].map((changed) => (
-            <div key={changed} className="flex-y gap-2">
-              <FcCheckmark />
-              {changed}
-            </div>
-          ))}
-        </div>
-        <Button
-          text="Click to view changes"
-          className="sm mt-3 rounded-md bg-blue clr-white"
-          onClick={() => {
-            toast.dismiss("diff");
-            openModal();
-          }}
-        />
-      </div>,
-      {
-        autoClose: false,
-        toastId: "diff",
-        closeOnClick: false,
-      }
-    );
-  };
-
-  usePostMessage({ interval: 10000 });
-
-  useEffect(() => {
-    /**
-     * Save the last edited vacancy.
-     */
-    localStorage.setItem("last-edited-vacancy", vacancyId);
-  }, []);
-
-  useEffect(() => {
-    if (!user || !draft || !vacancy || user.vacancies.length > 1) return;
-
-    /**
-     * Notify the user about changes made.
-     */
-
-    notifyOnMount();
-
-    return () => {
-      toast.dismiss("diff");
-    };
-  }, [userLoading, draftLoading, vacancyLoading]);
 
   useEffect(() => {
     const a4 = a4Ref.current;
@@ -139,6 +100,10 @@ const CVBuilder = (props: { vacancyId: string }) => {
 
     return () => observer.disconnect();
   }, [a4Ref.current]);
+
+  usePostMessage({ interval: Infinity });
+
+  const isReady = vacancy && user && defaultUserData && draft;
 
   return (
     <>
@@ -204,26 +169,4 @@ const CVBuilder = (props: { vacancyId: string }) => {
   );
 };
 
-export default CVBuilder;
-
-export const getStaticProps: GetStaticProps = async (context) => {
-  const ssg = generateSSGHelper();
-  const vacancyId = context.params?.vacancyId;
-
-  if (typeof vacancyId !== "string")
-    throw new Error("VacancyId is not a string");
-
-  await ssg.vacancies.getById.prefetch({ id: vacancyId });
-  await ssg.drafts.getByVacancyId.prefetch({ vacancyId });
-
-  return {
-    props: {
-      trpcState: ssg.dehydrate(),
-      vacancyId,
-    },
-  };
-};
-
-export const getStaticPaths = () => {
-  return { paths: [], fallback: "blocking" };
-};
+export default CvBuilder;

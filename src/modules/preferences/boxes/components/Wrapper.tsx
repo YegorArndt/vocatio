@@ -10,10 +10,11 @@ type WrapperProps = PropsWithChildren<{
   omitLink?: boolean;
   entryFor?: string;
   className?: string;
+  id?: string;
 }>;
 
 export const Wrapper = (props: WrapperProps) => {
-  const { children, entryFor, className, omitLink } = props;
+  const { children, entryFor, className, omitLink, id } = props;
 
   return (
     <section

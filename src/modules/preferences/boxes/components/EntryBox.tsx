@@ -1,3 +1,4 @@
+import cn from "classnames";
 import { api } from "~/utils";
 import { Wrapper } from "./Wrapper";
 import { FormContext } from "../../FormContext";
@@ -12,6 +13,7 @@ import { LuCopyPlus } from "react-icons/lu";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { AnimatedDiv } from "~/components/AnimatedDiv";
 import { Button } from "~/components/ui/buttons/Button";
+import { Placeholder } from "~/components";
 
 const { log } = console;
 
@@ -65,7 +67,12 @@ export const EntryBox = (props: EntryBoxProps) => {
   };
 
   return (
-    <Wrapper entryFor={entryFor}>
+    <Wrapper
+      entryFor={entryFor}
+      className={cn({
+        "pb-8": defaultValues.entries.length === 0,
+      })}
+    >
       {isHydrating && <EntryHydrationSkeleton />}
       {!userLoading && !isHydrating && defaultValues.entries.length > 0 && (
         <FormContext
@@ -134,6 +141,15 @@ export const EntryBox = (props: EntryBoxProps) => {
             </>
           )}
         </FormContext>
+      )}
+      {defaultValues.entries.length === 0 && !isHydrating && (
+        <Placeholder
+          className="!h-[200px] [&>*]:h-[200px] [&>*]:w-full [&>*]:border"
+          text="Don't type it manually. Instead choose a method to share your data with Vocatio."
+          actionContent={null}
+        >
+          <Button text="I'm ok typing it manually" className="primary sm" />
+        </Placeholder>
       )}
     </Wrapper>
   );

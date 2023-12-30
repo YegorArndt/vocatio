@@ -15,8 +15,9 @@ type Err = {
 };
 
 const prisma = new PrismaClient();
-// const publicKey = fs.readFileSync("secret/public.pem", "utf8");
-const publicKey = process.env.CLERK_PEM_PUBLIC_KEY;
+// @ts-ignore
+const publicKey = fs.readFileSync("secret/public.pem", "utf8");
+// const publicKey = process.env.CLERK_PEM_PUBLIC_KEY;
 
 export default async function updateUser(
   req: NextApiRequest,
@@ -42,7 +43,11 @@ export default async function updateUser(
       data: await getUserUpdateArgs(parsed),
     });
 
-    return res.status(200).json(updatedUser);
+    return res.status(200).json({
+      user: updatedUser,
+      message: "Successfully updated",
+      error: false,
+    });
   } catch (error) {
     return res.status(500).json({
       message: (error as Err).message,

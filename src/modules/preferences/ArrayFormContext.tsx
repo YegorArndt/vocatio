@@ -5,6 +5,8 @@ import {
   UseFieldArrayReturn,
 } from "react-hook-form";
 
+const { log } = console;
+
 type ArrayFormProps = {
   children: (a: {
     form: UseFieldArrayReturn<FieldValues, "entries", string>;

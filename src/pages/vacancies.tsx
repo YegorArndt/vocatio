@@ -1,8 +1,7 @@
+/*global chrome*/
 import Head from "next/head";
-import { ReactNode } from "react";
-import { FormProvider, UseFormRegister, useForm } from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
 import { IoIosArrowDown } from "react-icons/io";
-import { type Vacancy } from "@prisma/client";
 
 import { Layout } from "~/components/layout/Layout";
 import { api } from "~/utils/api";
@@ -11,6 +10,9 @@ import { Lines, CardStack } from "~/components/Spinner";
 import { Text } from "~/components/ui/inputs/Text";
 import { CuratedVacancies } from "~/modules/vacancies/CuratedVacancies";
 import { usePostMessage } from "~/hooks/usePostMessage";
+import { LuChrome } from "react-icons/lu";
+import { Linkedin } from "~/icons";
+import { Link } from "~/components/ui/buttons/Link";
 
 const { log } = console;
 
@@ -22,42 +24,8 @@ const defaultValues = {
 
 const Down = () => <IoIosArrowDown />;
 const Up = () => <IoIosArrowDown style={{ transform: "rotate(180deg)" }} />;
-const ToolbarEntry = (props: { text: ReactNode; icon: ReactNode }) => {
-  const { text, icon } = props;
-  return (
-    <div className="flex-y gap-2">
-      {icon}
-      {text}
-    </div>
-  );
-};
-const ToolbarRadio = (props: {
-  register: UseFormRegister<typeof defaultValues>;
-  name: keyof typeof defaultValues;
-}) => {
-  const { register, name } = props;
-  return (
-    <div className="flex-y gap-3">
-      {["desc", "asc"].map((value, i) => (
-        <label key={value} className="flex-y gap-2">
-          {i === 0 ? <Up /> : <Down />}
-          <input type="radio" value={value} {...register(name)} />
-        </label>
-      ))}
-    </div>
-  );
-};
 
-const getFilters = (vacancies: Vacancy[], key: keyof Vacancy) => {
-  const availableOptions = vacancies
-    .map((v) => v[key])
-    .filter((v) => typeof v === "string") as string[];
-  const filters = Array.from(new Set(availableOptions));
-
-  return filters;
-};
-
-export const Vacancies = () => {
+const Vacancies = () => {
   const { data: vacancies, isLoading: vacanciesLoading } =
     api.vacancies.getAll.useQuery();
   api.drafts.getAll.useQuery();
@@ -93,18 +61,42 @@ export const Vacancies = () => {
           {!vacanciesLoading && vacancies && vacancies.length > 0 && (
             <FormProvider {...methods}>
               <div className="card-grid vacancies">
-                {/* {isRefetching && <CardSkeleton />} */}
                 <CuratedVacancies vacancies={vacancies} />
               </div>
             </FormProvider>
           )}
           {!!(!vacanciesLoading && !vacancies?.length) && (
             <Placeholder
-              title="No vacancies found"
-              text="Use our Google Extension to add a new vacancy"
-              actionContent="Get Extension"
-              to="https://chrome.google.com/webstore/detail/Vocatio/bknmlolcaccbfcedimgmpnfcjadfelbn"
-              newTab
+              title="Let's get started."
+              text={
+                <ul className="mt-3 flex flex-col gap-2">
+                  {[
+                    {
+                      icon: <LuChrome />,
+                      title: "1. Install Vocatio Chrome Extension - 20 seconds",
+                      url: "https://chrome.google.com/webstore/detail/Vocatio/bknmlolcaccbfcedimgmpnfcjadfelbn",
+                    },
+                    {
+                      icon: <Linkedin />,
+                      title:
+                        "2. Import your CV material from LinkedIn - under 3 minutes",
+                      url: "/preferences/my-data",
+                    },
+                  ].map(({ icon, title, url }) => (
+                    <li key={title} className="flex-center gap-2">
+                      <Link
+                        key={title}
+                        text={title}
+                        frontIcon={icon}
+                        to={url}
+                        className="flex-y clr-blue"
+                        newTab
+                      />
+                    </li>
+                  ))}
+                </ul>
+              }
+              actionContent={null}
             />
           )}
         </div>
@@ -114,6 +106,41 @@ export const Vacancies = () => {
 };
 
 export default Vacancies;
+
+// const ToolbarEntry = (props: { text: ReactNode; icon: ReactNode }) => {
+//   const { text, icon } = props;
+//   return (
+//     <div className="flex-y gap-2">
+//       {icon}
+//       {text}
+//     </div>
+//   );
+// };
+// const ToolbarRadio = (props: {
+//   register: UseFormRegister<typeof defaultValues>;
+//   name: keyof typeof defaultValues;
+// }) => {
+//   const { register, name } = props;
+//   return (
+//     <div className="flex-y gap-3">
+//       {["desc", "asc"].map((value, i) => (
+//         <label key={value} className="flex-y gap-2">
+//           {i === 0 ? <Up /> : <Down />}
+//           <input type="radio" value={value} {...register(name)} />
+//         </label>
+//       ))}
+//     </div>
+//   );
+// };
+
+// const getFilters = (vacancies: Vacancy[], key: keyof Vacancy) => {
+//   const availableOptions = vacancies
+//     .map((v) => v[key])
+//     .filter((v) => typeof v === "string") as string[];
+//   const filters = Array.from(new Set(availableOptions));
+
+//   return filters;
+// };
 
 {
   /* <>

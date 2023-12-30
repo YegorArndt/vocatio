@@ -9,8 +9,6 @@ import { Divider } from "./Divider";
 import { Menu, MenuButton } from "@szhsin/react-menu";
 import { api } from "~/utils";
 import { useRouter } from "next/router";
-import { BlurImage } from "../BlurImage";
-import { Link } from "../ui/buttons/Link";
 import { Chip } from "../Chip";
 
 const mainNav = [
@@ -65,7 +63,7 @@ export const Navbar = (props: PropsWithChildren<Record<string, unknown>>) => {
       {mainNav}
       <Divider />
       {children}
-      <footer className="flex-center mx-auto mb-5 mt-auto flex-col gap-2">
+      {/* <footer className="flex-center mx-auto mb-5 mt-auto flex-col gap-2">
         <Link to="https://www.buymeacoffee.com/daytora" newTab>
           <BlurImage
             src="https://camo.githubusercontent.com/28aae05a0fba45679e8e27d90609601e249b64a5fe30dfef05495de4f4e318d4/68747470733a2f2f63646e2e6275796d6561636f666665652e636f6d2f627574746f6e732f76322f64656661756c742d79656c6c6f772e706e67"
@@ -74,8 +72,8 @@ export const Navbar = (props: PropsWithChildren<Record<string, unknown>>) => {
             alt="Buy me a coffee"
           />
         </Link>
-        <small>Coffee fuels coding ☕️</small>
-      </footer>
+        <small>Coffee fuels new updates ☕️</small>
+      </footer> */}
     </nav>
   );
 };

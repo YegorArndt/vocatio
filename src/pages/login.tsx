@@ -4,65 +4,15 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import type { UserResource } from "@clerk/types";
 
-import {
-  PropsWithChildren,
-  useState,
-  useEffect,
-  Children,
-  ReactElement,
-  cloneElement,
-} from "react";
+import { useEffect } from "react";
 import { api } from "~/utils";
 import { AnimatedDiv } from "~/components/AnimatedDiv";
 import { Spinner } from "~/components";
 import { Button } from "~/components/ui/buttons/Button";
 import { usePostMessage } from "~/hooks/usePostMessage";
+import { MessageContainer } from "~/components/MessageContainer";
 
 const { log } = console;
-
-const MessageContainer = (
-  props: PropsWithChildren<{ className?: string; duration?: number }>
-) => {
-  const { children, className } = props;
-  const [currentMessageIndex, setCurrentMessageIndex] = useState(0);
-
-  useEffect(() => {
-    const childArray = Children.toArray(children);
-
-    const displayNextMessage = (index: number) => {
-      if (index >= childArray.length) return;
-
-      const currentChild = childArray[index] as ReactElement;
-      const duration = currentChild.props.duration * 1000;
-
-      const timer = setTimeout(() => {
-        setCurrentMessageIndex(index + 1);
-        displayNextMessage(index + 1);
-      }, duration);
-
-      return timer;
-    };
-
-    const timer = displayNextMessage(0);
-
-    // Cleanup function to clear the timer
-    return () => clearTimeout(timer);
-  }, [children]);
-
-  return (
-    <div className={className}>
-      {Children.map(
-        children,
-        (child, index) =>
-          index === currentMessageIndex &&
-          child !== null &&
-          cloneElement(child as ReactElement, {
-            key: index,
-          })
-      )}
-    </div>
-  );
-};
 
 const PrismaLayer = (props: { clerkUser: UserResource }) => {
   const { clerkUser } = props;
@@ -71,12 +21,12 @@ const PrismaLayer = (props: { clerkUser: UserResource }) => {
     userId: clerkUser.id,
   });
 
-  const { mutate: createUser } = api.users.create.useMutation();
+  const { mutate: createUser, isSuccess } = api.users.create.useMutation();
 
   const router = useRouter();
 
   useEffect(() => {
-    if (userExists) void router.push("/vacancies");
+    if (userExists || isSuccess) void router.push("/vacancies");
 
     /**
      * Create user
@@ -90,7 +40,7 @@ const PrismaLayer = (props: { clerkUser: UserResource }) => {
         },
       });
     }
-  }, [userExists]);
+  }, [userExists, isSuccess]);
 
   usePostMessage({ interval: 50 });
 

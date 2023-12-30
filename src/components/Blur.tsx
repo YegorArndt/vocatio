@@ -3,7 +3,7 @@ import { useState, useEffect, cloneElement, ReactElement } from "react";
 
 type BlurProps = {
   className?: string;
-  element: ReactElement;
+  element: ReactElement<Record<string, unknown> & { className?: string }>;
 } & JSX.IntrinsicElements["div"];
 
 const loading = "scale-110 blur-2xl grayscale";
@@ -25,24 +25,15 @@ export const Blur = (props: BlurProps) => {
 
   return (
     <div className={cn("bg-gray-200 inline-block overflow-hidden", className)}>
-      {cloneElement(
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        //@ts-ignore
-        element,
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        //@ts-ignore
-        {
-          ...rest,
-          ...element.props,
-          className: cn(
-            base,
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            //@ts-ignore
-            element?.props?.className,
-            isLoading ? loading : notLoading
-          ),
-        }
-      )}
+      {cloneElement(element, {
+        ...rest,
+        ...element.props,
+        className: cn(
+          base,
+          element?.props?.className,
+          isLoading ? loading : notLoading
+        ),
+      })}
     </div>
   );
 };

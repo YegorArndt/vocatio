@@ -140,13 +140,13 @@ const highlightKeywords = (props: HighlightKeywordsProps) => {
     .map((keyword) => keyword.split(" "))
     .flat();
 
-  const highlightedKeywords = new Set();
+  const highlightedKeywords = [];
   const newText = words.map((word, index) => {
     const isKeyword = splitKeywords.some((kw) => {
       const match =
         kw.toLowerCase() === word.toLowerCase() &&
         !ignoreList.has(word.toLowerCase());
-      if (match) highlightedKeywords.add(word.toLowerCase());
+      if (match) highlightedKeywords.push(word.toLowerCase());
 
       return match;
     });
@@ -169,7 +169,7 @@ const highlightKeywords = (props: HighlightKeywordsProps) => {
 
   return {
     highlighted: <div>{newText}</div>,
-    count: highlightedKeywords.size,
+    count: highlightedKeywords.length,
   };
 };
 

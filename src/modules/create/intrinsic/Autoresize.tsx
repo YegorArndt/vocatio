@@ -23,9 +23,9 @@ export const Autoresize = (props: AutoresizeProps) => {
 
   const debouncedUpdateDesign = useCallback(
     debounce((text) => {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       //@ts-ignore
       const newProps = { ...c.props, [type]: text };
+      //@ts-ignore
       c.props = newProps;
       updateDesign(); // TODO: whitespace collapse
     }, 10000),

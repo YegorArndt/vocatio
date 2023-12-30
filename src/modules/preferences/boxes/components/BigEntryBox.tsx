@@ -27,7 +27,7 @@ const getFieldArray = (
   entries: (EmploymentHistoryEntry | EducationEntry)[]
 ): BigEntry[] => {
   return entries.map((e) => {
-    return omit(e, "id", "createdAt", "updatedAt", "skills", "userId");
+    return omit(e, "id", "createdAt", "updatedAt", "userId");
   });
 };
 
@@ -61,7 +61,15 @@ export const BigEntryBox = (props: {
     Object.keys(user[entryFor]).length === 0;
 
   const onSubmit = (values: typeof defaultValues) => {
-    const { entries } = values;
+    let { entries } = values;
+
+    entries = entries.map((e) => {
+      if (e.skills && typeof e.skills === "string") {
+        e.skills = (e.skills as string).split(",").map((s) => s.trim());
+      }
+
+      return e;
+    });
 
     mutate({
       [entryFor]: entries,

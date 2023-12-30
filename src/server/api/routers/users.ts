@@ -46,6 +46,36 @@ export const usersRouter = createTRPCRouter({
       return updatedUser;
     }),
 
+  getById: publicProcedure
+    .input(z.object({ userId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const { userId } = input;
+
+      const user = await ctx.prisma.user.findUnique({
+        where: {
+          id: userId,
+        },
+        include: {
+          education: true,
+          employmentHistory: true,
+          contact: true,
+          languages: true,
+          skills: true,
+          recommendations: true,
+          shortLinkedin: true,
+          vacancies: true,
+        },
+      });
+
+      if (!user)
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "User not found",
+        });
+
+      return user;
+    }),
+
   get: publicProcedure.query(async ({ ctx }) => {
     const { userId } = ctx;
 
@@ -126,44 +156,6 @@ export const usersRouter = createTRPCRouter({
       });
 
       return newUser;
-    }),
-
-  getByVacancyId: publicProcedure
-    .input(
-      z.object({
-        vacancyId: z.string(),
-      })
-    )
-    .query(async ({ ctx, input }) => {
-      const { userId } = ctx;
-      const { vacancyId } = input;
-
-      const vacancy = await ctx.prisma.vacancy.findUnique({
-        where: {
-          id: vacancyId,
-        },
-        include: {
-          users: true,
-        },
-      });
-
-      if (!vacancy) {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "Vacancy does not exist",
-        });
-      }
-
-      const user = vacancy.users.find((user) => user.id === userId);
-
-      if (!user) {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "User does not exist",
-        });
-      }
-
-      return user;
     }),
 
   exists: publicProcedure

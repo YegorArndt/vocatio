@@ -23,8 +23,6 @@ import { useComponentContext } from "../../ComponentContext";
 import {
   isDecoration,
   isEntries,
-  isGroup,
-  isHeading,
   isImage,
   isText,
   typedKeys,
@@ -220,20 +218,14 @@ export const ComponentToolbar = (props: ComponentToolbarProps) => {
 
   const custom = () => {
     const text = c.props.value;
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     //@ts-ignore
-    const userCommand =
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      //@ts-ignore
-      watch("custom");
+    const userCommand = watch("custom") as string;
     if (!text || !userCommand) return;
 
     notifyOnStart();
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     //@ts-ignore
     applyCustom({
       text,
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       //@ts-ignore
       userCommand,
     });
@@ -459,22 +451,11 @@ export const ComponentToolbar = (props: ComponentToolbarProps) => {
                     <MenuHeader className="normal-case">Turn into</MenuHeader>
                     <MenuDivider />
                     {typedKeys(intrinsic).map((typeOfComponent) => {
-                      if (
+                      const cantTurn =
                         typeOfComponent === type ||
-                        isDecoration(typeOfComponent)
-                      )
-                        return;
+                        isDecoration(typeOfComponent);
 
-                      if (
-                        (isText(type) || isHeading(type)) &&
-                        isGroup(typeOfComponent)
-                      )
-                        return;
-                      if (
-                        isGroup(type) &&
-                        (isText(typeOfComponent) || isHeading(typeOfComponent))
-                      )
-                        return;
+                      if (cantTurn) return;
 
                       return (
                         <CustomMenuItem

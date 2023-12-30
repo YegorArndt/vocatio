@@ -109,19 +109,21 @@ export const Preferences = () => {
                 </div>
               )}
             </div>
-            <div className="right-aside flex h-[500px] flex-col gap-3 rounded-md border bg-card p-5">
-              <h3 className="mb-4">Tips</h3>
-              {[
-                "Put as much relevant data as possible. The AI will choose what to include from your employment history & professional summary. This is an advantage over a static CV where you can't fit everything.",
-                "If you see that some of your data is missing, despite importing it from LinkedIn, it's probably because LinkedIn didn't load it all when you clicked 'Import' in the extension. Navigate to the respective section again (like Skills - they tend to be quite long) and scroll all the way down so that all skills are loaded.",
-                "Vocatio doesn't write a CV for you. It's a tool that helps you optimize the CV you already have for the job you want. If your CVs don't match a certain job, AI will not 'add' new data by itself.",
-                "Just click copy item to create and edit a new entry.",
-              ].map((tip, index) => (
-                <span key={index}>
-                  {index + 1}. {tip}
-                </span>
-              ))}
-            </div>
+            {hasLkd && (
+              <div className="right-aside flex h-[500px] flex-col gap-3 rounded-md border bg-card p-5">
+                <h3 className="mb-4">Tips</h3>
+                {[
+                  "Put as much relevant data as possible. The AI will choose what to include from your employment history & professional summary. This is an advantage over a static CV where you can't fit everything.",
+                  "If you see that some of your data is missing, despite importing it from LinkedIn, it's probably because LinkedIn didn't load it all when you clicked 'Import' in the extension. Navigate to the respective section again (like Skills - they tend to be quite long) and scroll all the way down so that all skills are loaded.",
+                  "Vocatio doesn't write a CV for you. It's a tool that helps you optimize the CV you already have for the job you want. If your CVs don't match a certain job, AI will not 'add' new data by itself.",
+                  "Just click copy item to create and edit a new entry.",
+                ].map((tip, index) => (
+                  <span key={index}>
+                    {index + 1}. {tip}
+                  </span>
+                ))}
+              </div>
+            )}
           </section>
         )}
         {!userLoading && !hasLkd && <Steps />}

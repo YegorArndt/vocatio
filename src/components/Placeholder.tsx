@@ -2,13 +2,13 @@ import cn from "classnames";
 import { Link } from "./ui/buttons/Link";
 import { Button } from "./ui/buttons/Button";
 import { FaWindowRestore } from "react-icons/fa";
-import { PropsWithChildren } from "react";
+import { PropsWithChildren, ReactNode } from "react";
 
 type PlaceholderProps = PropsWithChildren<{
-  title?: React.ReactNode;
-  text?: React.ReactNode;
+  title?: ReactNode;
+  text?: ReactNode;
   to?: string;
-  actionContent?: React.ReactNode;
+  actionContent?: ReactNode;
   newTab?: boolean;
   className?: string;
   onClick?: () => void;

@@ -10,7 +10,7 @@ const configuration = new Configuration({
 });
 const openai = new OpenAIApi(configuration);
 
-export const applyGpt = async (content: string) => {
+const applyGpt = async (content: string) => {
   const response = await openai.createChatCompletion({
     model: "gpt-3.5-turbo-1106",
     messages: [{ role: "user", content }],
@@ -37,8 +37,6 @@ export const gptRouter = createTRPCRouter({
         });
 
       const prompt = `Employment history: ${textToAdjust}. Required skills: ${context}. Rewrite employment history using key words from required skills. Ignore everything about education. Write in the first person. Avoid opening or closing phrases.`;
-
-      log(prompt);
 
       const enhanced = await applyGpt(prompt);
 

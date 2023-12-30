@@ -1,3 +1,4 @@
+/*global chrome*/
 import { useState, useEffect } from "react";
 import { type AppType } from "next/app";
 import Head from "next/head";

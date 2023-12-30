@@ -48,7 +48,7 @@ export type DndProviderProps = {
   className?: string;
 };
 
-const CrudContext = createContext<{
+type CrudContextType = {
   addComponent: (component: NormalizedComponent) => void;
   removeComponent: (component: NormalizedComponent) => void;
   toggleClassName: (component: NormalizedComponent, className: string) => void;
@@ -56,12 +56,9 @@ const CrudContext = createContext<{
     component: NormalizedComponent,
     type: NormalizedType
   ) => void;
-}>({
-  addComponent: () => {},
-  removeComponent: () => {},
-  toggleClassName: () => {},
-  changeComponentType: () => {},
-});
+};
+
+const CrudContext = createContext({} as CrudContextType);
 
 export const useCrudContext = () => {
   const context = useContext(CrudContext);

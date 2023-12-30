@@ -38,7 +38,7 @@ export const Steps = () => {
             1
           </Ball>
         </div>
-        <div className="-ml-[40%] h-[0.5px] w-[190%] bg-border" />
+        <div className="-ml-[36%] h-[0.5px] w-[180%] bg-border" />
         <div className="flex-center">
           <Ball>{step1Complete ? <Spinner size={15} /> : 2}</Ball>
         </div>
@@ -57,7 +57,7 @@ export const Steps = () => {
         </div>
         <div />
         <div className="flex-center whitespace-nowrap text-center">
-          Open the extension and click <br />✨ Share with Vocatio
+          Open the extension and click <br />✨ Export profile
         </div>
       </li>
     </ul>

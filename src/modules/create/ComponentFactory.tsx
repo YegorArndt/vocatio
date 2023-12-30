@@ -5,7 +5,7 @@ import { Group, Divider } from "./intrinsic";
 import { ImgHTMLAttributes } from "react";
 
 const PlainImage = (props: ImgHTMLAttributes<HTMLImageElement>) => (
-  <img {...props} />
+  <img {...props} draggable={false} />
 );
 
 const componentMapping = {

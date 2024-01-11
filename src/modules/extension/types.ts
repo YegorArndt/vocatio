@@ -1,3 +1,5 @@
+import { EmploymentHistoryEntry, SkillEntry, Vacancy } from "@prisma/client";
+
 export enum ProfessionField {
   FRONTEND = "FRONTEND",
   BACKEND = "BACKEND",
@@ -65,6 +67,21 @@ export enum EmploymentType {
   CONTRACT = "CONTRACT",
 }
 
+export type PartialVacancy = Partial<Vacancy> &
+  Pick<
+    Vacancy,
+    "description" | "jobTitle" | "companyName" | "requiredSkills" | "id"
+  >;
+
+export type PartialUser = {
+  id: string;
+  jobTitle: string;
+  professionalSummary: string;
+  employmentHistory: EmploymentHistoryEntry[];
+  skills: SkillEntry[];
+  image?: string;
+};
+
 export type VacancyDto = {
   image: string;
   companyName: string;
@@ -106,28 +123,28 @@ export type BigEntry = {
   skills?: string[];
 };
 
-export type User = {
-  name: string;
-  image: string;
-  jobTitle: string;
-  professionalSummary: string;
-  location: string;
+// export type User = {
+//   name: string;
+//   image: string;
+//   jobTitle: string;
+//   professionalSummary: string;
+//   location: string;
 
-  professionField: ProfessionField;
+//   professionField?: ProfessionField | null;
 
-  contact: {
-    linkedin: string;
-  };
+//   contact: {
+//     linkedin: string;
+//   };
 
-  languages: Entry[];
-  skills: Entry[];
+//   languages: Entry[];
+//   skills: Entry[];
 
-  education: BigEntry[];
-  employmentHistory: BigEntry[];
-  recommendations: BigEntry[];
-  awards: BigEntry[];
-  certificates: BigEntry[];
-};
+//   education: BigEntry[];
+//   employmentHistory: BigEntry[];
+//   recommendations: BigEntry[];
+//   awards: BigEntry[];
+//   certificates: BigEntry[];
+// };
 
 export enum Sender {
   Extension,

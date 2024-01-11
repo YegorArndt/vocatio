@@ -31,7 +31,7 @@ export const Button = forwardRef(
       <button type={type} ref={ref} className={cn(baseCn, className)} {...rest}>
         {frontIcon && <span className="mr-2">{frontIcon}</span>}
         {children}
-        {endIcon && <span className="ml-2">{endIcon}</span>}
+        {endIcon && <span>{endIcon}</span>}
       </button>
     );
   }

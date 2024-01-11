@@ -1,4 +1,4 @@
-import { SignInButton, useUser } from "@clerk/nextjs";
+import { SignInButton, useClerk, useUser } from "@clerk/nextjs";
 import type { NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
@@ -11,27 +11,34 @@ import { Spinner } from "~/components";
 import { Button } from "~/components/ui/buttons/Button";
 import { usePostMessage } from "~/hooks/usePostMessage";
 import { MessageContainer } from "~/components/MessageContainer";
+import { VscSignIn } from "react-icons/vsc";
 
 const { log } = console;
 
 const PrismaLayer = (props: { clerkUser: UserResource }) => {
   const { clerkUser } = props;
 
-  const { data: userExists } = api.users.exists.useQuery({
-    userId: clerkUser.id,
-  });
-
-  const { mutate: createUser, isSuccess } = api.users.create.useMutation();
+  const {
+    data: user,
+    isLoading: userLoading,
+    isError,
+  } = api.users.get.useQuery();
+  const {
+    mutate: createUser,
+    isSuccess,
+    isLoading: creatingUser,
+  } = api.users.create.useMutation();
 
   const router = useRouter();
 
   useEffect(() => {
-    if (userExists || isSuccess) void router.push("/vacancies");
+    if ((user && !userLoading) || isSuccess) void router.push("/vacancies");
 
+    const shouldCreate = isError || (!userLoading && !user && clerkUser);
     /**
      * Create user
      */
-    if (!userExists && clerkUser) {
+    if (shouldCreate) {
       createUser({
         name: clerkUser.fullName!,
         image: clerkUser.imageUrl,
@@ -40,7 +47,7 @@ const PrismaLayer = (props: { clerkUser: UserResource }) => {
         },
       });
     }
-  }, [userExists, isSuccess]);
+  }, [user, isSuccess]);
 
   usePostMessage({ interval: 50 });
 
@@ -49,6 +56,11 @@ const PrismaLayer = (props: { clerkUser: UserResource }) => {
 
 const LoginPage: NextPage = () => {
   const { user: clerkUser, isSignedIn, isLoaded } = useUser();
+  const { signOut } = useClerk();
+
+  useEffect(() => {
+    if (isLoaded && !isSignedIn) signOut();
+  }, [isSignedIn, isLoaded]);
 
   return (
     <>
@@ -60,7 +72,11 @@ const LoginPage: NextPage = () => {
           <AnimatedDiv className="flex-center flex-col gap-4">
             Welcome to Vocatio
             <SignInButton>
-              <Button text="Click here to sign in" className="primary sm" />
+              <Button
+                frontIcon={<VscSignIn />}
+                text="Click here to sign in"
+                className="primary sm"
+              />
             </SignInButton>
           </AnimatedDiv>
         ) : (

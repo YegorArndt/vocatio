@@ -1,3 +1,4 @@
+import * as React from "react";
 import type { SVGProps } from "react";
 const SvgGpt = (props: SVGProps<SVGSVGElement>) => (
   <svg
@@ -5,7 +6,6 @@ const SvgGpt = (props: SVGProps<SVGSVGElement>) => (
     width="1em"
     height="1em"
     viewBox="0 0 32 32"
-    fill="currentColor"
     {...props}
   >
     <path

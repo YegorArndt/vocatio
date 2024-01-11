@@ -7,6 +7,7 @@ export const env = createEnv({
    * isn't built with invalid env vars.
    */
   server: {
+    NEXT_PUBLIC_EXTENSION_PASSWORD: z.string(),
     NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL: z.string().url(),
     NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL: z.string().url(),
     NEXT_PUBLIC_SUPABASE_URL: z.string().url(),
@@ -17,7 +18,7 @@ export const env = createEnv({
     CLERK_SECRET_KEY: z.string(),
     UPSTASH_REDIS_REST_URL: z.string().url(),
     UPSTASH_REDIS_REST_TOKEN: z.string(),
-    OPENAI_API_KEY: z.string(),
+    NEXT_PUBLIC_OPENAI_API_KEY: z.string(),
     HF_API_KEY: z.string(),
     NODE_ENV: z.enum(["development", "test", "production"]),
   },
@@ -36,6 +37,7 @@ export const env = createEnv({
    * middlewares) or client-side so we need to destruct manually.
    */
   runtimeEnv: {
+    NEXT_PUBLIC_EXTENSION_PASSWORD: process.env.NEXT_PUBLIC_EXTENSION_PASSWORD,
     HF_API_KEY: process.env.HF_API_KEY,
     NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL:
       process.env.NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL,
@@ -50,7 +52,7 @@ export const env = createEnv({
     CLERK_SECRET_KEY: process.env.CLERK_SECRET_KEY,
     UPSTASH_REDIS_REST_URL: process.env.UPSTASH_REDIS_REST_URL,
     UPSTASH_REDIS_REST_TOKEN: process.env.UPSTASH_REDIS_REST_TOKEN,
-    OPENAI_API_KEY: process.env.OPENAI_API_KEY,
+    NEXT_PUBLIC_OPENAI_API_KEY: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
     NODE_ENV: process.env.NODE_ENV,
     // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
   },

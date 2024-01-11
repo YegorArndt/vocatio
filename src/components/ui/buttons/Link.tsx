@@ -5,7 +5,7 @@ import type { LinkProps as NextLinkProps } from "next/link";
 
 export type LinkProps = PropsWithChildren<
   {
-    to: NextLinkProps["href"];
+    to: NextLinkProps["href"] | undefined | null;
     frontIcon?: ReactNode;
     newTab?: boolean;
     text?: string;
@@ -34,18 +34,20 @@ export const Link = forwardRef(
     const shouldNewTab = newTab ? { target: "_blank", rel: "noreferrer" } : {};
 
     return (
-      <NextLink
-        className={cn(className, baseCn)}
-        href={to}
-        aria-label={text}
-        ref={ref}
-        {...rest}
-        {...shouldNewTab}
-      >
-        {frontIcon && <span className="mr-2">{frontIcon}</span>}
-        {children}
-        {endIcon && <span className="ml-2">{endIcon}</span>}
-      </NextLink>
+      to && (
+        <NextLink
+          className={cn(className, baseCn)}
+          href={to}
+          aria-label={text}
+          ref={ref}
+          {...rest}
+          {...shouldNewTab}
+        >
+          {frontIcon && <span className="mr-2">{frontIcon}</span>}
+          {children}
+          {endIcon && <span className="ml-2">{endIcon}</span>}
+        </NextLink>
+      )
     );
   }
 );

@@ -17,43 +17,23 @@ export const usePostMessage = (props = { interval: 1000 }) => {
     const sessionToken = Cookies.get("__session");
 
     if (sessionToken) {
-      const missingSections: (keyof typeof user)[] = [];
-      const sections: (keyof typeof user)[] = [
-        "employmentHistory",
-        "education",
-        "skills",
-        "languages",
-      ];
-
-      sections.forEach((section) => {
-        const sectionArray = user[section] as [];
-        if (sectionArray.length === 0) {
-          missingSections.push(section);
-        }
-      });
-
       const message = {
-        type: "FROM_PAGE",
+        type: "linkedin",
         token: sessionToken,
-        userId: user.id,
-        userName: user.name,
-        linkedin: user.contact?.linkedin,
-        userImage: user.image,
-        userJobTitle: user.jobTitle,
-        vacanciesCount: user.vacancies.length,
-        missingSections,
+        password: process.env.NEXT_PUBLIC_EXTENSION_PASSWORD,
+        user,
       };
 
       /**
        * Send token directly to content script via postMessage (extension).
        */
-      window.postMessage(message, "*");
+      window.postMessage(message);
 
       /**
        * Post message every miniute to keep the session alive.
        */
       setInterval(() => {
-        window.postMessage(message, "*");
+        window.postMessage(message);
       }, interval);
     } else {
       void router.push(clerkAuth);

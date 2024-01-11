@@ -1,18 +1,15 @@
-/*global chrome*/
 import { useState, useEffect } from "react";
 import { type AppType } from "next/app";
 import Head from "next/head";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Inter } from "next/font/google";
-import { ToastContainer } from "react-toastify";
 
-import "react-toastify/dist/ReactToastify.css";
 import "@szhsin/react-menu/dist/index.css";
 import "@szhsin/react-menu/dist/transitions/slide.css";
 
 import "~/styles/globals.css";
 import { api } from "~/utils";
-import { ModalFactory } from "~/modules/modal/ModalFactory";
+import { Toaster } from "~/components/external/Sonner";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -58,9 +55,8 @@ const MyApp: AppType = ({ Component, pageProps }) => {
         />
         <link rel="icon" href="/fav.webp" />
       </Head>
-      <Component {...pageProps} />
-      <ToastContainer theme="dark" position="bottom-left" />
-      <ModalFactory />
+      <Component {...pageProps} />{" "}
+      <Toaster position="bottom-left" theme="light" />
     </ClerkProvider>
   );
 };

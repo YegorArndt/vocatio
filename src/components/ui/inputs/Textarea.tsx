@@ -8,6 +8,7 @@ export type TextareaProps<T extends FieldValues = FieldValues> = {
   onClick?: MouseEventHandler<
     HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
   >;
+  textareaClassName?: string;
 } & React.TextareaHTMLAttributes<HTMLTextAreaElement>;
 
 export const Textarea = (props: TextareaProps) => {
@@ -19,6 +20,7 @@ export const Textarea = (props: TextareaProps) => {
     className,
     onClick,
     id = name,
+    textareaClassName,
     ...rest
   } = props as {
     control: Control<FieldValues>;
@@ -30,7 +32,7 @@ export const Textarea = (props: TextareaProps) => {
       <textarea
         rows={4}
         onClick={onClick}
-        className="text-input"
+        className={cn("text-input", textareaClassName)}
         autoComplete="off"
         autoCapitalize="off"
         autoCorrect="off"

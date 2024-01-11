@@ -85,7 +85,7 @@ export const usersRouter = createTRPCRouter({
         message: "You must be logged in to view this page",
       });
 
-    const user = await ctx.prisma.user.findUnique({
+    const user = await ctx.prisma.user.findFirst({
       where: {
         id: userId,
       },
@@ -97,7 +97,10 @@ export const usersRouter = createTRPCRouter({
         skills: true,
         recommendations: true,
         shortLinkedin: true,
-        vacancies: true,
+        vacancies: {
+          take: 100,
+          orderBy: [{ createdAt: "desc" }],
+        },
       },
     });
 

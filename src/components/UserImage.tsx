@@ -32,6 +32,7 @@ export const UserImage = (props: ImageProps) => {
             ? "scale-110 blur-2xl grayscale"
             : "scale-100 blur-0 grayscale-0"
         )}
+        quality={100}
         {...rest}
         onLoadingComplete={() => setIsLoading(false)}
         draggable={false}

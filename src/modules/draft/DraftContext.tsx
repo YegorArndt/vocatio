@@ -1,12 +1,10 @@
 import { createContext, useContext, useState } from "react";
+import { get } from "lodash-es";
 
-import { Venusaur } from "./designs/Venusaur";
 import type { DraftContextInput, DraftContextOutput } from "./types";
 import type { RawDesign, Design } from "./types/design";
+import { Venusaur } from "./designs/Venusaur";
 import { init } from "./utils/init";
-import { getDefaults } from "./utils/getDefaults";
-import { get } from "lodash-es";
-import { Sections } from "./types/sections";
 
 const { log } = console;
 
@@ -32,7 +30,7 @@ const updateSections = (a4Ref: DraftContextInput["a4Ref"]) => {
     sections: [],
   });
 
-  return sections as Sections;
+  return sections;
 };
 
 const Context = createContext({} as DraftContextOutput);
@@ -43,37 +41,37 @@ export const useDraftContext = () => {
 };
 
 export const DraftContext = (props: DraftContextInput) => {
-  const { children, defaultUserData, vacancy, user, a4Ref } = props;
+  const { draft, children, a4Ref } = props;
 
-  const defaults = getDefaults(user, defaultUserData, vacancy);
-  const initDesign = (d: RawDesign) => init(defaults, d, vacancy.id);
-  const initialDesign = initDesign(Venusaur);
+  const hydrateDesign = (d: RawDesign) => init(draft, d);
+  const initialDesign = hydrateDesign(Venusaur);
 
   const [design, setDesign] = useState<Design>(initialDesign);
 
-  const updateDesign = (newDesign?: Partial<Design>) =>
-    setDesign((d) => ({
-      ...d,
-      sections: updateSections(a4Ref)!,
-      ...newDesign,
-    }));
+  const updateDesign = (newDesign?: Partial<Design>) => {
+    const templateChanged = newDesign?.name && design.name !== newDesign.name;
+    if (templateChanged) return;
 
-  const persistToLs = (d: Design) => {
-    localStorage.setItem(`cv-${vacancy.id}`, JSON.stringify(d));
+    // @ts-ignore
+    setDesign((oldDesign) => {
+      const newD = {
+        ...oldDesign,
+        sections: updateSections(a4Ref),
+        ...newDesign,
+      };
+
+      return newD;
+    });
   };
 
-  const changeDesign = (d: RawDesign) => setDesign(initDesign(d));
+  const changeDesign = (d: RawDesign) => setDesign(hydrateDesign(d));
 
   const context: DraftContextOutput = {
     a4Ref,
     design,
     updateDesign,
-    persistToLs,
     changeDesign,
-    user,
-    vacancy,
-    defaultUserData,
-    defaults,
+    draft,
   };
 
   return (

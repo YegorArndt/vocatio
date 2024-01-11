@@ -7,7 +7,6 @@ export const CustomMenu = (props: MenuProps) => {
     <Menu
       gap={5}
       transition
-      direction="top"
       menuClassName={cn("z-dropdown", menuClassName as string)}
       portal
       {...rest}

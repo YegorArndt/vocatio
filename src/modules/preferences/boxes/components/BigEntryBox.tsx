@@ -1,4 +1,3 @@
-import cn from "classnames";
 import { api } from "~/utils";
 import { BlurImage, Placeholder } from "~/components";
 import { Wrapper } from "./Wrapper";
@@ -77,12 +76,7 @@ export const BigEntryBox = (props: {
   };
 
   return (
-    <Wrapper
-      entryFor={entryFor}
-      className={cn("relative", {
-        "pb-8": defaultValues.entries.length === 0,
-      })}
-    >
+    <Wrapper entryFor={entryFor}>
       {isHydrating && <BigEntryHydrationSkeleton />}
       {!userLoading && defaultValues.entries.length > 0 && (
         <FormContext
@@ -158,7 +152,7 @@ export const BigEntryBox = (props: {
                           </form>
                         </AnimatedDiv>
                         {index < form.fields.length - 1 && (
-                          <div className="flex-center">
+                          <div className="flex-center py-8">
                             <Divider />
                             <Button
                               text="Swap"
@@ -174,7 +168,7 @@ export const BigEntryBox = (props: {
                   </>
                 )}
               </ArrayFormContext>
-              <footer className="border-top flex-center py-5">
+              <footer className="border-top flex-center mt-8 py-5">
                 <SaveButton
                   isSuccess={isSuccess}
                   isLoading={userUpdating}

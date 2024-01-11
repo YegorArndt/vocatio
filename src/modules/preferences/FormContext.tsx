@@ -28,6 +28,29 @@ interface IFormContextProps<TFieldValues extends FieldValues> {
   form: MandatoryDefaultValues<TFieldValues>;
 }
 
+export const normalizeHookFormValues = <TFieldValues extends FieldValues>(
+  values: TFieldValues
+) => {
+  return mapValues(values, (value) => {
+    if (value == null) return "";
+    if (typeof value === "number") return `${value}`;
+    //@ts-ignore
+    return value as Partial<DefaultValues<TFieldValues>>;
+  });
+};
+
+export const denormalizeHookFormValues = <TFieldValues extends FieldValues>(
+  values: TFieldValues
+): Partial<DefaultValues<TFieldValues>> => {
+  return mapValues(values, (value): any => {
+    if (value === "") return null;
+    const parsedNumber = parseFloat(value);
+    if (!isNaN(parsedNumber) && value === parsedNumber.toString())
+      return parsedNumber;
+    return value;
+  }) as Partial<DefaultValues<TFieldValues>>;
+};
+
 export const FormContext = <TFieldValues extends FieldValues>(
   props: IFormContextProps<TFieldValues>
 ) => {
@@ -45,12 +68,7 @@ export const FormContext = <TFieldValues extends FieldValues>(
 
   const updateDefaults = useCallback(
     (newDefaults: Partial<DefaultValues<TFieldValues>>) => {
-      const normalized = mapValues(newDefaults, (value) => {
-        if (value == null) return "";
-        if (typeof value === "number") return `${value}`;
-        //@ts-ignore
-        return value as Partial<DefaultValues<TFieldValues>>;
-      });
+      const normalized = normalizeHookFormValues(newDefaults);
 
       const updatedDefaults = { ...defaultValues, ...normalized };
       setDefaultValues(updatedDefaults);

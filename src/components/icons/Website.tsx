@@ -9,7 +9,6 @@ const SvgWebsite = (props: SVGProps<SVGSVGElement>) => (
     viewBox="0 0 315.3 391.4"
     width="1em"
     height="1em"
-    fill="currentColor"
     {...props}
   >
     <defs>

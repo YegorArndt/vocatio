@@ -15,10 +15,17 @@ export type TextProps<T extends FieldValues = FieldValues> = {
 };
 
 export const Text = (props: TextProps) => {
-  const { name, control, onClick, placeholder, id, className, disabled } =
-    props as {
-      control: Control<FieldValues>;
-    } & TextProps<FieldValues>;
+  const {
+    name,
+    control,
+    onClick,
+    placeholder,
+    id = name,
+    className,
+    disabled,
+  } = props as {
+    control: Control<FieldValues>;
+  } & TextProps<FieldValues>;
   const { field } = useController({ control, name });
 
   return (

@@ -20,6 +20,10 @@
   --clr-secondary: #9b9b9b;
   --bg-secondary: #202020;
 
+  --bg-tertiary: hsl(240, 10%, 3.9%);
+  --clr-tertiary: hsl(0, 0%, 98%);
+  --border-clr-tertiary: hsl(240 3.7% 15.9%);
+
   --bg-hover: rgba(255, 255, 255, 0.055);
 
   --bg-test: hsla(0, 0%, 12%, 1);
@@ -43,16 +47,11 @@
 }
 
 @layer base {
-  html {
-    scroll-behavior: smooth;
-  }
-
   body,
   #__next {
     min-height: 100vh;
     text-rendering: optimizeSpeed;
-    scroll-behavior: smooth;
-    overscroll-behavior-y: contain;
+    /* overscroll-behavior-y: contain; */
     /* overflow-x: hidden; */
     display: flex;
     flex-direction: column;
@@ -254,7 +253,7 @@
     max-width: max-content;
   }
 
-  .hover:is(button, a):hover {
+  .hover:is(button, a, *[role="button"]):hover {
     @apply bg-hover;
   }
 
@@ -311,11 +310,17 @@
     border-color: #fff;
   }
 
+  /**
+    ::disabled & .disabled
+  */
   *:disabled:is(button, a) {
     background-color: hsla(0, 0%, 10%, 1);
     color: hsla(0, 0%, 56%, 1);
-    border: hsla(0, 0%, 18%, 1);
     cursor: not-allowed;
+  }
+
+  *:disabled:is(button, a):is(.primary, .secondary) {
+    @apply border;
   }
 
   *:disabled:is(button, a):hover {
@@ -489,7 +494,7 @@
   }
 
   .vacancies {
-    --size: 320px;
+    --size: 250px;
   }
 
   /* Title & Subtitle combo  */

@@ -1,36 +1,38 @@
-import React from "react";
-import { toast } from "react-toastify";
+import { ReactNode } from "react";
+import { toast } from "sonner";
 
-interface CopyToClipboardProps {
-  text: string;
-  children?: React.ReactNode;
-}
+import { type ToasterProps } from "./external/Sonner";
 
-const notifyOnSuccess = () => {
-  toast("Copied! 🎉");
+type CopyToClipboardProps = {
+  children: (copyHandler: (text: string) => Promise<void>) => ReactNode;
+  toasterProps?: ToasterProps;
+  textOnCopy?: string;
 };
 
-const CopyToClipboard: React.FC<CopyToClipboardProps> = ({
-  text,
-  children,
-}) => {
+const defaultToasterProps: ToasterProps = {
+  position: "bottom-left",
+};
+
+const notifyOnSuccess = (
+  textOnCopy = "Copied to clipboard.",
+  props = defaultToasterProps
+) => {
+  toast(textOnCopy, props);
+};
+
+const CopyToClipboard = (props: CopyToClipboardProps) => {
+  const { children, textOnCopy, toasterProps } = props;
+
   const copyTextToClipboard = async (text: string) => {
     try {
       await navigator.clipboard.writeText(text);
-      notifyOnSuccess();
+      notifyOnSuccess(textOnCopy, toasterProps);
     } catch (err) {
       console.error("Failed to copy text: ", err);
     }
   };
 
-  return (
-    <div
-      onClick={() => void copyTextToClipboard(text)}
-      style={{ cursor: "pointer", userSelect: "none" }}
-    >
-      {children || text}
-    </div>
-  );
+  return <>{children(copyTextToClipboard)}</>;
 };
 
 export default CopyToClipboard;

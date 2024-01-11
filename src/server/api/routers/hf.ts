@@ -2,7 +2,8 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "../trpc";
 import {
-  clean,
+  answerQuestion,
+  cleanAiOutput,
   hfFormat,
   instruct,
   summarize,
@@ -17,13 +18,12 @@ export const hfRouter = createTRPCRouter({
     .input(
       z.object({
         text: z.string(),
-        length: z.number().optional(),
       })
     )
     .mutation(async ({ input }) => {
-      const { text, length: max_length = 100 } = input;
+      const { text } = input;
 
-      const condensed = await summarize(text, max_length);
+      const condensed = await summarize(text);
 
       if (!condensed)
         throw new TRPCError({
@@ -53,7 +53,7 @@ export const hfRouter = createTRPCRouter({
           message: "Failed to get elaborated.",
         });
 
-      const cleaned = clean(elaborated.generated_text, [inputs]);
+      const cleaned = cleanAiOutput(elaborated.generated_text, [inputs]);
       return cleaned;
     }),
 
@@ -77,7 +77,7 @@ export const hfRouter = createTRPCRouter({
           message: "Failed to get custom.",
         });
 
-      const cleaned = clean(custom.generated_text, [inputs]);
+      const cleaned = cleanAiOutput(custom.generated_text, [inputs]);
 
       return cleaned;
     }),
@@ -110,8 +110,29 @@ export const hfRouter = createTRPCRouter({
         isText ? (converted as TextGenerationOutput).generated_text : converted
       ) as string;
 
-      const cleaned = clean(result, [textPrompt]);
+      const cleaned = cleanAiOutput(result, [textPrompt]);
 
       return cleaned;
+    }),
+
+  answerQuestion: publicProcedure
+    .input(
+      z.object({
+        question: z.string(),
+        context: z.string(),
+      })
+    )
+    .mutation(async ({ input }) => {
+      const { question, context } = input;
+
+      const { answer } = await answerQuestion(question, context);
+
+      if (!answer)
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to get answer.",
+        });
+
+      return answer;
     }),
 });

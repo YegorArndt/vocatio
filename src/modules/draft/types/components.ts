@@ -1,16 +1,20 @@
 import { type CSSProperties } from "react";
 
 import type { SectionId } from "./sections";
-import type { Defaults } from "../utils/getDefaults";
-import type { AutoresizeProps } from "~/modules/create/intrinsic/Autoresize";
-import type { DndProviderProps } from "~/modules/create/DndProvider";
-import { GroupProps } from "~/modules/create/intrinsic/Group";
+import type { AutoresizeProps } from "~/modules/draft/intrinsic/Autoresize";
+import type { DndProviderProps } from "~/modules/draft/components/DndProvider";
+import { GroupProps } from "~/modules/draft/intrinsic/Group";
+import { LsDraft } from ".";
+
+/**
+ * Each component must have: value, label, icon, type, id.
+ */
 
 export type ComponentToNormalize = RawComponent & {
   sectionId: SectionId;
 };
 
-type PropsInitializer = (data: Defaults) => Partial<NormalizedProps>;
+type PropsInitializer = (data: LsDraft) => Partial<NormalizedProps>;
 
 export type NormalizedProps = Partial<
   AutoresizeProps & GroupProps & DndProviderProps
@@ -38,4 +42,5 @@ export type NormalizedType =
   | "divider"
   | "image"
   | "icon-group"
-  | "entries";
+  | "entries"
+  | "context";

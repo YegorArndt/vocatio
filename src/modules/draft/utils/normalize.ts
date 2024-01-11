@@ -1,3 +1,4 @@
+import type { LsDraft } from "../types";
 import type {
   ComponentToNormalize,
   NormalizedComponent,
@@ -5,9 +6,8 @@ import type {
   NormalizedType,
 } from "../types/components";
 import { typedKeys } from "./common";
-import { Defaults } from "./getDefaults";
 
-const tooltips: Record<NormalizedType, string> = {
+export const tooltips: Record<NormalizedType, string> = {
   text: "Text",
   "heading-1": "Heading 1",
   "heading-2": "Heading 2",
@@ -17,12 +17,15 @@ const tooltips: Record<NormalizedType, string> = {
   image: "Image",
   "icon-group": "Icon Group",
   entries: "Entries",
+  context: "Section",
 };
 
-const defaultProps: NormalizedProps = {
+export const defaultProps: NormalizedProps = {
   className: "",
   style: {},
   tooltip: "",
+  value: "Sample text",
+  label: "Sample label",
 };
 
 const defaultComponent: NormalizedComponent = {
@@ -35,18 +38,18 @@ const defaultComponent: NormalizedComponent = {
 /**
  * Standardizes the component.
  */
-export const normalize = (
-  c: ComponentToNormalize,
-  defaults: Defaults,
-  vacancyId: string
-) => {
-  const p = typeof c.props === "function" ? c.props(defaults) : c.props;
+export const normalize = (c: ComponentToNormalize, draft: LsDraft) => {
+  const hydratedValues =
+    typeof c.props === "function" ? c.props(draft) : c.props;
 
   const normalized: NormalizedComponent = {
     ...defaultComponent,
     ...c,
-    id: `${c.id}-${vacancyId}`,
-    props: { ...defaultProps, tooltip: tooltips[c.type] ?? "", ...p },
+    props: {
+      ...defaultProps,
+      tooltip: tooltips[c.type] ?? "",
+      ...hydratedValues,
+    },
   };
 
   const { sections } = normalized.props;
@@ -59,7 +62,7 @@ export const normalize = (
       const newSection = {
         ...section,
         components: section.components.map((c: ComponentToNormalize) =>
-          normalize(c, defaults, vacancyId)
+          normalize(c, draft)
         ),
       };
       return { ...acc, [key]: newSection };

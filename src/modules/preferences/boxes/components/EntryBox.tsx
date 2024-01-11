@@ -1,4 +1,3 @@
-import cn from "classnames";
 import { api } from "~/utils";
 import { Wrapper } from "./Wrapper";
 import { FormContext } from "../../FormContext";
@@ -67,12 +66,7 @@ export const EntryBox = (props: EntryBoxProps) => {
   };
 
   return (
-    <Wrapper
-      entryFor={entryFor}
-      className={cn({
-        "pb-8": defaultValues.entries.length === 0,
-      })}
-    >
+    <Wrapper entryFor={entryFor}>
       {isHydrating && <EntryHydrationSkeleton />}
       {!userLoading && !isHydrating && defaultValues.entries.length > 0 && (
         <FormContext
@@ -126,7 +120,7 @@ export const EntryBox = (props: EntryBoxProps) => {
                   </form>
                 )}
               </ArrayFormContext>
-              <footer className="border-top flex-between w-full py-4">
+              <footer className="border-top flex-between mt-8 w-full py-5">
                 {children || (
                   <span className="clr-disabled">Add more if you need to.</span>
                 )}

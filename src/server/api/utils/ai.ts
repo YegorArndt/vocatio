@@ -8,17 +8,16 @@ import {
 export const inference = new HfInference(process.env.HF_API_KEY);
 
 const configuration = new Configuration({
-  apiKey: process.env.OPENAI_API_KEY,
+  apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
 });
 const openai = new OpenAIApi(configuration);
 
 export const hfFormat =
-  'Avoid closing or opening phrases like "Here is the changed text". Do not return my text itself. Write in the first person';
+  'Do not include phrases like "Here is the revised text". Do not return my text itself. Do not use numeration if not asked to. Write in the first person';
 
-export const clean = (text: string, patterns: string[]) =>
+export const cleanAiOutput = (text: string, patterns: string[]) =>
   patterns.reduce((acc, pattern) => acc.replace(pattern, "").trim(), text);
 
-// check out possible length, sometimes need more
 export const summarize = async (text: string, max_length?: number) =>
   await inference.summarization({
     model: "sshleifer/distilbart-cnn-12-6",
@@ -33,7 +32,7 @@ export const instruct = async (
   parameters?: TextGenerationArgs["parameters"]
 ) =>
   await inference.textGeneration({
-    model: "mistralai/Mixtral-8x7B-Instruct-v0.1",
+    model: "mistralai/Mistral-7B-Instruct-v0.2",
     inputs,
     parameters,
   });
@@ -43,15 +42,16 @@ export const toBulletPoints = async (text: string) => {
     Convert employment history to bullet points. 
     Conditions: Use past tense. Make it sound professional. ${hfFormat}.
 
-    Employment history to convert:
-    [/INST] "${text}"`;
+    Employment history to convert: "${text}"
+    [/INST]`;
 
   const converted = await instruct(inputs);
 
   if (!converted) throw new Error("Failed to get converted from OS-HF AI.");
 
-  const cleaned = clean(converted.generated_text, [
+  const cleaned = cleanAiOutput(converted.generated_text, [
     inputs,
+    "Revised bullet point:",
     "Bullet points:",
     "Revised:",
     "Bullet point conversion:",
@@ -60,10 +60,20 @@ export const toBulletPoints = async (text: string) => {
     "Converted to bullet points:",
     "Bullet point version:",
     "Revised as bullet points:",
+    "Revised bullet points:",
   ]).replaceAll("*", "•");
 
   return cleaned;
 };
+
+export const answerQuestion = async (question: string, context: string) =>
+  await inference.questionAnswering({
+    model: "deepset/roberta-base-squad2",
+    inputs: {
+      question,
+      context,
+    },
+  });
 
 export const applyGpt = async (messages: ChatCompletionRequestMessage[]) => {
   const response = await openai.createChatCompletion({

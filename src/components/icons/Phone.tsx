@@ -9,7 +9,6 @@ const SvgPhone = (props: SVGProps<SVGSVGElement>) => (
     viewBox="10 2 26 44"
     width="1em"
     height="1em"
-    fill="currentColor"
     {...props}
   >
     <path

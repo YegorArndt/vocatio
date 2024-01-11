@@ -1,33 +1,30 @@
+import type { LsDraft } from "../types";
 import type { RawDesign, Design } from "../types/design";
 import type { Sections } from "../types/sections";
 import { typedKeys } from "./common";
-import { Defaults } from "./getDefaults";
 import { normalize } from "./normalize";
 
-export const init = (
-  defaults: Defaults,
-  rawDesign: RawDesign,
-  vacancyId: string
-): Design => {
+export const init = (draft: LsDraft, rawDesign: RawDesign): Design => {
   const initializedSections = {} as Sections;
   const { sections } = rawDesign;
 
-  typedKeys(sections).forEach((sectionId) => {
-    const section = sections[sectionId]!;
+  typedKeys(sections).forEach((sectionName) => {
+    const section = sections[sectionName];
+    if (!section) return;
+
     const { components } = section;
 
-    const normalizedComponents = components.map((rc, i) =>
+    const normalizedComponents = components.map((rc) =>
       normalize(
         {
           ...rc,
-          sectionId,
+          sectionId: sectionName,
         },
-        defaults,
-        vacancyId
+        draft
       )
     );
 
-    initializedSections[sectionId] = {
+    initializedSections[sectionName] = {
       ...section,
       components: normalizedComponents,
     };

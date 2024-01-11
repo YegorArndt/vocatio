@@ -3,17 +3,18 @@ import cn from "classnames";
 
 import { Link, type LinkProps } from "./ui/buttons/Link";
 
+const { log } = console;
+
 type NavigationLinkProps = {
-  text: string;
+  text?: string;
   to: string;
   activeCn?: string;
 } & LinkProps;
 
 export const NavigationLink = (props: NavigationLinkProps) => {
   const { to, className, activeCn = "", ...linkProps } = props;
-  const router = useRouter();
-  const { pathname } = router;
-  const isActive = pathname.includes(to);
+  const { asPath } = useRouter();
+  const isActive = asPath === to;
 
   return (
     <Link

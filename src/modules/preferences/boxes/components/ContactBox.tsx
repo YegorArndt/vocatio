@@ -118,14 +118,12 @@ export const ContactBox = () => {
               {options && Object.keys(options).length > 0 && (
                 <Menu
                   menuButton={
-                    <MenuButton className="secondary lg flex-y ml-4 w-1/3 gap-3 rounded-md">
+                    <MenuButton className="secondary lg flex-y w-1/3 gap-3 rounded-md">
                       <LuPlusCircle />
                       Add more
                     </MenuButton>
                   }
                   transition
-                  gap={10}
-                  direction="left"
                 >
                   <MenuHeader>Type to filter</MenuHeader>
                   <FocusableItem>
@@ -174,7 +172,7 @@ export const ContactBox = () => {
                     })}
                 </Menu>
               )}
-              <footer className="border-top flex-between py-4">
+              <footer className="border-top flex-between mt-8 py-4">
                 <SaveButton
                   isLoading={userUpdating}
                   isSuccess={isSuccess}

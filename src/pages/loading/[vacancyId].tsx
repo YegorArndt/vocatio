@@ -1,73 +1,52 @@
-import { GetStaticProps } from "next";
+import { type GetServerSideProps } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
-import { Spinner } from "~/components";
-import { AnimatedDiv } from "~/components/AnimatedDiv";
-import { generateSSGHelper } from "~/server/api/utils/generateSSGHelper";
-import { api } from "~/utils";
+import { useEffect, useState } from "react";
 
-export const getStaticProps: GetStaticProps = async (context) => {
-  const ssg = generateSSGHelper();
-  const vacancyId = context.params?.vacancyId;
+import { Progress } from "~/components/external/Progress";
+import { api } from "~/utils";
+import { generateSSGHelper } from "~/server/api/utils/generateSSGHelper";
+import { startCvGeneration } from "~/utils/startCvGeneration";
+import { PartialUser } from "~/modules/extension/types";
+
+const { log } = console;
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const { vacancyId } = ctx.params || {};
 
   if (typeof vacancyId !== "string")
-    throw new Error("VacancyId is not a string");
+    throw new Error("vacancyId is not a string");
 
-  return {
-    props: {
-      trpcState: ssg.dehydrate(),
-      vacancyId,
-    },
-  };
-};
+  const ssg = generateSSGHelper();
+  await ssg.vacancies.getById.prefetch({ id: vacancyId });
 
-export const getStaticPaths = () => {
-  return { paths: [], fallback: "blocking" };
+  return { props: { vacancyId } };
 };
 
 const LoadingCvBuilder = (props: { vacancyId: string }) => {
   const { vacancyId } = props;
+  const [progress, setProgress] = useState(5);
+
+  const { data: user } = api.users.get.useQuery();
+  const { data: vacancy } = api.vacancies.getById.useQuery({ id: vacancyId });
+
   const router = useRouter();
-  const { data: vacancy, isLoading: vacancyLoading } =
-    api.vacancies.getById.useQuery({
-      id: vacancyId,
-    });
-  const {
-    mutate: createDraft,
-    isSuccess: successCreatingDraft,
-    isLoading: creatingDraft,
-  } = api.drafts.create.useMutation({
-    onSuccess: () => void router.push(`/create/${vacancyId}`),
-  });
 
   useEffect(() => {
-    if (!vacancy) return;
-
-    createDraft({
-      vacancyId: vacancy.id,
-    });
-  }, [vacancy]);
+    setInterval(() => setProgress((p) => p + 5), 1000);
+    if (user && vacancy) {
+      startCvGeneration(vacancy, user as PartialUser);
+      void router.push("/vacancies");
+      setProgress(100);
+    }
+  }, [user, vacancy]);
 
   return (
     <>
       <Head>
         <title>Generating CV...</title>
       </Head>
-      <main className="flex-center h-screen w-screen">
-        <div className="flex-y gap-2">
-          {(vacancyLoading || creatingDraft || successCreatingDraft) && (
-            <Spinner size={15} />
-          )}
-          {vacancyLoading && <AnimatedDiv>Analyzing vacancy...</AnimatedDiv>}
-          {creatingDraft && (
-            <AnimatedDiv>Hold on. Generating CV...</AnimatedDiv>
-          )}
-          {successCreatingDraft && (
-            <AnimatedDiv>Redirecting to CV builder...</AnimatedDiv>
-          )}
-        </div>
-      </main>
+      <Progress value={progress} className="fixed inset-0 w-screen" />
     </>
   );
 };

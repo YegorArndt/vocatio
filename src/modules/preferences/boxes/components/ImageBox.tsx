@@ -10,10 +10,11 @@ export const ImageBox = () => {
   const image = user?.image ?? defaultUserData?.user?.imageUrl;
 
   return (
-    <Wrapper entryFor="image">
+    <Wrapper entryFor="image" defaultOpen>
       <div className="flex justify-between pb-8">
         Your default CV image.
-        <br /> Anytime do &quot;Import data&quot; to update.
+        <br /> Anytime do &quot;Update name, image, and job title&quot; to
+        update.
         <BlurImage
           src={image!}
           height={150}

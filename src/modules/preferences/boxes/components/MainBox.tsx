@@ -35,7 +35,7 @@ export const MainBox = () => {
   };
 
   return (
-    <Wrapper entryFor="main">
+    <Wrapper entryFor="main" defaultOpen>
       {userLoading && <LineStack />}
       {!userLoading && (
         <FormContext
@@ -60,12 +60,13 @@ export const MainBox = () => {
                 </label>
                 <Textarea
                   name="professionalSummary"
+                  placeholder="Please copy-paste manually from LinkedIn."
                   control={control}
                   className="col-span-2"
                   rows={10}
                 />
               </form>
-              <footer className="border-top flex-between col-span-2 w-full gap-3 py-4">
+              <footer className="border-top flex-between col-span-2 mt-8 w-full gap-3 py-4">
                 <span className="inline-flex items-center clr-disabled">
                   In the future you&apos;ll be able to dynamically insert
                   company name, logo, and more, and regulate what changes

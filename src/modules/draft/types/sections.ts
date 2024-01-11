@@ -1,4 +1,3 @@
-import { Defaults } from "../utils/getDefaults";
 import type { NormalizedComponent, RawComponent } from "./components";
 
 export type SectionId =
@@ -9,8 +8,7 @@ export type SectionId =
   | "top-left"
   | "top-right"
   | "bottom-left"
-  | "bottom-right"
-  | keyof Defaults;
+  | "bottom-right";
 
 export type Section = {
   id: SectionId;

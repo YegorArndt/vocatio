@@ -1,5 +1,8 @@
 export { default as AiBrain } from "./AiBrain";
+export { default as Arrow } from "./Arrow";
+export { default as Bell } from "./Bell";
 export { default as Bird } from "./Bird";
+export { default as Checkmark } from "./Checkmark";
 export { default as Diamond } from "./Diamond";
 export { default as Email } from "./Email";
 export { default as Garbage } from "./Garbage";
@@ -12,6 +15,7 @@ export { default as Indeed } from "./Indeed";
 export { default as LinkedinColor } from "./LinkedinColor";
 export { default as Linkedin } from "./Linkedin";
 export { default as Location } from "./Location";
+export { default as PerkCheck } from "./PerkCheck";
 export { default as Phone } from "./Phone";
 export { default as Twitter } from "./Twitter";
 export { default as Vk } from "./Vk";

@@ -4,15 +4,21 @@ import cn from "classnames";
 
 export type BlurImageProps = {
   imageClassName?: string;
-} & ImageProps;
+} & Omit<ImageProps, "alt" | "src"> & {
+    alt?: string;
+    src: string | undefined | null;
+  };
 
 export const BlurImage = (props: BlurImageProps) => {
-  const { className, height, width, alt = "", ...rest } = props;
+  const { className, height, width, alt = "", src, ...rest } = props;
   const [isLoading, setIsLoading] = useState(true);
 
+  if (!src) return null;
+
   return (
-    <div className={cn("bg-gray-200 overflow-hidden", className)}>
+    <div className={cn("bg-gray-200 shrink-0 overflow-hidden", className)}>
       <Image
+        src={src}
         height={height}
         width={width}
         className={cn(

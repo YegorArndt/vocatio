@@ -9,7 +9,6 @@ const SvgLocation = (props: SVGProps<SVGSVGElement>) => (
     viewBox="0 0 350 536.6"
     width="1em"
     height="1em"
-    fill="currentColor"
     {...props}
   >
     <path

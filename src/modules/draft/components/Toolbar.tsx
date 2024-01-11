@@ -1,0 +1,206 @@
+import type { User, Vacancy } from "@prisma/client";
+import { type RefObject, useState } from "react";
+import { BsArrowsCollapse } from "react-icons/bs";
+import { FaTextHeight } from "react-icons/fa";
+import { RiFontSansSerif } from "react-icons/ri";
+import { FaClockRotateLeft } from "react-icons/fa6";
+import { SlMagnifier } from "react-icons/sl";
+import { jsPDF } from "jspdf";
+import { snakeCase } from "lodash-es";
+import html2canvas from "html2canvas";
+
+import { api } from "~/utils";
+import { useDraftContext } from "../DraftContext";
+import { BlurImage } from "~/components/BlurImage";
+import { Button } from "~/components/ui/buttons/Button";
+import { FocusableItem, MenuButton, MenuDivider } from "@szhsin/react-menu";
+import {
+  TooltipTrigger,
+  TooltipContent,
+  Tooltip,
+  TooltipProvider,
+} from "~/components/external/Tooltip";
+import { Spinner } from "~/components";
+import { CustomMenu } from "~/components/external/CustomMenu";
+import { CustomMenuItem } from "~/components/external/CustomMenuItem";
+import {
+  Drawer,
+  DrawerContent,
+  DrawerHandle,
+  DrawerTrigger,
+} from "~/components/external/Drawer";
+import { Diff } from "./Diff";
+import { Blur } from "~/components/Blur";
+
+const { log } = console;
+
+const downloadPdf = async (
+  a4Ref: RefObject<HTMLDivElement>,
+  userName: User["name"],
+  companyName: Vacancy["companyName"] = "cv"
+) => {
+  const a4 = a4Ref.current;
+  if (!a4) return;
+
+  const pageCount = Math.ceil(a4.clientHeight / 1122);
+
+  const pdf = new jsPDF({
+    format: "a4",
+    orientation: "portrait",
+    unit: "px",
+  });
+
+  const width = pdf.internal.pageSize.getWidth();
+  const height = pdf.internal.pageSize.getHeight();
+
+  for (let i = 0; i < pageCount; i++) {
+    const yOffset = i * 1122;
+
+    const canvas = await html2canvas(a4, {
+      width: 793,
+      height: 1122,
+      windowHeight: 1122,
+      windowWidth: 793,
+      y: yOffset,
+      scrollY: -yOffset,
+      useCORS: true,
+    });
+
+    const imgData = canvas.toDataURL("image/png");
+
+    if (i > 0) {
+      pdf.addPage();
+    }
+
+    pdf.addImage(imgData, "PNG", 0, 0, width, height, undefined, "FAST");
+  }
+
+  pdf.save(`${snakeCase(userName)}_${companyName}.pdf`);
+};
+
+const fonts = [
+  "Arial",
+  "Arial Black",
+  "Arial Narrow",
+  "Arial Rounded MT Bold",
+  "Calibri",
+  "Century Gothic",
+  "Franklin Gothic Medium",
+  "Futura",
+  "Geneva",
+  "Gill Sans",
+  "Helvetica",
+  "Impact",
+  "Lucida Grande",
+  "Optima",
+  "Segoe UI",
+  "Tahoma",
+  "Trebuchet MS",
+  "Verdana",
+  "Inter",
+];
+
+export const Toolbar = () => {
+  const { data: user, isLoading: userLoading } = api.users.get.useQuery();
+
+  const { draft, a4Ref, design, updateDesign } = useDraftContext();
+
+  const { data: vacancy, isLoading: vacancyLoading } =
+    api.vacancies.getById.useQuery({ id: draft.vacancyId });
+
+  const [filter, setFilter] = useState("");
+
+  return (
+    <>
+      <Drawer>
+        <DrawerTrigger
+          className="common hover flex-y gap-3"
+          disabled={userLoading || vacancyLoading}
+        >
+          {userLoading || vacancyLoading ? (
+            <Spinner size={10} />
+          ) : (
+            <Blur element={<SlMagnifier />} />
+          )}
+          Review changes
+        </DrawerTrigger>
+        <DrawerContent className="max-h-[90vh] bg-primary py-5 pl-5">
+          <DrawerHandle />
+          {user && vacancy && <Diff user={user} vacancy={vacancy} />}
+        </DrawerContent>
+      </Drawer>
+      <Button
+        text="Download PDF"
+        frontIcon={
+          vacancyLoading ? (
+            <Spinner size={10} />
+          ) : (
+            <BlurImage
+              src="/download-cloud.png"
+              alt="Download"
+              height={15}
+              width={15}
+            />
+          )
+        }
+        onClick={() =>
+          void downloadPdf(a4Ref, user!.name, vacancy!.companyName)
+        }
+        className="common hover flex-y gap-1"
+        disabled={vacancyLoading}
+      />
+      <CustomMenu
+        menuButton={
+          <MenuButton className="common hover flex-y  gap-3">
+            <RiFontSansSerif /> {design.font}
+          </MenuButton>
+        }
+        direction="right"
+        transition
+      >
+        <FocusableItem>
+          {({ ref }) => (
+            <input
+              ref={ref}
+              type="text"
+              placeholder="Search fonts"
+              value={filter}
+              onChange={(e) => setFilter(e.target.value)}
+              className="bg-transparent p-2 outline-none"
+            />
+          )}
+        </FocusableItem>
+        <MenuDivider />
+        {fonts
+          .filter((font) => font.toLowerCase().includes(filter.toLowerCase()))
+          .map((font) => (
+            <CustomMenuItem
+              key={font}
+              onClick={() =>
+                updateDesign({ font: font === "Inter" ? "inherit" : font })
+              }
+            >
+              {font}
+            </CustomMenuItem>
+          ))}
+      </CustomMenu>
+      {[
+        { text: "Undo", icon: <FaClockRotateLeft /> },
+        { text: "Condense spacing", icon: <BsArrowsCollapse /> },
+        { text: "Condense text", icon: <FaTextHeight /> },
+      ].map(({ text, icon }) => (
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger
+              className="common hover flex-y gap-3 whitespace-nowrap"
+              disabled
+            >
+              {icon} {text}
+            </TooltipTrigger>
+            <TooltipContent>✨ Coming soon</TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      ))}
+    </>
+  );
+};

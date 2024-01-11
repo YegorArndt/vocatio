@@ -1,8 +1,10 @@
+//@ts-nocheck
+
 import { v4 as uuidv4 } from "uuid";
 import type { NormalizedComponent, RawComponent } from "../types/components";
 import type { RawDesign } from "../types/design";
 import { capitalize, startCase } from "lodash-es";
-import { heading } from "./utils";
+import { clean, heading } from "./utils";
 import { typedEntries } from "../utils/common";
 import cn from "classnames";
 
@@ -13,7 +15,7 @@ const topLeft: RawComponent[] = [
     type: "image",
     id: "image",
     props: (data) => ({
-      src: data.userImage,
+      src: data.image,
       height: 200,
       width: 200,
       className: "rounded-full",
@@ -54,22 +56,24 @@ const topRight: RawComponent[] = [
 
 const left: RawComponent[] = [
   {
-    type: "entries",
+    type: "context",
     id: "contact",
     props: (data) => {
-      const components = typedEntries(data.contact).map(([key, value]) => ({
-        type: "icon-group",
-        id: key as string,
-        sectionId: "contact",
-        props: {
-          image: key,
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          //@ts-ignore
-          value: key === "linkedin" ? data.linkedin : value,
-          tooltip: startCase(key as string),
-          label: startCase(key as string),
-        },
-      })) as NormalizedComponent[];
+      const components = typedEntries(clean(data.contact)).map(
+        ([key, value]) => ({
+          type: "icon-group",
+          id: key as string,
+          sectionId: "contact",
+          props: {
+            image: key,
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            //@ts-ignore
+            value: key === "linkedin" ? data.contact?.linkedin : value,
+            tooltip: startCase(key as string),
+            label: startCase(key as string),
+          },
+        })
+      ) as NormalizedComponent[];
       return {
         title: heading("Contact"),
         sections: {
@@ -83,7 +87,7 @@ const left: RawComponent[] = [
     },
   },
   {
-    type: "entries",
+    type: "context",
     id: "education",
     props: (data) => {
       const components = data.education.map((entry) => ({
@@ -91,7 +95,7 @@ const left: RawComponent[] = [
         id: entry.id,
         sectionId: "education",
         props: {
-          tooltip: "Education item",
+          tooltip: "Education Item",
           sections: {
             [entry.id]: {
               id: entry.id,
@@ -101,14 +105,14 @@ const left: RawComponent[] = [
                   id: `place-${entry.id}`,
                   sectionId: entry.id,
                   props: {
-                    imageProps: { height: 50, width: 50 },
+                    imageProps: { height: 25, width: 25 },
                     value: entry.place,
                     label: entry.title,
                     image: entry.image,
                     smallText: entry.period,
                     smallTextClassName: "font-thin",
                     className:
-                      "font-bold text-[1rem] grid grid-cols-[50px,1fr] gap-2 items-center",
+                      "font-bold text-[13px] grid grid-cols-[25px,1fr] gap-2 items-center",
                   },
                 },
                 {
@@ -135,12 +139,12 @@ const left: RawComponent[] = [
           },
         },
         className: "flex flex-col gap-4",
-        tooltip: "Education section",
+        tooltip: "Education Section",
       };
     },
   },
   {
-    type: "entries",
+    type: "context",
     id: "languages",
     props: (data) => {
       const components: NormalizedComponent[] = data.languages.map(
@@ -174,18 +178,18 @@ const left: RawComponent[] = [
 
 const right: RawComponent[] = [
   {
-    type: "entries",
+    type: "context",
     id: "employmentHistory",
     props: (data) => {
-      const components = data.employmentHistory.map((entry, index) => {
+      const components = data.employmentHistory.map((entry) => {
         return {
           type: "entries",
           id: entry.id,
-          sectionId: entry.id,
+          sectionId: "employmentHistory",
           props: {
             className: "",
             style: {},
-            tooltip: "Experience item",
+            tooltip: "Experience Entry",
             sections: {
               [entry.id]: {
                 id: entry.id,
@@ -250,7 +254,7 @@ const right: RawComponent[] = [
             components,
           },
         },
-        tooltip: "Experience section",
+        tooltip: "Experience Section",
         className: "flex flex-col gap-4",
       };
     },
@@ -272,19 +276,19 @@ export const Venusaur: RawDesign = {
       id: "top-right",
       components: topRight,
       className:
-        "top-right [&_.heading-2]:border-none [&>*:first-child]:mt-[32px] [&>*:nth-child(even)]:mb-[8px] [&>*:nth-child(even)]:mt-1 [&>*:last-child]:mb-[16px] bg-[#fff] text-[#737373] [&_.heading-2]:text-[1.5rem] [&_.heading-2]:tracking-wider [&_.heading-2]:text-[#323B4C] [&_.heading-2]:font-light [&>*]:max-w-[450px]",
+        "top-right [&_.heading-2]:border-none [&>*:first-child]:mt-[32px] [&>*:nth-child(even)]:mb-[8px] [&>*:nth-child(even)]:mt-1 [&>*:last-child]:mb-[16px] bg-[#fff] text-[#737373] [&_.heading-2]:text-[1.5rem] [&_.heading-2]:tracking-wider [&_.heading-2]:text-[#323B4C] [&_.heading-2]:font-light [&>*]:max-w-[450px] [&_.text]:text-[12px]",
     },
     left: {
       id: "left",
       components: left,
       className:
-        "left flex flex-col [&_section]:mb-[16px] items-center bg-[#323B4C] text-[#fff] [&_.image]:mx-auto [&_div:not(:first-child)>.heading-2]:mt-3 [&_.group]:mb-[8px]",
+        "left flex flex-col [&_section]:mb-[16px] items-center bg-[#323B4C] text-[#fff] [&_.image]:mx-auto [&_div:not(:first-child)>.heading-2]:mt-3 [&_.group]:mb-[8px] [&_.group]:grid-cols-[100px,1fr]",
     },
     right: {
       id: "right",
       components: right,
       className:
-        "right [&_section]:mb-[16px] bg-white text-[#000] [&_.heading-1]:text-[#323B4C] [&_.heading-2]:text-[#323B4C] !pr-2 [&_div:not(:first-child)>.heading-2]:pt-[12px]",
+        "right [&_section]:mb-[16px] bg-white text-[#000] [&_.heading-1]:text-[#323B4C] [&_.heading-2]:text-[#323B4C] !pr-2 [&_div:not(:first-child)>.heading-2]:pt-[12px] [&_.text]:text-[12px] [&_.group]:grid-cols-2",
     },
   },
   intrinsic: {
@@ -296,17 +300,17 @@ export const Venusaur: RawDesign = {
         "text-[29px] tracking-[-0.039375rem] font-bold border-b-2 border-current pb-[8px]",
     },
     text: {
-      className: "text-[12px]",
+      className: "",
     },
     group: {
-      className: "grid grid-cols-[80px,1fr] gap-3",
+      className: "grid  gap-3",
     },
     "icon-group": {
       className: "grid grid-cols-[20px,1fr] gap-3",
       imageProps: { height: 20, width: 20 },
     },
   },
-  image: "/venusaur.png",
-  pokemonImage: "/venusaur-pokemon.png",
+  image: "venusaur.png",
+  pokemonImage: "venusaur-pokemon.png",
   font: "Arial",
 };

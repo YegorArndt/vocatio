@@ -1,6 +1,8 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
+import { PartialVacancySchema } from "../utils/schemas";
+import { Vacancy } from "@prisma/client";
 
 const { log } = console;
 
@@ -9,26 +11,58 @@ const { log } = console;
  * And triggered by extension.
  */
 export const vacanciesRouter = createTRPCRouter({
-  getByConstraint: publicProcedure
+  deleteForUser: publicProcedure
     .input(
       z.object({
-        companyName: z.string(),
-        location: z.string(),
-        jobTitle: z.string(),
+        vacancyId: z.string(),
       })
     )
-    .query(async ({ ctx, input }) => {
-      const { companyName, location, jobTitle } = input;
+    .mutation(async ({ ctx, input }) => {
+      const { userId } = ctx;
 
-      const vacancies = await ctx.prisma.vacancy.findFirst({
-        where: {
-          companyName,
-          location,
-          jobTitle,
+      if (!userId)
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "You are not authorized to perform this action",
+        });
+
+      const { vacancyId } = input;
+
+      const deletedVacancy = await ctx.prisma.vacancy.update({
+        where: { id: vacancyId },
+        data: {
+          user: {
+            disconnect: { id: userId },
+          },
         },
       });
 
-      return vacancies;
+      return deletedVacancy;
+    }),
+
+  upsert: publicProcedure
+    .input(PartialVacancySchema)
+    .mutation(async ({ ctx, input }) => {
+      const { userId } = ctx;
+
+      if (!userId || !input.id)
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "You are not authorized to perform this action",
+        });
+
+      const upsertedVacancy = await ctx.prisma.vacancy.upsert({
+        where: { id: input.id },
+        update: input as Vacancy,
+        create: {
+          ...(input as Vacancy),
+          user: {
+            connect: { id: userId },
+          },
+        },
+      });
+
+      return upsertedVacancy;
     }),
 
   getAll: publicProcedure.query(async ({ ctx }) => {
@@ -40,7 +74,7 @@ export const vacanciesRouter = createTRPCRouter({
         message: "You are not authorized to perform this action",
       });
 
-    const user = await ctx.prisma.user.findUnique({
+    const user = await ctx.prisma.user.findFirst({
       where: { id: userId },
       include: {
         vacancies: {
@@ -70,7 +104,7 @@ export const vacanciesRouter = createTRPCRouter({
 
       const { id } = input;
 
-      const vacancy = await ctx.prisma.vacancy.findUnique({
+      const vacancy = await ctx.prisma.vacancy.findFirst({
         where: { id },
       });
 
@@ -79,22 +113,6 @@ export const vacanciesRouter = createTRPCRouter({
           code: "NOT_FOUND",
           message: "Vacancy not found",
         });
-
-      /**
-       * If vacancy is not connected to user, connect it.
-       */
-      if (!vacancy.userId) {
-        await ctx.prisma.user.update({
-          where: { id: userId },
-          data: {
-            vacancies: {
-              connect: {
-                id: vacancy.id,
-              },
-            },
-          },
-        });
-      }
 
       return vacancy;
     }),

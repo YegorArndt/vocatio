@@ -6,7 +6,7 @@ import { startCase } from "lodash-es";
 export const preferencesToolbar = [
   {
     text: "My data",
-    to: "/preferences/my-data",
+    to: "/preferences",
     frontIcon: <GoDatabase />,
   },
   {
@@ -14,7 +14,7 @@ export const preferencesToolbar = [
     to: "/preferences/fine-tuning",
     frontIcon: <Gpt />,
     className: "disabled pointer-events-none",
-    endIcon: <Chip text="Soon" className="bg-sky px-3" />,
+    endIcon: <Chip text="Soon" className="bg-sky px-1 text-[0.6rem]" />,
   },
 ].map((props) => (
   <NavigationLink

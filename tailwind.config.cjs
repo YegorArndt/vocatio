@@ -28,6 +28,8 @@ const config = {
         border: "var(--border-clr)",
         disabled: "var(--clr-disabled)",
         input: "var(--input-clr)",
+        tertiary: "var(--clr-tertiary)",
+        "border-tertiary": "var(--border-clr-tertiary)",
       },
       backgroundColor: {
         base: "var(--bg-base)",
@@ -41,6 +43,7 @@ const config = {
         card: "var(--bg-card)",
         border: "var(--border-clr)",
         input: "var(--input-bg)",
+        tertiary: "var(--bg-tertiary)",
       },
       fontSize: {
         default: "0.875rem",
@@ -53,46 +56,19 @@ const config = {
         pageBreak: 46,
         a4: 45,
       },
-      animation: {
-        pulse: "pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite",
-        jiggle: "jiggle 0.3s ease-in-out infinite",
-        shake: "shake 1s cubic-bezier(.36,.07,.19,.97) both infinite",
-        "rotate-full": "rotate-full 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite",
-        "rotate-y-circle":
-          "rotate-y-circle 2.4s cubic-bezier(0, 0.2, 0.8, 1) infinite",
-      },
       keyframes: {
-        "rotate-y-circle": {
-          "0%, 100%": {
-            animationTimingFunction: "cubic-bezier(0.5, 0, 1, 0.5)",
-            transform: "rotateY(0deg)",
-          },
-          "50%": {
-            transform: "rotateY(1800deg)",
-            animationTimingFunction: "cubic-bezier(0, 0.5, 0.5, 1)",
-          },
-          "100%": {
-            transform: "rotateY(3600deg)",
-          },
+        "accordion-down": {
+          from: { height: "0" },
+          to: { height: "var(--radix-accordion-content-height)" },
         },
-        shake: {
-          "10%, 90%": { transform: "translate3d(-1px, 0, 0)" },
-          "20%, 80%": { transform: "translate3d(1px, 0, 0)" },
-          "30%, 50%, 70%": { transform: "translate3d(-1px, 0, 0)" },
-          "40%, 60%": { transform: "translate3d(1px, 0, 0)" },
+        "accordion-up": {
+          from: { height: "var(--radix-accordion-content-height)" },
+          to: { height: "0" },
         },
-        pulse: {
-          "0%, 100%": { opacity: "0.5" },
-          "50%": { opacity: "1" },
-        },
-        jiggle: {
-          "0%, 100%": { transform: "rotate(-1deg)" },
-          "50%": { transform: "rotate(1deg)" },
-        },
-        "rotate-full": {
-          "0%": { transform: "rotate(0deg)" },
-          "100%": { transform: "rotate(360deg)" },
-        },
+      },
+      animation: {
+        "accordion-down": "accordion-down 0.2s ease-out",
+        "accordion-up": "accordion-up 0.2s ease-out",
       },
       fontFamily: {
         logo: ["logo", "sans-serif"],

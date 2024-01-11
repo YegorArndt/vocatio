@@ -1,3 +1,4 @@
+import { LiaMoneyCheckSolid } from "react-icons/lia";
 import {
   Phone,
   Website,
@@ -15,10 +16,16 @@ import {
   Bird,
 } from "./components/icons";
 
+export const curEnv =
+  (process.env.NODE_ENV === "development"
+    ? "http://localhost:3000"
+    : "https://www.vocatio.cat") || "https://www.vocatio.cat";
+
 export const publicRoutes = [
   "/privacy-policy",
   "/login",
   "/landing",
+  "/api/extension/generateDraft",
   "/api/extension/addVacancy",
 ];
 
@@ -37,6 +44,7 @@ export const icons = {
   linkedinColor: LinkedinColor,
   diamond: Diamond,
   bird: Bird,
+  check: LiaMoneyCheckSolid,
 };
 
 export const clerkAuth =

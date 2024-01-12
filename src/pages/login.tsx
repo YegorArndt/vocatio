@@ -9,7 +9,6 @@ import { api } from "~/utils";
 import { AnimatedDiv } from "~/components/AnimatedDiv";
 import { Spinner } from "~/components";
 import { Button } from "~/components/ui/buttons/Button";
-import { usePostMessage } from "~/hooks/usePostMessage";
 import { MessageContainer } from "~/components/MessageContainer";
 import { VscSignIn } from "react-icons/vsc";
 
@@ -48,8 +47,6 @@ const PrismaLayer = (props: { clerkUser: UserResource }) => {
       });
     }
   }, [user, isSuccess]);
-
-  usePostMessage({ interval: 50 });
 
   return null;
 };

@@ -235,10 +235,10 @@ model User {
   awards            AwardsEntry[]
   certificates      CertificatesEntry[]
 
-  professionalSummary String? // TODO short version
+  professionalSummary String?  
 
   contact       Contact?
-  shortLinkedin Url?
+  shortLinkedin String?
 
   vacancies Vacancy[]
   drafts    Draft[]
@@ -331,13 +331,4 @@ model Cv {
   vacancy   Vacancy @relation(fields: [vacancyId], references: [id])
 }
 
-model Url {
-  id          String   @id @default(uuid())
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  name        String
-  originalUrl String
-  shortUrl    String
-  user        User     @relation(fields: [userId], references: [id])
-  userId      String   @unique
-}
+ 

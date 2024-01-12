@@ -2,14 +2,17 @@ import { type PropsWithChildren, useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 
 export const Portal = (props: PropsWithChildren<Record<string, unknown>>) => {
-  const [container] = useState(document.createElement("div"));
+  const [container, setContainer] = useState(null as unknown as HTMLDivElement);
 
   useEffect(() => {
-    document.body.appendChild(container);
-    return () => {
-      document.body.removeChild(container);
-    };
+    if (container) {
+      document.body.appendChild(container);
+      return;
+    }
+
+    const c = document.createElement("div");
+    setContainer(c);
   }, [container]);
 
-  return ReactDOM.createPortal(props.children, container);
+  return container ? ReactDOM.createPortal(props.children, container) : null;
 };

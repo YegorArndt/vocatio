@@ -11,7 +11,6 @@ import { preferencesToolbar } from "~/modules/preferences/constants";
 import { api } from "~/utils";
 import { Steps } from "~/modules/preferences/Steps";
 import { BigEntryBox } from "~/modules/preferences/boxes/components/BigEntryBox";
-import { usePostMessage } from "~/hooks/usePostMessage";
 import {
   DrawerTrigger,
   DrawerContent,
@@ -27,8 +26,6 @@ export const Preferences = () => {
   const { data: user, isLoading: userLoading } = api.users.get.useQuery();
 
   const hasLkd = !!user?.contact?.linkedin;
-
-  usePostMessage();
 
   return (
     <>

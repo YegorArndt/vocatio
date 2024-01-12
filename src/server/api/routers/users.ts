@@ -62,7 +62,6 @@ export const usersRouter = createTRPCRouter({
           languages: true,
           skills: true,
           recommendations: true,
-          shortLinkedin: true,
           vacancies: true,
         },
       });
@@ -96,7 +95,6 @@ export const usersRouter = createTRPCRouter({
         languages: true,
         skills: true,
         recommendations: true,
-        shortLinkedin: true,
         vacancies: {
           take: 100,
           orderBy: [{ createdAt: "desc" }],

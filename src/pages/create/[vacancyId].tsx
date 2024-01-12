@@ -10,7 +10,6 @@ import { Layout } from "~/components/layout/Layout";
 import { DesignViewer } from "~/modules/draft/components/DesignViewer";
 import { PageBreak } from "~/modules/draft/components/PageBreak";
 import { Lines } from "~/components/Spinner";
-import { usePostMessage } from "~/hooks/usePostMessage";
 import { useState, useRef, useEffect } from "react";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { Button } from "~/components/ui/buttons/Button";
@@ -37,8 +36,6 @@ const CvBuilder = (props: { vacancyId: string }) => {
   const draft = getDraftByVacancyId(vacancyId);
 
   const { a4Ref, a4Height, a4Width, pages, setPages } = useA4();
-
-  usePostMessage({ interval: 2000 });
 
   const { data: vacancy } = api.vacancies.getById.useQuery({ id: vacancyId });
 

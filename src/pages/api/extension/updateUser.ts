@@ -1,6 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient } from "@prisma/client";
-import jwt from "jsonwebtoken";
 const fs = require("fs");
 
 import { getUserUpdateArgs } from "~/server/api/utils/getUserUpdateArgs";
@@ -16,20 +15,20 @@ type Err = {
 
 const prisma = new PrismaClient();
 // @ts-ignore
-const publicKey = fs.readFileSync("secret/public.pem", "utf8");
+// const publicKey = fs.readFileSync("secret/public.pem", "utf8");
 // const publicKey = process.env.CLERK_PEM_PUBLIC_KEY;
 
 export default async function updateUser(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const token = req.headers.authorization?.split(" ")[1];
+  // const token = req.headers.authorization?.split(" ")[1];
 
-  if (!token || !publicKey)
-    return res.status(401).json({ message: "Unauthorized" });
+  // if (!token || !publicKey)
+  // return res.status(401).json({ message: "Unauthorized" });
 
   try {
-    jwt.verify(token, publicKey);
+    // jwt.verify(token, publicKey);
 
     const { userId, user } = req.body as {
       userId: string;
@@ -46,12 +45,10 @@ export default async function updateUser(
     return res.status(200).json({
       user: updatedUser,
       message: "Successfully updated",
-      error: false,
     });
   } catch (error) {
     return res.status(500).json({
       message: (error as Err).message,
-      error: (error as Err).message,
     });
   }
 }

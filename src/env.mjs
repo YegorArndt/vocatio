@@ -7,7 +7,6 @@ export const env = createEnv({
    * isn't built with invalid env vars.
    */
   server: {
-    NEXT_PUBLIC_EXTENSION_PASSWORD: z.string(),
     NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL: z.string().url(),
     NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL: z.string().url(),
     NEXT_PUBLIC_SUPABASE_URL: z.string().url(),
@@ -37,7 +36,6 @@ export const env = createEnv({
    * middlewares) or client-side so we need to destruct manually.
    */
   runtimeEnv: {
-    NEXT_PUBLIC_EXTENSION_PASSWORD: process.env.NEXT_PUBLIC_EXTENSION_PASSWORD,
     HF_API_KEY: process.env.HF_API_KEY,
     NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL:
       process.env.NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL,

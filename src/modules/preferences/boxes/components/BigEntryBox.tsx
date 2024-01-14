@@ -19,6 +19,11 @@ import { typedKeys } from "~/modules/draft/utils/common";
 import { Text } from "~/components/ui/inputs/Text";
 import { BiMoveVertical } from "react-icons/bi";
 import { Divider } from "~/components/layout/Divider";
+import {
+  ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup,
+} from "~/components/external/Resizable";
 
 const { log } = console;
 
@@ -76,120 +81,130 @@ export const BigEntryBox = (props: {
   };
 
   return (
-    <Wrapper entryFor={entryFor}>
-      {isHydrating && <BigEntryHydrationSkeleton />}
-      {!userLoading && defaultValues.entries.length > 0 && (
-        <FormContext
-          form={{
-            defaultValues,
-          }}
-        >
-          {({ formState, control, resetField }, submit) => (
-            <>
-              <ArrayFormContext>
-                {({ form }) => (
-                  <>
-                    {form.fields.map((field, index) => (
-                      <Fragment key={index}>
-                        <AnimatedDiv
-                          key={field.id}
-                          className="grid grid-cols-[3fr_4fr] gap-4"
-                        >
-                          <header className="flex-y gap-4">
-                            {field.image ? (
-                              <BlurImage
-                                src={field.image}
-                                alt="Missing image"
-                                width={100}
-                                height={100}
-                                className="rounded-md"
-                              />
-                            ) : null}
-                            <div className="flex flex-col gap-2">
-                              <Text
-                                name={`entries.${index}.place`}
-                                control={control}
-                              />
-                              <div className="flex-y gap-2">
-                                <Button onClick={() => form.remove(index)}>
-                                  <RiDeleteBin6Line />
-                                </Button>
+    <ResizablePanelGroup direction="horizontal">
+      <ResizablePanel>
+        <Wrapper entryFor={entryFor} className="w-auto">
+          {isHydrating && <BigEntryHydrationSkeleton />}
+          {!userLoading && defaultValues.entries.length > 0 && (
+            <FormContext
+              form={{
+                defaultValues,
+              }}
+            >
+              {({ formState, control, resetField }, submit) => (
+                <>
+                  <ArrayFormContext>
+                    {({ form }) => (
+                      <>
+                        {form.fields.map((field, index) => (
+                          <Fragment key={index}>
+                            <AnimatedDiv
+                              key={field.id}
+                              className="grid grid-cols-[3fr_4fr] gap-4"
+                            >
+                              <header className="flex-y gap-4">
+                                {field.image ? (
+                                  <BlurImage
+                                    src={field.image}
+                                    alt="Missing image"
+                                    width={100}
+                                    height={100}
+                                    className="rounded-md"
+                                  />
+                                ) : null}
+                                <div className="flex flex-col gap-2">
+                                  <Text
+                                    name={`entries.${index}.place`}
+                                    control={control}
+                                  />
+                                  <div className="flex-y gap-2">
+                                    <Button onClick={() => form.remove(index)}>
+                                      <RiDeleteBin6Line />
+                                    </Button>
+                                    <Button
+                                      onClick={() =>
+                                        form.insert(index + 1, field)
+                                      }
+                                    >
+                                      <LuCopyPlus />
+                                    </Button>
+                                    <Button
+                                      onClick={() =>
+                                        resetField(`entries.${index}`)
+                                      }
+                                    >
+                                      <TbRestore />
+                                    </Button>
+                                  </div>
+                                </div>
+                              </header>
+                              <form className="flex flex-col gap-2">
+                                {typedKeys(field).map((name, i) => {
+                                  const shouldRender = ![
+                                    "place",
+                                    "image",
+                                    "id",
+                                    "descriptionSummary",
+                                  ].includes(name);
+
+                                  if (!shouldRender) return null;
+
+                                  const props = {
+                                    name: `entries.${index}.${name}`,
+                                    control,
+                                    placeholder: `Missing ${name}`,
+                                  };
+
+                                  const Component =
+                                    name === "description" ? Textarea : Text;
+
+                                  return <Component key={name} {...props} />;
+                                })}
+                              </form>
+                            </AnimatedDiv>
+                            {index < form.fields.length - 1 && (
+                              <div className="flex-center py-8">
+                                <Divider />
                                 <Button
-                                  onClick={() => form.insert(index + 1, field)}
-                                >
-                                  <LuCopyPlus />
-                                </Button>
-                                <Button
-                                  onClick={() => resetField(`entries.${index}`)}
-                                >
-                                  <TbRestore />
-                                </Button>
+                                  text="Swap"
+                                  endIcon={<BiMoveVertical />}
+                                  onClick={() => form.swap(index, index + 1)!}
+                                  className="flex-y px-5"
+                                />
+                                <Divider />
                               </div>
-                            </div>
-                          </header>
-                          <form className="flex flex-col gap-2">
-                            {typedKeys(field).map((name, i) => {
-                              const shouldRender = ![
-                                "place",
-                                "image",
-                                "id",
-                                "descriptionSummary",
-                              ].includes(name);
-
-                              if (!shouldRender) return null;
-
-                              const props = {
-                                name: `entries.${index}.${name}`,
-                                control,
-                                placeholder: `Missing ${name}`,
-                              };
-
-                              const Component =
-                                name === "description" ? Textarea : Text;
-
-                              return <Component key={name} {...props} />;
-                            })}
-                          </form>
-                        </AnimatedDiv>
-                        {index < form.fields.length - 1 && (
-                          <div className="flex-center py-8">
-                            <Divider />
-                            <Button
-                              text="Swap"
-                              endIcon={<BiMoveVertical />}
-                              onClick={() => form.swap(index, index + 1)!}
-                              className="flex-y px-5"
-                            />
-                            <Divider />
-                          </div>
-                        )}
-                      </Fragment>
-                    ))}
-                  </>
-                )}
-              </ArrayFormContext>
-              <footer className="border-top flex-center mt-8 py-5">
-                <SaveButton
-                  isSuccess={isSuccess}
-                  isLoading={userUpdating}
-                  disabled={!formState.isDirty}
-                  reset={resetCache}
-                  onClick={() => void submit(onSubmit)}
-                />
-              </footer>
-            </>
+                            )}
+                          </Fragment>
+                        ))}
+                      </>
+                    )}
+                  </ArrayFormContext>
+                  <footer className="border-top flex-center mt-8 py-5">
+                    <SaveButton
+                      isSuccess={isSuccess}
+                      isLoading={userUpdating}
+                      disabled={!formState.isDirty}
+                      reset={resetCache}
+                      onClick={() => void submit(onSubmit)}
+                    />
+                  </footer>
+                </>
+              )}
+            </FormContext>
           )}
-        </FormContext>
-      )}
-      {defaultValues.entries.length === 0 && !isHydrating && (
-        <Placeholder
-          className="!h-[200px] [&>*]:h-[200px] [&>*]:w-full [&>*]:border"
-          text="Don't type it manually. Instead choose a method to share your data with Vocatio."
-          actionContent={null}
-        >
-          <Button text="I'm ok typing it manually" className="primary sm" />
-        </Placeholder>
-      )}
-    </Wrapper>
+          {defaultValues.entries.length === 0 && !isHydrating && (
+            <Placeholder
+              className="!h-[200px] [&>*]:h-[200px] [&>*]:w-full [&>*]:border"
+              text="Don't type it manually. Instead choose a method to share your data with Vocatio."
+              actionContent={null}
+            >
+              <Button text="I'm ok typing it manually" className="primary sm" />
+            </Placeholder>
+          )}
+        </Wrapper>
+      </ResizablePanel>
+      <ResizableHandle withHandle />
+      <ResizablePanel />
+    </ResizablePanelGroup>
   );
 };

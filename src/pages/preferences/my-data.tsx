@@ -3,14 +3,9 @@ import { Spinner } from "~/components";
 import ScrollToTop from "react-scroll-to-top";
 
 import { Layout } from "~/components/layout/Layout";
-import { ContactBox } from "~/modules/preferences/boxes/components/ContactBox";
-import { EntryBox } from "~/modules/preferences/boxes/components/EntryBox";
-import { ImageBox } from "~/modules/preferences/boxes/components/ImageBox";
-import { MainBox } from "~/modules/preferences/boxes/components/MainBox";
 import { preferencesToolbar } from "~/modules/preferences/constants";
 import { api } from "~/utils";
 import { Steps } from "~/modules/preferences/Steps";
-import { BigEntryBox } from "~/modules/preferences/boxes/components/BigEntryBox";
 import {
   DrawerTrigger,
   DrawerContent,
@@ -19,6 +14,11 @@ import {
 import { FcIdea } from "react-icons/fc";
 import { TbDatabaseImport } from "react-icons/tb";
 import { Gpt } from "~/icons";
+import { ContactBox } from "~/modules/preferences/boxes/components/ContactBox";
+import { EntryBox } from "~/modules/preferences/boxes/components/EntryBox";
+import { ImageBox } from "~/modules/preferences/boxes/components/ImageBox";
+import { MainBox } from "~/modules/preferences/boxes/components/MainBox";
+import { BigEntryBox } from "~/modules/preferences/boxes/components/BigEntryBox";
 
 const { log } = console;
 
@@ -42,8 +42,8 @@ export const Preferences = () => {
             </div>
           </div>
         ) : (
-          <section className="two-col-grid mb-8">
-            <div className="main-center">
+          <>
+            <section className="breakout">
               <h1>
                 {hasLkd
                   ? "Review your data. Did we get it right?"
@@ -73,8 +73,8 @@ export const Preferences = () => {
                   <BigEntryBox entryFor="education" />
                 </div>
               )}
-            </div>
-          </section>
+            </section>
+          </>
         )}
         {!userLoading && !hasLkd && <Steps />}
 

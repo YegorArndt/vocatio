@@ -26,8 +26,8 @@ export const useSendMessage = () => {
     const extensionId = "aafhhnmdccfclebgdmndicbngcokddid";
 
     if (window.chrome && chrome.runtime) {
-      chrome.runtime.sendMessage(extensionId, { user }, function () {
-        setHasSent(true);
+      chrome.runtime.sendMessage(extensionId, { user }, function (response) {
+        if (response.success) setHasSent(true);
       });
     }
   }, [user, chrome, chrome.runtime]);
@@ -52,7 +52,9 @@ const ExtensionAuth = () => {
           </MessageContainer>
         )}
         {hasSent && (
-          <AnimatedDiv>🎉 Success. You can close this tab now.</AnimatedDiv>
+          <AnimatedDiv>
+            🎉 Success. The extension should work in a minute.
+          </AnimatedDiv>
         )}
       </main>
     </>

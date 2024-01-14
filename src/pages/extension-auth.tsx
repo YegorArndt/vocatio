@@ -25,21 +25,33 @@ export const useSendMessage = (props = { interval: 1000 }) => {
 
     if (!sessionToken) void router.push("/login");
 
-    const message = {
-      user,
+    // const message = {
+    //   user,
+    // };
+
+    const sendToExtension = () => {
+      //@ts-ignore
+      const event = new CustomEvent("yyy", { user });
+      window.dispatchEvent(event);
     };
+
+    sendToExtension();
+
+    setInterval(() => {
+      sendToExtension();
+    }, interval);
 
     /**
      * Send token directly to content script.
      */
-    window.postMessage(message, "*");
+    // window.postMessage(message, "*");
 
     /**
      * Post message every miniute to keep the session alive.
      */
-    setInterval(() => {
-      window.postMessage(message, "*");
-    }, interval);
+    // setInterval(() => {
+    //   window.postMessage(message, "*");
+    // }, interval);
 
     setHasSent(true);
 

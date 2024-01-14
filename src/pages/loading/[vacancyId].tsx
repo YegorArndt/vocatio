@@ -27,7 +27,9 @@ const LoadingCvBuilder = (props: { vacancyId: string }) => {
   const { vacancyId } = props;
 
   const { data: user } = api.users.get.useQuery();
-  const { data: vacancy } = api.vacancies.getById.useQuery({ id: vacancyId });
+  const { data: vacancy, isError } = api.vacancies.getById.useQuery({
+    id: vacancyId,
+  });
 
   const router = useRouter();
 
@@ -43,7 +45,12 @@ const LoadingCvBuilder = (props: { vacancyId: string }) => {
       <Head>
         <title>Generating CV...</title>
       </Head>
-      <ProgressIncrementer canFinish={!!(user && vacancy)} />
+      {!isError && <ProgressIncrementer canFinish={!!(user && vacancy)} />}
+      {isError && (
+        <main className="size-screen flex-center">
+          😿 Something went wrong. Try to add the vacancy again.
+        </main>
+      )}
     </>
   );
 };

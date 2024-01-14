@@ -71,3 +71,26 @@ export const vacancyUI = {
     icon: <BsPersonWorkspace />,
   },
 };
+
+export const defaultGroups = {
+  favorite: {
+    icon: <span>😻</span>,
+    label: "Favorite",
+  },
+  applied: {
+    icon: <span>✅</span>,
+    label: "Applied",
+  },
+  interview: {
+    icon: <span>🎥</span>,
+    label: "Interview",
+  },
+  rejected: {
+    icon: <span>😿</span>,
+    label: "Rejected",
+  },
+  offer: {
+    icon: <span>🎉</span>,
+    label: "Offer",
+  },
+};

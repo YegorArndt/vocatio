@@ -21,7 +21,10 @@ export const useSendMessage = () => {
 
     const sessionToken = Cookies.get("__session");
 
-    if (!sessionToken) void router.push("/login");
+    if (!sessionToken) {
+      void router.push("/login");
+      return;
+    }
 
     const extensionId = "aafhhnmdccfclebgdmndicbngcokddid";
 

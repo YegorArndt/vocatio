@@ -219,6 +219,9 @@
   .size-full {
     @apply h-full w-full;
   }
+  .size-screen {
+    @apply h-screen w-screen;
+  }
 
   .flex-center {
     display: flex;

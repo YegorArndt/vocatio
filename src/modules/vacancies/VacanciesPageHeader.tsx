@@ -1,5 +1,5 @@
 import { FocusableItem, MenuDivider, MenuHeader } from "@szhsin/react-menu";
-import { get, startCase } from "lodash-es";
+import { get } from "lodash-es";
 import { HiOutlinePlusCircle } from "react-icons/hi2";
 import { CustomMenu } from "~/components/external/CustomMenu";
 import { CustomMenuButton } from "~/components/external/CustomMenuButton";
@@ -12,31 +12,9 @@ import { Diamond } from "~/icons";
 import { Text } from "~/components/ui/inputs/Text";
 import { useForm } from "react-hook-form";
 import { ReactNode } from "react";
+import { defaultGroups } from "./constants";
 
 type Group = GroupedVacancies[keyof GroupedVacancies];
-
-const defaultGroups = {
-  favorite: {
-    icon: <span>😻</span>,
-    label: "Favorite",
-  },
-  applied: {
-    icon: <span>✅</span>,
-    label: "Applied",
-  },
-  interview: {
-    icon: <span>🎥</span>,
-    label: "Interview",
-  },
-  rejected: {
-    icon: <span>😿</span>,
-    label: "Rejected",
-  },
-  offer: {
-    icon: <span>🎉</span>,
-    label: "Offer",
-  },
-};
 
 const HEADER_BUTTON_CN =
   "sm clr-card flex-y relative rounded-md last:-ml-2 hover:bg-hover whitespace-nowrap";
@@ -142,7 +120,7 @@ export const VacanciesPageHeader = () => {
               className="flex-y gap-2"
             >
               {defaultGroups[g].icon}
-              {startCase(g)}
+              {g}
             </CustomMenuItem>
           ))}
           {!!suggestedGroupNames.length && <MenuDivider />}

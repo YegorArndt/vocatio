@@ -37,17 +37,21 @@ export const updatePersistedState = (
 };
 
 export const getDraftByVacancyId = (vacancyId: Vacancy["id"]) => {
-  if (!localStorage) return;
+  try {
+    if (!localStorage) return;
 
-  for (let i = 0; i < localStorage.length; i++) {
-    const key = localStorage.key(i);
-    if (key === `draft-${vacancyId}`) {
-      const value = localStorage.getItem(key);
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key === `draft-${vacancyId}`) {
+        const value = localStorage.getItem(key);
 
-      if (value) {
-        return JSON.parse(value) as LsDraft;
+        if (value) {
+          return JSON.parse(value) as LsDraft;
+        }
       }
     }
+  } catch (e) {
+    console.error(e);
   }
 };
 

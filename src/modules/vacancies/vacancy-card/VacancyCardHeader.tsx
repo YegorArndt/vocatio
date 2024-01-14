@@ -22,6 +22,9 @@ import { EditVacancyDrawer } from "../EditVacancyDrawer";
 import { useVacanciesContext } from "../VacanciesContext";
 import { omit } from "lodash-es";
 import { Link } from "~/components/ui/buttons/Link";
+import { defaultGroups } from "../constants";
+
+const { log } = console;
 
 export const VacancyCardHeader = (props: { vacancy: Vacancy }) => {
   const { vacancy } = props;
@@ -123,10 +126,12 @@ export const VacancyCardHeader = (props: { vacancy: Vacancy }) => {
           groupKeys.map((name) => {
             return (
               <CustomMenuItem
-                key={name as string}
+                key={name}
                 className="flex-y gap-3 text-[0.8rem]"
                 onClick={() => updateGroup(name)}
               >
+                {groupedVacancies[name]?.icon ||
+                  defaultGroups[name as keyof typeof defaultGroups]?.icon}
                 {groupedVacancies[name]?.label}
               </CustomMenuItem>
             );

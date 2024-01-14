@@ -31,6 +31,14 @@ export const Autoresize = (props: AutoresizeProps) => {
     }, 10000),
     []
   );
+
+  const handlePaste = (e: ClipboardEvent) => {
+    e.preventDefault();
+    const text = e.clipboardData?.getData("text/plain") || "";
+    document.execCommand("insertText", false, text);
+    debouncedUpdateDesign(text);
+  };
+
   if (!initialValue.current) return null;
 
   return (
@@ -45,6 +53,7 @@ export const Autoresize = (props: AutoresizeProps) => {
         debouncedUpdateDesign(textContent);
       }}
       ref={divRef}
+      onPaste={handlePaste}
     >
       {value}
     </AnimatedDiv>

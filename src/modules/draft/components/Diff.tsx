@@ -298,7 +298,7 @@ const TopRight = (props: TopRightProps) => {
         </span>
       </header>
       <span>{highlightedDescription}</span>
-      <h3>AI generated job summary</h3>
+      <h3>✨ AI generated job summary</h3>
       <span>
         {vacancy.summary ||
           "None 😿. Perhaps the vacancy was created manually?"}

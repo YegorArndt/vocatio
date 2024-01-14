@@ -49,14 +49,12 @@ export const VacancyCard = (props: { vacancy: Vacancy }) => {
         className={cn("clr-card relative rounded-md border bg-card shadow-md")}
       >
         <VacancyCardHeader vacancy={vacancy} />
-        <section className="flex-y gap-8 p-3">
-          <Link
-            to={`create/${vacancy.id}`}
-            frontIcon={<Gpt />}
-            text="View CV"
-            baseCn="flex-y hover:underline text-[0.8rem]"
-          />
-        </section>
+        <Link
+          to={`create/${vacancy.id}`}
+          frontIcon={<Gpt />}
+          text="View CV"
+          baseCn="flex-y hover:underline text-[0.8rem] p-3 w-min whitespace-nowrap"
+        />
         <Accordion
           trigger={(expanded, setExpanded) => (
             <Button

@@ -30,7 +30,7 @@ export const useSendMessage = () => {
         if (response.success) setHasSent(true);
       });
     }
-  }, [user, chrome, chrome.runtime]);
+  }, [user]);
 
   return { hasSent };
 };

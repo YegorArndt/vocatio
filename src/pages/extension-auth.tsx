@@ -23,14 +23,14 @@ export const useSendMessage = () => {
 
     if (!sessionToken) void router.push("/login");
 
-    const editorExtensionId = "aafhhnmdccfclebgdmndicbngcokddid";
+    const extensionId = "aafhhnmdccfclebgdmndicbngcokddid";
 
     if (chrome && chrome.runtime) {
-      chrome.runtime.sendMessage(editorExtensionId, { user }, function () {
+      chrome.runtime.sendMessage(extensionId, { user }, function () {
         setHasSent(true);
       });
     }
-  }, [user]);
+  }, [user, chrome, chrome.runtime]);
 
   return { hasSent };
 };

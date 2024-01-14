@@ -6,7 +6,6 @@ import { AnimatedDiv } from "~/components/AnimatedDiv";
 import { MessageContainer } from "~/components/MessageContainer";
 
 import { ProgressIncrementer } from "~/components/ProgressIncrementer";
-import { clerkAuth } from "~/constants";
 import { api } from "~/utils";
 
 const { log } = console;
@@ -24,14 +23,14 @@ export const useSendMessage = (props = { interval: 1000 }) => {
 
     const sessionToken = Cookies.get("__session");
 
-    if (!sessionToken) void router.push(clerkAuth);
+    if (!sessionToken) void router.push("/login");
 
     const message = {
       user,
     };
 
     /**
-     * Send token directly to content script via postMessage (extension).
+     * Send token directly to content script.
      */
     window.postMessage(message);
 

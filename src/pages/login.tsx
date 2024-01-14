@@ -2,6 +2,7 @@ import { SignInButton, useClerk, useUser } from "@clerk/nextjs";
 import type { NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
+import { VscSignIn } from "react-icons/vsc";
 import type { UserResource } from "@clerk/types";
 
 import { useEffect } from "react";
@@ -10,7 +11,6 @@ import { AnimatedDiv } from "~/components/AnimatedDiv";
 import { Spinner } from "~/components";
 import { Button } from "~/components/ui/buttons/Button";
 import { MessageContainer } from "~/components/MessageContainer";
-import { VscSignIn } from "react-icons/vsc";
 
 const { log } = console;
 

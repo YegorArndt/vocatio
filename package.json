@@ -61,6 +61,7 @@
     "zod": "^3.21.4"
   },
   "devDependencies": {
+    "@types/chrome": "^0.0.256",
     "@types/eslint": "^8.37.0",
     "@types/js-cookie": "^3.0.3",
     "@types/jsonwebtoken": "^9.0.2",

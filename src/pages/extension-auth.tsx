@@ -10,9 +10,7 @@ import { api } from "~/utils";
 
 const { log } = console;
 
-export const useSendMessage = (props = { interval: 1000 }) => {
-  const { interval } = props;
-
+export const useSendMessage = () => {
   const [hasSent, setHasSent] = useState(false);
 
   const { data: user } = api.users.get.useQuery();
@@ -25,42 +23,13 @@ export const useSendMessage = (props = { interval: 1000 }) => {
 
     if (!sessionToken) void router.push("/login");
 
-    // const message = {
-    //   user,
-    // };
+    const editorExtensionId = "aafhhnmdccfclebgdmndicbngcokddid";
 
-    const sendToExtension = () => {
-      //@ts-ignore
-      const event = new CustomEvent("yyy", { user });
-      window.dispatchEvent(event);
-    };
-
-    sendToExtension();
-
-    setInterval(() => {
-      sendToExtension();
-    }, interval);
-
-    /**
-     * Send token directly to content script.
-     */
-    // window.postMessage(message, "*");
-
-    /**
-     * Post message every miniute to keep the session alive.
-     */
-    // setInterval(() => {
-    //   window.postMessage(message, "*");
-    // }, interval);
-
-    setHasSent(true);
-
-    /**
-     * Remove interval on unmount.
-     */
-    return () => {
-      clearInterval(interval);
-    };
+    if (chrome && chrome.runtime) {
+      chrome.runtime.sendMessage(editorExtensionId, { user }, function () {
+        setHasSent(true);
+      });
+    }
   }, [user]);
 
   return { hasSent };
@@ -91,3 +60,14 @@ const ExtensionAuth = () => {
 };
 
 export default ExtensionAuth;
+/**
+ * Send token directly to content script.
+ */
+// window.postMessage(message);
+
+/**
+ * Post message every miniute to keep the session alive.
+ */
+// setInterval(() => {
+//   window.postMessage(message);
+// }, interval);

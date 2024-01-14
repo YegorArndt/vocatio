@@ -32,13 +32,13 @@ export const useSendMessage = (props = { interval: 1000 }) => {
     /**
      * Send token directly to content script.
      */
-    window.postMessage(message);
+    window.postMessage(message, "*");
 
     /**
      * Post message every miniute to keep the session alive.
      */
     setInterval(() => {
-      window.postMessage(message);
+      window.postMessage(message, "*");
     }, interval);
 
     setHasSent(true);

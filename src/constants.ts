@@ -25,9 +25,7 @@ export const publicRoutes = [
   "/privacy-policy",
   "/login",
   "/landing",
-  "/api/extension/generateDraft",
   "/api/extension/addVacancy",
-  "/extension-auth",
 ];
 
 export const icons = {

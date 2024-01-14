@@ -51,6 +51,8 @@ export const ProgressIncrementer = ({
   }, [progress, canFinish]);
 
   return (
-    !hidden && <Progress value={progress} className="fixed inset-0 w-screen" />
+    !hidden && (
+      <Progress value={progress} className="fixed inset-0 w-screen shadow-md" />
+    )
   );
 };

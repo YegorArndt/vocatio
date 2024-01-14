@@ -26,7 +26,7 @@ export const useSendMessage = () => {
       return;
     }
 
-    const extensionId = "aafhhnmdccfclebgdmndicbngcokddid";
+    const extensionId = "bknmlolcaccbfcedimgmpnfcjadfelbn";
 
     if (window.chrome && chrome.runtime) {
       chrome.runtime.sendMessage(extensionId, { user }, function (response) {

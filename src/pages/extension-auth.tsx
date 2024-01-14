@@ -25,7 +25,7 @@ export const useSendMessage = () => {
 
     const extensionId = "aafhhnmdccfclebgdmndicbngcokddid";
 
-    if (chrome && chrome.runtime) {
+    if (window.chrome && chrome.runtime) {
       chrome.runtime.sendMessage(extensionId, { user }, function () {
         setHasSent(true);
       });

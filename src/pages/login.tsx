@@ -46,9 +46,16 @@ const PrismaLayer = (props: { clerkUser: UserResource }) => {
         },
       });
     }
-  }, [user, isSuccess]);
+  }, [user, isSuccess, isError]);
 
-  return null;
+  return (
+    isError && (
+      <AnimatedDiv duration={3} className="flex-y gap-2">
+        <Spinner size={15} />
+        Creating an account for you...
+      </AnimatedDiv>
+    )
+  );
 };
 
 const LoginPage: NextPage = () => {

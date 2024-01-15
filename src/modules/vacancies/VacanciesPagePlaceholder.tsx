@@ -2,9 +2,14 @@ import { LiaExternalLinkAltSolid } from "react-icons/lia";
 
 import { BlurImage } from "~/components";
 import { Link } from "~/components/ui/buttons/Link";
+import { usePersistantData } from "~/hooks/usePersistantData";
 import { Linkedin } from "~/icons";
+import { api, cn } from "~/utils";
 
 export const VacanciesPagePlaceholder = () => {
+  const { ls } = usePersistantData();
+  const { data: user } = api.users.get.useQuery();
+
   return (
     <section className="flex-y flex-col gap-3">
       <header className="flex-y gap-3">
@@ -19,7 +24,10 @@ export const VacanciesPagePlaceholder = () => {
       </header>
       <Link
         to="https://chromewebstore.google.com/detail/vocatio/bknmlolcaccbfcedimgmpnfcjadfelbn"
-        className="flex-y clr-blue"
+        baseCn="flex-y clr-blue"
+        className={cn({
+          "line-through": ls.hasConnectedExtension,
+        })}
         frontIcon={<LiaExternalLinkAltSolid />}
         text="Get chrome extension"
         endIcon={<small className="clr-disabled">~20 seconds</small>}
@@ -27,7 +35,10 @@ export const VacanciesPagePlaceholder = () => {
       />
       <Link
         to="/preferences/my-data"
-        className="flex-y clr-blue"
+        baseCn="flex-y clr-blue"
+        className={cn({
+          "line-through": user?.contact?.linkedin,
+        })}
         frontIcon={<Linkedin />}
         text="Import LinkedIn profile to start CV generation"
         endIcon={<small className="clr-disabled">~3 minutes</small>}

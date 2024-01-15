@@ -95,9 +95,7 @@ const LoginPage: NextPage = () => {
         <title>Logging into Vocatio...</title>
       </Head>
       <div className="flex-center h-screen flex-col gap-4">
-        <header className="fixed inset-0">
-          <ProgressIncrementer canFinish={isLoaded} shouldHide />
-        </header>
+        <ProgressIncrementer canFinish={isLoaded} shouldHide fixToTop />
         {isFirstLogin && (
           <AnimatedDiv>
             <SignUp />

@@ -12,14 +12,16 @@ export type LsNotification = {
 
 export type PersistantData = {
   isDndMode: boolean;
+  hasConnectedExtension: boolean;
   notifications: LsNotification[];
 };
 
 export const LS_KEY = "vocatio-preferences";
-// export const LS_UPDATE_EVENT = "ls-update";
+
 export const initialPersistedState: PersistantData = {
   isDndMode: false,
   notifications: [],
+  hasConnectedExtension: false,
 };
 
 export const getPersistedState = (): PersistantData => {

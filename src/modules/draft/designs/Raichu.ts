@@ -106,7 +106,7 @@ const left: RawComponent[] = [
               id: entry.id,
               components: [
                 {
-                  type: "text",
+                  type: entry.image ? "icon-group" : "text",
                   id: `place-${entry.id}`,
                   sectionId: entry.id,
                   props: {

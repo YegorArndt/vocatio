@@ -36,7 +36,7 @@ export const VacanciesPagePlaceholder = () => {
               "line-through": ls.hasConnectedExtension,
             })}
             frontIcon={<LiaExternalLinkAltSolid />}
-            text="Get chrome extension"
+            text="Connect chrome extension"
             endIcon={<small className="clr-disabled">~20 seconds</small>}
             newTab
           />

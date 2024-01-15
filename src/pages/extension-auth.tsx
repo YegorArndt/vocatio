@@ -36,7 +36,7 @@ export const useSendMessage = () => {
       });
     }
 
-    setIsInstalled(false);
+    setIsInstalled(hasSent);
   };
 
   return { hasSent, sendMessage, isInstalled };

@@ -177,16 +177,6 @@ model CertificatesEntry {
   userId      String
 }
 
-model CustomMedia {
-  id        String   @id @default(uuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  name      String
-  url       String
-  contact   Contact? @relation(fields: [contactId], references: [id])
-  contactId String
-}
-
 model Contact {
   id          String        @id @default(uuid())
   createdAt   DateTime      @default(now())
@@ -210,7 +200,7 @@ model Contact {
   country     String?
   city        String?
   zip         String?
-  customMedia CustomMedia[]
+  customField String[]
   user        User          @relation(fields: [userId], references: [id])
   userId      String        @unique
 }

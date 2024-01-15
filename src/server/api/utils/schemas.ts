@@ -122,6 +122,7 @@ export const ContactSchema = z
     country: z.string(),
     city: z.string(),
     zip: z.string(),
+    custom: z.array(z.string()),
   })
   .partial();
 

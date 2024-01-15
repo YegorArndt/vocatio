@@ -75,22 +75,22 @@ export const vacancyUI = {
 export const defaultGroups = {
   favorite: {
     icon: <span>😻</span>,
-    label: "Favorite",
+    label: "favorite",
   },
   applied: {
     icon: <span>✅</span>,
-    label: "Applied",
+    label: "applied",
   },
   interview: {
     icon: <span>🎥</span>,
-    label: "Interview",
+    label: "interview",
   },
   rejected: {
     icon: <span>😿</span>,
-    label: "Rejected",
+    label: "rejected",
   },
   offer: {
     icon: <span>🎉</span>,
-    label: "Offer",
+    label: "offer",
   },
 };

@@ -14,6 +14,7 @@ import { useState, useRef, useEffect } from "react";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { Button } from "~/components/ui/buttons/Button";
 import { getDraftByVacancyId } from "~/utils/ls";
+import { toast } from "sonner";
 
 const { log } = console;
 
@@ -38,6 +39,10 @@ const CvBuilder = (props: { vacancyId: string }) => {
   const { a4Ref, a4Height, a4Width, pages, setPages } = useA4();
 
   const { data: vacancy } = api.vacancies.getById.useQuery({ id: vacancyId });
+
+  useEffect(() => {
+    toast.dismiss("success");
+  }, []);
 
   return (
     <>

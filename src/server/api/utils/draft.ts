@@ -78,13 +78,8 @@ You are a resume writer with the task of customizing a resume for a specific job
 
     Instructions:
       1. Identify the key responsibilities.
-
-      2. Rewrite each employment history into exactly 6 bullet points, starting each with "•". Follow these rules while rewriting:
-      Each bullet point should be short and straight to the point. However, do not omit any critical information. Critical information includes achievements, skills (React, C#), and keywords that can be found in the key responsibilities (any keywords and terms like marketing, or security; not only technlogies). Rewrite a bullet point if you know that the candidate must have worked with what's required in the responsibilities if they've specified anything that implies that but haven't mentioned that exact aspect the responsibility highlights.
-      
+      2. Rewrite each employment history into max. 6 bullet points. Each bullet point should be short and straight to the point. If a bullet point can attest to the candidate's ability to perform a key responsibility, make it a paraphrase of the key responsibility and put it on top. The bullet point can be paraphrazed as long as it doesn't lose its original meaning and includes the keywords it originally has (like "Java", "Python", "React", etc.). The paraphrase is done by not adding the new text, but replacing the existing one with the key responsibility terminology. 
       3. Ensure the professional summary reflects the most critical responsibilities from the vacancy in no more than 5 sentences. It should be a combined version of the original professional summary and the one where the critical responsibilities are reflected.
-
-      4. Analyze the texts you composed and make sure to omit any duplications.
 
     Format of your response:
       Prefix each employment history entry with an "@" followed by its index (zero-based). Do not prefix the summary.

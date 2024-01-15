@@ -1,5 +1,5 @@
 import Head from "next/head";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { HiOutlineExternalLink } from "react-icons/hi";
 import { MdArrowRightAlt } from "react-icons/md";
 import { AnimatedDiv } from "~/components/AnimatedDiv";
@@ -9,36 +9,10 @@ import { ProgressIncrementer } from "~/components/ProgressIncrementer";
 import { Link } from "~/components/ui/buttons/Link";
 import { extensionUrl } from "~/constants";
 import { usePersistantData } from "~/hooks/usePersistantData";
-import { RouterOutputs, api } from "~/utils/api";
+import { useSendMessage } from "~/hooks/useSendMessage";
+import { api } from "~/utils/api";
 
 const { log } = console;
-
-const EXTENSION_ID_DEV = "aafhhnmdccfclebgdmndicbngcokddid";
-const EXTENSION_ID_PROD = "bknmlolcaccbfcedimgmpnfcjadfelbn";
-
-export const useSendMessage = () => {
-  const [hasSent, setHasSent] = useState(false);
-  const [isInstalled, setIsInstalled] = useState(true);
-
-  const sendMessage = (user: RouterOutputs["users"]["get"]) => {
-    const id =
-      (process.env.NODE_ENV === "development"
-        ? EXTENSION_ID_DEV
-        : EXTENSION_ID_PROD) || EXTENSION_ID_PROD;
-
-    if (window.chrome && chrome.runtime && !hasSent) {
-      chrome.runtime.sendMessage(id, { user }, function (response) {
-        if (response.success) {
-          setHasSent(true);
-          return;
-        }
-        setIsInstalled(false);
-      });
-    }
-  };
-
-  return { hasSent, sendMessage, isInstalled };
-};
 
 const ExtensionAuth = () => {
   const { hasSent, sendMessage, isInstalled } = useSendMessage();

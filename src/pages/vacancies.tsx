@@ -28,7 +28,9 @@ const Vacancies = () => {
           const hasVacancies =
             groupedVacancies &&
             !!groupedVacancies[currentGroup]?.vacancies.length;
-          const showPlaceholder = !loadingVacancies && !hasVacancies;
+
+          const showPlaceholder =
+            !loadingVacancies && !hasVacancies && currentGroup === "all";
 
           return (
             <Layout

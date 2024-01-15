@@ -19,11 +19,18 @@ import { EntryBox } from "~/modules/preferences/boxes/components/EntryBox";
 import { ImageBox } from "~/modules/preferences/boxes/components/ImageBox";
 import { MainBox } from "~/modules/preferences/boxes/components/MainBox";
 import { BigEntryBox } from "~/modules/preferences/boxes/components/BigEntryBox";
+import { useSendMessage } from "~/hooks/useSendMessage";
+import { useEffect } from "react";
 
 const { log } = console;
 
 export const Preferences = () => {
   const { data: user, isLoading: userLoading } = api.users.get.useQuery();
+  const { sendMessage } = useSendMessage();
+
+  useEffect(() => {
+    if (user) sendMessage(user);
+  }, [user]);
 
   const hasLkd = !!user?.contact?.linkedin;
 
@@ -38,7 +45,7 @@ export const Preferences = () => {
         {userLoading ? (
           <div className="content flex-center h-[85vh]">
             <div className="flex-y gap-3">
-              <Spinner size={15} /> Loading your data...
+              <Spinner size={15} /> Loading your info...
             </div>
           </div>
         ) : (

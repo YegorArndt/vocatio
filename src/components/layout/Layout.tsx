@@ -9,7 +9,6 @@ import {
 } from "~/components/external/Popover";
 import { Bell, Checkmark } from "../icons";
 import { usePersistantData } from "~/hooks/usePersistantData";
-import { BlurImage } from "../BlurImage";
 import { Link } from "../ui/buttons/Link";
 
 const { log } = console;
@@ -62,10 +61,7 @@ const Notifications = () => {
           );
         })}
         {!hasNotifications && (
-          <div className="flex-center gap-2">
-            <BlurImage src="/loading-cat.gif" height={25} width={25} />
-            No notifications
-          </div>
+          <div className="flex-center gap-2">No notifications</div>
         )}
       </PopoverContent>
     </Popover>

@@ -12,7 +12,6 @@ import { PiSignOutDuotone } from "react-icons/pi";
 
 const mainNav = [
   { text: "My vacancies", to: "/vacancies", frontIcon: <FaLaptopCode /> },
-  // { text: "Create", to: "/create", frontIcon: <Gpt /> },
   {
     text: "Preferences",
     to: "/preferences/my-data",

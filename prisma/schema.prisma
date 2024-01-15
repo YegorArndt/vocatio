@@ -238,7 +238,6 @@ model User {
   professionalSummary String?  
 
   contact       Contact?
-  shortLinkedin String?
 
   vacancies Vacancy[]
   drafts    Draft[]

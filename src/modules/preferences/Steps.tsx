@@ -23,7 +23,6 @@ const Ball = (props: DecoProps) => {
 
 export const Steps = () => {
   const [step1Complete, setStep1Complete] = useState(false);
-  const [step2Complete, setStep2Complete] = useState(false);
 
   return (
     <ul className="content flex max-w-[550px] flex-col gap-3">
@@ -57,7 +56,8 @@ export const Steps = () => {
         </div>
         <div />
         <div className="flex-center whitespace-nowrap text-center">
-          Open the extension and click <br />✨ Export profile
+          Open the extension and click <br />✨ Update name, image, and job
+          title
         </div>
       </li>
     </ul>

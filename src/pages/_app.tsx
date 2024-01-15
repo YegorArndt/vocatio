@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { type AppType } from "next/app";
 import Head from "next/head";
 import { ClerkProvider } from "@clerk/nextjs";
+
 import { Inter } from "next/font/google";
 
 import "@szhsin/react-menu/dist/index.css";

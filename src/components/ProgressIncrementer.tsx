@@ -1,16 +1,19 @@
 import { useEffect, useState } from "react";
 import { Progress } from "~/components/external/Progress";
+import { cn } from "~/utils";
 
 type ProgressIncrementerProps = {
   canFinish: boolean;
   incrementBy?: number;
   shouldHide?: boolean;
+  className?: string;
 };
 
 export const ProgressIncrementer = ({
   canFinish,
   incrementBy = 10,
   shouldHide,
+  className,
 }: ProgressIncrementerProps) => {
   const [progress, setProgress] = useState(5);
   const [hidden, setHidden] = useState(false);
@@ -52,7 +55,10 @@ export const ProgressIncrementer = ({
 
   return (
     !hidden && (
-      <Progress value={progress} className="fixed inset-0 w-screen shadow-md" />
+      <Progress
+        value={progress}
+        className={(cn("fixed inset-0 w-screen shadow-md"), className)}
+      />
     )
   );
 };

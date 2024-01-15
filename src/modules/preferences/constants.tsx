@@ -1,29 +1,35 @@
-import { Chip, NavigationLink } from "~/components";
+import { NavigationLink } from "~/components";
 import { GoDatabase } from "react-icons/go";
-import { Gpt } from "~/components/icons";
 import { startCase } from "lodash-es";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "~/components/external/Tooltip";
+import { Gpt } from "~/icons";
 
 export const preferencesToolbar = [
-  {
-    text: "My data",
-    to: "/preferences",
-    frontIcon: <GoDatabase />,
-  },
-  {
-    text: "Fine-tuning",
-    to: "/preferences/fine-tuning",
-    frontIcon: <Gpt />,
-    className: "disabled pointer-events-none",
-    endIcon: <Chip text="Soon" className="bg-sky px-1 text-[0.6rem]" />,
-  },
-].map((props) => (
   <NavigationLink
-    key={props.text}
+    key="My data"
+    frontIcon={<GoDatabase />}
+    text="My data"
+    to="/preferences"
     baseCn="common hover flex-y gap-1"
     activeCn="bg-hover"
-    {...props}
-  />
-));
+  />,
+  <TooltipProvider>
+    <Tooltip>
+      <TooltipTrigger
+        className="common hover flex-y gap-3 whitespace-nowrap"
+        disabled
+      >
+        <Gpt /> Fine-tuning
+      </TooltipTrigger>
+      <TooltipContent>✨ Coming soon</TooltipContent>
+    </Tooltip>
+  </TooltipProvider>,
+];
 
 export const languages = [
   "chinese",

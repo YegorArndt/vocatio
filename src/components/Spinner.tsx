@@ -162,6 +162,24 @@ export const SpinnerWithLayout = (props: { text?: string }) => {
   );
 };
 
+export const ButtonSkeleton = (props: DecoProps) => {
+  const { className } = props;
+
+  return <div className={cn("skeleton h-8 w-[120px] rounded-md", className)} />;
+};
+
+export const SkeletonButtonStack = (props: DecoProps) => {
+  const { className, length = 2 } = props;
+
+  return (
+    <div className={cn("flex gap-3", className)}>
+      {Array.from({ length }).map((_, i) => (
+        <ButtonSkeleton key={i} />
+      ))}
+    </div>
+  );
+};
+
 export const EntryHydrationSkeleton = () => {
   return (
     <div className="flex flex-col gap-5">

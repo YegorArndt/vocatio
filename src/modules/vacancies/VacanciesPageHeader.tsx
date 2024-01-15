@@ -13,6 +13,7 @@ import { Text } from "~/components/ui/inputs/Text";
 import { useForm } from "react-hook-form";
 import { ReactNode } from "react";
 import { defaultGroups } from "./constants";
+import { SkeletonButtonStack } from "~/components/Spinner";
 
 type Group = GroupedVacancies[keyof GroupedVacancies];
 
@@ -89,6 +90,7 @@ export const VacanciesPageHeader = () => {
   return (
     <header className="flex-between border-bottom sticky top-5 z-layout bg-primary pb-2 before:absolute before:-top-16 before:left-0 before:h-16 before:w-full before:bg-primary">
       <section className="flex-y gap-3">
+        {loadingVacancies && <SkeletonButtonStack length={2} />}
         {typedKeys(groupedVacancies).map((groupName) => (
           <GroupButton
             key={groupName}
@@ -102,51 +104,53 @@ export const VacanciesPageHeader = () => {
             }
           />
         ))}
-        <CustomMenu
-          gap={10}
-          menuButton={
-            <CustomMenuButton className="flex-y sm gap-2 rounded-md hover:bg-hover">
-              <HiOutlinePlusCircle />
-              Add a new group
-            </CustomMenuButton>
-          }
-        >
-          {suggestedGroupNames.map((g) => (
-            <CustomMenuItem
-              key={g}
-              onClickCapture={() =>
-                addNewGroup(g, defaultGroups[g].label, defaultGroups[g].icon)
-              }
-              className="flex-y gap-2"
-            >
-              {defaultGroups[g].icon}
-              {g}
-            </CustomMenuItem>
-          ))}
-          {!!suggestedGroupNames.length && <MenuDivider />}
-          <MenuHeader className="normal-case">Custom</MenuHeader>
-          <FocusableItem>
-            {({ ref }) => (
-              <div ref={ref} className="flex-y gap-2">
-                <Text
-                  name="newGroup"
-                  control={control}
-                  className="outlined !border-none [&>*]:text-black"
-                  placeholder="Type a new group name"
-                />
-                <Button
-                  onClick={() => {
-                    const userDefinedGroup = watch("newGroup");
-                    if (!userDefinedGroup) return;
-                    addNewGroup(userDefinedGroup, userDefinedGroup);
-                  }}
-                >
-                  <HiOutlinePlusCircle size={17} />
-                </Button>
-              </div>
-            )}
-          </FocusableItem>
-        </CustomMenu>
+        {!loadingVacancies && (
+          <CustomMenu
+            gap={10}
+            menuButton={
+              <CustomMenuButton className="flex-y sm gap-2 rounded-md hover:bg-hover">
+                <HiOutlinePlusCircle />
+                Add a new group
+              </CustomMenuButton>
+            }
+          >
+            {suggestedGroupNames.map((g) => (
+              <CustomMenuItem
+                key={g}
+                onClickCapture={() =>
+                  addNewGroup(g, defaultGroups[g].label, defaultGroups[g].icon)
+                }
+                className="flex-y gap-2"
+              >
+                {defaultGroups[g].icon}
+                {g}
+              </CustomMenuItem>
+            ))}
+            {!!suggestedGroupNames.length && <MenuDivider />}
+            <MenuHeader className="normal-case">Custom</MenuHeader>
+            <FocusableItem>
+              {({ ref }) => (
+                <div ref={ref} className="flex-y gap-2">
+                  <Text
+                    name="newGroup"
+                    control={control}
+                    className="outlined !border-none [&>*]:text-black"
+                    placeholder="Type a new group name"
+                  />
+                  <Button
+                    onClick={() => {
+                      const userDefinedGroup = watch("newGroup");
+                      if (!userDefinedGroup) return;
+                      addNewGroup(userDefinedGroup, userDefinedGroup);
+                    }}
+                  >
+                    <HiOutlinePlusCircle size={17} />
+                  </Button>
+                </div>
+              )}
+            </FocusableItem>
+          </CustomMenu>
+        )}
       </section>
       {/* <TooltipProvider>
         <Tooltip>

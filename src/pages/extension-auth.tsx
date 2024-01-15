@@ -1,45 +1,47 @@
-import Cookies from "js-cookie";
 import Head from "next/head";
-import { useRouter } from "next/router";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
 import { AnimatedDiv } from "~/components/AnimatedDiv";
 import { MessageContainer } from "~/components/MessageContainer";
 
 import { ProgressIncrementer } from "~/components/ProgressIncrementer";
-import { api } from "~/utils";
+import { RouterOutputs, api } from "~/utils/api";
 
 const { log } = console;
+
+const EXTENSION_ID_DEV = "aafhhnmdccfclebgdmndicbngcokddid";
+const EXTENSION_ID_PROD = "bknmlolcaccbfcedimgmpnfcjadfelbn";
 
 export const useSendMessage = () => {
   const [hasSent, setHasSent] = useState(false);
 
-  const { data: user } = api.users.get.useQuery();
-  const router = useRouter();
+  const sendMessage = (user: RouterOutputs["users"]["get"]) => {
+    const id =
+      (process.env.NODE_ENV === "development"
+        ? EXTENSION_ID_DEV
+        : EXTENSION_ID_PROD) || EXTENSION_ID_PROD;
 
-  useEffect(() => {
-    if (!user) return;
-
-    const sessionToken = Cookies.get("__session");
-
-    if (!sessionToken) {
-      void router.push("/login");
-      return;
+    try {
+      if (window.chrome && chrome.runtime) {
+        chrome.runtime.sendMessage(id, { user }, function (response) {
+          if (response.success) setHasSent(true);
+        });
+      }
+    } catch (e) {
+      toast.error("Something went wrong. Please try again later.");
     }
+  };
 
-    const extensionId = "bknmlolcaccbfcedimgmpnfcjadfelbn";
-
-    if (window.chrome && chrome.runtime) {
-      chrome.runtime.sendMessage(extensionId, { user }, function (response) {
-        if (response.success) setHasSent(true);
-      });
-    }
-  }, [user]);
-
-  return { hasSent };
+  return { hasSent, sendMessage };
 };
 
 const ExtensionAuth = () => {
-  const { hasSent } = useSendMessage();
+  const { hasSent, sendMessage } = useSendMessage();
+  const { data: user } = api.users.get.useQuery();
+
+  useEffect(() => {
+    if (user) sendMessage(user);
+  }, [user]);
 
   return (
     <>
@@ -65,14 +67,3 @@ const ExtensionAuth = () => {
 };
 
 export default ExtensionAuth;
-/**
- * Send token directly to content script.
- */
-// window.postMessage(message);
-
-/**
- * Post message every miniute to keep the session alive.
- */
-// setInterval(() => {
-//   window.postMessage(message);
-// }, interval);

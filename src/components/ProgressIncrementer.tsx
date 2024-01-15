@@ -7,6 +7,7 @@ type ProgressIncrementerProps = {
   incrementBy?: number;
   shouldHide?: boolean;
   className?: string;
+  fixToTop?: boolean;
 };
 
 export const ProgressIncrementer = ({
@@ -14,6 +15,7 @@ export const ProgressIncrementer = ({
   incrementBy = 10,
   shouldHide,
   className,
+  fixToTop,
 }: ProgressIncrementerProps) => {
   const [progress, setProgress] = useState(5);
   const [hidden, setHidden] = useState(false);
@@ -54,11 +56,19 @@ export const ProgressIncrementer = ({
   }, [progress, canFinish]);
 
   return (
-    !hidden && (
+    !hidden &&
+    (fixToTop ? (
+      <header className="fixed inset-0">
+        <Progress
+          value={progress}
+          className={(cn("fixed inset-0 w-screen shadow-md"), className)}
+        />{" "}
+      </header>
+    ) : (
       <Progress
         value={progress}
         className={(cn("fixed inset-0 w-screen shadow-md"), className)}
       />
-    )
+    ))
   );
 };

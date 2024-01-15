@@ -52,26 +52,28 @@ const PrismaLayer = (props: { clerkUser: UserResource }) => {
 
   return (
     <>
-      <ProgressIncrementer canFinish={!userLoading} shouldHide />
-      {userLoading && (
-        <MessageContainer>
-          <AnimatedDiv duration={2}>
-            🎉 Thank you for using Vocatio Beta
+      <ProgressIncrementer canFinish={!userLoading} shouldHide fixToTop />
+      <main className="flex-center">
+        {userLoading && (
+          <MessageContainer>
+            <AnimatedDiv duration={2}>
+              🎉 Thank you for using Vocatio Beta
+            </AnimatedDiv>
+            <AnimatedDiv duration={1000}>Authorizing...</AnimatedDiv>
+          </MessageContainer>
+        )}
+        {creatingUser && (
+          <AnimatedDiv duration={3} className="flex-y gap-2">
+            <Spinner size={15} />
+            Creating an account for you...
           </AnimatedDiv>
-          <AnimatedDiv duration={1000}>Authorizing...</AnimatedDiv>
-        </MessageContainer>
-      )}
-      {creatingUser && (
-        <AnimatedDiv duration={3} className="flex-y gap-2">
-          <Spinner size={15} />
-          Creating an account for you...
-        </AnimatedDiv>
-      )}
-      {(successCreating || user) && (
-        <AnimatedDiv duration={1000}>
-          🎉 Success. Redirecting you to the vacancies page...
-        </AnimatedDiv>
-      )}
+        )}
+        {(successCreating || user) && (
+          <AnimatedDiv duration={1000}>
+            🎉 Success. Redirecting you to the vacancies page...
+          </AnimatedDiv>
+        )}
+      </main>
     </>
   );
 };

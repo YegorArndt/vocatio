@@ -26,7 +26,7 @@ export const useSendMessage = () => {
         ? EXTENSION_ID_DEV
         : EXTENSION_ID_PROD) || EXTENSION_ID_PROD;
 
-    if (window.chrome && chrome.runtime) {
+    if (window.chrome && chrome.runtime && !hasSent) {
       chrome.runtime.sendMessage(id, { user }, function (response) {
         if (response.success) {
           setHasSent(true);

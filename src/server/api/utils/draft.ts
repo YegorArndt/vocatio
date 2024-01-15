@@ -80,7 +80,7 @@ You are a resume writer with the task of customizing a resume for a specific job
 
     Instructions:
       1. Identify the key responsibilities.
-      2. Rewrite each employment history into max. 6 bullet points. Each bullet point should be short and straight to the point. If a bullet point can attest to the candidate's ability to perform a key responsibility, make it a paraphrase of the key responsibility and put it on top. The bullet point can be paraphrazed as long as it doesn't lose its original meaning and includes the keywords it originally has (like "Java", "Python", "React", etc.). Keep the keywords intact while paraphrazing. The paraphrase is done by not adding the new text, but replacing the existing one with the key responsibility terminology. Each bullet point should start with "•".
+      2. Rewrite each employment history into max. 6 bullet points. Each bullet point should be short and straight to the point. If a bullet point can attest to the candidate's ability to perform a key responsibility, make it a paraphrase of the key responsibility and put it on top. The bullet point can be paraphrazed as long as it doesn't lose its original meaning and keeps the keywords it originally contains (like "Java", "Python", "React", "marketing" etc). The paraphrase is done by not adding the new text, but replacing the existing one with the key responsibility terminology. Each bullet point should start with "•".
       3. Ensure the professional summary reflects the most critical responsibilities from the vacancy in no more than 5 sentences. It should be a combined version of the original professional summary and the one where the critical responsibilities are reflected.
 
     Format of your response:
@@ -188,7 +188,7 @@ export const tryMixtral = async (
   };
 };
 
-export const tryGpt3 = async (vacancy: PartialVacancy, user: PartialUser) => {
+export const tryGpt = async (vacancy: PartialVacancy, user: PartialUser) => {
   const content = getPrompt(vacancy, user);
   const result = await applyGpt([{ role: "system", content }]);
 
@@ -213,7 +213,7 @@ export const generateDraft = async (
   user: PartialUser
 ) => {
   let { professionalSummary, employmentHistory, isSuccessfullyEnhanced } =
-    await tryGpt3(vacancy, user);
+    await tryGpt(vacancy, user);
 
   if (!isSuccessfullyEnhanced) {
     ({ professionalSummary, employmentHistory } = await tryMixtral(

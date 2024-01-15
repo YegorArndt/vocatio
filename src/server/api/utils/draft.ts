@@ -12,17 +12,19 @@ const max_new_tokens = 3000;
 export const getResponsibilities = (vacancy: PartialVacancy) => {
   const { requiredSkills } = vacancy;
 
+  return vacancy.description!;
+
   /**
    * ...suffice as context for AI.
    */
-  const requiredSkillsSuffice = requiredSkills && requiredSkills.length > 300;
-  if (requiredSkillsSuffice) return vacancy.requiredSkills as string;
+  // const requiredSkillsSuffice = requiredSkills && requiredSkills.length > 300;
+  // if (requiredSkillsSuffice) return vacancy.requiredSkills as string;
 
-  const partialDescription = vacancy.description!.split(":")[1];
+  // const partialDescription = vacancy.description!.split(":")[1];
 
-  return (
-    partialDescription ? partialDescription : vacancy.description
-  ) as string;
+  // return (
+  //   partialDescription ? partialDescription : vacancy.description
+  // ) as string;
 };
 
 export const formatEmploymentHistories = (

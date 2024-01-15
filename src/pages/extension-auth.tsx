@@ -1,27 +1,24 @@
 import Head from "next/head";
 import { useEffect, useState } from "react";
+import { HiOutlineExternalLink } from "react-icons/hi";
 import { MdArrowRightAlt } from "react-icons/md";
-import { toast } from "sonner";
 import { AnimatedDiv } from "~/components/AnimatedDiv";
 import { MessageContainer } from "~/components/MessageContainer";
 
 import { ProgressIncrementer } from "~/components/ProgressIncrementer";
 import { Link } from "~/components/ui/buttons/Link";
+import { extensionUrl } from "~/constants";
 import { usePersistantData } from "~/hooks/usePersistantData";
 import { RouterOutputs, api } from "~/utils/api";
 
 const { log } = console;
-
-type Err = {
-  name: string;
-  message: string;
-};
 
 const EXTENSION_ID_DEV = "aafhhnmdccfclebgdmndicbngcokddid";
 const EXTENSION_ID_PROD = "bknmlolcaccbfcedimgmpnfcjadfelbn";
 
 export const useSendMessage = () => {
   const [hasSent, setHasSent] = useState(false);
+  const [isInstalled, setIsInstalled] = useState(true);
 
   const sendMessage = (user: RouterOutputs["users"]["get"]) => {
     const id =
@@ -29,26 +26,24 @@ export const useSendMessage = () => {
         ? EXTENSION_ID_DEV
         : EXTENSION_ID_PROD) || EXTENSION_ID_PROD;
 
-    try {
-      if (window.chrome && chrome.runtime) {
-        chrome.runtime.sendMessage(id, { user }, function (response) {
-          if (response.success) setHasSent(true);
-        });
-      } else {
-        throw new Error("Reinstall the extension.");
-      }
-    } catch (e) {
-      const error =
-        (e as Err).message || "Something went wrong. Please try again later.";
-      toast.error(error);
+    if (window.chrome && chrome.runtime) {
+      chrome.runtime.sendMessage(id, { user }, function (response) {
+        if (response.success) {
+          setHasSent(true);
+          return;
+        }
+        setIsInstalled(false);
+      });
     }
+
+    setIsInstalled(false);
   };
 
-  return { hasSent, sendMessage };
+  return { hasSent, sendMessage, isInstalled };
 };
 
 const ExtensionAuth = () => {
-  const { hasSent, sendMessage } = useSendMessage();
+  const { hasSent, sendMessage, isInstalled } = useSendMessage();
   const { data: user } = api.users.get.useQuery();
   const { updateData } = usePersistantData();
 
@@ -61,11 +56,29 @@ const ExtensionAuth = () => {
       <Head>
         <title>{hasSent ? "Success" : "Connecting the extension..."}</title>
       </Head>
-      <ProgressIncrementer incrementBy={13} canFinish={hasSent} shouldHide />
+      <ProgressIncrementer
+        incrementBy={13}
+        canFinish={hasSent || !isInstalled}
+        shouldHide
+      />
       <main className="flex-center h-[90vh]">
-        {!hasSent && (
+        {!isInstalled && (
+          <AnimatedDiv className="flex-center flex-col gap-3">
+            Coudn&apos;t connect to the extension. Have you installed it?
+            <Link
+              text="Install from Chrome Web Store"
+              endIcon={<HiOutlineExternalLink />}
+              to={extensionUrl}
+              newTab
+              className="flex-y clr-blue"
+            />
+          </AnimatedDiv>
+        )}
+        {!hasSent && isInstalled && (
           <MessageContainer>
-            <AnimatedDiv duration={2}>✨ Thanks for using Vocatio</AnimatedDiv>
+            <AnimatedDiv duration={3}>
+              ✨ Thank you for using Vocatio Beta
+            </AnimatedDiv>
             <AnimatedDiv duration={1000}>
               Connecting the extension...
             </AnimatedDiv>

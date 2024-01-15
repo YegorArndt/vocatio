@@ -4,7 +4,7 @@ import ScrollToTop from "react-scroll-to-top";
 
 import { Layout } from "~/components/layout/Layout";
 import { preferencesToolbar } from "~/modules/preferences/constants";
-import { api } from "~/utils";
+import { api, cn } from "~/utils";
 import { Steps } from "~/modules/preferences/Steps";
 import {
   DrawerTrigger,
@@ -42,39 +42,40 @@ export const Preferences = () => {
             </div>
           </div>
         ) : (
-          <>
-            <section className="breakout">
-              <h1>
-                {hasLkd
-                  ? "Review your data. Did we get it right?"
-                  : "Import your data from LinkedIn."}
-              </h1>
-              <p>
-                {hasLkd
-                  ? "Vocatio will fallback to it when generating your CVs."
-                  : "Don't type it manually. Value your time."}
-              </p>
-              {hasLkd && (
-                <div className="flex flex-col gap-8">
-                  <ImageBox />
-                  <MainBox />
-                  <ContactBox />
-                  <EntryBox
-                    entryFor="languages"
-                    labelOptions={[]}
-                    valueOptions={[]}
-                  />
-                  <EntryBox
-                    entryFor="skills"
-                    labelOptions={[]}
-                    valueOptions={[]}
-                  />
-                  <BigEntryBox entryFor="employmentHistory" />
-                  <BigEntryBox entryFor="education" />
-                </div>
-              )}
-            </section>
-          </>
+          <section
+            className={cn({
+              breakout: hasLkd,
+              content: !hasLkd,
+            })}
+          >
+            <h1>
+              {hasLkd ? "Your info." : "Import your profile from LinkedIn."}
+            </h1>
+            <p>
+              {hasLkd
+                ? "Review your info. Vocatio will fallback to it when generating your CVs."
+                : "Don't type it manually. Value your time."}
+            </p>
+            {hasLkd && (
+              <div className="flex flex-col gap-8">
+                <ImageBox />
+                <MainBox />
+                <ContactBox />
+                <EntryBox
+                  entryFor="languages"
+                  labelOptions={[]}
+                  valueOptions={[]}
+                />
+                <EntryBox
+                  entryFor="skills"
+                  labelOptions={[]}
+                  valueOptions={[]}
+                />
+                <BigEntryBox entryFor="employmentHistory" />
+                <BigEntryBox entryFor="education" />
+              </div>
+            )}
+          </section>
         )}
         {!userLoading && !hasLkd && <Steps />}
 

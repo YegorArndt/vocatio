@@ -13,7 +13,7 @@ export const preferencesToolbar = [
   <NavigationLink
     key="My data"
     frontIcon={<GoDatabase />}
-    text="My data"
+    text="My info"
     to="/preferences"
     baseCn="common hover flex-y gap-1"
     activeCn="bg-hover"
@@ -24,7 +24,7 @@ export const preferencesToolbar = [
         className="common hover flex-y gap-3 whitespace-nowrap"
         disabled
       >
-        <Gpt /> Fine-tuning
+        <Gpt /> AI fine-tuning
       </TooltipTrigger>
       <TooltipContent>✨ Coming soon</TooltipContent>
     </Tooltip>

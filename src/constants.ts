@@ -47,5 +47,8 @@ export const icons = {
   check: LiaMoneyCheckSolid,
 };
 
+export const extensionUrl =
+  "https://chromewebstore.google.com/detail/vocatio/bknmlolcaccbfcedimgmpnfcjadfelbn";
+
 export const clerkAuth =
   "https://splendid-amoeba-59.accounts.dev/sign-in?redirect_url=https%3A%2F%2Fchirp-mu-rust-60.vercel.app%2Flogin#https://splendid-amoeba-59.accounts.dev/sign-in?redirect_url=https%3A%2F%2Fchirp-mu-rust-60.vercel.app%2Flogin";

@@ -30,7 +30,7 @@ export const VacanciesPagePlaceholder = () => {
       {!bothStepsDone && (
         <>
           <Link
-            to="https://chromewebstore.google.com/detail/vocatio/bknmlolcaccbfcedimgmpnfcjadfelbn"
+            to="/extension-auth"
             baseCn="flex-y clr-blue"
             className={cn({
               "line-through": ls.hasConnectedExtension,
@@ -38,7 +38,6 @@ export const VacanciesPagePlaceholder = () => {
             frontIcon={<LiaExternalLinkAltSolid />}
             text="Connect chrome extension"
             endIcon={<small className="clr-disabled">~20 seconds</small>}
-            newTab
           />
           <Link
             to="/preferences/my-data"

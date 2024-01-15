@@ -1,5 +1,6 @@
 import Head from "next/head";
 import { useEffect, useState } from "react";
+import { MdArrowRightAlt } from "react-icons/md";
 import { toast } from "sonner";
 import { AnimatedDiv } from "~/components/AnimatedDiv";
 import { MessageContainer } from "~/components/MessageContainer";
@@ -40,7 +41,7 @@ export const useSendMessage = () => {
 const ExtensionAuth = () => {
   const { hasSent, sendMessage } = useSendMessage();
   const { data: user } = api.users.get.useQuery();
-  const { ls, updateData } = usePersistantData();
+  const { updateData } = usePersistantData();
 
   useEffect(() => {
     if (user) sendMessage(user);
@@ -49,7 +50,7 @@ const ExtensionAuth = () => {
   return (
     <>
       <Head>
-        <title>{hasSent ? "Success" : "Logging you in"}</title>
+        <title>{hasSent ? "Success" : "Connecting the extension..."}</title>
       </Head>
       <ProgressIncrementer incrementBy={13} canFinish={hasSent} shouldHide />
       <main className="flex-center h-[90vh]">
@@ -67,7 +68,8 @@ const ExtensionAuth = () => {
             <Link
               text="View dashboard"
               to="/vacancies"
-              className="primary sm"
+              className="flex-y sm rounded-md tracking-wide hover:bg-hover"
+              endIcon={<MdArrowRightAlt size={20} />}
               onClick={() => {
                 updateData({ hasConnectedExtension: true });
               }}

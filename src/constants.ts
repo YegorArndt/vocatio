@@ -26,6 +26,7 @@ export const publicRoutes = [
   "/login",
   "/landing",
   "/api/extension/addVacancy",
+  "/api/extension/updateUser",
 ];
 
 export const icons = {

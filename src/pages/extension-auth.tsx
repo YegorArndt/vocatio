@@ -12,6 +12,11 @@ import { RouterOutputs, api } from "~/utils/api";
 
 const { log } = console;
 
+type Err = {
+  name: string;
+  message: string;
+};
+
 const EXTENSION_ID_DEV = "aafhhnmdccfclebgdmndicbngcokddid";
 const EXTENSION_ID_PROD = "bknmlolcaccbfcedimgmpnfcjadfelbn";
 
@@ -29,9 +34,13 @@ export const useSendMessage = () => {
         chrome.runtime.sendMessage(id, { user }, function (response) {
           if (response.success) setHasSent(true);
         });
+      } else {
+        throw new Error("Reinstall the extension.");
       }
     } catch (e) {
-      toast.error("Something went wrong. Please try again later.");
+      const error =
+        (e as Err).message || "Something went wrong. Please try again later.";
+      toast.error(error);
     }
   };
 

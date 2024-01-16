@@ -113,6 +113,7 @@ export const TextEditorToolbar = (props: TextEditorToolbarProps) => {
               {
                 label: "gpt-4",
                 icon: <BlurImage src="/ai/gpt-4.png" />,
+                onClick: () => generateCoverLetter("gpt-4"),
               },
               {
                 label: "gpt-3.5-turbo-1106",
@@ -131,16 +132,12 @@ export const TextEditorToolbar = (props: TextEditorToolbarProps) => {
               {trigger.label}
             </MenubarTrigger>
             <MenubarContent className="bg-primary">
-              {actions.map(({ label, icon, ...rest }, index) => (
+              {actions.map(({ label, icon, onClick }, index) => (
                 <MenubarItem
                   key={label}
                   className="flex-y cursor-pointer gap-2 hover:bg-hover"
                   disabled={index !== 0}
-                  onClick={
-                    index === 0
-                      ? () => generateCoverLetter(label)
-                      : rest.onClick
-                  }
+                  onClick={onClick}
                 >
                   {icon}
                   {label}

@@ -31,6 +31,8 @@ import {
 } from "~/components/external/Drawer";
 import { Diff } from "./Diff";
 import { Blur } from "~/components/Blur";
+import { CoverLetterDrawer } from "./cover-letter/CoverLetterDrawer";
+import { A4_HEIGHT, A4_WIDTH } from "../constants";
 
 const { log } = console;
 
@@ -42,7 +44,7 @@ const downloadPdf = async (
   const a4 = a4Ref.current;
   if (!a4) return;
 
-  const pageCount = Math.ceil(a4.clientHeight / 1122);
+  const pageCount = Math.ceil(a4.clientHeight / A4_HEIGHT);
 
   const pdf = new jsPDF({
     format: "a4",
@@ -54,13 +56,13 @@ const downloadPdf = async (
   const height = pdf.internal.pageSize.getHeight();
 
   for (let i = 0; i < pageCount; i++) {
-    const yOffset = i * 1122;
+    const yOffset = i * A4_HEIGHT;
 
     const canvas = await html2canvas(a4, {
-      width: 793,
-      height: 1122,
-      windowHeight: 1122,
-      windowWidth: 793,
+      width: A4_WIDTH,
+      height: A4_HEIGHT,
+      windowHeight: A4_HEIGHT,
+      windowWidth: A4_WIDTH,
       y: yOffset,
       scrollY: -yOffset,
       useCORS: true,
@@ -129,6 +131,7 @@ export const Toolbar = () => {
           {user && vacancy && <Diff user={user} vacancy={vacancy} />}
         </DrawerContent>
       </Drawer>
+      <CoverLetterDrawer />
       <Button
         text="Download PDF"
         frontIcon={
@@ -189,7 +192,7 @@ export const Toolbar = () => {
         { text: "Condense spacing", icon: <BsArrowsCollapse /> },
         { text: "Condense text", icon: <FaTextHeight /> },
       ].map(({ text, icon }) => (
-        <TooltipProvider>
+        <TooltipProvider key={text}>
           <Tooltip>
             <TooltipTrigger
               className="common hover flex-y gap-3 whitespace-nowrap"

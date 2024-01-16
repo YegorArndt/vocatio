@@ -1,22 +1,23 @@
 import cn from "classnames";
-import {
+import type {
   DraftEmploymentHistoryEntry,
   EmploymentHistoryEntry,
   Vacancy,
 } from "@prisma/client";
-import { PropsWithChildren, ReactNode } from "react";
-import { BlurImage } from "~/components";
+import { type PropsWithChildren, type ReactNode } from "react";
 import { LiaExternalLinkAltSolid } from "react-icons/lia";
+
+import { BlurImage } from "~/components";
 import { vacancyUI } from "../../vacancies/constants";
 import { Link } from "~/components/ui/buttons/Link";
 import { useDraftContext } from "../DraftContext";
-import { RouterOutputs } from "~/utils/api";
+import { type RouterOutputs } from "~/utils/api";
 import {
+  AccordionTrigger,
   Accordion,
   AccordionItem,
   AccordionContent,
-} from "@radix-ui/react-accordion";
-import { AccordionTrigger } from "~/components/external/Accordion";
+} from "~/components/external/Accordion";
 
 const { log } = console;
 

@@ -57,7 +57,7 @@ const PrismaLayer = (props: { clerkUser: UserResource }) => {
         {userLoading && (
           <MessageContainer>
             <AnimatedDiv duration={2}>
-              🎉 Thank you for using Vocatio Beta
+              ✨ Thank you for using Vocatio Beta
             </AnimatedDiv>
             <AnimatedDiv duration={1000}>Authorizing...</AnimatedDiv>
           </MessageContainer>
@@ -70,7 +70,7 @@ const PrismaLayer = (props: { clerkUser: UserResource }) => {
         )}
         {(successCreating || user) && (
           <AnimatedDiv duration={1000}>
-            🎉 Success. Redirecting you to the vacancies page...
+            🎉 Success. Redirecting to your vacancies...
           </AnimatedDiv>
         )}
       </main>

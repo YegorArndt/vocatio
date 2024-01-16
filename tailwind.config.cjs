@@ -105,6 +105,8 @@ const config = {
       addUtilities({ ...textColorClasses, ...headingClasses });
     }),
     require("@tailwindcss/aspect-ratio"),
+    require("tailwindcss-animate"),
+
     // require("@tailwindcss/forms"),
   ],
 };

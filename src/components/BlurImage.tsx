@@ -10,7 +10,7 @@ export type BlurImageProps = {
   };
 
 export const BlurImage = (props: BlurImageProps) => {
-  const { className, height, width, alt = "", src, ...rest } = props;
+  const { className, height = 20, width = 20, alt = "", src, ...rest } = props;
   const [isLoading, setIsLoading] = useState(true);
 
   if (!src) return null;

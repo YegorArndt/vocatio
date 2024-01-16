@@ -15,6 +15,7 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import { Button } from "~/components/ui/buttons/Button";
 import { getDraftByVacancyId } from "~/utils/ls";
 import { toast } from "sonner";
+import { A4_HEIGHT, A4_WIDTH } from "~/modules/draft/constants";
 
 const { log } = console;
 
@@ -113,9 +114,6 @@ const CvBuilder = (props: { vacancyId: string }) => {
 };
 
 export default CvBuilder;
-
-const A4_HEIGHT = 1122;
-const A4_WIDTH = 793;
 
 const useA4 = () => {
   const [pages, setPages] = useState(1);

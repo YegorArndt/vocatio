@@ -86,7 +86,7 @@ You are a resume writer with the task of customizing a resume for a specific job
     Format of your response:
       Prefix each employment history entry with an "@" followed by its index (zero-based). Do not prefix the summary.
       Maintain a first-person narrative style. 
-      Translate the professional summary & employment histories into the language in which the vacancy is written. This is really important.
+      Translate the professional summary & employment histories into the language in which the key responsibilities are written. 
       Return only the reworded professional summary and tailored employment histories. Don't wrap them with quotation marks.
       Use fixed numbers for years of experience where necessary.`;
 

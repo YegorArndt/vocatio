@@ -46,7 +46,9 @@ export const VacancyCard = (props: { vacancy: Vacancy }) => {
   return (
     <div>
       <div
-        className={cn("clr-card relative rounded-md border bg-card shadow-md")}
+        className={cn(
+          "clr-card relative rounded-md border bg-card shadow-md hover:border-white"
+        )}
       >
         <VacancyCardHeader vacancy={vacancy} />
         <Link

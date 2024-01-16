@@ -64,27 +64,12 @@ export const Spinner = (props: DecoProps) => {
 
 export const CardSkeleton = () => {
   return (
-    <div className="flex flex-col rounded-md border bg-card [&>*]:p-4">
-      <header className="flex-y gap-8 [&>*]:rounded-full">
-        <i className="skeleton h-[70px] min-w-[70px]" />
-        <i className="skeleton h-5 w-full" />
-        <i className="skeleton h-5 w-8" />
-      </header>
-      <LineStack
-        length={3}
-        className="ml-1 !gap-0 [&>*:first-child]:max-w-[180px]"
-      />
-      <LineStack
-        length={1}
-        className="border-top border-bottom [&>*]:flex-row-reverse [&>*]:justify-between"
-      />
-      <LineStack className="!flex-row [&>*]:basis-[30%]" />
-    </div>
+    <div className="skeleton flex h-[170px] flex-col rounded-md border bg-card" />
   );
 };
 
 export const CardStack = (props: DecoProps) => {
-  const { className, length = 6 } = props;
+  const { className, length = 8 } = props;
 
   return (
     <div className={cn("card-grid", className)}>

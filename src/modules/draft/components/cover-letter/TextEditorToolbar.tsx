@@ -137,7 +137,7 @@ export const TextEditorToolbar = (props: TextEditorToolbarProps) => {
                   className="flex-y cursor-pointer gap-2 hover:bg-hover"
                   disabled={index !== 0}
                   onClick={
-                    index === 1
+                    index === 0
                       ? () => generateCoverLetter(label)
                       : rest.onClick
                   }

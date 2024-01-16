@@ -125,7 +125,7 @@ export const ComponentToolbar = (props: ComponentToolbarProps) => {
         data-html2canvas-ignore
         render={() => {
           return (
-            <div className="flex-center gap-1">
+            <div className="flex-center gap-1" data-html2canvas-ignore>
               <span
                 {...listeners}
                 {...attributes}

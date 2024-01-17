@@ -36,6 +36,7 @@ import { A4_HEIGHT, A4_WIDTH } from "../constants";
 import { toast } from "sonner";
 import { useForm } from "react-hook-form";
 import { usePersistantData } from "~/hooks/usePersistantData";
+import { PiFilePdf } from "react-icons/pi";
 
 const { log } = console;
 
@@ -116,14 +117,17 @@ const MoveToAppliedButton = (props: { vacancyId: string }) => {
   return (
     <div className="flex w-full flex-col gap-2">
       <header className="flex-between w-full gap-2">
-        Downloaded PDF. Move vacancy to applied?
-        <div className="flex-y gap-2">
+        <div>
+          <PiFilePdf /> Downloaded PDF. <br />
+          Move vacancy to applied?
+        </div>
+        <div className="flex flex-col gap-2">
           {["Yes", "No"].map((text, index) => (
             <Button
               key={text}
               text={text}
               onClick={() => moveToApplied(index === 0)}
-              baseCn="!cursor-pointer clr-white x-sm rounded-md"
+              baseCn="!cursor-pointer clr-white x-sm rounded-md whitespace-nowrap"
               className={index === 0 ? "bg-green" : "bg-red"}
               disabled={isLoading}
             />

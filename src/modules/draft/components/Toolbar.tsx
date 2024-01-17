@@ -117,12 +117,14 @@ const MoveToAppliedButton = (props: { vacancyId: string }) => {
   return (
     <div className="flex w-full flex-col gap-2">
       <header className="flex-between w-full gap-2">
-        <div>
-          <PiFilePdf /> Downloaded PDF. <br />
+        <div className="flex flex-col">
+          <span className="flex-y gap-2">
+            <PiFilePdf size={20} /> Downloaded PDF.
+          </span>
           Move vacancy to applied?
         </div>
         <div className="flex flex-col gap-2">
-          {["Yes", "No"].map((text, index) => (
+          {["Yep", "No"].map((text, index) => (
             <Button
               key={text}
               text={text}

@@ -136,7 +136,7 @@ const Section = (props: Section & Pick<DndProviderProps, "decorated">) => {
       items={components}
       strategy={verticalListSortingStrategy}
     >
-      <section ref={setNodeRef} className={className}>
+      <ul ref={setNodeRef} className={className}>
         {components.map((c, i) => (
           <ComponentContext.Provider key={c.id} value={c}>
             <SortableItem decorated={decorated}>
@@ -148,7 +148,7 @@ const Section = (props: Section & Pick<DndProviderProps, "decorated">) => {
             </SortableItem>
           </ComponentContext.Provider>
         ))}
-      </section>
+      </ul>
     </SortableContext>
   );
 };

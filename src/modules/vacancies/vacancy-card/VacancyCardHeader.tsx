@@ -23,6 +23,7 @@ import { useVacanciesContext } from "../VacanciesContext";
 import { omit } from "lodash-es";
 import { Link } from "~/components/ui/buttons/Link";
 import { defaultGroups } from "../constants";
+import { Diamond } from "~/components/icons";
 
 const { log } = console;
 
@@ -131,7 +132,9 @@ export const VacancyCardHeader = (props: { vacancy: Vacancy }) => {
                 onClick={() => updateGroup(name)}
               >
                 {groupedVacancies[name]?.icon ||
-                  defaultGroups[name as keyof typeof defaultGroups]?.icon}
+                  defaultGroups[name as keyof typeof defaultGroups]?.icon || (
+                    <Diamond />
+                  )}
                 {groupedVacancies[name]?.label}
               </CustomMenuItem>
             );

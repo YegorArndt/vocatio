@@ -37,7 +37,7 @@ const CvBuilder = (props: { vacancyId: string }) => {
 
   const draft = getDraftByVacancyId(vacancyId);
 
-  const { a4Ref, a4Height, a4Width, pages, setPages } = useA4();
+  const { a4Ref, pages, setPages } = useA4();
 
   const { data: vacancy } = api.vacancies.getById.useQuery({ id: vacancyId });
 
@@ -66,8 +66,8 @@ const CvBuilder = (props: { vacancyId: string }) => {
                   ref={a4Ref}
                   className={cn("a4 main-center", context.design.a4)}
                   style={{
-                    height: a4Height * pages,
-                    width: a4Width,
+                    height: A4_HEIGHT * pages,
+                    width: A4_WIDTH,
                     fontFamily: context.design.font,
                   }}
                 >
@@ -93,8 +93,8 @@ const CvBuilder = (props: { vacancyId: string }) => {
             <div
               className="a4 main-center skeleton rounded-md"
               style={{
-                height: a4Height * pages,
-                width: a4Width,
+                height: A4_HEIGHT * pages,
+                width: A4_WIDTH,
               }}
             />
             <div className="right-aside skeleton rounded-md" />
@@ -105,7 +105,7 @@ const CvBuilder = (props: { vacancyId: string }) => {
         <PageBreak
           key={i}
           style={{
-            top: 64 + a4Height * (i + 1),
+            top: 64 + A4_HEIGHT * (i + 1),
           }}
         />
       ))}
@@ -133,5 +133,5 @@ const useA4 = () => {
     return () => observer.disconnect();
   }, [a4Ref.current]);
 
-  return { a4Ref, a4Height: A4_HEIGHT, a4Width: A4_WIDTH, pages, setPages };
+  return { a4Ref, pages, setPages };
 };

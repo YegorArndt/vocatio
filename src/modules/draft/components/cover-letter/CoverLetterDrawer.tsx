@@ -42,14 +42,14 @@ export const CoverLetterDrawer = () => {
         Cover letter
       </DrawerTrigger>
       {defaultValues && (
-        <DrawerContent className="flex h-screen flex-col gap-5 bg-primary clr-primary">
-          <header className="grid grid-cols-3 gap-2 p-5">
-            <FormContext
-              form={{
-                defaultValues,
-              }}
-            >
-              {({ control }) => (
+        <FormContext
+          form={{
+            defaultValues,
+          }}
+        >
+          {({ control }) => (
+            <DrawerContent className="flex h-screen flex-col gap-5 bg-primary clr-primary">
+              <header className="grid grid-cols-3 gap-2 p-5">
                 <label className="flex-y gap-4 whitespace-nowrap text-[0.8rem]">
                   File name:
                   <Text
@@ -58,24 +58,24 @@ export const CoverLetterDrawer = () => {
                     className="outlined"
                   />
                 </label>
-              )}
-            </FormContext>
 
-            <DrawerHandle />
+                <DrawerHandle />
 
-            <span className="flex-y justify-end font-normal">
-              <BlurImage
-                src={vacancy?.image}
-                height={40}
-                width={40}
-                className="ml-4 mr-2 shrink-0 rounded-full"
-              />
-              <b>{vacancy?.companyName}</b>
-            </span>
-          </header>
+                <span className="flex-y justify-end font-normal">
+                  <BlurImage
+                    src={vacancy?.image}
+                    height={40}
+                    width={40}
+                    className="ml-4 mr-2 shrink-0 rounded-full"
+                  />
+                  <b>{vacancy?.companyName}</b>
+                </span>
+              </header>
 
-          {user && vacancy && <TextEditor vacancy={vacancy} user={user} />}
-        </DrawerContent>
+              {user && vacancy && <TextEditor vacancy={vacancy} user={user} />}
+            </DrawerContent>
+          )}
+        </FormContext>
       )}
     </Drawer>
   );

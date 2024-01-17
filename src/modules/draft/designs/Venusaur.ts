@@ -270,7 +270,7 @@ export const Venusaur: RawDesign = {
       id: "top-left",
       components: topLeft,
       className:
-        "top-left [&>*:first-child]:mt-[32px] flex flex-col items-center bg-[#323B4C] text-[#fff] [&_.image]:mx-auto [&_div:not(:first-child)>.heading-2]:mt-[12px] [&_.text]:mb-[4px] [&_.text]:text-[14px] [&>*:last-child]:mb-[48px]",
+        "top-left [&>*:first-child]:mt-[32px] flex flex-col items-center bg-[#323B4C] text-[#fff] [&_.image]:mx-auto [&_li:not(:first-child)>.heading-2]:mt-[12px] [&_.text]:mb-[4px] [&_.text]:text-[14px] [&>*:last-child]:mb-[48px]",
     },
     "top-right": {
       id: "top-right",
@@ -282,13 +282,13 @@ export const Venusaur: RawDesign = {
       id: "left",
       components: left,
       className:
-        "left flex flex-col [&_section]:mb-[16px] items-center bg-[#323B4C] text-[#fff] [&_.image]:mx-auto [&_div:not(:first-child)>.heading-2]:mt-3 [&_.group]:mb-[8px] [&_.group]:grid-cols-[100px,1fr]",
+        "left flex flex-col [&_section]:mb-[16px] items-center bg-[#323B4C] text-[#fff] [&_.image]:mx-auto [&_li:not(:first-child)>.heading-2]:mt-3 [&_.group]:mb-[8px] [&_.group]:grid-cols-[100px,1fr]",
     },
     right: {
       id: "right",
       components: right,
       className:
-        "right [&_section]:mb-[16px] bg-white text-[#000] [&_.heading-1]:text-[#323B4C] [&_.heading-2]:text-[#323B4C] !pr-2 [&_div:not(:first-child)>.heading-2]:pt-[12px] [&_.text]:text-[12px] [&_.group]:grid-cols-2",
+        "right [&_section]:mb-[16px] bg-white text-[#000] [&_.heading-1]:text-[#323B4C] [&_.heading-2]:text-[#323B4C] !pr-2 [&_ul:not(:first-child)>.heading-2]:pt-[12px] [&_.text]:text-[12px] [&_.group]:grid-cols-2",
     },
   },
   intrinsic: {

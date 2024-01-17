@@ -48,7 +48,7 @@ type ComponentToolbarProps = PropsWithChildren<{
   decorated?: boolean;
   className?: string;
 }> &
-  HTMLAttributes<HTMLDivElement>;
+  HTMLAttributes<HTMLLIElement>;
 
 export const ComponentToolbar = (props: ComponentToolbarProps) => {
   const {
@@ -96,7 +96,7 @@ export const ComponentToolbar = (props: ComponentToolbarProps) => {
   );
 
   return (
-    <div
+    <li
       ref={dndRef}
       data-tooltip-id={id}
       className={className}
@@ -343,6 +343,6 @@ export const ComponentToolbar = (props: ComponentToolbarProps) => {
           );
         }}
       />
-    </div>
+    </li>
   );
 };

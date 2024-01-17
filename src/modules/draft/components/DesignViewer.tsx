@@ -43,7 +43,7 @@ export const DesignViewer = () => {
                 alt={d.name}
                 className="transform cursor-pointer transition hover:-translate-y-1 motion-reduce:transition-none"
               />
-              <p className="flex-center mt-2 gap-2">
+              <footer className="flex-center mt-2 gap-2">
                 <BlurImage
                   src={`/designs/${d.pokemonImage}`}
                   height={40}
@@ -51,7 +51,7 @@ export const DesignViewer = () => {
                   alt={d.name}
                 />
                 {d.name}
-              </p>
+              </footer>
             </div>
           ))}
       </div>

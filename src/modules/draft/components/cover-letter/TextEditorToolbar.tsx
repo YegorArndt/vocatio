@@ -23,6 +23,7 @@ type TextEditorToolbarProps = {
   user: RouterOutputs["users"]["get"];
   methods: {
     onCopy: () => void;
+    onDownloadPdf: () => void;
     onGenerate: (generatedCoverLetter: string) => void;
   };
 };
@@ -41,7 +42,7 @@ const getPrompt = (props: Record<string, string>) => {
 export const TextEditorToolbar = (props: TextEditorToolbarProps) => {
   const { vacancy, user, methods } = props;
 
-  const { onCopy, onGenerate } = methods;
+  const { onCopy, onGenerate, onDownloadPdf } = methods;
 
   const generateCoverLetter = async (model: string) => {
     toast.loading(`Generating cover letter with ${model}`, {
@@ -97,6 +98,7 @@ export const TextEditorToolbar = (props: TextEditorToolbarProps) => {
               {
                 label: "Download .pdf",
                 icon: <PiFilePdf />,
+                onClick: onDownloadPdf,
               },
               {
                 label: "Download .docx",
@@ -125,7 +127,7 @@ export const TextEditorToolbar = (props: TextEditorToolbarProps) => {
               },
             ],
           },
-        ].map(({ trigger, actions }, index) => (
+        ].map(({ trigger, actions }) => (
           <MenubarMenu key={trigger.label}>
             <MenubarTrigger className="flex-y cursor-pointer gap-2">
               {trigger.icon}
@@ -136,7 +138,7 @@ export const TextEditorToolbar = (props: TextEditorToolbarProps) => {
                 <MenubarItem
                   key={label}
                   className="flex-y cursor-pointer gap-2 hover:bg-hover"
-                  disabled={index !== 0}
+                  disabled={!Boolean(onClick)}
                   onClick={onClick}
                 >
                   {icon}

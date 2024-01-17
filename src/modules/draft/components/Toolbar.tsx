@@ -1,5 +1,5 @@
 import type { User, Vacancy } from "@prisma/client";
-import { type RefObject, useState, useEffect } from "react";
+import { type RefObject, useState } from "react";
 import { BsArrowsCollapse } from "react-icons/bs";
 import { FaTextHeight } from "react-icons/fa";
 import { RiFontSansSerif } from "react-icons/ri";
@@ -83,28 +83,9 @@ const downloadPdf = async (
 
 const MoveToAppliedButton = (props: { vacancyId: string }) => {
   const { vacancyId } = props;
-  const [timer, setTimer] = useState(10);
 
   const { mutate: updateVacancy, isLoading } =
     api.vacancies.upsert.useMutation();
-
-  useEffect(() => {
-    let interval: NodeJS.Timeout;
-
-    interval = setInterval(() => {
-      setTimer((prevTimer) => {
-        if (prevTimer === 1) {
-          toast.dismiss("move-to-applied");
-          return prevTimer;
-        }
-
-        return prevTimer - 1;
-      });
-    }, 1000);
-
-    // Cleanup interval on component unmount
-    return () => clearInterval(interval);
-  }, [timer]);
 
   const moveToApplied = (shouldMove: boolean) => {
     toast.dismiss("move-to-applied");
@@ -119,9 +100,7 @@ const MoveToAppliedButton = (props: { vacancyId: string }) => {
 
   return (
     <div className="flex-between w-full gap-2">
-      <span className="flex-y gap-3">
-        <span>{timer}</span>Move vacancy to applied?
-      </span>
+      Move vacancy to applied?
       <div className="flex-y gap-2">
         {["Yes", "No"].map((text, index) => (
           <Button
@@ -208,7 +187,7 @@ export const Toolbar = () => {
           void downloadPdf(a4Ref, user!.name, vacancy!.companyName);
           toast.success(<MoveToAppliedButton vacancyId={vacancy!.id} />, {
             id: "move-to-applied",
-            duration: 10000,
+            duration: Infinity,
           });
         }}
         className="common hover flex-y gap-1"

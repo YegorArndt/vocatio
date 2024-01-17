@@ -101,7 +101,7 @@ const MoveToAppliedButton = (props: { vacancyId: string }) => {
 
     if (shouldAutoMoveToApplied) {
       updateData({
-        shouldAutoMoveToApplied: shouldMove,
+        shouldAutoMoveToApplied,
       });
     }
 

@@ -221,7 +221,7 @@ export const Toolbar = () => {
 
           toast.success(message, {
             id: "move-to-applied",
-            duration: ls.shouldAutoMoveToApplied ? undefined : Infinity,
+            duration: ls.shouldAutoMoveToApplied ? undefined : 30000,
           });
         }}
         className="common hover flex-y gap-1"

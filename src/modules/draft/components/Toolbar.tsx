@@ -34,6 +34,8 @@ import { Blur } from "~/components/Blur";
 import { CoverLetterDrawer } from "./cover-letter/CoverLetterDrawer";
 import { A4_HEIGHT, A4_WIDTH } from "../constants";
 import { toast } from "sonner";
+import { useForm } from "react-hook-form";
+import { usePersistantData } from "~/hooks/usePersistantData";
 
 const { log } = console;
 
@@ -84,11 +86,24 @@ const downloadPdf = async (
 const MoveToAppliedButton = (props: { vacancyId: string }) => {
   const { vacancyId } = props;
 
+  const { updateData } = usePersistantData();
+
+  const { register, watch } = useForm();
+
   const { mutate: updateVacancy, isLoading } =
     api.vacancies.upsert.useMutation();
 
   const moveToApplied = (shouldMove: boolean) => {
     toast.dismiss("move-to-applied");
+
+    const shouldAutoMoveToApplied = watch("shouldAutoMoveToApplied");
+
+    if (shouldAutoMoveToApplied) {
+      updateData({
+        shouldAutoMoveToApplied: shouldMove,
+      });
+    }
+
     if (!shouldMove) return;
 
     void updateVacancy({
@@ -99,20 +114,26 @@ const MoveToAppliedButton = (props: { vacancyId: string }) => {
   };
 
   return (
-    <div className="flex-between w-full gap-2">
-      Move vacancy to applied?
-      <div className="flex-y gap-2">
-        {["Yes", "No"].map((text, index) => (
-          <Button
-            key={text}
-            text={text}
-            onClick={() => moveToApplied(index === 0)}
-            baseCn="!cursor-pointer clr-white sm rounded-md"
-            className={index === 0 ? "bg-green" : "bg-red"}
-            disabled={isLoading}
-          />
-        ))}
-      </div>
+    <div className="flex w-full flex-col gap-2">
+      <header className="flex-between w-full gap-2">
+        Downloaded PDF. Move vacancy to applied?
+        <div className="flex-y gap-2">
+          {["Yes", "No"].map((text, index) => (
+            <Button
+              key={text}
+              text={text}
+              onClick={() => moveToApplied(index === 0)}
+              baseCn="!cursor-pointer clr-white x-sm rounded-md"
+              className={index === 0 ? "bg-green" : "bg-red"}
+              disabled={isLoading}
+            />
+          ))}
+        </div>
+      </header>
+      <label className="flex-y gap-2 text-[12px]">
+        <input type="checkbox" {...register("shouldAutoMoveToApplied")} />
+        Always move to applied
+      </label>
     </div>
   );
 };
@@ -148,6 +169,8 @@ export const Toolbar = () => {
     api.vacancies.getById.useQuery({ id: draft.vacancyId });
 
   const [filter, setFilter] = useState("");
+
+  const { ls } = usePersistantData();
 
   return (
     <>
@@ -185,9 +208,16 @@ export const Toolbar = () => {
         }
         onClick={() => {
           void downloadPdf(a4Ref, user!.name, vacancy!.companyName);
-          toast.success(<MoveToAppliedButton vacancyId={vacancy!.id} />, {
+
+          const message = ls.shouldAutoMoveToApplied ? (
+            "Downloaded PDF and moved to ✅ applied"
+          ) : (
+            <MoveToAppliedButton vacancyId={vacancy!.id} />
+          );
+
+          toast.success(message, {
             id: "move-to-applied",
-            duration: Infinity,
+            duration: ls.shouldAutoMoveToApplied ? undefined : Infinity,
           });
         }}
         className="common hover flex-y gap-1"

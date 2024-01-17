@@ -12,6 +12,7 @@ export type LsNotification = {
 
 export type PersistantData = {
   isDndMode: boolean;
+  shouldAutoMoveToApplied: boolean;
   hasConnectedExtension: boolean;
   notifications: LsNotification[];
 };
@@ -22,6 +23,7 @@ export const initialPersistedState: PersistantData = {
   isDndMode: false,
   notifications: [],
   hasConnectedExtension: false,
+  shouldAutoMoveToApplied: false,
 };
 
 export const getPersistedState = (): PersistantData => {

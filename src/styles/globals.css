@@ -276,6 +276,9 @@
   .sm:is(button, a) {
     @apply h-8 px-3 text-default leading-5;
   }
+  .x-sm:is(button, a) {
+    @apply h-5 px-2 leading-3;
+  }
 
   .primary:is(button, a) {
     @apply inline-flex items-center justify-center rounded-md;

@@ -33,7 +33,7 @@ export const VacancyCardHeader = (props: { vacancy: Vacancy }) => {
 
   const groupKeys = typedKeys(omit(groupedVacancies, "all"));
 
-  const { mutate: update } = api.vacancies.upsert.useMutation({});
+  const { mutate: update } = api.vacancies.upsert.useMutation();
   const { mutate: deleteVacancy } = api.vacancies.deleteForUser.useMutation();
 
   const updateGroup = (newGroup: string) => {

@@ -1,5 +1,5 @@
 import type { User, Vacancy } from "@prisma/client";
-import { type RefObject, useState } from "react";
+import { type RefObject, useState, useEffect } from "react";
 import { BsArrowsCollapse } from "react-icons/bs";
 import { FaTextHeight } from "react-icons/fa";
 import { RiFontSansSerif } from "react-icons/ri";
@@ -33,6 +33,7 @@ import { Diff } from "./Diff";
 import { Blur } from "~/components/Blur";
 import { CoverLetterDrawer } from "./cover-letter/CoverLetterDrawer";
 import { A4_HEIGHT, A4_WIDTH } from "../constants";
+import { toast } from "sonner";
 
 const { log } = console;
 
@@ -78,6 +79,63 @@ const downloadPdf = async (
   }
 
   pdf.save(`${snakeCase(userName)}_${companyName}.pdf`);
+};
+
+const MoveToAppliedButton = (props: { vacancyId: string }) => {
+  const { vacancyId } = props;
+  const [timer, setTimer] = useState(10);
+
+  const { mutate: updateVacancy, isLoading } =
+    api.vacancies.upsert.useMutation();
+
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+
+    interval = setInterval(() => {
+      setTimer((prevTimer) => {
+        if (prevTimer === 1) {
+          toast.dismiss("move-to-applied");
+          return prevTimer;
+        }
+
+        return prevTimer - 1;
+      });
+    }, 1000);
+
+    // Cleanup interval on component unmount
+    return () => clearInterval(interval);
+  }, [timer]);
+
+  const moveToApplied = (shouldMove: boolean) => {
+    toast.dismiss("move-to-applied");
+    if (!shouldMove) return;
+
+    void updateVacancy({
+      id: vacancyId,
+      group: "applied",
+    });
+    toast.success("Moved to ✅ applied");
+  };
+
+  return (
+    <div className="flex-between w-full gap-2">
+      <span className="flex-y gap-3">
+        <span>{timer}</span>Move vacancy to applied?
+      </span>
+      <div className="flex-y gap-2">
+        {["Yes", "No"].map((text, index) => (
+          <Button
+            key={text}
+            text={text}
+            onClick={() => moveToApplied(index === 0)}
+            baseCn="!cursor-pointer clr-white sm rounded-md"
+            className={index === 0 ? "bg-green" : "bg-red"}
+            disabled={isLoading}
+          />
+        ))}
+      </div>
+    </div>
+  );
 };
 
 const fonts = [
@@ -146,9 +204,13 @@ export const Toolbar = () => {
             />
           )
         }
-        onClick={() =>
-          void downloadPdf(a4Ref, user!.name, vacancy!.companyName)
-        }
+        onClick={() => {
+          void downloadPdf(a4Ref, user!.name, vacancy!.companyName);
+          toast.success(<MoveToAppliedButton vacancyId={vacancy!.id} />, {
+            id: "move-to-applied",
+            duration: 10000,
+          });
+        }}
         className="common hover flex-y gap-1"
         disabled={vacancyLoading}
       />

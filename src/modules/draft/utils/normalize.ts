@@ -1,11 +1,16 @@
 import type { LsDraft } from "../types";
 import type {
-  ComponentToNormalize,
   NormalizedComponent,
   NormalizedProps,
   NormalizedType,
 } from "../types/components";
+import { RawComponent } from "../types/raw";
+import { SectionId } from "../types/sections";
 import { typedKeys } from "./common";
+
+export type ComponentToNormalize = RawComponent & {
+  sectionId: SectionId;
+};
 
 export const tooltips: Record<NormalizedType, string> = {
   text: "Text",

@@ -14,8 +14,9 @@ const mainNav = [
   { text: "My vacancies", to: "/vacancies", frontIcon: <FaLaptopCode /> },
   {
     text: "Preferences",
-    to: "/preferences/my-data",
+    to: "/preferences/my-info",
     frontIcon: <IoSettingsOutline />,
+    activeIfIncludes: ["customize-ai", "updateKey"],
   },
 ].map((props) => (
   <NavigationLink

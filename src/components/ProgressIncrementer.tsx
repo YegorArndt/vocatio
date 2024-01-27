@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Progress } from "~/components/external/Progress";
+import { Progress } from "~/components/ui/external/Progress";
 import { cn } from "~/utils";
 
 type ProgressIncrementerProps = {

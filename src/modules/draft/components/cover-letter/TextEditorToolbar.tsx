@@ -3,7 +3,6 @@ import { CiFileOn } from "react-icons/ci";
 import { PiFilePdf } from "react-icons/pi";
 import { SiMicrosoftword } from "react-icons/si";
 import { toast } from "sonner";
-import { type Vacancy } from "@prisma/client";
 
 import {
   Menubar,
@@ -11,16 +10,24 @@ import {
   MenubarTrigger,
   MenubarContent,
   MenubarItem,
-} from "~/components/external/MenuBar";
+} from "~/components/ui/external/MenuBar";
 import { BlurImage } from "~/components";
 import { Gpt } from "~/icons";
-import { hfFormat, applyGpt } from "~/server/api/utils/ai";
-import { RouterOutputs } from "~/utils/api";
+import {
+  hfFormat,
+  applyGpt,
+  instruct,
+  cleanAiOutput,
+} from "~/server/api/utils/ai";
 import { COVER_LETTER_FIELD } from "./constants";
+import { Badge } from "~/components/ui/external/Badge";
+import { Models, PartialVacancy, RouterUser } from "~/modules/extension/types";
+import { useDraftContext } from "../../DraftContext";
+import { LsDraft } from "../../types";
 
 type TextEditorToolbarProps = {
-  vacancy: Vacancy;
-  user: RouterOutputs["users"]["get"];
+  vacancy: PartialVacancy;
+  user: RouterUser;
   methods: {
     onCopy: () => void;
     onDownloadPdf: () => void;
@@ -28,41 +35,50 @@ type TextEditorToolbarProps = {
   };
 };
 
-const getPrompt = (props: Record<string, string>) => {
-  const { vacancyDescription, employmentHistory, professionalSummary, name } =
-    props;
-  return `Write a cover letter for the following vacancy posting: ${vacancyDescription}. 
-        My employment history: ${employmentHistory}. 
+const getPrompt = (draft: LsDraft) => {
+  const { experience, professionalSummary, name, vacancy } = draft;
+  return `Write a cover letter for the following vacancy posting: ${
+    vacancy.description
+  }. 
+        My employment history: ${draft.experience
+          .map((x) => `${x.description}`)
+          .join(", ")}. 
         My professional summary: ${professionalSummary}. 
-        My name is ${name}.
-        Format: ${hfFormat}. Use professional tone. Use the common structure of a cover letter Make it sound more like a human, not AI.
+        My name: ${name}.
+        My contact info: ${draft.contact
+          .map((x) => `${x.name}: ${x.value}`)
+          .join(", ")}.
+        Date: ${new Date().toLocaleDateString()}.
+        Email: ${draft.email}.
+        Format: ${hfFormat}. Use professional tone. Use the common structure of a cover letter. Make it sound more like a human, not AI! Write the cover letter in the language in which the vacancy posting is written. We do not know any contact data on the receiver.
     `;
 };
 
 export const TextEditorToolbar = (props: TextEditorToolbarProps) => {
-  const { vacancy, user, methods } = props;
+  const { methods } = props;
+
+  const { draft } = useDraftContext();
 
   const { onCopy, onGenerate, onDownloadPdf } = methods;
 
-  const generateCoverLetter = async (model: string) => {
+  const generateCoverLetter = async (model: Models) => {
     toast.loading(`Generating cover letter with ${model}`, {
       id: COVER_LETTER_FIELD,
       duration: Infinity,
     });
 
-    const generatedCoverLetter = await applyGpt([
-      {
-        role: "system",
-        content: getPrompt({
-          vacancyDescription: vacancy.description!,
-          employmentHistory: user.employmentHistory
-            .map((x) => x.description)
-            .join(" "),
-          professionalSummary: user.professionalSummary!,
-          name: user.name,
-        }),
-      },
-    ]);
+    let generatedCoverLetter;
+
+    const prompt = getPrompt(draft);
+
+    if (model === "gpt-3.5") {
+      generatedCoverLetter = await applyGpt(prompt, model);
+    } else {
+      const clByMixtral = await instruct(prompt, { max_new_tokens: 2000 });
+      generatedCoverLetter = cleanAiOutput(clByMixtral.generated_text, [
+        prompt,
+      ]);
+    }
 
     toast.dismiss(COVER_LETTER_FIELD);
 
@@ -94,6 +110,7 @@ export const TextEditorToolbar = (props: TextEditorToolbarProps) => {
                 label: "Copy as text",
                 icon: <BiCopy />,
                 onClick: onCopy,
+                badge: null,
               },
               {
                 label: "Download .pdf",
@@ -108,22 +125,32 @@ export const TextEditorToolbar = (props: TextEditorToolbarProps) => {
           },
           {
             trigger: {
-              label: "Generate cover letter",
+              label: "Generate cover letter with",
               icon: <Gpt />,
             },
             actions: [
               {
                 label: "gpt-4",
-                icon: <BlurImage src="/ai/gpt-4.png" />,
-                onClick: () => generateCoverLetter("gpt-4"),
+                icon: (
+                  <BlurImage src="/ai/gpt-4.png" className="rounded-full" />
+                ),
+                badge: "most cabable",
+                // onClick: () => generateCoverLetter("gpt-4"),
+                disabled: true,
               },
               {
-                label: "gpt-3.5-turbo-1106",
-                icon: <BlurImage src="/ai/gpt-3.png" />,
+                label: "gpt-3.5",
+                icon: (
+                  <BlurImage src="/ai/gpt-3.png" className="rounded-full" />
+                ),
+                badge: "in between",
+                onClick: () => generateCoverLetter("gpt-3.5"),
               },
               {
-                label: "mistralai/Mistral-7B-Instruct-v0.2",
+                label: "mixtral",
                 icon: <BlurImage src="/ai/mistral.png" />,
+                badge: "fastest",
+                onClick: () => generateCoverLetter("mixtral"),
               },
             ],
           },
@@ -134,15 +161,16 @@ export const TextEditorToolbar = (props: TextEditorToolbarProps) => {
               {trigger.label}
             </MenubarTrigger>
             <MenubarContent className="bg-primary">
-              {actions.map(({ label, icon, onClick }, index) => (
+              {actions.map(({ label, icon, onClick, badge }) => (
                 <MenubarItem
                   key={label}
                   className="flex-y cursor-pointer gap-2 hover:bg-hover"
-                  disabled={!Boolean(onClick)}
+                  disabled={!onClick}
                   onClick={onClick}
                 >
                   {icon}
                   {label}
+                  {badge && <Badge variant="outline">{badge}</Badge>}
                 </MenubarItem>
               ))}
             </MenubarContent>

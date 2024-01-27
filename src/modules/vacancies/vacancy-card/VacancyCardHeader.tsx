@@ -4,7 +4,7 @@ import {
   TooltipContent,
   Tooltip,
   TooltipProvider,
-} from "~/components/external/Tooltip";
+} from "~/components/ui/external/Tooltip";
 import { MenuHeader, SubMenu } from "@szhsin/react-menu";
 import { BsThreeDots } from "react-icons/bs";
 import { FaLinkedin } from "react-icons/fa";
@@ -12,10 +12,10 @@ import { LiaEditSolid } from "react-icons/lia";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { toast } from "sonner";
 import { BlurImage } from "~/components";
-import { CustomMenu } from "~/components/external/CustomMenu";
-import { CustomMenuButton } from "~/components/external/CustomMenuButton";
-import { CustomMenuItem } from "~/components/external/CustomMenuItem";
-import { DrawerTrigger } from "~/components/external/Drawer";
+import { CustomMenu } from "~/components/ui/external/CustomMenu";
+import { CustomMenuButton } from "~/components/ui/external/CustomMenuButton";
+import { CustomMenuItem } from "~/components/ui/external/CustomMenuItem";
+import { DrawerTrigger } from "~/components/ui/external/Drawer";
 import { typedKeys } from "~/modules/draft/utils/common";
 import { api, cn } from "~/utils";
 import { EditVacancyDrawer } from "../EditVacancyDrawer";

@@ -1,9 +1,8 @@
 import { HfInference, TextGenerationArgs } from "@huggingface/inference";
-import {
-  type ChatCompletionRequestMessage,
-  Configuration,
-  OpenAIApi,
-} from "openai";
+import { Configuration, OpenAIApi } from "openai";
+import { Models } from "~/modules/extension/types";
+
+const { log } = console;
 
 export const inference = new HfInference(process.env.HF_API_KEY);
 
@@ -75,12 +74,29 @@ export const answerQuestion = async (question: string, context: string) =>
     },
   });
 
-export const applyGpt = async (messages: ChatCompletionRequestMessage[]) => {
-  const response = await openai.createChatCompletion({
-    // model: "gpt-3.5-turbo-1106",
-    model: "gpt-4",
-    messages,
-  });
+export const applyGpt = async (prompt: string, model: Models = "gpt-3.5") => {
+  let response;
 
-  return response?.data?.choices?.[0]?.message?.content;
+  if (model === "gpt-3.5") {
+    // response = await openai.createCompletion({
+    //   model: "gpt-3.5-turbo",
+    //   prompt,
+    // });
+
+    // return response?.data?.choices?.[0]?.text;
+
+    response = await openai.createChatCompletion({
+      model: "gpt-3.5-turbo-1106",
+      messages: [{ role: "system", content: prompt }],
+    });
+
+    return response?.data?.choices?.[0]?.message?.content;
+  } else if (model === "gpt-4") {
+    response = await openai.createChatCompletion({
+      model: "gpt-4",
+      messages: [{ role: "system", content: prompt }],
+    });
+
+    return response?.data?.choices?.[0]?.message?.content;
+  }
 };

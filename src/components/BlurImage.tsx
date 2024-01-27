@@ -1,19 +1,28 @@
-import { useState } from "react";
+import { ReactNode, useState } from "react";
 import Image, { type ImageProps } from "next/image";
 import cn from "classnames";
 
 export type BlurImageProps = {
   imageClassName?: string;
+  fallback?: ReactNode;
 } & Omit<ImageProps, "alt" | "src"> & {
     alt?: string;
     src: string | undefined | null;
   };
 
 export const BlurImage = (props: BlurImageProps) => {
-  const { className, height = 20, width = 20, alt = "", src, ...rest } = props;
+  const {
+    className,
+    height = 25,
+    width = 25,
+    alt = "",
+    src,
+    fallback,
+    ...rest
+  } = props;
   const [isLoading, setIsLoading] = useState(true);
 
-  if (!src) return null;
+  if (!src) return fallback || null;
 
   return (
     <div className={cn("bg-gray-200 shrink-0 overflow-hidden", className)}>

@@ -1,5 +1,5 @@
 import type { NormalizedComponent, NormalizedType } from "./components";
-import type { RawSections, Sections } from "./sections";
+import type { Sections } from "./sections";
 
 export type Intrinsic = Partial<
   Record<NormalizedType, Partial<NormalizedComponent["props"]>>
@@ -14,8 +14,4 @@ export type Design = {
   font: string;
   image: string;
   pokemonImage: string;
-};
-
-export type RawDesign = Omit<Design, "sections"> & {
-  sections: RawSections;
 };

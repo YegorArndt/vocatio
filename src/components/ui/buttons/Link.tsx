@@ -40,12 +40,13 @@ export const Link = forwardRef(
           href={to}
           aria-label={text}
           ref={ref}
+          replace
           {...rest}
           {...shouldNewTab}
         >
-          {frontIcon && <span className="mr-2">{frontIcon}</span>}
+          {frontIcon && <span className="mr-[0.3em]">{frontIcon}</span>}
           {children}
-          {endIcon && <span className="ml-2">{endIcon}</span>}
+          {endIcon && <span className="ml-1">{endIcon}</span>}
         </NextLink>
       )
     );

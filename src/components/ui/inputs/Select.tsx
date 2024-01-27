@@ -31,8 +31,15 @@ export const Select = (props: SelectProps) => {
       className={cn("select-wrapper", className)}
       classNamePrefix="my-react-select"
       isClearable
+      // getOptionLabel={(option) => option.id}
       {...rest}
       {...field}
+      // getNewOptionData={(inputValue, optionLabel) => ({
+      //   id: optionLabel,
+      //   name: `Click to add "${inputValue}"`,
+      //   lab
+      //   __isNew__: true,
+      // })}
     />
   );
 };

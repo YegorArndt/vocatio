@@ -10,8 +10,8 @@ import {
 import type { Vacancy } from "@prisma/client";
 
 import { api } from "~/utils";
-import { usePersistantData } from "~/hooks/usePersistantData";
-import { type PersistantData } from "~/utils/ls";
+
+const { log } = console;
 
 export type GroupedVacancies = Record<
   string,
@@ -31,8 +31,6 @@ type VacanciesContextOutput = {
   setGroupedVacancies: Dispatch<SetStateAction<GroupedVacancies>>;
   currentGroup: string;
   setCurrentGroup: (group: string) => void;
-  isDndMode: PersistantData["isDndMode"];
-  setIsDndMode: (bool: PersistantData["isDndMode"]) => void;
   loadingVacancies: boolean;
 };
 
@@ -51,11 +49,11 @@ export const VacanciesContextProvider = ({
   const [groupedVacancies, setGroupedVacancies] = useState(
     {} as GroupedVacancies
   );
-  const { ls, updateData } = usePersistantData();
   const [currentGroup, setCurrentGroup] = useState("all");
 
   useEffect(() => {
-    if (!user || groupedVacancies.all) return;
+    const hasAlreadyGrouped = !!groupedVacancies.all;
+    if (!user || hasAlreadyGrouped) return;
 
     const v = user.vacancies;
     const initialized = groupVacancies(v);
@@ -67,8 +65,6 @@ export const VacanciesContextProvider = ({
     setGroupedVacancies,
     currentGroup,
     setCurrentGroup,
-    isDndMode: ls.isDndMode,
-    setIsDndMode: (bool) => updateData({ isDndMode: bool }),
     loadingVacancies,
   };
 

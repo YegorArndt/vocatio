@@ -10,7 +10,7 @@ const Preferences = () => {
 
   useEffect(() => {
     const lastViewed =
-      localStorage.getItem("last-viewed-preference") || "my-data";
+      localStorage.getItem("last-viewed-preference") || "my-info";
     router.push(`/preferences/${lastViewed}`);
   }, []);
 

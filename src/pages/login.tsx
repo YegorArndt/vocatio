@@ -10,6 +10,7 @@ import { AnimatedDiv } from "~/components/AnimatedDiv";
 import { Spinner } from "~/components";
 import { ProgressIncrementer } from "~/components/ProgressIncrementer";
 import { MessageContainer } from "~/components/MessageContainer";
+import { usePersistentData } from "~/hooks/usePersistentData";
 
 const { log } = console;
 
@@ -20,7 +21,7 @@ const PrismaLayer = (props: { clerkUser: UserResource }) => {
     data: user,
     isLoading: userLoading,
     isError,
-  } = api.users.get.useQuery();
+  } = api.users.get.useQuery(undefined, { retry: false });
 
   const {
     mutate: createUser,
@@ -28,24 +29,29 @@ const PrismaLayer = (props: { clerkUser: UserResource }) => {
     isLoading: creatingUser,
   } = api.users.create.useMutation();
 
+  const { updateLs } = usePersistentData();
   const router = useRouter();
 
   useEffect(() => {
-    if ((user && !userLoading) || successCreating)
+    if (user || successCreating) {
+      updateLs({ user });
       void router.push("/vacancies");
+      return;
+    }
 
     /**
      * Create user
      */
     const noDbRecord = isError || (!userLoading && !user && clerkUser);
 
-    if (noDbRecord) {
+    if (noDbRecord && !creatingUser && !successCreating) {
       createUser({
-        name: clerkUser.fullName!,
+        contact: [
+          { name: "Email", value: clerkUser.emailAddresses[0]!.emailAddress },
+        ],
+        email: clerkUser.emailAddresses[0]!.emailAddress,
         image: clerkUser.imageUrl,
-        contact: {
-          email: clerkUser.emailAddresses[0]!.emailAddress,
-        },
+        name: clerkUser.fullName!,
       });
     }
   }, [user, successCreating, isError]);
@@ -62,16 +68,14 @@ const PrismaLayer = (props: { clerkUser: UserResource }) => {
             <AnimatedDiv duration={1000}>Authorizing...</AnimatedDiv>
           </MessageContainer>
         )}
-        {creatingUser && (
+        {creatingUser && !successCreating && !user && (
           <AnimatedDiv duration={3} className="flex-y gap-2">
             <Spinner size={15} />
             Creating an account for you...
           </AnimatedDiv>
         )}
         {(successCreating || user) && (
-          <AnimatedDiv duration={1000}>
-            🎉 Success. Redirecting to your vacancies...
-          </AnimatedDiv>
+          <AnimatedDiv duration={1000}>🎉 Success</AnimatedDiv>
         )}
       </main>
     </>

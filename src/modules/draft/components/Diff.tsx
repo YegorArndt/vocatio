@@ -1,9 +1,5 @@
 import cn from "classnames";
-import type {
-  DraftEmploymentHistoryEntry,
-  EmploymentHistoryEntry,
-  Vacancy,
-} from "@prisma/client";
+
 import { type PropsWithChildren, type ReactNode } from "react";
 import { LiaExternalLinkAltSolid } from "react-icons/lia";
 
@@ -17,7 +13,10 @@ import {
   Accordion,
   AccordionItem,
   AccordionContent,
-} from "~/components/external/Accordion";
+} from "~/components/ui/external/Accordion";
+import { PartialVacancy } from "~/modules/extension/types";
+import { DraftExperienceEntry, ExperienceEntry } from "@prisma/client";
+import { AFTER_GREEN, BEFORE_RED } from "~/modules/constants";
 
 const { log } = console;
 
@@ -34,25 +33,8 @@ type TopLeftProps = {
 };
 
 type TopRightProps = {
-  vacancy: Vacancy;
+  vacancy: PartialVacancy;
   highlightedDescription: ReactNode;
-};
-
-type DiffProps = {
-  vacancy: Vacancy;
-  employmentHistory: {
-    old: EmploymentHistoryEntry[];
-    new: DraftEmploymentHistoryEntry[];
-  };
-  professionalSummary: {
-    old: string;
-    new: string;
-    count?: number;
-  };
-  jobTitle: {
-    old: string;
-    new: string;
-  };
 };
 
 type HighlightKeywordsProps = {
@@ -67,10 +49,7 @@ type EntryProps = PropsWithChildren<{
   className?: string;
   leftOut: string[];
 }> &
-  Partial<EmploymentHistoryEntry>;
-
-const beforeRed = "bg-[#ffdce0] clr-black rounded-md p-3";
-const afterGreen = "bg-[#E7FFEB] clr-black rounded-md p-3";
+  Partial<ExperienceEntry>;
 
 const ignoreList = new Set([
   "I",
@@ -104,24 +83,31 @@ const ignoreList = new Set([
   "I",
 ]);
 
+/**
+ * LLM is asked to return keywords wrapped with <b/> tags.
+ */
+const filterHtmlTags = (text: string) => {
+  return text.replace(/<[^>]*>/g, "");
+};
+
 const getInterleaved = (
-  employmentHistory: {
-    new: DraftEmploymentHistoryEntry[];
-    old: EmploymentHistoryEntry[];
+  experience: {
+    new: DraftExperienceEntry[];
+    old: ExperienceEntry[];
   },
   keywords: string[]
 ) => {
   let newHighlightedCount = 0;
 
-  const withHighlights = employmentHistory.new.map((entry, index) => {
+  const withHighlights = experience.new.map((entry, index) => {
     const currentCount = highlightKeywords({
-      text: entry.description,
+      text: filterHtmlTags(entry.description),
       keywords,
     }).count;
     newHighlightedCount += currentCount;
 
-    const oldDescription = employmentHistory.old[index]?.description || "";
-    const newDescription = entry.description;
+    const oldDescription = experience.old[index]?.description || "";
+    const newDescription = filterHtmlTags(entry.description);
 
     // Function to extract capitalized words
     const getCapitalizedWords = (text: string) => {
@@ -156,9 +142,9 @@ const getInterleaved = (
 
     return {
       ...entry,
-      original: employmentHistory.old[index]?.description,
+      original: experience.old[index]?.description,
       description: highlightKeywords({
-        text: entry.description,
+        text: filterHtmlTags(entry.description),
         keywords,
       }).highlighted,
       count: currentCount,
@@ -169,7 +155,7 @@ const getInterleaved = (
     };
   });
 
-  const copy = { ...employmentHistory, new: withHighlights };
+  const copy = { ...experience, new: withHighlights };
 
   const interleaved = [];
 
@@ -241,7 +227,7 @@ const TopLeft = (props: TopLeftProps) => {
       <h3>Professional Summary</h3>
       <div className="mt-3 flex flex-col gap-2">
         <span>Before</span>
-        <div className={`rounded-md ${beforeRed} p-3 clr-black`}>
+        <div className={`rounded-md ${BEFORE_RED} p-3 clr-black`}>
           <p>{professionalSummary.old}</p>
         </div>
       </div>
@@ -252,7 +238,7 @@ const TopLeft = (props: TopLeftProps) => {
             text={`~${professionalSummary.count} keywords included 🎉`}
           />
         </span>
-        <div className={`${afterGreen} rounded-md p-3`}>
+        <div className={`${AFTER_GREEN} rounded-md p-3`}>
           <p>{professionalSummary.new}</p>
         </div>
       </div>
@@ -260,14 +246,14 @@ const TopLeft = (props: TopLeftProps) => {
       <h3 className="mt-5">Job Title</h3>
       <div className="flex flex-col gap-2">
         <span className="mt-3">Before</span>
-        <div className={`rounded-md ${beforeRed} p-3 clr-black`}>
+        <div className={`rounded-md ${BEFORE_RED} p-3 clr-black`}>
           <p>{jobTitle.old}</p>
         </div>
       </div>
 
       <div className="flex flex-col gap-2">
         <span className="mt-3">After</span>
-        <div className={`rounded-md ${afterGreen} p-3 clr-black`}>
+        <div className={`rounded-md ${AFTER_GREEN} p-3 clr-black`}>
           <p>{jobTitle.new}</p>
         </div>
       </div>
@@ -290,20 +276,16 @@ const TopRight = (props: TopRightProps) => {
             className="rounded-full"
           />
         )}
-        <span className="text-lg">
+        <span className="flex-y gap-3 text-lg">
           {vacancy.companyName} - {vacancy.jobTitle}
-          <Link to={vacancy.sourceUrl} className="flex-y" newTab>
+          <Link to={vacancy.sourceUrl} className="flex-y gap-1 clr-blue" newTab>
+            Source
             {vacancyUI[vacancy.sourceName as keyof typeof vacancyUI]?.icon}
             <LiaExternalLinkAltSolid />
           </Link>
         </span>
       </header>
       <span>{highlightedDescription}</span>
-      <h3>✨ AI generated job summary</h3>
-      <span>
-        {vacancy.summary ||
-          "None 😿. Perhaps the vacancy was created manually?"}
-      </span>
     </section>
   );
 };
@@ -356,7 +338,7 @@ const Entry = (props: EntryProps) => {
 };
 
 export const Diff = (props: {
-  vacancy: Vacancy;
+  vacancy: PartialVacancy;
   user: RouterOutputs["users"]["get"];
 }) => {
   const { vacancy, user } = props;
@@ -366,7 +348,7 @@ export const Diff = (props: {
 
   const { highlighted: summaryHighlighted, count: summaryCount } =
     highlightKeywords({
-      text: draft.professionalSummary,
+      text: filterHtmlTags(draft.professionalSummary!),
       keywords,
     });
 
@@ -379,8 +361,8 @@ export const Diff = (props: {
 
   const { interleaved, newHighlightedCount } = getInterleaved(
     {
-      new: draft.employmentHistory as DraftEmploymentHistoryEntry[],
-      old: user!.employmentHistory,
+      new: draft.experience as DraftExperienceEntry[],
+      old: user!.experience,
     },
     keywords
   );
@@ -417,8 +399,8 @@ export const Diff = (props: {
                 key={entry.id}
                 {...(entry as EntryProps)}
                 className={cn({
-                  [afterGreen]: index % 2 === 1,
-                  [beforeRed]: index % 2 === 0,
+                  [AFTER_GREEN]: index % 2 === 1,
+                  [BEFORE_RED]: index % 2 === 0,
                 })}
               />
             )

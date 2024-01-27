@@ -2,17 +2,25 @@ import { LiaExternalLinkAltSolid } from "react-icons/lia";
 
 import { BlurImage } from "~/components";
 import { Link } from "~/components/ui/buttons/Link";
-import { usePersistantData } from "~/hooks/usePersistantData";
+import { usePersistentData } from "~/hooks/usePersistentData";
 import { Linkedin } from "~/icons";
 import { api, cn } from "~/utils";
+import { useVacanciesContext } from "./VacanciesContext";
 
 export const VacanciesPagePlaceholder = () => {
-  const { ls } = usePersistantData();
+  const { currentGroup } = useVacanciesContext();
+  const { ls } = usePersistentData();
   const { data: user } = api.users.get.useQuery();
 
-  const bothStepsDone = ls.hasConnectedExtension && user?.contact?.linkedin;
+  const stepOneDone = ls.hasConnectedExtension;
+  const stepTwoDone =
+    user?.experience?.length !== 0 ||
+    user?.education?.length !== 0 ||
+    user?.skills?.length !== 0;
 
-  return (
+  const bothStepsDone = stepOneDone && stepTwoDone;
+
+  return currentGroup === "all" ? (
     <section className="flex-y flex-col gap-3">
       <header className="flex-y gap-3">
         {bothStepsDone && <>🎉</>}
@@ -30,29 +38,42 @@ export const VacanciesPagePlaceholder = () => {
       {!bothStepsDone && (
         <>
           <Link
-            to="/extension-auth"
+            to="/connect-extension"
             baseCn="flex-y clr-blue"
             className={cn({
-              "line-through": ls.hasConnectedExtension,
+              "line-through": stepOneDone,
             })}
             frontIcon={<LiaExternalLinkAltSolid />}
             text="Connect chrome extension"
             endIcon={<small className="clr-disabled">~20 seconds</small>}
           />
           <Link
-            to="/preferences/my-data"
+            to="/preferences/my-info"
             baseCn="flex-y clr-blue"
             className={cn({
-              "line-through": user?.contact?.linkedin,
+              "line-through": stepTwoDone,
             })}
             frontIcon={<Linkedin />}
-            text="Import LinkedIn profile to start CV generation"
+            text="Import your info from LinkedIn"
             endIcon={<small className="clr-disabled">~3 minutes</small>}
-            newTab
           />
         </>
       )}
       {bothStepsDone && <div>Use the extension to generate your first CV.</div>}
+    </section>
+  ) : (
+    <section className="flex-y flex-col">
+      <h3>Empty</h3>
+      <div className="flex-y gap-3">
+        <BlurImage
+          src="/loading-cat.gif"
+          height={30}
+          width={30}
+          className="rounded-md"
+          alt=""
+        />
+        Empty groups are deleted after refreshing the page.
+      </div>
     </section>
   );
 };

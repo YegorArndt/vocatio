@@ -10,7 +10,7 @@ import "@szhsin/react-menu/dist/transitions/slide.css";
 
 import "~/styles/globals.css";
 import { api } from "~/utils";
-import { Toaster } from "~/components/external/Sonner";
+import { Toaster } from "~/components/ui/external/Sonner";
 
 const inter = Inter({ subsets: ["latin"] });
 

@@ -25,7 +25,7 @@ export type GroupProps = {
   label: string;
   value: string;
   image: string;
-  smallText?: string;
+  smallText?: string | null;
   smallTextClassName?: string;
   labelProps?: AutoresizeProps;
   valueProps?: AutoresizeProps;

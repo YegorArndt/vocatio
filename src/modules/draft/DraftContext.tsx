@@ -2,14 +2,15 @@ import { createContext, useContext, useState } from "react";
 import { get } from "lodash-es";
 
 import type { DraftContextInput, DraftContextOutput } from "./types";
-import type { RawDesign, Design } from "./types/design";
+import type { Design } from "./types/design";
+import type { RawDesign } from "./types/raw";
 import { Venusaur } from "./designs/Venusaur";
 import { init } from "./utils/init";
 
 const { log } = console;
 
 /**
- * Utilize React's internal props to get the SOTA of the current design.
+ * Utilize React's internal props to get the dynamic data structure of the current design.
  */
 const updateSections = (a4Ref: DraftContextInput["a4Ref"]) => {
   const a4 = a4Ref.current;
@@ -49,8 +50,8 @@ export const DraftContext = (props: DraftContextInput) => {
   const [design, setDesign] = useState<Design>(initialDesign);
 
   const updateDesign = (newDesign?: Partial<Design>) => {
-    const templateChanged = newDesign?.name && design.name !== newDesign.name;
-    if (templateChanged) return;
+    const isTemplateChanged = newDesign?.name && design.name !== newDesign.name;
+    if (isTemplateChanged) return;
 
     // @ts-ignore
     setDesign((oldDesign) => {

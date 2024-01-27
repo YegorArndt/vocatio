@@ -130,23 +130,6 @@ const NavbarSkeleton = () => (
   </nav>
 );
 
-export const SpinnerWithLayout = (props: { text?: string }) => {
-  const { text } = props;
-  return (
-    <div className="app-container overflow-hidden !p-0">
-      <NavbarSkeleton />
-      <main className="main-container">
-        <div className="content flex-center h-screen">
-          <div className="flex-center flex-col gap-4">
-            <Spinner />
-            {text}
-          </div>
-        </div>
-      </main>
-    </div>
-  );
-};
-
 export const ButtonSkeleton = (props: DecoProps) => {
   const { className } = props;
 

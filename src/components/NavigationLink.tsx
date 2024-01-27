@@ -5,16 +5,28 @@ import { Link, type LinkProps } from "./ui/buttons/Link";
 
 const { log } = console;
 
-type NavigationLinkProps = {
+export type NavigationLinkProps = {
   text?: string;
   to: string;
   activeCn?: string;
+  activeIfIncludes?: string[];
 } & LinkProps;
 
 export const NavigationLink = (props: NavigationLinkProps) => {
-  const { to, className, activeCn = "", ...linkProps } = props;
-  const { asPath } = useRouter();
-  const isActive = asPath === to;
+  const {
+    to,
+    className,
+    activeCn = "",
+    activeIfIncludes,
+    ...linkProps
+  } = props;
+  const { asPath, pathname } = useRouter();
+  let isActive = asPath === to;
+
+  if (activeIfIncludes) {
+    isActive =
+      asPath === to || activeIfIncludes.some((path) => asPath.includes(path));
+  }
 
   return (
     <Link

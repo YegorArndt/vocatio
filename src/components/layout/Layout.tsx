@@ -6,10 +6,9 @@ import {
   Popover,
   PopoverTrigger,
   PopoverContent,
-} from "~/components/external/Popover";
-import { Bell, Checkmark } from "../icons";
-import { usePersistantData } from "~/hooks/usePersistantData";
-import { Link } from "../ui/buttons/Link";
+} from "~/components/ui/external/Popover";
+import { Bell } from "../icons";
+import { usePersistentData } from "~/hooks/usePersistentData";
 
 const { log } = console;
 
@@ -19,10 +18,7 @@ type LayoutProps = PropsWithChildren<{
 }>;
 
 const Notifications = () => {
-  const { ls } = usePersistantData();
-  const { notifications } = ls;
-
-  const hasNotifications = notifications.length > 0;
+  const { ls } = usePersistentData();
 
   return (
     <Popover>
@@ -31,38 +27,14 @@ const Notifications = () => {
           "fixed right-5 top-5 z-dropdown rounded-full border bg-primary p-2",
           {
             "after:absolute after:right-0 after:top-0 after:h-2 after:w-2 after:rounded-full after:bg-[#51A8FF]":
-              hasNotifications,
+              false,
           }
         )}
       >
         <Bell />
       </PopoverTrigger>
       <PopoverContent>
-        {notifications.map((notification) => {
-          const { title, type, body, link } = notification;
-          return (
-            <div
-              key={title}
-              className="flex-y [&>div+div]:border-top gap-3 pb-3"
-            >
-              <Checkmark fontSize={20} />
-              <section>
-                <h4 className="text-[1rem]">{title}</h4>
-                {body && <span>{body}</span>}
-                {link && (
-                  <Link
-                    text="Click here to view"
-                    to={link}
-                    className="clr-blue"
-                  />
-                )}
-              </section>
-            </div>
-          );
-        })}
-        {!hasNotifications && (
-          <div className="flex-center gap-2">No notifications</div>
-        )}
+        <div className="flex-center gap-2">No notifications</div>
       </PopoverContent>
     </Popover>
   );

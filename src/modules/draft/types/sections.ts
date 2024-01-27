@@ -1,4 +1,4 @@
-import type { NormalizedComponent, RawComponent } from "./components";
+import type { NormalizedComponent } from "./components";
 
 export type SectionId =
   | "top"
@@ -17,11 +17,3 @@ export type Section = {
 };
 
 export type Sections = Partial<Record<SectionId, Section>>;
-
-export type RawSection = {
-  id: SectionId;
-  components: RawComponent[];
-  className: string;
-};
-
-export type RawSections = Partial<Record<SectionId, RawSection>>;

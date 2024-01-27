@@ -12,27 +12,17 @@ import { BsPersonWorkspace } from "react-icons/bs";
 import { Button } from "~/components/ui/buttons/Button";
 import { Gpt } from "~/icons";
 import { VacancyCardHeader } from "./VacancyCardHeader";
+import { getSalaryRange } from "./utils";
 
 const { log } = console;
 
-type Nullable = string | null;
-
-const getSalaryRange = (
-  min: Nullable,
-  max: Nullable,
-  isAnnualSalary: boolean
-) => {
-  const isValid = min && max;
-  if (!isValid) return null;
-
-  const salary = +min === +max ? min : `${min} - ${max}`;
-  const salaryType = isAnnualSalary ? "annually" : "monthly";
-
-  return `${salary} ${salaryType}`;
+type VacancyCardProps = {
+  vacancy: Vacancy;
 };
 
-export const VacancyCard = (props: { vacancy: Vacancy }) => {
+export const VacancyCard = (props: VacancyCardProps) => {
   const { vacancy } = props;
+
   const {
     salaryMax,
     salaryMin,
@@ -60,7 +50,7 @@ export const VacancyCard = (props: { vacancy: Vacancy }) => {
         <Accordion
           trigger={(expanded, setExpanded) => (
             <Button
-              text={expanded ? "Hide details" : "Show known details"}
+              text={expanded ? "Hide details" : "Quick details"}
               className="border-top flex-y border-top w-full p-3 text-[0.8rem]"
               onClick={() => setExpanded(!expanded)}
               frontIcon={expanded ? <IoMdEyeOff /> : <IoEye />}

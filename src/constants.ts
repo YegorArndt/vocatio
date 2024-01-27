@@ -21,17 +21,12 @@ export const curEnv =
     ? "http://localhost:3000"
     : "https://www.vocatio.cat") || "https://www.vocatio.cat";
 
-export const publicRoutes = [
-  "/privacy-policy",
-  "/login",
-  "/landing",
-  "/api/extension/addVacancy",
-  "/api/extension/updateUser",
-];
+export const publicRoutes = ["/privacy-policy", "/login", "/landing"];
 
 export const icons = {
   email: Email,
   phone: Phone,
+  address: Location,
   location: Location,
   website: Website,
   linkedin: Linkedin,
@@ -52,3 +47,7 @@ export const extensionUrl =
 
 export const clerkAuth =
   "https://splendid-amoeba-59.accounts.dev/sign-in?redirect_url=https%3A%2F%2Fchirp-mu-rust-60.vercel.app%2Flogin#https://splendid-amoeba-59.accounts.dev/sign-in?redirect_url=https%3A%2F%2Fchirp-mu-rust-60.vercel.app%2Flogin";
+
+export const linkedinBaseUrl = "https://www.linkedin.com/in/";
+
+export const linkedinJobsSearchUrl = "https://www.linkedin.com/jobs/search/?";

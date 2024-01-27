@@ -1,4 +1,5 @@
-import { EmploymentHistoryEntry, SkillEntry, Vacancy } from "@prisma/client";
+import type { Vacancy } from "@prisma/client";
+import type { RouterOutputs } from "~/utils/api";
 
 export enum ProfessionField {
   FRONTEND = "FRONTEND",
@@ -20,14 +21,6 @@ export enum ProfessionField {
   MACHINE_LEARNING_ENGINEER = "MACHINE_LEARNING_ENGINEER",
   ANALYST = "ANALYST",
   SCRUM_MASTER = "SCRUM_MASTER",
-}
-
-export enum SkillLevel {
-  BASIC = "BASIC",
-  INTERMEDIATE = "INTERMEDIATE",
-  ADVANCED = "ADVANCED",
-  EXPERT = "EXPERT",
-  NATIVE = "NATIVE",
 }
 
 export enum Currency {
@@ -67,20 +60,15 @@ export enum EmploymentType {
   CONTRACT = "CONTRACT",
 }
 
+export type RouterUser = RouterOutputs["users"]["get"];
+
+export type Models = "gpt-4" | "mixtral" | "gpt-3.5";
+
 export type PartialVacancy = Partial<Vacancy> &
   Pick<
     Vacancy,
     "description" | "jobTitle" | "companyName" | "requiredSkills" | "id"
   >;
-
-export type PartialUser = {
-  id: string;
-  jobTitle: string;
-  professionalSummary: string;
-  employmentHistory: EmploymentHistoryEntry[];
-  skills: SkillEntry[];
-  image?: string;
-};
 
 export type VacancyDto = {
   image: string;
@@ -108,11 +96,6 @@ export type VacancyDto = {
   sourceName: SourceName;
 };
 
-export type Entry = {
-  name: string;
-  level: SkillLevel;
-};
-
 export type BigEntry = {
   place: string;
   period: string;
@@ -121,54 +104,4 @@ export type BigEntry = {
   image: string;
   title: string;
   skills?: string[];
-};
-
-// export type User = {
-//   name: string;
-//   image: string;
-//   jobTitle: string;
-//   professionalSummary: string;
-//   location: string;
-
-//   professionField?: ProfessionField | null;
-
-//   contact: {
-//     linkedin: string;
-//   };
-
-//   languages: Entry[];
-//   skills: Entry[];
-
-//   education: BigEntry[];
-//   employmentHistory: BigEntry[];
-//   recommendations: BigEntry[];
-//   awards: BigEntry[];
-//   certificates: BigEntry[];
-// };
-
-export enum Sender {
-  Extension,
-  Content,
-}
-
-export enum Message {
-  GET_LANGUAGES,
-  GET_EMPLOYMENT_HISTORY,
-  GET_EDUCATION,
-  GET_RECOMMENDATIONS,
-  GET_CERTIFICATES,
-  GET_AWARDS,
-  GET_SKILLS,
-  GET_USER,
-  ADD_VACANCY,
-}
-
-export interface ChromeMessage {
-  from: Sender;
-  message: Message;
-}
-
-export type RequestArgs<T> = T & {
-  userId: string;
-  token: string;
 };

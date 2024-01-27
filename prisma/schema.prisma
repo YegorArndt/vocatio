@@ -66,32 +66,39 @@ enum ProfessionField {
   SCRUM_MASTER
 }
 
-enum SkillLevel {
-  BEGINNER
-  BASIC
-  INTERMEDIATE
-  ADVANCED
-  EXPERT
-  NATIVE
+enum DefaultModel {
+  GPT3
+  GPT4
+  MIXTRAL
+}
+
+model ContactEntry {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  name      String
+  value     String
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
 }
 
 model LanguageEntry {
-  id        String     @id @default(uuid())
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   name      String
-  level     SkillLevel
-  user      User       @relation(fields: [userId], references: [id])
+  value     String
+  user      User     @relation(fields: [userId], references: [id])
   userId    String
 }
 
 model SkillEntry {
-  id        String     @id @default(uuid())
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   name      String
-  level     SkillLevel
-  user      User       @relation(fields: [userId], references: [id])
+  value     String
+  user      User     @relation(fields: [userId], references: [id])
   userId    String
 }
 
@@ -108,34 +115,35 @@ model EducationEntry {
   userId      String
 }
 
-model EmploymentHistoryEntry {
-  id                 String   @id @default(uuid())
-  createdAt          DateTime @default(now())
-  updatedAt          DateTime @updatedAt
-  place              String
-  period             String
-  description        String
-  descriptionSummary String // To minimize costs of OpenAI API
-  skills             String[]
-  image              String
-  title              String
-  user               User     @relation(fields: [userId], references: [id])
-  userId             String
+model ExperienceEntry {
+  id                String   @id @default(uuid())
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  place             String
+  period            String
+  description       String
+  // We automatically optimzie user's experience texts with gpt-4 at the beginning. They don't know. That helps weaker LLMS to generate better texts.
+  shadowDescription String?
+  skills            String[]
+  image             String
+  title             String
+  user              User     @relation(fields: [userId], references: [id])
+  userId            String
 }
 
-model DraftEmploymentHistoryEntry {
-  id                               String   @id @default(uuid())
-  createdAt                        DateTime @default(now())
-  updatedAt                        DateTime @updatedAt
-  place                            String
-  period                           String
-  description                      String
-  skills                           String[]
-  image                            String
-  title                            String
-  originalEmploymentHistoryEntryId String
-  draft                            Draft?   @relation(fields: [draftId], references: [id])
-  draftId                          String?
+model DraftExperienceEntry {
+  id                        String   @id @default(uuid())
+  createdAt                 DateTime @default(now())
+  updatedAt                 DateTime @updatedAt
+  place                     String
+  period                    String
+  description               String
+  skills                    String[]
+  image                     String
+  title                     String
+  originalExperienceEntryId String
+  draft                     Draft?   @relation(fields: [draftId], references: [id])
+  draftId                   String?
 }
 
 model RecommendationsEntry {
@@ -151,82 +159,55 @@ model RecommendationsEntry {
   userId      String
 }
 
-model AwardsEntry {
-  id          String   @id @default(uuid())
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  place       String
-  period      String
-  description String
-  image       String
-  title       String
-  user        User     @relation(fields: [userId], references: [id])
-  userId      String
-}
-
-model CertificatesEntry {
-  id          String   @id @default(uuid())
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  place       String
-  period      String
-  description String
-  image       String
-  title       String
-  user        User     @relation(fields: [userId], references: [id])
-  userId      String
-}
-
-model Contact {
-  id          String        @id @default(uuid())
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
-  email       String
-  location    String?
-  phone       String?
-  github      String?
-  linkedin    String?
-  indeed      String?
-  glassdoor   String?
-  hh          String?
-  facebook    String?
-  instagram   String?
-  twitter     String?
-  telegram    String?
-  skype       String?
-  vk          String?
-  website     String?
-  address     String?
-  country     String?
-  city        String?
-  zip         String?
-  user        User          @relation(fields: [userId], references: [id])
-  userId      String        @unique
-}
+// model Contact {
+//   id          String        @id @default(uuid())
+//   createdAt   DateTime      @default(now())
+//   updatedAt   DateTime      @updatedAt
+//   email       String
+//   location    String?
+//   phone       String?
+//   github      String?
+//   linkedin    String?
+//   indeed      String?
+//   glassdoor   String?
+//   hh          String?
+//   facebook    String?
+//   instagram   String?
+//   twitter     String?
+//   telegram    String?
+//   skype       String?
+//   vk          String?
+//   website     String?
+//   address     String?
+//   country     String?
+//   city        String?
+//   zip         String?
+//   custom      CustomContact[]
+//   user        User          @relation(fields: [userId], references: [id])
+//   userId      String        @unique
+// }
 
 model User {
   id        String   @id @default(uuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  name     String
-  image    String
-  jobTitle String?
+  name                String
+  image               String
+  jobTitle            String?
+  linkedinId          String?
+  email               String?
+  professionalSummary String?
 
   professionField ProfessionField?
 
   languages LanguageEntry[]
   skills    SkillEntry[]
+  contact   ContactEntry[]
 
-  education         EducationEntry[]
-  employmentHistory EmploymentHistoryEntry[]
-  recommendations   RecommendationsEntry[]
-  awards            AwardsEntry[]
-  certificates      CertificatesEntry[]
-
-  professionalSummary String?  
-
-  contact       Contact?
+  education       EducationEntry[]
+  experience      ExperienceEntry[]
+  recommendations RecommendationsEntry[]
 
   vacancies Vacancy[]
   drafts    Draft[]
@@ -240,13 +221,13 @@ model Draft {
 
   professionalSummary String
   jobTitle            String
-  employmentHistory   DraftEmploymentHistoryEntry[]
+  experience          DraftExperienceEntry[]
   topSkills           String[]
 
   userId String
-  user User @relation(fields: [userId], references: [id])
+  user   User   @relation(fields: [userId], references: [id])
 
-  vacancyId String   
+  vacancyId String
   vacancy   Vacancy @relation(fields: [vacancyId], references: [id])
 }
 
@@ -257,10 +238,7 @@ model VacancyGroup {
 
   name String
   icon String?
-
-   
-
- }
+}
 
 model Vacancy {
   id              String           @id @default(uuid())
@@ -280,10 +258,10 @@ model Vacancy {
   professionField ProfessionField?
 
   summary        String? @db.Text
-  description    String?  @db.Text
+  description    String? @db.Text
   requiredSkills String?
 
-  group            String?
+  group String?
 
   requiredRemote    Remote?
   requiredSeniority Seniority?
@@ -318,5 +296,3 @@ model Cv {
   vacancyId String
   vacancy   Vacancy @relation(fields: [vacancyId], references: [id])
 }
-
- 

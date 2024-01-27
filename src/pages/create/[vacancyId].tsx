@@ -1,8 +1,6 @@
 import { GetServerSideProps } from "next";
 import Head from "next/head";
 
-import { api } from "~/utils";
-import { Toolbar } from "~/modules/draft/components/Toolbar";
 import { DraftContext } from "~/modules/draft/DraftContext";
 import { DndProvider } from "~/modules/draft/components/DndProvider";
 import cn from "classnames";
@@ -16,6 +14,7 @@ import { Button } from "~/components/ui/buttons/Button";
 import { getDraftByVacancyId } from "~/utils/ls";
 import { toast } from "sonner";
 import { A4_HEIGHT, A4_WIDTH } from "~/modules/draft/constants";
+import { Toolbar } from "~/modules/draft/components/toolbar";
 
 const { log } = console;
 
@@ -36,13 +35,12 @@ const CvBuilder = (props: { vacancyId: string }) => {
   const { vacancyId } = props;
 
   const draft = getDraftByVacancyId(vacancyId);
+  const { vacancy } = draft || {};
 
   const { a4Ref, pages, setPages } = useA4();
 
-  const { data: vacancy } = api.vacancies.getById.useQuery({ id: vacancyId });
-
   useEffect(() => {
-    toast.dismiss("success");
+    toast.dismiss();
   }, []);
 
   return (

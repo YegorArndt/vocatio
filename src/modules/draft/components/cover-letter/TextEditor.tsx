@@ -1,4 +1,3 @@
-import { type Vacancy } from "@prisma/client";
 import { useRef } from "react";
 import { toast } from "sonner";
 import jsPDF from "jspdf";
@@ -6,9 +5,10 @@ import jsPDF from "jspdf";
 import { type RouterOutputs } from "~/utils/api";
 import { TextEditorToolbar } from "./TextEditorToolbar";
 import { useFormContext } from "react-hook-form";
+import { PartialVacancy } from "~/modules/extension/types";
 
 type TextEditorProps = {
-  vacancy: Vacancy;
+  vacancy: PartialVacancy;
   user: RouterOutputs["users"]["get"];
 };
 

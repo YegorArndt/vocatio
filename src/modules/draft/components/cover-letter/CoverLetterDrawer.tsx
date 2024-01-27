@@ -1,44 +1,40 @@
 import { RiDraftLine } from "react-icons/ri";
 
-import { Spinner, BlurImage } from "~/components";
+import { BlurImage } from "~/components";
 import { Blur } from "~/components/Blur";
 import {
   Drawer,
   DrawerTrigger,
   DrawerContent,
   DrawerHandle,
-} from "~/components/external/Drawer";
-import { api } from "~/utils";
+} from "~/components/ui/external/Drawer";
 import { useDraftContext } from "../../DraftContext";
 import { Text } from "~/components/ui/inputs/Text";
-import { FormContext } from "~/modules/preferences/FormContext";
+import { FormContext } from "~/modules/preferences/my-info/FormContext";
 import { TextEditor } from "./TextEditor";
+import { usePersistentData } from "~/hooks/usePersistentData";
 
 const { log } = console;
 
 export const CoverLetterDrawer = () => {
   const { draft } = useDraftContext();
+  const { ls } = usePersistentData();
 
-  const { data: user, isLoading: userLoading } = api.users.get.useQuery();
-  const { data: vacancy, isLoading: vacancyLoading } =
-    api.vacancies.getById.useQuery({ id: draft.vacancyId });
+  const { user } = ls;
+  const { vacancy } = draft;
 
   const defaultValues = user &&
     vacancy && {
-      "file-name": `${user?.name} - ${vacancy?.companyName} - Cover Letter`,
+      "file-name": `${user?.name}. Cover letter for ${vacancy?.companyName}`,
     };
 
   return (
     <Drawer>
       <DrawerTrigger
         className="common hover flex-y gap-3"
-        disabled={userLoading || vacancyLoading}
+        suppressHydrationWarning
       >
-        {userLoading || vacancyLoading ? (
-          <Spinner size={10} />
-        ) : (
-          <Blur element={<RiDraftLine />} />
-        )}
+        <Blur element={<RiDraftLine />} />
         Cover letter
       </DrawerTrigger>
       {defaultValues && (
@@ -50,6 +46,7 @@ export const CoverLetterDrawer = () => {
           {({ control }) => (
             <DrawerContent className="flex h-screen flex-col gap-5 bg-primary clr-primary">
               <header className="grid grid-cols-3 gap-2 p-5">
+                {/* Enter file name */}
                 <label className="flex-y gap-4 whitespace-nowrap text-[0.8rem]">
                   File name:
                   <Text
@@ -59,8 +56,10 @@ export const CoverLetterDrawer = () => {
                   />
                 </label>
 
+                {/* Handle  */}
                 <DrawerHandle />
 
+                {/* Company name on the right */}
                 <span className="flex-y justify-end font-normal">
                   <BlurImage
                     src={vacancy?.image}
@@ -72,7 +71,8 @@ export const CoverLetterDrawer = () => {
                 </span>
               </header>
 
-              {user && vacancy && <TextEditor vacancy={vacancy} user={user} />}
+              {/* Editor toolbar and Textarea */}
+              <TextEditor vacancy={vacancy} user={user} />
             </DrawerContent>
           )}
         </FormContext>

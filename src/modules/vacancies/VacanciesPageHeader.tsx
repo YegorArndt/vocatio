@@ -1,13 +1,13 @@
 import { FocusableItem, MenuDivider, MenuHeader } from "@szhsin/react-menu";
 import { get } from "lodash-es";
 import { HiOutlinePlusCircle } from "react-icons/hi2";
-import { CustomMenu } from "~/components/external/CustomMenu";
-import { CustomMenuButton } from "~/components/external/CustomMenuButton";
+import { CustomMenu } from "~/components/ui/external/CustomMenu";
+import { CustomMenuButton } from "~/components/ui/external/CustomMenuButton";
 import { Button, ButtonProps } from "~/components/ui/buttons/Button";
 import { cn } from "~/utils";
 import { GroupedVacancies, useVacanciesContext } from "./VacanciesContext";
 import { typedKeys } from "../draft/utils/common";
-import { CustomMenuItem } from "~/components/external/CustomMenuItem";
+import { CustomMenuItem } from "~/components/ui/external/CustomMenuItem";
 import { Diamond } from "~/icons";
 import { Text } from "~/components/ui/inputs/Text";
 import { useForm } from "react-hook-form";
@@ -64,9 +64,7 @@ export const VacanciesPageHeader = () => {
     setGroupedVacancies,
     loadingVacancies,
     currentGroup,
-    isDndMode,
     setCurrentGroup,
-    setIsDndMode,
   } = useVacanciesContext();
 
   const { control, watch } = useForm();

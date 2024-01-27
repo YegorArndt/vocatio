@@ -14,6 +14,17 @@ export type AutoresizeProps = {
   type?: "value" | "label" | "smallText";
 };
 
+const isUrl = (url: string | null | undefined) => {
+  if (!url) return false;
+
+  try {
+    new URL(url);
+    return true;
+  } catch (error) {
+    return false;
+  }
+};
+
 export const Autoresize = (props: AutoresizeProps) => {
   const { value, style, className, type = "value" } = props;
   const initialValue = useRef(value);
@@ -45,17 +56,19 @@ export const Autoresize = (props: AutoresizeProps) => {
     <AnimatedDiv
       contentEditable
       data-placeholder={value}
-      className={cn("!block whitespace-pre-wrap break-words", className)}
+      className={cn("!block whitespace-pre-wrap", className, {
+        "break-words": !isUrl(value),
+        "break-all": isUrl(value),
+      })}
       style={style}
       suppressContentEditableWarning
       onInput={(e: FormEvent<HTMLDivElement>) => {
-        const { textContent } = e.currentTarget;
-        debouncedUpdateDesign(textContent);
+        const { innerHTML } = e.currentTarget;
+        debouncedUpdateDesign(innerHTML);
       }}
       ref={divRef}
       onPaste={handlePaste}
-    >
-      {value}
-    </AnimatedDiv>
+      dangerouslySetInnerHTML={{ __html: value }}
+    />
   );
 };

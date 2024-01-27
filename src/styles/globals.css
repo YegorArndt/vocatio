@@ -121,6 +121,10 @@
     @apply relative z-a4;
   }
 
+  .a4.two-cols {
+    grid-template-rows: auto;
+  }
+
   .heading-1,
   .name {
     line-height: 120%;
@@ -149,6 +153,14 @@
   }
   .right {
     grid-area: 2 / 2 / 3 / 3;
+  }
+
+  .two-cols .left {
+    grid-area: 1 / 1 / 3 / 2; /* spans from the first row to the last row in the first column */
+  }
+
+  .two-cols .right {
+    grid-area: 1 / 2 / 3 / 3; /* spans from the first row to the last row in the second column */
   }
 
   /* Content editable placeholder */
@@ -193,6 +205,9 @@
 @layer utilities {
   .border {
     border: 1px solid var(--border-clr);
+  }
+  .border-2 {
+    border: 2px solid var(--border-clr);
   }
   .border-y {
     border-top: 1px solid var(--border-clr);
@@ -671,4 +686,55 @@
   }
 
   /* END CV fonts */
+
+  /* GPT logo spin animation  */
+
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    20% {
+      transform: rotate(360deg);
+      animation-timing-function: cubic-bezier(
+        0.55,
+        0.055,
+        0.675,
+        0.19
+      ); /* Very fast start */
+    }
+    40% {
+      transform: rotate(720deg);
+      animation-timing-function: cubic-bezier(
+        0.215,
+        0.61,
+        0.355,
+        1
+      ); /* Slow down */
+    }
+    60% {
+      transform: rotate(1080deg);
+      animation-timing-function: cubic-bezier(
+        0.55,
+        0.055,
+        0.675,
+        0.19
+      ); /* Very fast start */
+    }
+    80% {
+      transform: rotate(1440deg);
+      animation-timing-function: cubic-bezier(
+        0.215,
+        0.61,
+        0.355,
+        1
+      ); /* Slow down */
+    }
+    100% {
+      transform: rotate(1800deg);
+    }
+  }
+
+  .spin-animation {
+    animation: spin 3s infinite; /* Adjusted time for faster rotation */
+  }
 }

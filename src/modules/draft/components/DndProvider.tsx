@@ -33,7 +33,7 @@ import type { NormalizedComponent, NormalizedType } from "../types/components";
 import type { Sections, SectionId, Section } from "../types/sections";
 import { ComponentFactory } from "./ComponentFactory";
 import { typedKeys } from "../utils/common";
-import { ComponentToolbar } from "../toolstrip";
+import { Toolstrip } from "../toolstrip";
 import { useDraftContext } from "../DraftContext";
 import { defaultProps, tooltips } from "../utils/normalize";
 import { cn } from "~/utils";
@@ -90,8 +90,8 @@ const SortableItem = (
     setNodeRef,
     transform,
     transition,
+    node,
     isDragging,
-    active,
   } = useSortable({ id: c.id, data: c });
 
   const style = {
@@ -102,12 +102,12 @@ const SortableItem = (
   };
 
   return (
-    <ComponentToolbar
+    <Toolstrip
       dndRef={setNodeRef}
       listeners={listeners}
+      node={node}
       attributes={attributes}
       style={style}
-      decorated={decorated}
       className={cn({
         "relative pl-6": decorated,
         "flex-center": c.type === "image",
@@ -115,12 +115,15 @@ const SortableItem = (
     >
       {decorated && (
         <Fragment>
-          <div className="z-1 absolute left-0 top-2 h-3 w-3 rounded-full border-2 border-solid border-black bg-white" />
+          <div
+            id={`ball-${c.id}`}
+            className="absolute left-0 top-2 z-10 h-3 w-3 rounded-full border-2 border-solid !border-black bg-white"
+          />
           <div className="absolute left-[.36rem] top-2 h-full w-[0.5px] bg-black" />
         </Fragment>
       )}
       {children}
-    </ComponentToolbar>
+    </Toolstrip>
   );
 };
 
@@ -139,7 +142,7 @@ const Section = (props: Section & Pick<DndProviderProps, "decorated">) => {
       <ul ref={setNodeRef} className={className}>
         {components.map((c, i) => (
           <ComponentContext.Provider key={c.id} value={c}>
-            <SortableItem decorated={decorated}>
+            <SortableItem decorated={decorated && !c.type.includes("heading")}>
               {["entries", "context"].includes(c.type) ? (
                 <DndProvider {...(c.props as { sections: Sections })} />
               ) : (

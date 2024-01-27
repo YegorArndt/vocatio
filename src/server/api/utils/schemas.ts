@@ -2,14 +2,6 @@ import { z } from "zod";
 
 export type UserUpdateArgs = z.infer<typeof UserUpdateSchema>;
 
-export const SkillLevel = z.enum([
-  "BASIC",
-  "INTERMEDIATE",
-  "ADVANCED",
-  "EXPERT",
-  "NATIVE",
-]);
-
 export const SalaryCurrency = z.enum([
   "USD",
   "GBP",
@@ -55,7 +47,7 @@ export const LanguageEntrySchema = z
     createdAt: z.date(),
     updatedAt: z.date(),
     name: z.string(),
-    level: SkillLevel,
+    value: z.string(),
     userId: z.string(),
   })
   .partial();
@@ -66,7 +58,18 @@ export const SkillEntrySchema = z
     createdAt: z.date().optional(),
     updatedAt: z.date().optional(),
     name: z.string().optional(),
-    level: SkillLevel.optional(),
+    value: z.string(),
+    userId: z.string().optional(),
+  })
+  .partial();
+
+export const ContactEntrySchema = z
+  .object({
+    id: z.string().optional(),
+    createdAt: z.date().optional(),
+    updatedAt: z.date().optional(),
+    name: z.string(),
+    value: z.string(),
     userId: z.string().optional(),
   })
   .partial();
@@ -85,83 +88,47 @@ export const EducationEntrySchema = z
   })
   .partial();
 
-export const EmploymentHistoryEntrySchema = z
+export const ExperienceEntrySchema = z
   .object({
     id: z.string().uuid(),
     createdAt: z.date(),
     updatedAt: z.date(),
-    place: z.string(),
-    period: z.string(),
-    description: z.string(),
-    descriptionSummary: z.string(),
-    skills: z.array(z.string()),
-    image: z.string(),
-    title: z.string(),
-    userId: z.string().uuid(),
-  })
-  .partial();
-
-export const ContactSchema = z
-  .object({
-    location: z.string(),
-    email: z.string(),
-    phone: z.string(),
-    github: z.string(),
-    linkedin: z.string(),
-    indeed: z.string(),
-    glassdoor: z.string(),
-    hh: z.string(),
-    facebook: z.string(),
-    instagram: z.string(),
-    twitter: z.string(),
-    telegram: z.string(),
-    skype: z.string(),
-    vk: z.string(),
-    website: z.string(),
-    address: z.string(),
-    country: z.string(),
-    city: z.string(),
-    zip: z.string(),
-    custom: z.array(z.string()),
-  })
-  .partial();
-
-const RecommendationsEntrySchema = z
-  .object({
-    id: z.string().uuid(),
-    createdAt: z.date(),
-    updatedAt: z.date(),
-    place: z.string(),
-    period: z.string(),
-    description: z.string(),
-    image: z.string(),
-    title: z.string(),
+    place: z.string().optional().nullable(),
+    period: z.string().optional().nullable(),
+    description: z.string().optional().nullable(),
+    shadowDescription: z.string().optional().nullable(),
+    skills: z.array(z.string()).nullable(),
+    image: z.string().optional().nullable(),
+    title: z.string().optional().nullable(),
     userId: z.string().uuid(),
   })
   .partial();
 
 export const UserUpdateSchema = z
   .object({
-    name: z.string(),
     image: z.string().optional(),
+    name: z.string(),
+    jobTitle: z.string().optional(),
     professionalSummary: z.string(),
 
-    jobTitle: z.string().optional(),
-    professionField: ProfessionField,
+    linkedinId: z.string().optional(),
+    email: z.string().optional(),
 
+    // professionField: ProfessionField,
+
+    contact: z.array(ContactEntrySchema),
     languages: z.array(LanguageEntrySchema),
     skills: z.array(SkillEntrySchema),
+
+    experience: z.array(ExperienceEntrySchema),
     education: z.array(EducationEntrySchema),
-    employmentHistory: z.array(EmploymentHistoryEntrySchema),
-
-    contact: ContactSchema,
-
-    recommendations: z.array(RecommendationsEntrySchema),
   })
   .partial();
 
 export const PartialVacancySchema = z.object({
   id: z.string().nullable().optional(),
+
+  image: z.string().nullable().optional(),
 
   description: z.string().nullable().optional(),
 
@@ -217,9 +184,9 @@ export const LsDraft = z.object({
   jobTitle: z.string(),
   professionalSummary: z.string(),
   topSkills: z.string(),
-  employmentHistory: EmploymentHistoryEntrySchema.extend(
+  experience: ExperienceEntrySchema.extend(
     z.object({
-      originalEmploymentHistoryId: z.string(),
+      originalexperienceId: z.string(),
     }).shape
   ).array(),
 });

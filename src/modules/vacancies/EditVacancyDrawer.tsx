@@ -7,11 +7,11 @@ import {
   DrawerContent,
   Drawer,
   DrawerHandle,
-} from "~/components/external/Drawer";
+} from "~/components/ui/external/Drawer";
 import { Text } from "~/components/ui/inputs/Text";
 import { Textarea } from "~/components/ui/inputs/Textarea";
 import { api } from "~/utils";
-import { normalizeHookFormValues } from "../preferences/FormContext";
+import { normalizeHookFormValues } from "../preferences/my-info/FormContext";
 import { SaveButton } from "~/components/SaveButton";
 import { LiaEditSolid } from "react-icons/lia";
 
@@ -140,8 +140,6 @@ export const EditVacancyDrawer = (props: EditVacancyDrawerProps) => {
     defaultValues: normalizeHookFormValues(vacancy),
   });
 
-  const { invalidate } = api.useContext().vacancies;
-
   const {
     mutate: upsertVacancy,
     isLoading,
@@ -149,8 +147,11 @@ export const EditVacancyDrawer = (props: EditVacancyDrawerProps) => {
     reset,
   } = api.vacancies.upsert.useMutation({
     onSuccess: (updated) => {
-      invalidate();
       resetForm(normalizeHookFormValues(updated));
+
+      /**
+       * Start cv generation.
+       */
       onClick?.(updated);
     },
   });
@@ -214,6 +215,7 @@ export const EditVacancyDrawer = (props: EditVacancyDrawerProps) => {
                   className="col-span-2"
                   textareaClassName="h-[500px]"
                   required
+                  minLength={500}
                 />
               </label>
             )}

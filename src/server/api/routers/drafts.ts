@@ -6,56 +6,6 @@ import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 const { log } = console;
 
 export const draftsRouter = createTRPCRouter({
-  // create: publicProcedure
-  //   .input(
-  //     z.object({
-  //       vacancyId: z.string(),
-  //     })
-  //   )
-  //   .mutation(async ({ ctx, input }) => {
-  //     const { userId } = ctx;
-
-  //     if (!userId)
-  //       throw new TRPCError({
-  //         code: "UNAUTHORIZED",
-  //         message: "You are not authorized to perform this action",
-  //       });
-
-  //     const { vacancyId } = input;
-
-  //     const [user, vacancy] = await ctx.prisma.$transaction([
-  //       ctx.prisma.user.findFirst({
-  //         where: { id: userId },
-  //         include: { employmentHistory: true, skills: true },
-  //       }),
-  //       ctx.prisma.vacancy.findFirst({
-  //         where: { id: vacancyId },
-  //       }),
-  //     ]);
-
-  //     if (!user || !vacancy)
-  //       throw new TRPCError({
-  //         code: "NOT_FOUND",
-  //         message: "User or vacancy not found",
-  //       });
-
-  //     const tailored = await generateDraft(vacancy, user as PartialUser);
-
-  //     const draft = await ctx.prisma.draft.create({
-  //       data: {
-  //         professionalSummary: tailored.professionalSummary,
-  //         jobTitle: vacancy.jobTitle!,
-  //         vacancyId: vacancy.id,
-  //         topSkills: tailored.topSkills,
-  //         employmentHistory: {
-  //           create: tailored.employmentHistory,
-  //         },
-  //       },
-  //     });
-
-  //     return draft;
-  //   }),
-
   getById: publicProcedure
     .input(
       z.object({

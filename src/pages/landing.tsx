@@ -1,5 +1,5 @@
 import cn from "classnames";
-import { BlurImage, Chip } from "~/components";
+import { BlurImage } from "~/components";
 import { Button } from "~/components/ui/buttons/Button";
 import { Link } from "~/components/ui/buttons/Link";
 import { Arrow, Gpt, Linkedin, PerkCheck } from "~/icons";
@@ -21,7 +21,6 @@ const Landing = () => {
         <Link className="flex-center gap-2" to="#">
           <MountainIcon className="h-6 w-6" />
           <span>Vocatio</span>
-          <Chip text="Beta" className="bg-sky px-3" />
           <span className="sr-only">Vocatio</span>
         </Link>
         <nav className="ml-auto flex gap-4 sm:gap-6">
@@ -86,7 +85,7 @@ const Landing = () => {
                 {
                   title: (
                     <Link
-                      to="/my-data"
+                      to="/my-info"
                       text="1. Install Vocatio Chrome Extension - 20 seconds"
                       frontIcon={<LuChrome />}
                       newTab
@@ -99,7 +98,7 @@ const Landing = () => {
                 {
                   title: (
                     <Link
-                      to="/preferences/my-data"
+                      to="/preferences/my-info"
                       text="2. Import your data - 3 minutes"
                       frontIcon={<TbDatabaseImport />}
                       newTab

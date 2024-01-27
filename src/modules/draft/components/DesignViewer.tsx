@@ -6,8 +6,11 @@ import type { Design } from "~/modules/draft/types/design";
 import { Venusaur } from "~/modules/draft/designs/Venusaur";
 import { Charmander } from "../designs/Charmander";
 import { Raichu } from "../designs/Raichu";
+import { Nidoran } from "../designs/Nidoran";
+import { Link } from "~/components/ui/buttons/Link";
+import { Bulbasaur } from "../designs/Bulbasaur";
 
-const designs = [Venusaur, Charmander, Raichu];
+const designs = [Bulbasaur, Nidoran, Venusaur, Charmander, Raichu];
 
 export const DesignViewer = () => {
   const { changeDesign, design } = useDraftContext();
@@ -55,6 +58,11 @@ export const DesignViewer = () => {
             </div>
           ))}
       </div>
+      <Link
+        text="Suggest a design ❤️"
+        className="primary sm mt-8"
+        to="mailto:yegorarndt@gmail.com"
+      />
     </div>
   );
 };

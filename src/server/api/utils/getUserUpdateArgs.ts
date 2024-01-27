@@ -1,72 +1,44 @@
 import { z } from "zod";
-import { EmploymentHistoryEntry, type Prisma } from "@prisma/client";
+import type { Prisma } from "@prisma/client";
+
 import { UserUpdateSchema } from "./schemas";
-import { summarize, toBulletPoints } from "./ai";
 
 const { log } = console;
 
-const getDescriptionSummary = async (description: string) => {
-  const { summary_text } = await summarize(description);
-  const bullets = await toBulletPoints(summary_text);
-  return bullets;
-};
-
 export const getUserUpdateArgs = async (
-  input: z.infer<typeof UserUpdateSchema>
+  input: z.infer<typeof UserUpdateSchema>,
+  prevUser: z.infer<typeof UserUpdateSchema>
 ) => {
   const {
     education,
-    employmentHistory,
+    experience,
     contact,
     languages,
     skills,
-    recommendations,
     name,
     jobTitle,
     professionalSummary,
+    linkedinId,
+    email,
     image,
   } = input;
-  const summarizedEmploymentHistory: EmploymentHistoryEntry[] = [];
-
-  /**
-   * Summarize employment history descriptions.
-   */
-  if (employmentHistory && employmentHistory.length > 0) {
-    const fullDescriptions = employmentHistory.map((x) => x.description);
-
-    const descriptionSummaries = await Promise.allSettled(
-      fullDescriptions.map((description) => getDescriptionSummary(description!))
-    );
-
-    employmentHistory.forEach((x, i) => {
-      const withSummary = {
-        ...x,
-        descriptionSummary:
-          descriptionSummaries[i]?.status === "fulfilled"
-            ? (descriptionSummaries[i] as PromiseFulfilledResult<string>)?.value
-            : x.descriptionSummary || x.description,
-      } as EmploymentHistoryEntry;
-
-      summarizedEmploymentHistory.push(withSummary);
-    });
-  }
 
   const userUpdateArgs = {
-    contact: {
-      update: contact ? contact : undefined,
-    },
-    name,
-    jobTitle,
-    image,
-    professionalSummary,
-    ...(recommendations && {
-      recommendations: {
+    ...(contact && {
+      contact: {
         deleteMany: {},
         createMany: {
-          data: recommendations,
+          data: contact,
         },
       },
     }),
+    name,
+    jobTitle,
+    image,
+    professionalSummary,
+    linkedinId,
+    email: email || prevUser.email,
+
     ...(skills && {
       skills: {
         deleteMany: {},
@@ -91,11 +63,11 @@ export const getUserUpdateArgs = async (
         },
       },
     }),
-    ...(summarizedEmploymentHistory.length && {
-      employmentHistory: {
+    ...(experience && {
+      experience: {
         deleteMany: {},
         createMany: {
-          data: summarizedEmploymentHistory,
+          data: experience,
         },
       },
     }),

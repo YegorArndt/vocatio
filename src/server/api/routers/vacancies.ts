@@ -3,14 +3,37 @@ import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 import { PartialVacancySchema } from "../utils/schemas";
 import { Vacancy } from "@prisma/client";
+import { summarize } from "../utils/ai";
 
 const { log } = console;
 
-/**
- * Creation is handled via Nextjs API route.
- * And triggered by extension.
- */
 export const vacanciesRouter = createTRPCRouter({
+  create: publicProcedure
+    .input(PartialVacancySchema)
+    .mutation(async ({ ctx, input }) => {
+      const { userId } = ctx;
+
+      if (!userId)
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "You are not authorized to perform this action",
+        });
+
+      const { summary_text } = await summarize(input.description!);
+
+      const createdVacancy = await ctx.prisma.vacancy.create({
+        data: {
+          ...(input as Vacancy),
+          summary: summary_text,
+          user: {
+            connect: { id: userId },
+          },
+        },
+      });
+
+      return createdVacancy;
+    }),
+
   deleteForUser: publicProcedure
     .input(
       z.object({

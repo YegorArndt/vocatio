@@ -143,7 +143,7 @@ export const Toolstrip = (props: ToolstripProps) => {
         render={() => {
           return (
             <div className="flex-center gap-1" data-html2canvas-ignore>
-              {["place", "title"].some((s) => id.includes(s)) && (
+              {["place", "title"].some((s) => id?.includes(s)) && (
                 <Button
                   className={cn(BUTTON_CN, "p-2", {
                     "bg-hover": !!element,

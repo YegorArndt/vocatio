@@ -88,7 +88,7 @@ const LoginPage: NextPage = () => {
 
   useEffect(() => {
     const hasClearedLs = isLoaded && !isSignedIn;
-    if (hasClearedLs) signOut();
+    if (hasClearedLs) void signOut();
   }, [isSignedIn, isLoaded]);
 
   const isFirstLogin = !isSignedIn && isLoaded;

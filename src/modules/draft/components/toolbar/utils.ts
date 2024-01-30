@@ -1,11 +1,6 @@
 import { LsDraft } from "../../types";
 import { RouterOutputs } from "~/utils/api";
-import {
-  filterContactForClient,
-  separateEntries,
-  stripHtmlTags,
-} from "~/modules/utils";
-import { typedEntries } from "../../utils/common";
+import { stripHtmlTags } from "~/modules/utils";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import { RefObject } from "react";
@@ -31,15 +26,12 @@ export const getStructuredCvText = (
   /**
    * Contact
    */
-  const { definedEntries: contact } = separateEntries(
-    filterContactForClient(user.contact)
-  );
-
-  formattedText += `  CONTACT: `;
-
-  typedEntries(contact).forEach(([key, value]) => {
-    formattedText += `  ${key}: ${value} | `;
-  });
+  if (user.contact && user.contact.length > 0) {
+    formattedText += `  CONTACT: `;
+    user.contact.forEach((entry) => {
+      formattedText += ` ${entry.name} - ${entry.value} |`;
+    });
+  }
 
   formattedText += `\n`;
 
@@ -126,7 +118,7 @@ export const downloadPdf = async (props: DownloadPdfProps) => {
 
   // // Width for text wrapping
   const maxWidth = pdf.internal.pageSize.getWidth() - 40; // 20px margin on each side
-  const lines = pdf.splitTextToSize(cvText, maxWidth);
+  const lines: string[] = pdf.splitTextToSize(cvText, maxWidth);
 
   // Start from the top of the first page
   let yPos = 10; // Start from the top

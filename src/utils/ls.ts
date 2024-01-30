@@ -72,7 +72,7 @@ export const setDraftByVacancyId = (
 
     if (isLsQuotaExceededError)
       toast.error(
-        "You've reached the beta limit. Contact the admin to resolve the issue.",
+        "You've reached the beta limit. Contact the developer to resolve the issue.",
         {
           duration: 15000,
         }

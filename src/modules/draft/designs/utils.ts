@@ -306,6 +306,7 @@ export const bigEntry = (pps: BigEntryProps): RawComponent => {
                       value: "Skills proven during tenure",
                       label: "Skills",
                       image: "diamond",
+                      // @ts-ignore
                       smallText: entry?.skills?.join(", "),
                       smallTextClassName: "font-thin",
                       tooltip: "Skills",

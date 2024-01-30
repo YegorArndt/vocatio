@@ -1,5 +1,6 @@
 import type { LsDraft } from "../types";
-import type { RawDesign, Design } from "../types/design";
+import type { Design } from "../types/design";
+import { RawDesign } from "../types/raw";
 import type { Sections } from "../types/sections";
 import { typedKeys } from "./common";
 import { normalize } from "./normalize";

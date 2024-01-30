@@ -53,7 +53,7 @@ export const TextEditor = (props: TextEditorProps) => {
       const value = editableRef.current?.innerText;
       const message = value ? "Copied to clipboard" : "Nothing to copy";
       toast.info(message);
-      if (value) navigator.clipboard.writeText(value);
+      if (value) void navigator.clipboard.writeText(value);
     },
     onDownloadPdf: () => {
       const value = editableRef.current?.innerText;

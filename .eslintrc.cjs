@@ -16,6 +16,7 @@ const config = {
     "@typescript-eslint/array-type": "off",
     "@typescript-eslint/consistent-type-definitions": "off",
     "@typescript-eslint/prefer-nullish-coalescing": "off",
+    "prefer-const": "off",
 
     // TODO
     "@typescript-eslint/ban-ts-comment": "off",

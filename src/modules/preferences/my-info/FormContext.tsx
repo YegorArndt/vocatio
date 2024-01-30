@@ -42,7 +42,7 @@ export const normalizeHookFormValues = <TFieldValues extends FieldValues>(
 export const denormalizeHookFormValues = <TFieldValues extends FieldValues>(
   values: TFieldValues
 ): Partial<DefaultValues<TFieldValues>> => {
-  return mapValues(values, (value): any => {
+  return mapValues(values, (value) => {
     if (value === "") return null;
     const parsedNumber = parseFloat(value);
     if (!isNaN(parsedNumber) && value === parsedNumber.toString())

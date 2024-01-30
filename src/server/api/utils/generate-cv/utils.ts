@@ -24,15 +24,15 @@ export const rearrangeSkillsByRelevance = (
     .map((item) => item.skill);
 };
 
-export const formatExperience = (histories: ExperienceEntry[]) => {
+export const formatExperience = (
+  histories: ExperienceEntry[],
+  vacancyDescription: string
+) => {
   return histories
     .map(
       (x, i) =>
-        `@${i}: ${
-          x.shadowDescription
-        }. Skills you might wanna include in the first bullet point: ${x.skills.map(
-          (x) => `${x}`
-        )}`
+        // prettier-ignore
+        `@${i}: ${x.shadowDescription}. [${x.skills.map((x) => `${x}`).join(", ")}]`
     )
     .join("\n");
 };
@@ -60,13 +60,15 @@ export const getResponsibilities = (
 ) => {
   const { requiredSkills, description } = vacancy;
 
-  const isRequiredSkillsLong = requiredSkills && requiredSkills.length > 300;
+  return requiredSkills;
 
-  const responsibilities = compressResponsbilities(
-    (isRequiredSkillsLong ? requiredSkills : description)!
-  );
+  // const isRequiredSkillsLong = requiredSkills && requiredSkills.length > 300;
 
-  return responsibilities;
+  // const responsibilities = compressResponsbilities(
+  //   (isRequiredSkillsLong ? requiredSkills : description)!
+  // );
+
+  // return responsibilities;
 };
 
 export const formatResponse = (enhancedContent: string | undefined) => {
@@ -119,7 +121,29 @@ export const mixWithOriginalHistories = (
     };
   });
 
-  log(experience);
-
   return experience;
+};
+
+export const boldKeywords = (
+  experience: ExperienceEntry[],
+  vacancy: PartialVacancy
+) => {
+  return experience.map((x) => {
+    // Verwenden Sie einen regulären Ausdruck für die Übereinstimmung unter Ignorierung der Groß-/Kleinschreibung
+    const relevantSkills = x.skills.filter((skill) =>
+      new RegExp(skill, "i").test(vacancy.description!)
+    );
+
+    // Erstellen Sie einen regulären Ausdruck, der alle relevanten Fähigkeiten (case-insensitive) umfasst
+    const regex = new RegExp(relevantSkills.join("|"), "gi");
+
+    const description = x.description.replace(
+      regex,
+      (match) => `<b>${match}</b>`
+    );
+
+    log(description);
+
+    return { ...x, description };
+  });
 };

@@ -18,27 +18,27 @@ type MixtralProps = {
 const getPrompt = (props: MixtralProps) => {
   const { vacancy, user } = props;
 
-  const experience = formatExperience(user.experience);
+  const experience = formatExperience(user.experience, vacancy.description!);
 
   //prettier-ignore
   return `
-  You are a highly creative resume writer professional with the task of customizing my resume for a specific job opening.
-    Context:
-      Vacancy: "${vacancy.description}".
-      My professional summary: "${user.professionalSummary}".
-      My employment histories: "${experience}".
+  Your task: rewrite my professional summary as well as the employment histories to completely (!) match the vacancy requirements. Wrap the key required skills (e.g. "React") with <b>React</b> html tag. I'll parse your response into HTML.
 
-    Instructions:
-      1. Translate the professional summary and employment histories into the language in which the vacancy is written (Dutch, French, German, or Russian etc; if uncertain, use English).
-      2. Compose a summary that presents my most relevant experiences and strong points/characteristics. Aim to use no more than 3-5 sentences.
-      3. From the employment histories, extract 3 concise bullet points each, maximizing relevance to the vacancy. When possible, rephrase the bullet point to use exactly the same terminology as in the vacancy. 
+  Context:
 
-    Format of your response:
-      1. Prefix each employment history entry with an "@" followed by its index (zero-based). Do not prefix the summary.
-      2. Keep the bullet point format for the employment histories. This is crucially important.
-      3. Do not include anything but the summary and the employment histories. I will parse your response and include the texts directly into my resume.
-      4. Keep <b> and <i> tags intact.
-     `
+    Vacancy requirements: "${vacancy.requiredSkills}".
+    My professional summary: "${user.professionalSummary}".
+    My employment histories: "${experience}".
+
+  Format of your response:
+
+    1. Prefix each employment history entry with an "@" followed by its index (zero-based). Do not prefix the summary.
+    2. Each employment history must end up as a collection of 3-4 most relevant bullet points. Each bullet point must start with a "•" and a verb. Maintain first person narrative. If there's lack of relevance in the original bullet points, just create a new one mirroring the vacancy requirements.
+    3. Wrap all relevant skills with <b> html tag (e.g. <b>React</b>). I'll parse your response into HTML.
+    4. Keep the <i/> tags intact.
+    5. Return the summary before the histories.
+    6. Make the summary short, concise. It must be a single sentence.
+  `
 };
 
 export const tryMixtral = async (props: MixtralProps) => {
@@ -49,8 +49,11 @@ export const tryMixtral = async (props: MixtralProps) => {
     `<s>[INST] ${prompt} ${hfFormat}.[/INST]</s>`,
     {
       max_new_tokens,
+      temperature: 0.7,
     }
   );
+
+  log(tailored);
 
   const extracted = tailored.generated_text.split("</s>")[1];
   const formatted = formatResponse(extracted);

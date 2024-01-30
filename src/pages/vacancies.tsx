@@ -18,7 +18,6 @@ import { Link } from "~/components/ui/buttons/Link";
 import { extensionUrl } from "~/constants";
 import { LiaExternalLinkAltSolid } from "react-icons/lia";
 import { useRouter } from "next/router";
-import { isEqual } from "lodash-es";
 
 const { log } = console;
 
@@ -86,15 +85,6 @@ const VacanciesPage = () => {
       }
     }
   }, [user, ls.user, response.success, errorGettingUser, isInstalled]);
-
-  useEffect(() => {
-    if (!user) return;
-    if (!ls.user) return updateLs({ user });
-
-    if (!isEqual(user.experience, ls.user.experience)) {
-      updateLs({ user });
-    }
-  }, [user, ls.user]);
 
   return (
     <Fragment>

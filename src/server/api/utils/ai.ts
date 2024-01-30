@@ -86,15 +86,15 @@ export const applyGpt = async (prompt: string, model: Models = "gpt-3.5") => {
     // return response?.data?.choices?.[0]?.text;
 
     response = await openai.createChatCompletion({
-      model: "gpt-3.5-turbo-1106",
-      messages: [{ role: "system", content: prompt }],
+      model: "gpt-3.5-turbo-0613",
+      messages: [{ role: "user", content: prompt }],
     });
 
     return response?.data?.choices?.[0]?.message?.content;
   } else if (model === "gpt-4") {
     response = await openai.createChatCompletion({
       model: "gpt-4",
-      messages: [{ role: "system", content: prompt }],
+      messages: [{ role: "user", content: prompt }],
     });
 
     return response?.data?.choices?.[0]?.message?.content;

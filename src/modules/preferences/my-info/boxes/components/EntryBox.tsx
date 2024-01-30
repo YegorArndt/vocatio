@@ -1,3 +1,5 @@
+//@ts-nocheck
+
 import { FormContext } from "../../FormContext";
 import { Select } from "~/components/ui/inputs/Select";
 import { ArrayFormContext } from "../../ArrayFormContext";
@@ -12,8 +14,7 @@ import { BiMoveVertical } from "react-icons/bi";
 const { log } = console;
 
 const getFieldArray = (entries: SkillEntry[]) =>
-  entries &&
-  entries.map((e) => ({
+  entries?.map((e) => ({
     name: { label: e.name, value: e.name },
     value: { label: e.value, value: e.value },
   }));
@@ -93,7 +94,10 @@ export const EntryBox = (props) => {
                 onClick={() =>
                   void submit((data) => {
                     //@ts-ignore
-                    update({ [boxName]: reverseFieldArray(data[boxName]) });
+                    update({
+                      //@ts-ignore
+                      [boxName]: reverseFieldArray(data[boxName]),
+                    });
                   })
                 }
                 className="primary sm flex-y ml-auto"

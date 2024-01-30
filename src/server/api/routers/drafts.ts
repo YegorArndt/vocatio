@@ -29,7 +29,7 @@ export const draftsRouter = createTRPCRouter({
           userId,
         },
         include: {
-          employmentHistory: true,
+          experience: true,
           vacancy: true,
         },
       });
@@ -84,7 +84,7 @@ export const draftsRouter = createTRPCRouter({
           vacancyId,
         },
         include: {
-          employmentHistory: true,
+          experience: true,
         },
       });
 

@@ -17,6 +17,7 @@ import {
 import { PartialVacancy } from "~/modules/extension/types";
 import { DraftExperienceEntry, ExperienceEntry } from "@prisma/client";
 import { AFTER_GREEN, BEFORE_RED } from "~/modules/constants";
+import { stripHtmlTags } from "~/modules/utils";
 
 const { log } = console;
 
@@ -83,13 +84,6 @@ const ignoreList = new Set([
   "I",
 ]);
 
-/**
- * LLM is asked to return keywords wrapped with <b/> tags.
- */
-const filterHtmlTags = (text: string) => {
-  return text.replace(/<[^>]*>/g, "");
-};
-
 const getInterleaved = (
   experience: {
     new: DraftExperienceEntry[];
@@ -101,13 +95,13 @@ const getInterleaved = (
 
   const withHighlights = experience.new.map((entry, index) => {
     const currentCount = highlightKeywords({
-      text: filterHtmlTags(entry.description),
+      text: stripHtmlTags(entry.description),
       keywords,
     }).count;
     newHighlightedCount += currentCount;
 
     const oldDescription = experience.old[index]?.description || "";
-    const newDescription = filterHtmlTags(entry.description);
+    const newDescription = stripHtmlTags(entry.description);
 
     // Function to extract capitalized words
     const getCapitalizedWords = (text: string) => {
@@ -144,7 +138,7 @@ const getInterleaved = (
       ...entry,
       original: experience.old[index]?.description,
       description: highlightKeywords({
-        text: filterHtmlTags(entry.description),
+        text: stripHtmlTags(entry.description),
         keywords,
       }).highlighted,
       count: currentCount,
@@ -325,7 +319,7 @@ const Entry = (props: EntryProps) => {
             </header>
             <AccordionContent className="rounded-md bg-card p-2">
               {leftOut.map((sentence, index) => (
-                <div>
+                <div key={sentence}>
                   {index + 1}. &nbsp;{sentence.trim()}
                 </div>
               ))}
@@ -344,25 +338,25 @@ export const Diff = (props: {
   const { vacancy, user } = props;
   const { draft } = useDraftContext();
 
-  const keywords = [vacancy!.description, vacancy!.requiredSkills] as string[];
+  const keywords = [vacancy.description, vacancy.requiredSkills] as string[];
 
   const { highlighted: summaryHighlighted, count: summaryCount } =
     highlightKeywords({
-      text: filterHtmlTags(draft.professionalSummary!),
+      text: stripHtmlTags(draft.professionalSummary!),
       keywords,
     });
 
   const { highlighted: vacancyHighlighted, count: vacancyCount } =
     highlightKeywords({
-      text: vacancy!.description!,
-      keywords: user!.professionalSummary!.split(" "),
+      text: vacancy.description!,
+      keywords: user.professionalSummary!.split(" "),
       className: "bg-border",
     });
 
   const { interleaved, newHighlightedCount } = getInterleaved(
     {
       new: draft.experience as DraftExperienceEntry[],
-      old: user!.experience,
+      old: user.experience,
     },
     keywords
   );
@@ -381,11 +375,11 @@ export const Diff = (props: {
       <div className="grid grid-cols-2 gap-4">
         <TopLeft
           professionalSummary={{
-            old: user!.professionalSummary!,
+            old: user.professionalSummary!,
             new: summaryHighlighted,
             count: summaryCount,
           }}
-          jobTitle={{ old: user!.jobTitle!, new: draft.jobTitle! }}
+          jobTitle={{ old: user.jobTitle!, new: draft.jobTitle }}
         />
         <TopRight
           vacancy={vacancy}

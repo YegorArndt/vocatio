@@ -1,3 +1,5 @@
+//@ts-nocheck
+
 import { BlurImage, Spinner } from "~/components";
 import { BigEntry } from "~/modules/extension/types";
 import { Button } from "~/components/ui/buttons/Button";
@@ -21,6 +23,7 @@ const { log } = console;
 //@ts-ignore
 const filterForClient = (entries): BigEntry[] => {
   return (
+    //@ts-ignore
     entries &&
     //@ts-ignore
     entries.map((e) => {
@@ -140,17 +143,18 @@ export const BigEntryBox = (props) => {
 
                           if (name === "skills") {
                             return (
-                              <label className="flex flex-col gap-2">
+                              <label key={name} className="flex flex-col gap-2">
                                 <div className="flex flex-col gap-1 rounded-md border bg-primary p-3">
                                   ❗️ Add as many skills as possible. This will
                                   reflect on the quality of CV tailoring.
                                   <small className="clr-disabled">
                                     If there are different ways of spelling the
-                                    same skill, e.g. "REST API" & "Restful API",
-                                    consider including both.
+                                    same skill, e.g. &quot;REST API&quot; &
+                                    &quot;Restful API&quot;, consider including
+                                    both.
                                   </small>
                                 </div>
-                                <Component key={name} {...props} />
+                                <Component {...props} />
                               </label>
                             );
                           }

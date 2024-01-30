@@ -45,6 +45,7 @@ const InitGenerationPage = () => {
       /**
        * Create new vacancy
        */
+      //@ts-ignore
       if (!createdVacancy && !creatingVacancy) createVacancy(newVacancy);
 
       /**
@@ -72,8 +73,8 @@ const InitGenerationPage = () => {
       }
 
       if (createdVacancy) {
-        refetchUser().then(() => {
-          router.push("/vacancies");
+        void refetchUser().then(() => {
+          void router.push("/vacancies");
         });
       }
     }

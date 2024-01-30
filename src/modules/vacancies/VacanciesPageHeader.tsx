@@ -92,7 +92,7 @@ export const VacanciesPageHeader = () => {
         {typedKeys(groupedVacancies).map((groupName) => (
           <GroupButton
             key={groupName}
-            group={groupedVacancies[groupName] as Group}
+            group={groupedVacancies[groupName]!}
             onClick={() => setCurrentGroup(groupName)}
             isActive={groupName === currentGroup}
             endIcon={

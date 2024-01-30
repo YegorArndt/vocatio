@@ -51,16 +51,22 @@ export const MyInfoPage = (
   const { updateKey, expirationToken } = props;
 
   const { ls, updateLs } = usePersistentData();
+
+  const { data: user } = api.users.get.useQuery();
+
   const { mutate: updateDatabase, isLoading: isUpdating } =
     api.users.update.useMutation();
 
-  const { mutate: createShadowExperience } =
-    api.users.createShadowExperience.useMutation({
-      onSuccess: (userWithShadowExperience) => {
-        //@ts-ignore
-        updateLs({ user: userWithShadowExperience });
-      },
-    });
+  const {
+    mutate: createShadowExperience,
+    isLoading: creatingShadowExp,
+    isSuccess: successCreatingShadowExp,
+  } = api.users.createShadowExperience.useMutation({
+    onSuccess: (userWithShadowExperience) => {
+      //@ts-ignore
+      updateLs({ user: userWithShadowExperience });
+    },
+  });
 
   const { sendMessage, hasSent, response, isExpired } = useSendMessage({
     expirationToken,
@@ -140,16 +146,59 @@ export const MyInfoPage = (
   }, [ls.user]);
 
   useEffect(() => {
-    if (!ls.user) return;
+    if (!ls.user || !user) return;
 
-    const hasGeneratedShadowDescriptions = ls.user.experience?.some(
+    const hasShadowDescDatabaseRecord = user.experience?.find(
       (exp) => exp.shadowDescription
     );
 
-    if (hasGeneratedShadowDescriptions) return;
+    const shouldCreate =
+      !hasShadowDescDatabaseRecord &&
+      !creatingShadowExp &&
+      !successCreatingShadowExp;
 
-    createShadowExperience();
+    if (shouldCreate) return createShadowExperience();
+
+    const hasShadowDescLsRecord = ls.user.experience?.find(
+      (exp) => exp.shadowDescription
+    );
+
+    if (!hasShadowDescLsRecord) {
+      const hasShadowDescDatabaseRecord = user.experience?.find(
+        (exp) => exp.shadowDescription
+      );
+
+      if (hasShadowDescDatabaseRecord) {
+        updateLs({ user });
+      }
+    }
   }, [ls.user]);
+
+  const checkUser = () => {
+    return { hasLsRecord: !!ls.user, user };
+  };
+
+  useEffect(() => {
+    // Function to check user data
+    const checkUser = () => {
+      return { hasLsRecord: !!ls.user, user };
+    };
+
+    // Set a timeout to check user data after a delay
+    const timeoutId = setTimeout(() => {
+      const { hasLsRecord, user } = checkUser();
+      if (!hasLsRecord) {
+        updateLs({ user });
+        toast.dismiss();
+        toast.info("Loading your data...");
+      }
+    }, 5000);
+
+    // Clear the timeout if the component unmounts or if relevant data changes
+    return () => {
+      clearTimeout(timeoutId);
+    };
+  }, [ls.user, user]); // Dependencies array
 
   return (
     <>

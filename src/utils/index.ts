@@ -11,7 +11,7 @@ export const getLinkedinId = (url: string): string => {
   const pattern = /linkedin\.com\/in\/([\w-]+)/;
   const match = url.match(pattern);
 
-  if (match && match[1]) {
+  if (match?.[1]) {
     return match[1];
   }
 
@@ -37,5 +37,5 @@ export const getMissingInfo = (user: RouterUser) => {
   ];
 
   //@ts-ignore
-  return keys.filter((key) => !user[key] || !user[key]?.length);
+  return keys.filter((key) => !user[key]?.length);
 };

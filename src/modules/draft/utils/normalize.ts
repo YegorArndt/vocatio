@@ -66,7 +66,8 @@ export const normalize = (c: ComponentToNormalize, draft: LsDraft) => {
 
       const newSection = {
         ...section,
-        components: section.components.map((c: ComponentToNormalize) =>
+        components: section.components.map((c) =>
+          // @ts-ignore
           normalize(c, draft)
         ),
       };

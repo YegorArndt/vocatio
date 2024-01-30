@@ -291,6 +291,7 @@ export const bigEntry = (pps: BigEntryProps): RawComponent => {
                       summary: entry.descriptionSummary,
                       tooltip: "Description",
                       style: {},
+                      className: "text-[12px]",
                       ...(description && description(entry)),
                     },
                   },

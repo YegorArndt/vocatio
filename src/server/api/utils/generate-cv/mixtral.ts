@@ -33,7 +33,7 @@ const getPrompt = (props: MixtralProps) => {
   Format of your response:
 
     1. Prefix each employment history entry with an "@" followed by its index (zero-based). Do not prefix the summary.
-    2. Each employment history must end up as a collection of 3-4 most relevant bullet points. Each bullet point must start with a "•" and a verb. Maintain first person narrative. If there's lack of relevance in the original bullet points, just create a new one mirroring the vacancy requirements.
+    2. Make each employment history entry a set of bullet points. Max.3 bullet points per entry. A bullet point must start with a "•".
     3. Wrap all relevant skills with <b> html tag (e.g. <b>React</b>). I'll parse your response into HTML.
     4. Keep the <i/> tags intact.
     5. Return the summary before the histories.

@@ -26,6 +26,12 @@ import {
 import { IoArrowRedoSharp } from "react-icons/io5";
 import { Switch } from "~/components/ui/external/Switch";
 import { BestPracticesDrawer } from "~/modules/preferences/customize-ai/BestPracticesDrawer";
+import {
+  TooltipTrigger,
+  TooltipContent,
+  Tooltip,
+  TooltipProvider,
+} from "~/components/ui/external/Tooltip";
 
 const { log } = console;
 
@@ -84,20 +90,41 @@ const CustomizeAiPage = () => {
                   {ls.defaultModel}
                 </MenubarTrigger>
                 <MenubarContent className="bg-primary">
-                  {typedEntries(models).map(([key, value]) => (
-                    <MenubarItem
-                      key={key}
-                      className="flex-y cursor-pointer gap-2 hover:bg-hover"
-                      onClick={() => {
-                        updateLs({ defaultModel: key });
-                        toast.success(`Default model set to ${key}`);
-                      }}
-                    >
-                      {value.icon}
-                      {key}
-                      <Badge variant="outline">{value.badge}</Badge>
-                    </MenubarItem>
-                  ))}
+                  {typedEntries(models).map(([key, value]) =>
+                    key === "gpt-4" ? (
+                      <TooltipProvider key={key}>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <MenubarItem
+                              onClick={() => {
+                                toast.info("Upgrade to premium to use gpt-4");
+                              }}
+                              className="flex-y cursor-pointer gap-2 hover:bg-hover"
+                            >
+                              {value.icon}
+                              {key}
+                              <Badge variant="outline">{value.badge}</Badge>
+                              <BlurImage src="/premium.png" />
+                            </MenubarItem>
+                          </TooltipTrigger>
+                          <TooltipContent>Premium feature</TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    ) : (
+                      <MenubarItem
+                        key={key}
+                        className="flex-y cursor-pointer gap-2 hover:bg-hover"
+                        onClick={() => {
+                          updateLs({ defaultModel: key });
+                          toast.success(`Default model set to ${key}`);
+                        }}
+                      >
+                        {value.icon}
+                        {key}
+                        <Badge variant="outline">{value.badge}</Badge>
+                      </MenubarItem>
+                    )
+                  )}
                 </MenubarContent>
               </MenubarMenu>
             </Menubar>

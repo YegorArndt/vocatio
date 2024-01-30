@@ -24,6 +24,12 @@ import { Badge } from "~/components/ui/external/Badge";
 import { Models, PartialVacancy, RouterUser } from "~/modules/extension/types";
 import { useDraftContext } from "../../DraftContext";
 import { LsDraft } from "../../types";
+import {
+  TooltipTrigger,
+  TooltipContent,
+  Tooltip,
+  TooltipProvider,
+} from "~/components/ui/external/Tooltip";
 
 type TextEditorToolbarProps = {
   vacancy: PartialVacancy;
@@ -40,17 +46,19 @@ const getPrompt = (draft: LsDraft) => {
   return `Write a cover letter for the following vacancy posting: ${
     vacancy.description
   }. 
-        My employment history: ${draft.experience
-          .map((x) => `${x.description}`)
-          .join(", ")}. 
-        My professional summary: ${professionalSummary}. 
-        My name: ${name}.
-        My contact info: ${draft.contact
-          .map((x) => `${x.name}: ${x.value}`)
-          .join(", ")}.
-        Date: ${new Date().toLocaleDateString()}.
-        Email: ${draft.email}.
-        Format: ${hfFormat}. Use professional tone. Use the common structure of a cover letter. Make it sound more like a human, not AI! Write the cover letter in the language in which the vacancy posting is written. We do not know any contact data on the receiver.
+   - Insert my data into the cover letter:
+      My employment history: ${draft.experience
+        .map((x) => `${x.description}`)
+        .join(", ")}. 
+      My professional summary: ${professionalSummary}. 
+      My name: ${name}.
+      My contact info: ${draft.contact
+        .map((x) => `${x.name}: ${x.value}`)
+        .join(", ")}.
+      Date: ${new Date().toLocaleDateString()}.
+      Email: ${draft.email}.
+
+   - Format of the cover letter: ${hfFormat}. Use professional tone. Use the common structure of a cover letter. Make it sound more like a human, not AI! Write the cover letter in the language in which the vacancy posting is written. We do not know any contact data on the receiver. Do not include brackets for me to fill in missing data. Use the data I gave you.
     `;
 };
 
@@ -135,8 +143,6 @@ export const TextEditorToolbar = (props: TextEditorToolbarProps) => {
                   <BlurImage src="/ai/gpt-4.png" className="rounded-full" />
                 ),
                 badge: "most cabable",
-                // onClick: () => generateCoverLetter("gpt-4"),
-                disabled: true,
               },
               {
                 label: "gpt-3.5",
@@ -161,18 +167,39 @@ export const TextEditorToolbar = (props: TextEditorToolbarProps) => {
               {trigger.label}
             </MenubarTrigger>
             <MenubarContent className="bg-primary">
-              {actions.map(({ label, icon, onClick, badge }) => (
-                <MenubarItem
-                  key={label}
-                  className="flex-y cursor-pointer gap-2 hover:bg-hover"
-                  disabled={!onClick}
-                  onClick={onClick}
-                >
-                  {icon}
-                  {label}
-                  {badge && <Badge variant="outline">{badge}</Badge>}
-                </MenubarItem>
-              ))}
+              {actions.map(({ label, icon, onClick, badge }) =>
+                label === "gpt-4" ? (
+                  <TooltipProvider key={label}>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <MenubarItem
+                          onClick={() => {
+                            toast.info("Upgrade to premium to use gpt-4");
+                          }}
+                          className="flex-y cursor-pointer gap-2 hover:bg-hover"
+                        >
+                          {icon}
+                          {label}
+                          {badge && <Badge variant="outline">{badge}</Badge>}
+                          <BlurImage src="/premium.png" />
+                        </MenubarItem>
+                      </TooltipTrigger>
+                      <TooltipContent>Premium feature</TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                ) : (
+                  <MenubarItem
+                    key={label}
+                    className="flex-y cursor-pointer gap-2 hover:bg-hover"
+                    disabled={!onClick}
+                    onClick={onClick}
+                  >
+                    {icon}
+                    {label}
+                    {badge && <Badge variant="outline">{badge}</Badge>}
+                  </MenubarItem>
+                )
+              )}
             </MenubarContent>
           </MenubarMenu>
         ))}

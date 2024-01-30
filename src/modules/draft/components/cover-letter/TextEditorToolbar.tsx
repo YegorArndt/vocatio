@@ -149,7 +149,7 @@ export const TextEditorToolbar = (props: TextEditorToolbarProps) => {
                 icon: (
                   <BlurImage src="/ai/gpt-3.png" className="rounded-full" />
                 ),
-                badge: "in between",
+                badge: "default",
                 onClick: () => generateCoverLetter("gpt-3.5"),
               },
               {

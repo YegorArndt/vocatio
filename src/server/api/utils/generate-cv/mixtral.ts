@@ -22,7 +22,7 @@ const getPrompt = (props: MixtralProps) => {
 
   //prettier-ignore
   return `
-  Your task: rewrite my professional summary as well as the employment histories to completely (!) match the vacancy requirements. Wrap the key required skills (e.g. "React") with <b>React</b> html tag. I'll parse your response into HTML.
+  Your task: rewrite my professional summary as well as the employment histories to completely (!) match the vacancy requirements. Wrap the key required skills (e.g. "React") with <b>React</b> html tag. I'll parse your response into HTML. Rewrite each employment history into 3-4 bullet points.
 
   Context:
 
@@ -33,11 +33,10 @@ const getPrompt = (props: MixtralProps) => {
   Format of your response:
 
     1. Prefix each employment history entry with an "@" followed by its index (zero-based). Do not prefix the summary.
-    2. Make each employment history entry a set of bullet points. Max.3 bullet points per entry. A bullet point must start with a "•".
-    3. Wrap all relevant skills with <b> html tag (e.g. <b>React</b>). I'll parse your response into HTML.
-    4. Keep the <i/> tags intact.
-    5. Return the summary before the histories.
-    6. Make the summary short, concise. It must be a single sentence.
+    2. Wrap all relevant skills with <b> html tag (e.g. <b>React</b>). I'll parse your response into HTML.
+    3. Keep the <i/> tags intact.
+    4. Return the summary before the histories.
+    5. Make the summary short, concise. It must be a single sentence.
   `
 };
 

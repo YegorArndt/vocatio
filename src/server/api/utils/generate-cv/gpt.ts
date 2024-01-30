@@ -77,7 +77,6 @@ export const createShadowExperience = async (
     - Smaller numbers should be written as numbers (e.g. 1000). 
     - Each bullet point starts with a "•" and a verb.
     - As the first bullet of each employment history you should add a summary of what I did and include all the skills I have listed in square brackets after each employment history in the bullet point. Omit the square brackets.
-    - Wrap the listing of skills in the first bullet point with square brackets. I need it, because I'll try to programatically find these skills later. Do not wrap each skills individually. Instead, wrap the whole listing of skills.
     
     Constraints:
     - Do not add phrases like "driving $1B in revenue", "serve millions of license requests daily" to each bullet point. Instead add them to 1-2 bullet points per employment history.

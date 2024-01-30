@@ -50,11 +50,10 @@ export const useSendMessage = (props?: { expirationToken?: string | null }) => {
       setIsExpired(true);
       return;
     }
+    try {
+      if (window.chrome && chrome.runtime) {
+        setHasSent(true);
 
-    if (window.chrome && chrome.runtime) {
-      setHasSent(true);
-
-      try {
         chrome.runtime.sendMessage(
           EXTENSION_ID,
           message,
@@ -69,10 +68,10 @@ export const useSendMessage = (props?: { expirationToken?: string | null }) => {
             setIsInstalled(false);
           }
         );
-      } catch (e) {
+      } else {
         setIsInstalled(false);
       }
-    } else {
+    } catch (e) {
       setIsInstalled(false);
     }
   };

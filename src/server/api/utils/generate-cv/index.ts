@@ -44,7 +44,7 @@ export const generateDraft = async (props: GenerateDraftProps) => {
     ...user,
     professionalSummary: professionalSummary || user.professionalSummary,
     experience:
-      experience ||
+      experience ??
       user.experience!.map((x) => ({
         ...x,
         id: uuidv4(),

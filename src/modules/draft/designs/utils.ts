@@ -10,14 +10,14 @@ import type {
 } from "../types/components";
 import { cn } from "~/utils";
 import type { RawComponent } from "../types/raw";
-import { EducationEntry, ExperienceEntry } from "@prisma/client";
+import { ContactEntry, EducationEntry, ExperienceEntry } from "@prisma/client";
 import { typedKeys } from "../utils/common";
 import { icons } from "~/constants";
 import { GroupProps } from "~/modules/draft/intrinsic/Group";
 
 const iconNames = typedKeys(icons);
 
-const defaultIcon = (entryName: string) =>
+export const defaultIcon = (entryName: string) =>
   iconNames.find((i) => i.includes(entryName.toLowerCase()));
 
 type UtilityComponentProps =
@@ -129,9 +129,14 @@ type ContextProps = {
   headingClassName?: string;
   headingGrade?: number;
   componentType?: NormalizedType;
+  sectionProps?: UtilityComponentProps;
+  componentProps?: UtilityComponentProps;
+  omitHeading?: boolean;
 };
 
-const getType = (entry: ExperienceEntry | EducationEntry) => {
+export const getType = (
+  entry: ExperienceEntry | EducationEntry | ContactEntry
+) => {
   if (entry.image) return "icon-group";
   if (defaultIcon(entry.name)) return "icon-group";
   if (entry.name) return "group";
@@ -146,6 +151,9 @@ export const entry = (pps: ContextProps): RawComponent => {
     componentType,
     headingClassName,
     headingGrade,
+    sectionProps,
+    omitHeading,
+    componentProps,
   } = pps;
 
   return {
@@ -161,7 +169,8 @@ export const entry = (pps: ContextProps): RawComponent => {
             image: entry.image ?? defaultIcon(entry.name) ?? "diamond",
             tooltip: entry.name,
             label: entry.name,
-            value: entry.value,
+            value: id === "skills" ? null : entry.value,
+            ...(componentProps && componentProps(entry)),
           },
         };
       }) as NormalizedComponent[];
@@ -171,17 +180,19 @@ export const entry = (pps: ContextProps): RawComponent => {
           contact: {
             id,
             components: [
-              heading({
-                value: headingValue,
-                className: headingClassName,
-                grade: headingGrade,
-              }),
+              !omitHeading &&
+                heading({
+                  value: headingValue,
+                  className: headingClassName,
+                  grade: headingGrade,
+                }),
               ...components,
-            ],
+            ].filter(Boolean),
           },
         },
         tooltip: `${headingValue} Section`,
-        className: id,
+        ...sectionProps,
+        className: `${id} ${sectionProps?.className ?? ""}`,
       };
     },
   };
@@ -291,7 +302,7 @@ export const bigEntry = (pps: BigEntryProps): RawComponent => {
                       summary: entry.descriptionSummary,
                       tooltip: "Description",
                       style: {},
-                      className: "text-[12px]",
+                      className: "text-[12.5px] leading-loose",
                       ...(description && description(entry)),
                     },
                   },

@@ -4,8 +4,8 @@ import { get } from "lodash-es";
 import type { DraftContextInput, DraftContextOutput } from "./types";
 import type { Design } from "./types/design";
 import type { RawDesign } from "./types/raw";
-import { Venusaur } from "./designs/Venusaur";
 import { init } from "./utils/init";
+import { Pikachu } from "./designs/Pikachu";
 
 const { log } = console;
 
@@ -45,7 +45,7 @@ export const DraftContext = (props: DraftContextInput) => {
   const { draft, children, a4Ref } = props;
 
   const hydrateDesign = (d: RawDesign) => init(draft, d);
-  const initialDesign = hydrateDesign(Venusaur);
+  const initialDesign = hydrateDesign(Pikachu);
 
   const [design, setDesign] = useState<Design>(initialDesign);
 

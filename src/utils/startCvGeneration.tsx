@@ -86,21 +86,19 @@ export const startCvGeneration = (props: StartCvGenerationProps) => {
       /**
        * Show success toast
        */
-      toast.success(
-        <div onClick={() => toast.dismiss("success")} className="flex-y">
-          🎉 Success.&nbsp;
+      toast.success("CV generated.", {
+        description: (
           <Link
             text="View CV"
             to={`/create/${vacancyId}`}
             className="flex-y gap-1 clr-blue"
+            onClick={() => toast.dismiss("success")}
           />
-        </div>,
-        {
-          duration: Infinity,
-          dismissible: true,
-          id: "success",
-        }
-      );
+        ),
+        duration: Infinity,
+        dismissible: true,
+        id: "success",
+      });
     })
     .catch((e) => {
       toast.dismiss();

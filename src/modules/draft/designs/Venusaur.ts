@@ -28,6 +28,9 @@ const left: RawComponent[] = [
       className:
         "font-bold text-[13px] grid grid-cols-[25px,1fr] gap-2 items-center",
     }),
+    description: () => ({
+      value: "",
+    }),
     sectionClassName: "flex flex-col",
   }),
   entry({ id: "languages", componentType: "group" }),

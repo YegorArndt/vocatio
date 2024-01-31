@@ -22,22 +22,23 @@ const getPrompt = (props: MixtralProps) => {
 
   //prettier-ignore
   return `
-  Your task: rewrite my professional summary as well as the employment histories to completely (!) match the vacancy requirements. Wrap the key required skills (e.g. "React") with <b>React</b> html tag. I'll parse your response into HTML. Rewrite each employment history into 3-4 bullet points.
-
   Context:
 
-    Vacancy requirements: "${vacancy.requiredSkills}".
+    Vacancy: "${vacancy.description}".
     My professional summary: "${user.professionalSummary}".
     My employment histories: "${experience}".
 
-  Format of your response:
+    Instructions:
+    1. Completely rewrite the professional summary (from scratch, create a new one) to very closely match the vacancy.
+    2. Completely rewrite the employment histories (from scratch, create new ones) to very closely match the vacancy. For that, make up new bullet points based on what's required in the vacancy. You can consider mixing them with the original ones. The made up ones are more important though.
+    3. Keep each employment history entry at max. 4 bullet points ("•").
 
-    1. Prefix each employment history entry with an "@" followed by its index (zero-based). Do not prefix the summary.
-    2. Wrap all relevant skills with <b> html tag (e.g. <b>React</b>). I'll parse your response into HTML.
-    3. Keep the <i/> tags intact.
-    4. Return the summary before the histories.
-    5. Make the summary short, concise. It must be a single sentence.
-  `
+    Format of your response:
+    1. First return the professional summary. Do not prefix the resultant summary with anything.
+    2. Prefix each employment history entry with an "@" followed by its index (zero-based). 
+    3. Wrap all skills (technologies, other hard-skills) with <b>{skill name}</b> html tag (e.g. <b>React</b>). I'll parse your response into HTML.
+    4. Do not add any introductory or accompanying text. I'll insert your response directly into the resume!
+ `
 };
 
 export const tryMixtral = async (props: MixtralProps) => {
@@ -51,8 +52,6 @@ export const tryMixtral = async (props: MixtralProps) => {
       temperature: 0.7,
     }
   );
-
-  log(tailored);
 
   const extracted = tailored.generated_text.split("</s>")[1];
   const formatted = formatResponse(extracted);

@@ -1,5 +1,5 @@
 import cn from "classnames";
-import { useCallback, type CSSProperties, FormEvent, useRef } from "react";
+import { useCallback, type CSSProperties, useRef, FormEvent } from "react";
 import { AnimatedDiv } from "~/components/AnimatedDiv";
 import { useDraftContext } from "~/modules/draft/DraftContext";
 import { useComponentContext } from "../components/ComponentContext";
@@ -39,7 +39,7 @@ export const Autoresize = (props: AutoresizeProps) => {
       //@ts-ignore
       c.props = newProps;
       updateDesign(); // TODO: whitespace collapse
-    }, 10000),
+    }, 1000000),
     []
   );
 

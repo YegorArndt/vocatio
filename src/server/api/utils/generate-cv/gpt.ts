@@ -24,22 +24,23 @@ const getPrompt = (props: GptProps) => {
   const experience = formatExperience(user.experience, vacancy.description!);
   const responsibilities = getResponsibilities(vacancy, model);
 
+  // prettier-ignore
   return `
-    Your task: rewrite my professional summary as well as the employment histories to completely match the vacancy requirements.
+      Context:
+  
+        Vacancy: "${responsibilities}".
+        My professional summary: "${user.professionalSummary}".
+        My employment histories: "${experience}".
 
-    Context:
+      Goal: compose a professional summary and rewrite my employment histories to closely match the vacancy description.
 
-      Vacancy requirements: "${responsibilities}".
-      My professional summary: "${user.professionalSummary}".
-      My employment histories: "${experience}".
-
-    Format of your response:
-
+      Format of your response:
+  
       1. Prefix each employment history entry with an "@" followed by its index (zero-based). Do not prefix the summary.
-      2. Each employment history must end up as a collection of 3-4 most relevant bullet points. Each bullet point must start with a "•" and a verb. Maintain first person narrative.
-      3. Wrap all relevant skills with <b> html tag (e.g. <b>React</b>). I'll parse your response into HTML.
-      4. Keep the <i/> tags intact.
-    `;
+      2. Each employment history must keep its original 2-3 bullet points plus 2-3 made up bullet points based on vacancy description. A total of 4-6 bullet points is expected per employmnet history.
+      3. Wrap all skills (technologies, other hard-skills) with <b>{skill name}</b> html tag (e.g. <b>React</b>). I'll parse your response into HTML.
+      4. Do not add any introductory or accompanying text. I'll insert your response directly into the resume!
+`;
 };
 
 export const tryGpt = async (props: GptProps) => {
@@ -76,12 +77,12 @@ export const createShadowExperience = async (
     - Preferably, use seconds, money, number of users and similar metrics avoiding the usage of percentage based metrics.
     - Smaller numbers should be written as numbers (e.g. 1000). 
     - Each bullet point starts with a "•" and a verb.
-    - As the first bullet of each employment history you should add a summary of what I did and include all the skills I have listed in square brackets after each employment history in the bullet point. Omit the square brackets.
+    - As the first bullet of each employment history you should add a summary of what I did and include all the skills I have listed in square brackets after each employment history in the bullet point. Omit the square brackets. Use strong verbs and zero cliches. This is the most important bullet point.
     
     Constraints:
-    - Do not add phrases like "driving $1B in revenue", "serve millions of license requests daily" to each bullet point. Instead add them to 1-2 bullet points per employment history.
-    - Be more modest choosing numbers for metrics. 
-    - Do not omit details from the employment histories. Simply change the format to bullet points.
+      - Do not add phrases like "driving $1B in revenue", "serve millions of license requests daily" to each bullet point. Instead add them to 1-2 bullet points per employment history.
+      - Be more modest choosing numbers for metrics. 
+      - Do not omit details from the employment histories. Simply change the format to bullet points.
   
     Format of your response:
       - Return the reworded histories as JSON with keys being the indices of the employment histories (initially prefixed with "@"). 

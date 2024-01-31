@@ -38,6 +38,9 @@ const left: RawComponent[] = [
       imageProps: { height: 30, width: 30 },
       className: "gap-1 text-[16px] font-bold",
     }),
+    description: () => ({
+      value: "",
+    }),
   }),
   entry({ id: "languages", headingGrade: 3, componentType: "group" }),
 ];

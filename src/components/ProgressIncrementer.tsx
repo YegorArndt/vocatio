@@ -12,7 +12,7 @@ type ProgressIncrementerProps = {
 
 export const ProgressIncrementer = ({
   canFinish,
-  incrementBy = 10,
+  incrementBy = 30,
   shouldHide,
   className,
   fixToTop,

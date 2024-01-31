@@ -33,6 +33,9 @@ const left: RawComponent[] = [
       className: "text-[14px] grid grid-cols-[50px,1fr]",
       imageProps: { height: 50, width: 50, className: "rounded-full" },
     }),
+    description: () => ({
+      value: "",
+    }),
   }),
 ];
 

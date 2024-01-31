@@ -43,6 +43,9 @@ const left: RawComponent[] = [
         ? `Completed in ${extractYear(entry.period)}`
         : entry.period,
     }),
+    description: () => ({
+      value: "",
+    }),
   }),
   entry({ id: "contact", headingGrade: 3, headingValue: "My Contact" }),
   entry({ id: "languages", headingGrade: 3 }),

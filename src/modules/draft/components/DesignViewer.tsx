@@ -9,8 +9,9 @@ import { Raichu } from "../designs/Raichu";
 import { Nidoran } from "../designs/Nidoran";
 import { Link } from "~/components/ui/buttons/Link";
 import { Bulbasaur } from "../designs/Bulbasaur";
+import { Pikachu } from "../designs/Pikachu";
 
-const designs = [Bulbasaur, Nidoran, Venusaur, Charmander, Raichu];
+const designs = [Pikachu, Bulbasaur, Nidoran, Venusaur, Charmander, Raichu];
 
 export const DesignViewer = () => {
   const { changeDesign, design } = useDraftContext();

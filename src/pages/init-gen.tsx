@@ -6,9 +6,11 @@ import { startCvGeneration } from "~/utils/startCvGeneration";
 import { useSendMessage } from "~/hooks/useSendMessage";
 import { usePersistentData } from "~/hooks/usePersistentData";
 import { updatePersistedState } from "~/utils/ls";
-import { useRouter } from "next/router";
 import { toast } from "sonner";
 import { ProgressIncrementer } from "~/components/ProgressIncrementer";
+import { MdArrowRightAlt } from "react-icons/md";
+import { AnimatedDiv } from "~/components/AnimatedDiv";
+import { Link } from "~/components/ui/buttons/Link";
 
 const { log } = console;
 
@@ -29,8 +31,6 @@ const InitGenerationPage = () => {
     isRefetching,
   } = api.users.get.useQuery();
   const { ls } = usePersistentData();
-
-  const router = useRouter();
 
   useEffect(() => {
     if (!hasSent) sendMessage({ type: "get-vacancy" });
@@ -73,9 +73,7 @@ const InitGenerationPage = () => {
       }
 
       if (createdVacancy) {
-        void refetchUser().then(() => {
-          void router.push("/vacancies");
-        });
+        void refetchUser();
       }
     }
   }, [response.success, user, ls.user, createdVacancy, isGenerating]);
@@ -86,6 +84,17 @@ const InitGenerationPage = () => {
         <title>Generating CV...</title>
       </Head>
       <ProgressIncrementer fixToTop canFinish={createdVacancy} shouldHide />
+      {createdVacancy && (
+        <AnimatedDiv className="flex-center h-[95vh] flex-col gap-3">
+          🎉 Success. The vacancy was added to your dashboard.
+          <Link
+            text="View dashboard"
+            to="/vacancies"
+            className="flex-y sm rounded-md tracking-wide hover:bg-hover"
+            endIcon={<MdArrowRightAlt size={20} />}
+          />
+        </AnimatedDiv>
+      )}
     </>
   );
 };

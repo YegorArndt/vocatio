@@ -32,7 +32,7 @@ export const formatExperience = (
     .map(
       (x, i) =>
         // prettier-ignore
-        `@${i}: ${x.shadowDescription}. [${x.skills.map((x) => `${x}`).join(", ")}]`
+        `@${i}: ${x.shadowDescription}`
     )
     .join("\n");
 };
@@ -60,7 +60,7 @@ export const getResponsibilities = (
 ) => {
   const { requiredSkills, description } = vacancy;
 
-  return requiredSkills;
+  return description;
 
   // const isRequiredSkillsLong = requiredSkills && requiredSkills.length > 300;
 
@@ -74,20 +74,29 @@ export const getResponsibilities = (
 export const formatResponse = (enhancedContent: string | undefined) => {
   if (!enhancedContent) return { isSuccessfullyEnhanced: false };
 
+  // Remove unwanted headers
   const enhancedContentCopy = enhancedContent.replace(
     /Professional Summary:|Summary:|Employment Histories:|Employment History:|Employment History|Summary|Professional Summary/gi,
     ""
   );
 
+  // Split the content into summary and histories
   const [summary, historiesContent] = enhancedContentCopy.split(/(?=@0)/, 2);
 
   if (!summary || !historiesContent) return { isSuccessfullyEnhanced: false };
 
+  // Remove the "1.", "2.", etc., patterns before each history entry
+  const cleanedHistoriesContent = historiesContent.replace(
+    /\b\d+\.\s*(?=@\d+:)/g,
+    ""
+  );
+
+  // Process each history entry
   const histories = {} as Record<string, string>;
   const historyRegex = /@(\d+):\s*([\s\S]*?)(?=@\d+:|$)/g;
   let match;
 
-  while ((match = historyRegex.exec(historiesContent)) !== null) {
+  while ((match = historyRegex.exec(cleanedHistoriesContent)) !== null) {
     const historyIndex = match[1]!;
     const historyText = match[2]!.trim();
     histories[historyIndex] = historyText;
@@ -129,20 +138,17 @@ export const boldKeywords = (
   vacancy: PartialVacancy
 ) => {
   return experience.map((x) => {
-    // Verwenden Sie einen regulären Ausdruck für die Übereinstimmung unter Ignorierung der Groß-/Kleinschreibung
-    const relevantSkills = x.skills.filter((skill) =>
-      new RegExp(skill, "i").test(vacancy.description!)
-    );
+    const experienceSkills = x.skills;
+    const vacancyText = vacancy.description?.toLowerCase();
 
-    // Erstellen Sie einen regulären Ausdruck, der alle relevanten Fähigkeiten (case-insensitive) umfasst
-    const regex = new RegExp(relevantSkills.join("|"), "gi");
+    const description = x.description;
 
-    const description = x.description.replace(
-      regex,
-      (match) => `<b>${match}</b>`
-    );
-
-    log(description);
+    experienceSkills?.forEach((skill) => {
+      // Run experience skills against vacancy text finding all matches and replacing them with bolded version.
+      const regex = new RegExp(`\\b${skill.toLowerCase()}\\b`, "g");
+      const matches = vacancyText?.match(regex);
+      description?.replace(regex, `<b>${matches}</b>`);
+    });
 
     return { ...x, description };
   });

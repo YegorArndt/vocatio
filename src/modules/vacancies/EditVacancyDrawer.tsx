@@ -165,6 +165,7 @@ export const EditVacancyDrawer = (props: EditVacancyDrawerProps) => {
 
     const { id } = vacancy;
 
+    // @ts-ignore
     upsertVacancy({
       id,
       ...autofillMissing(updated as EditableVacancy),

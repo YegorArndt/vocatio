@@ -50,6 +50,7 @@ export const vacanciesRouter = createTRPCRouter({
         where: { id: vacancyId },
         data: {
           user: {
+            // @ts-ignore
             disconnect: { id: userId },
           },
         },
@@ -72,6 +73,7 @@ export const vacanciesRouter = createTRPCRouter({
       const upsertedVacancy = await ctx.prisma.vacancy.upsert({
         where: { id: input.id },
         update: input as Vacancy,
+        // @ts-ignore
         create: {
           ...(input as Vacancy),
           user: {

@@ -13,6 +13,7 @@ export const Heading = () => {
 
   const userNameProps = {
     className:
+      //@ts-ignore
       design.baseComponents?.[`heading-${c.hydratedProps?.grade}`]?.className ??
       HEADING_CN,
     ...c.hydratedProps,

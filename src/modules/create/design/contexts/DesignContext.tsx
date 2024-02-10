@@ -1,5 +1,4 @@
 import React, { createContext, useContext, useState } from "react";
-import { DraftContextInput } from "../../../../__archieved/draft/types";
 import { Design } from "../types";
 import { Charmander } from "../designs/Charmander";
 
@@ -11,7 +10,7 @@ type DesignContextInput = {
 };
 
 type DesignContextOutput = {
-  a4Ref: DraftContextInput["a4Ref"];
+  a4Ref: DesignContextInput["a4Ref"];
   design: Design;
 };
 

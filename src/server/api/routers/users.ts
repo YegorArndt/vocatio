@@ -9,7 +9,7 @@ import { getUserUpdateArgs } from "../utils/getUserUpdateArgs";
 import { UserUpdateSchema } from "../utils/schemas";
 import { ExperienceEntry, User } from "@prisma/client";
 import { pick } from "lodash-es";
-import { createShadowExperience } from "../utils/generate-cv/gpt";
+import { createShadowExperience } from "../../../__archieved/generate-cv/gpt";
 
 const { log } = console;
 

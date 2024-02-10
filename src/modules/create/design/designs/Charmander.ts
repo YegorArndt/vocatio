@@ -15,7 +15,7 @@ import {
   languages,
   education,
 } from "./utils";
-import { boldKeywords } from "~/server/api/utils/generate-cv/utils";
+import { boldKeywords } from "~/__archieved/generate-cv/utils";
 
 const blueColor = "bg-[#22405C]";
 const grayColor = "#BDBDBD";

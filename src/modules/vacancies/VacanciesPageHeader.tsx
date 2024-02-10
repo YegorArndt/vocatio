@@ -6,7 +6,7 @@ import { CustomMenuButton } from "~/components/ui/external/CustomMenuButton";
 import { Button, ButtonProps } from "~/components/ui/buttons/Button";
 import { cn } from "~/utils";
 import { GroupedVacancies, useVacanciesContext } from "./VacanciesContext";
-import { typedKeys } from "../draft/utils/common";
+import { typedKeys } from "../../__archieved/draft/utils/common";
 import { CustomMenuItem } from "~/components/ui/external/CustomMenuItem";
 import { Diamond } from "~/icons";
 import { Text } from "~/components/ui/inputs/Text";
@@ -150,20 +150,6 @@ export const VacanciesPageHeader = () => {
           </CustomMenu>
         )}
       </section>
-      {/* <TooltipProvider>
-        <Tooltip>
-          <TooltipTrigger
-            className={cn(HEADER_BUTTON_CN, {
-              "bg-hover": isDndMode,
-            })}
-            onClick={() => setIsDndMode(!isDndMode)}
-            disabled
-          >
-            Drag and drop mode
-          </TooltipTrigger>
-          <TooltipContent>✨ Coming soon</TooltipContent>
-        </Tooltip>
-      </TooltipProvider> */}
     </header>
   );
 };

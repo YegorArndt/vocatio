@@ -30,6 +30,7 @@ const config = {
         input: "var(--input-clr)",
         tertiary: "var(--clr-tertiary)",
         "border-tertiary": "var(--border-clr-tertiary)",
+        grayD: "var(--gray-d)",
       },
       backgroundColor: {
         base: "var(--bg-base)",
@@ -44,6 +45,7 @@ const config = {
         border: "var(--border-clr)",
         input: "var(--input-bg)",
         tertiary: "var(--bg-tertiary)",
+        grayD: "var(--gray-d)",
       },
       fontSize: {
         default: "0.875rem",
@@ -106,6 +108,7 @@ const config = {
     }),
     require("@tailwindcss/aspect-ratio"),
     require("tailwindcss-animate"),
+    require("@tailwindcss/container-queries"),
 
     // require("@tailwindcss/forms"),
   ],

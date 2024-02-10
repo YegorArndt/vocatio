@@ -88,6 +88,7 @@ export const EntryBox = (props) => {
               )}
             </ArrayFormContext>
             <footer className="border-top flex-between col-span-2 mt-8 w-full gap-3 py-4">
+              {boxName === "skills" && <div>Add as many as possible.</div>}
               <Button
                 frontIcon={isUpdating && <Spinner size={10} />}
                 text={isUpdating ? "Updating..." : "Update"}

@@ -22,6 +22,7 @@ const ResizablePanel = ResizablePrimitive.Panel;
 const ResizableHandle = ({
   withHandle,
   className,
+  children,
   ...props
 }: React.ComponentProps<typeof ResizablePrimitive.PanelResizeHandle> & {
   withHandle?: boolean;
@@ -38,6 +39,7 @@ const ResizableHandle = ({
         <FaArrowsLeftRight width={50} height="100%" />
       </div>
     )}
+    {children}
   </ResizablePrimitive.PanelResizeHandle>
 );
 

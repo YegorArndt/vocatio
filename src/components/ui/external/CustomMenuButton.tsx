@@ -1,7 +1,7 @@
 import cn from "classnames";
 import { MenuButton, MenuButtonProps } from "@szhsin/react-menu";
 import { forwardRef } from "react";
-import { BUTTON_CN } from "~/modules/draft/toolstrip/constants";
+import { BUTTON_CN } from "~/modules/create/design/toolbars/constants";
 
 export const CustomMenuButton = forwardRef((props: MenuButtonProps, ref) => {
   const { className, ...rest } = props;

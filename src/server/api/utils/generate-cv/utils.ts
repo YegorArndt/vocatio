@@ -1,6 +1,9 @@
 import type { ExperienceEntry } from "@prisma/client";
 import { pick } from "lodash-es";
-import { Models, PartialVacancy, RouterUser } from "~/modules/extension/types";
+import {
+  Models,
+  PartialVacancy,
+} from "~/modules/create/design/extension/types";
 import { v4 as uuidv4 } from "uuid";
 
 const { log } = console;
@@ -37,18 +40,27 @@ export const formatExperience = (
     .join("\n");
 };
 
-export const getTopSkills = (vacancy: PartialVacancy, user: RouterUser) =>
-  rearrangeSkillsByRelevance(
-    vacancy.description!,
-    Array.from(
-      new Set(
-        [
-          ...user.skills!.map((x) => x.name),
-          ...user.experience!.map((x) => x.skills),
-        ].flat()
-      )
-    )
-  );
+export const getTopSkills = (vacancySkills: string[], userSkills: string[]) => {
+  const topSkills = [] as string[];
+  const remainderSkills = [] as string[];
+
+  vacancySkills.forEach((vs) => {
+    const userSkill = userSkills.find((us) => {
+      const vsLower = vs.toLowerCase();
+      const usLower = us.toLowerCase();
+
+      return (
+        usLower === vsLower ||
+        usLower.includes(vsLower) ||
+        vsLower.includes(usLower)
+      );
+    });
+    if (userSkill) topSkills.push(vs);
+    else remainderSkills.push(vs);
+  });
+
+  return { topSkills, remainderSkills };
+};
 
 export const compressResponsbilities = (r: string) => {
   return r;
@@ -133,23 +145,13 @@ export const mixWithOriginalHistories = (
   return experience;
 };
 
-export const boldKeywords = (
-  experience: ExperienceEntry[],
-  vacancy: PartialVacancy
-) => {
-  return experience.map((x) => {
-    const experienceSkills = x.skills;
-    const vacancyText = vacancy.description?.toLowerCase();
+export const boldKeywords = (text: string, keywords: string) => {
+  const vacancyWords = new Set(keywords.toLowerCase().match(/\w+/g));
 
-    const description = x.description;
-
-    experienceSkills?.forEach((skill) => {
-      // Run experience skills against vacancy text finding all matches and replacing them with bolded version.
-      const regex = new RegExp(`\\b${skill.toLowerCase()}\\b`, "g");
-      const matches = vacancyText?.match(regex);
-      description?.replace(regex, `<b>${matches}</b>`);
-    });
-
-    return { ...x, description };
+  return text.replace(/\w+/g, (word) => {
+    if (vacancyWords.has(word.toLowerCase())) {
+      return `<span class="font-bold">${word}</span>`;
+    }
+    return word;
   });
 };

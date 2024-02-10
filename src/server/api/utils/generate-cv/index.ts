@@ -1,11 +1,8 @@
-import { v4 as uuidv4 } from "uuid";
-
 import type {
   Models,
   RouterUser,
   PartialVacancy,
-} from "~/modules/extension/types";
-import { getTopSkills } from "./utils";
+} from "~/modules/create/design/extension/types";
 import { tryMixtral } from "./mixtral";
 import { tryGpt } from "./gpt";
 
@@ -20,38 +17,55 @@ type GenerateDraftProps = {
 export const generateDraft = async (props: GenerateDraftProps) => {
   const { vacancy, user, model } = props;
 
-  const firstTryModel = model === "mixtral" ? tryMixtral : tryGpt;
-  const fallbackModel = model === "mixtral" ? tryGpt : tryMixtral;
+  const tryFirstFn = model === "mixtral" ? tryMixtral : tryGpt;
+  const fallbackFn = model === "mixtral" ? tryGpt : tryMixtral;
 
-  let { professionalSummary, experience, isSuccessfullyEnhanced } =
-    await firstTryModel({
-      vacancy,
-      user,
-      model,
-    });
+  let {
+    professionalSummary,
+    vacancySkills,
+    matchingSkills,
+    bonusTasks,
+    vacancyResponsibilities,
+    integratedGenericBulletPoints,
+    isSuccess,
+  } = await tryGpt({
+    vacancy,
+    user,
+    model,
+  });
 
-  if (!isSuccessfullyEnhanced) {
-    ({ professionalSummary, experience } = await fallbackModel({
-      vacancy,
-      user,
-      model,
-    }));
+  const combinedSummaries = {
+    original: user.professionalSummary,
+    generated: professionalSummary,
+  };
+
+  const tailoredExperience = [
+    ...user.experience.map((x, i) =>
+      i === 0
+        ? {
+            ...x,
+            description: bonusTasks[0].mergedTuples
+              .map((x) => `• ${x}`)
+              .join("\n"),
+          }
+        : { ...x, description: x.shadowDescription }
+    ),
+  ];
+
+  let filledMatchingSkills = matchingSkills;
+
+  if (matchingSkills.length < 7) {
   }
-
-  const topSkills = getTopSkills(vacancy, user);
 
   return {
     ...user,
-    professionalSummary: professionalSummary || user.professionalSummary,
-    experience:
-      experience ??
-      user.experience!.map((x) => ({
-        ...x,
-        id: uuidv4(),
-        originalExperienceEntryId: x.id,
-      })),
+    user,
+    integratedGenericBulletPoints,
+    combinedSummaries,
+    vacancySkills,
+    matchingSkills,
+    tailoredExperience,
     jobTitle: vacancy.jobTitle || user.jobTitle || "Software Engineer",
-    topSkills,
     vacancy,
   };
 };

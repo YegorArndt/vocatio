@@ -20,7 +20,7 @@ export const NavigationLink = (props: NavigationLinkProps) => {
     activeIfIncludes,
     ...linkProps
   } = props;
-  const { asPath, pathname } = useRouter();
+  const { asPath } = useRouter();
   let isActive = asPath === to;
 
   if (activeIfIncludes) {

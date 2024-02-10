@@ -9,7 +9,7 @@ import {
 import { isEmpty, isNil, pick, startCase } from "lodash-es";
 import { Checkmark } from "~/components/icons";
 import { api, cn } from "~/utils";
-import { RouterUser } from "~/modules/extension/types";
+import { RouterUser } from "~/modules/create/design/extension/types";
 import { useScrollIntoView } from "~/hooks/useScrollIntoView";
 import { MainBox } from "./boxes/components/MainBox";
 import { BigEntryBox } from "./boxes/components/BigEntryBox";
@@ -132,7 +132,6 @@ const UpdateWithExtensionLink = (props: {
           `Open the extension while on LinkedIn and click "Update ${boxName}"`,
           {
             duration: 10000,
-            dismissible: true,
           }
         );
       }}
@@ -144,6 +143,7 @@ const UpdateWithExtensionLink = (props: {
 
 export const BoxFactory = (props: BoxFactoryProps) => {
   const { boxName, updateKey, className } = props;
+  const { data: user } = api.users.get.useQuery();
   const { ls, updateLs } = usePersistentData();
   const { mutate: updateDatabase, isLoading: isUpdating } =
     api.users.update.useMutation();
@@ -154,19 +154,17 @@ export const BoxFactory = (props: BoxFactoryProps) => {
 
   const { Component, dataKeys } = mapping[boxName];
 
-  const data = ls.user && pick(ls.user, dataKeys);
   const update = (updatedUser: Partial<RouterUser>) => {
     /**
      * Update database. On success - update local storage.
      */
-
     //@ts-ignore
     updateDatabase(updatedUser, {
       onSuccess: () => {
-        //@ts-ignore
-        updateLs({ user: { ...ls.user, ...updatedUser } });
-        const keys = dataKeys.map(startCase);
-        toast.success(`Updated ${keys.join(", ")}.`);
+        // @ts-ignore
+        updateLs({ user: { ...user, ...updatedUser } });
+        const keys = dataKeys.map(startCase).join(", ");
+        toast.success(`Updated ${keys}.`);
       },
       onError: () => {
         toast.error(
@@ -175,6 +173,8 @@ export const BoxFactory = (props: BoxFactoryProps) => {
       },
     });
   };
+
+  const data = ls.user && pick(ls.user, dataKeys);
 
   const isDataComplete =
     data &&

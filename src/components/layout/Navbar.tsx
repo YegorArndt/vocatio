@@ -1,31 +1,12 @@
 import { type PropsWithChildren } from "react";
 import { SignOutButton, useUser } from "@clerk/nextjs";
-import { FaLaptopCode } from "react-icons/fa";
-import { IoSettingsOutline } from "react-icons/io5";
 
-import { NavigationLink } from "../NavigationLink";
 import { Divider } from "./Divider";
 import { Menu, MenuButton } from "@szhsin/react-menu";
 import { api } from "~/utils";
 import { useRouter } from "next/router";
 import { PiSignOutDuotone } from "react-icons/pi";
-
-const mainNav = [
-  { text: "My vacancies", to: "/vacancies", frontIcon: <FaLaptopCode /> },
-  {
-    text: "Preferences",
-    to: "/preferences/my-info",
-    frontIcon: <IoSettingsOutline />,
-    activeIfIncludes: ["customize-ai", "updateKey"],
-  },
-].map((props) => (
-  <NavigationLink
-    key={props.text}
-    baseCn="common hover flex-y gap-1"
-    activeCn="bg-hover"
-    {...props}
-  />
-));
+import { mainNav } from "./constants";
 
 export const Navbar = (props: PropsWithChildren<Record<string, unknown>>) => {
   const { children } = props;
@@ -40,7 +21,7 @@ export const Navbar = (props: PropsWithChildren<Record<string, unknown>>) => {
     <nav className="navbar border-right fixed inset-0 z-layout flex w-[240px] flex-col bg-secondary font-semibold clr-secondary [&>*]:px-4 [&>*]:py-1">
       <Menu
         menuButton={
-          <MenuButton className="flex !py-3 font-semibold clr-primary">
+          <MenuButton className="flex whitespace-nowrap !py-3 font-semibold clr-primary">
             🐈 &nbsp;&nbsp; {veryTop} vocatio
           </MenuButton>
         }

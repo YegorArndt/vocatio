@@ -108,7 +108,7 @@ const DrawerDescription = forwardRef<
 DrawerDescription.displayName = DrawerPrimitive.Description.displayName;
 
 const DrawerHandle = (props: { className?: string }) => (
-  <div className="cursor-grab">
+  <div className="col-span-2 cursor-grab">
     <div
       className={cn(
         "mx-auto mb-5 h-4 w-20 rounded-md bg-card",

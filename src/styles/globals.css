@@ -36,10 +36,14 @@
   --input-ring: #333;
   --input-wrapper-ring: #888;
 
+  --gray-d: #a5a5a5;
+
   --border-clr: rgba(255, 255, 255, 0.13);
 
   --clr-disabled: rgba(255, 255, 255, 0.282);
   --caret-clr: rgba(255, 255, 255, 0.81);
+
+  --toolstrip-bg: rgb(37, 37, 37);
 
   --scrollbar-track-color: #333;
   --scrollbar-thumb-color: #888;
@@ -123,23 +127,6 @@
 
   .a4.two-cols {
     grid-template-rows: auto;
-  }
-
-  .heading-1,
-  .name {
-    line-height: 120%;
-  }
-
-  .heading-1 {
-    line-height: 120%;
-  }
-
-  .heading-2 {
-    line-height: 120%;
-  }
-
-  .heading-3 {
-    line-height: 120%;
   }
 
   .top-left {
@@ -447,6 +434,14 @@
     @apply py-16;
   }
 
+  .cv-editor-container {
+    --navbar-width: 100px;
+  }
+
+  .cv-editor-container nav {
+    max-width: 150px;
+  }
+
   .navbar {
     grid-column: 1;
   }
@@ -736,5 +731,41 @@
 
   .spin-animation {
     animation: spin 3s infinite; /* Adjusted time for faster rotation */
+  }
+
+  /* Toolstrip  */
+  .autoresize-panel {
+    background-color: var(--toolstrip-bg);
+    color: var(--clr-card);
+    display: inline-flex;
+    align-items: stretch;
+    font-size: 14px;
+    line-height: 1.2;
+    border-radius: 5px;
+    box-shadow: rgba(15, 15, 15, 0.1) 0px 0px 0px 1px,
+      rgba(15, 15, 15, 0.2) 0px 3px 6px, rgba(15, 15, 15, 0.4) 0px 9px 24px;
+    pointer-events: auto;
+  }
+
+  .clr-ghost {
+    color: #a5a5a5;
+    /* background: rgba(255, 255, 255, 0.055); */
+  }
+
+  .clr-ghost-muted {
+    color: rgba(255, 255, 255, 0.282);
+    /* background: rgba(255, 255, 255, 0.055); */
+  }
+
+  /* EDITOR  */
+  .nav-button {
+    @apply flex-y gap-1 text-[13px] text-[#a5a5a5] hover:underline;
+  }
+
+  .cv-section {
+    border: 1px solid;
+    border-color: transparent;
+
+    @apply group-hover:border-green;
   }
 }

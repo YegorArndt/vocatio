@@ -1,8 +1,11 @@
 import type { Vacancy } from "@prisma/client";
 import { toast } from "sonner";
 
-import type { LsDraft } from "~/modules/draft/types";
-import { Models, RouterUser } from "~/modules/extension/types";
+import type {
+  Models,
+  RouterUser,
+} from "~/modules/create/design/extension/types";
+import type { GeneratedDraft } from "~/modules/create/design/types";
 
 export type PersistentData = {
   shouldAutoMoveToApplied: boolean;
@@ -38,7 +41,9 @@ export const updatePersistedState = (
   return newData;
 };
 
-export const getDraftByVacancyId = (vacancyId: Vacancy["id"]) => {
+export const getDraftByVacancyId = (vacancyId?: Vacancy["id"]) => {
+  if (!vacancyId) return;
+
   try {
     if (!localStorage) return;
 
@@ -48,7 +53,7 @@ export const getDraftByVacancyId = (vacancyId: Vacancy["id"]) => {
         const value = localStorage.getItem(key);
 
         if (value) {
-          return JSON.parse(value) as LsDraft;
+          return JSON.parse(value) as GeneratedDraft;
         }
       }
     }
@@ -59,7 +64,7 @@ export const getDraftByVacancyId = (vacancyId: Vacancy["id"]) => {
 
 export const setDraftByVacancyId = (
   vacancyId: Vacancy["id"],
-  draft: LsDraft
+  draft: GeneratedDraft
 ) => {
   if (!localStorage) return;
 

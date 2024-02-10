@@ -1,6 +1,9 @@
 import { toast } from "sonner";
 import { Link } from "~/components/ui/buttons/Link";
-import { Models, PartialVacancy } from "~/modules/extension/types";
+import {
+  Models,
+  PartialVacancy,
+} from "~/modules/create/design/extension/types";
 import { generateDraft } from "~/server/api/utils/generate-cv";
 import { getPersistedState, setDraftByVacancyId } from "./ls";
 import { LiaExternalLinkAltSolid } from "react-icons/lia";
@@ -86,19 +89,22 @@ export const startCvGeneration = (props: StartCvGenerationProps) => {
       /**
        * Show success toast
        */
-      toast.success("CV generated.", {
-        description: (
+      toast.success(
+        <div className="flex-y gap-1">
+          🎉 Success.
           <Link
             text="View CV"
             to={`/create/${vacancyId}`}
             className="flex-y gap-1 clr-blue"
             onClick={() => toast.dismiss("success")}
           />
-        ),
-        duration: Infinity,
-        dismissible: true,
-        id: "success",
-      });
+        </div>,
+        {
+          duration: Infinity,
+          dismissible: true,
+          id: "success",
+        }
+      );
     })
     .catch((e) => {
       toast.dismiss();

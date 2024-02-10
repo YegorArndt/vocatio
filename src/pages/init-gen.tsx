@@ -1,98 +1,80 @@
 import Head from "next/head";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
-import { api } from "~/utils";
-import { startCvGeneration } from "~/utils/startCvGeneration";
 import { useSendMessage } from "~/hooks/useSendMessage";
 import { usePersistentData } from "~/hooks/usePersistentData";
-import { updatePersistedState } from "~/utils/ls";
-import { toast } from "sonner";
 import { ProgressIncrementer } from "~/components/ProgressIncrementer";
-import { MdArrowRightAlt } from "react-icons/md";
 import { AnimatedDiv } from "~/components/AnimatedDiv";
-import { Link } from "~/components/ui/buttons/Link";
+import { Spinner } from "~/components";
+import { useRouter } from "next/router";
+import { toast } from "sonner";
+import { initDraft } from "~/modules/init-gen/utils";
+import { api } from "~/utils";
 
 const { log } = console;
 
 const InitGenerationPage = () => {
   const { sendMessage, hasSent, response } = useSendMessage();
-
-  const {
-    mutate: createVacancy,
-    isLoading: creatingVacancy,
-    isSuccess: createdVacancy,
-  } = api.vacancies.create.useMutation();
-
-  const [isGenerating, setIsGenerating] = useState(false);
-
-  const {
-    data: user,
-    refetch: refetchUser,
-    isRefetching,
-  } = api.users.get.useQuery();
   const { ls } = usePersistentData();
+  const router = useRouter();
+
+  const { mutate: createVacancy } = api.vacancies.create.useMutation({
+    onSuccess: () => {
+      toast.success("Vacancy added to dashboard.");
+    },
+  });
 
   useEffect(() => {
     if (!hasSent) sendMessage({ type: "get-vacancy" });
 
-    if (response.success && response.data) {
-      const { newVacancy } = response.data;
-      if (!newVacancy) {
-        toast.error("Something went wrong. Please try again.");
+    if (response.success) {
+      if (!ls.user) {
+        toast.error(
+          "Aborting. Missing user data. Vocatio will try to load it again."
+        );
+        void router.push("/preferences");
         return;
       }
 
-      /**
-       * Create new vacancy
-       */
-      //@ts-ignore
-      if (!createdVacancy && !creatingVacancy) createVacancy(newVacancy);
+      const { newVacancy } = response.data!;
 
-      /**
-       * Start generation if user found in ls.
-       */
-      if (!isGenerating && ls.user) {
-        startCvGeneration({ vacancy: newVacancy });
-        setIsGenerating(true);
-      }
+      void initDraft({
+        vacancy: newVacancy,
+        lsUser: ls.user,
+        handleExistingDraft: () => {
+          toast.error(
+            "Aborting. A draft for this vacancy already exists. Please delete it and try again."
+          );
+          void router.push(`/create/${newVacancy.id}`);
+        },
+        onComplete: (generatedDraft) => {
+          //@ts-ignore
+          createVacancy({
+            ...newVacancy,
+            responsibilities: generatedDraft.vacancyResponsibilities,
+            requiredSkills: generatedDraft.vacancySkills,
+          });
+        },
+      });
 
-      /**
-       * Update user in ls if none found.
-       */
-      if (!ls.user && user && !isGenerating) {
-        updatePersistedState((old) => ({
-          ...old,
-          user,
-        }));
-
-        toast.loading("Preparing your data...", { id: "preparing" });
-      }
-
-      if (isGenerating) {
-        toast.dismiss("preparing");
-      }
-
-      if (createdVacancy) {
-        void refetchUser();
-      }
+      void router.push(`/create/${newVacancy.id}`);
     }
-  }, [response.success, user, ls.user, createdVacancy, isGenerating]);
+  }, [response.success]);
 
   return (
     <>
       <Head>
-        <title>Generating CV...</title>
+        <title>Initializing...</title>
       </Head>
-      <ProgressIncrementer fixToTop canFinish={createdVacancy} shouldHide />
-      {createdVacancy && (
-        <AnimatedDiv className="flex-center h-[95vh] flex-col gap-3">
-          🎉 Success. The vacancy was added to your dashboard.
-          <Link
-            text="View dashboard"
-            to="/vacancies"
-            className="flex-y sm rounded-md tracking-wide hover:bg-hover"
-            endIcon={<MdArrowRightAlt size={20} />}
-          />
+      <ProgressIncrementer fixToTop canFinish={response.success} shouldHide />
+      {!response.success && (
+        <AnimatedDiv className="flex-center h-[95vh] gap-3">
+          <Spinner size={12} /> Initializing...
+        </AnimatedDiv>
+      )}
+      {response.success && (
+        <AnimatedDiv className="flex-center h-[95vh] gap-3">
+          <Spinner size={12} /> Redirecting to CV Editor...
         </AnimatedDiv>
       )}
     </>

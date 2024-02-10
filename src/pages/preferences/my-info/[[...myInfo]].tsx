@@ -12,7 +12,7 @@ import { useEffect } from "react";
 import { api, getMissingInfo } from "~/utils";
 import { pick, startCase } from "lodash-es";
 import { toast } from "sonner";
-import { RouterUser } from "~/modules/extension/types";
+import { RouterUser } from "~/modules/create/design/extension/types";
 import Image from "next/image";
 import { Link } from "~/components/ui/buttons/Link";
 import { linkedinJobsSearchUrl } from "~/constants";
@@ -51,9 +51,7 @@ export const MyInfoPage = (
   const { updateKey, expirationToken } = props;
 
   const { ls, updateLs } = usePersistentData();
-
   const { data: user } = api.users.get.useQuery();
-
   const { mutate: updateDatabase, isLoading: isUpdating } =
     api.users.update.useMutation();
 
@@ -173,10 +171,6 @@ export const MyInfoPage = (
       }
     }
   }, [ls.user]);
-
-  const checkUser = () => {
-    return { hasLsRecord: !!ls.user, user };
-  };
 
   useEffect(() => {
     // Function to check user data

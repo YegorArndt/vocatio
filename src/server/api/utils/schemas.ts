@@ -136,7 +136,7 @@ export const PartialVacancySchema = z.object({
 
   companyName: z.string().nullable().optional(),
 
-  requiredSkills: z.string().nullable().optional(),
+  requiredSkills: z.array(z.string()).nullable().optional(),
 
   group: z.string().nullable().optional(),
 
@@ -177,9 +177,11 @@ export const PartialVacancySchema = z.object({
   sourceUrl: z.string().nullable().optional(),
 
   sourceName: z.string().nullable().optional(),
+
+  responsibilities: z.array(z.string()).nullable().optional(),
 });
 
-export const LsDraft = z.object({
+export const GeneratedDraft = z.object({
   vacancyId: z.string(),
   jobTitle: z.string(),
   professionalSummary: z.string(),

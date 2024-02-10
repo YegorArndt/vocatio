@@ -1,4 +1,7 @@
-import type { PartialVacancy, RouterUser } from "~/modules/extension/types";
+import type {
+  PartialVacancy,
+  RouterUser,
+} from "~/modules/create/design/extension/types";
 import { hfFormat, instruct } from "../ai";
 import {
   formatExperience,
@@ -22,21 +25,23 @@ const getPrompt = (props: MixtralProps) => {
 
   //prettier-ignore
   return `
+  Task: Resume tailoring to a specific vacancy.
+  
   Context:
 
     Vacancy: "${vacancy.description}".
-    My professional summary: "${user.professionalSummary}".
-    My employment histories: "${experience}".
+    Professional summary: "${user.professionalSummary}".
+    Employment histories: "${experience}".
 
     Instructions:
-    1. Completely rewrite the professional summary (from scratch, create a new one) to very closely match the vacancy.
-    2. Completely rewrite the employment histories (from scratch, create new ones) to very closely match the vacancy. For that, make up new bullet points based on what's required in the vacancy. You can consider mixing them with the original ones. The made up ones are more important though.
-    3. Keep each employment history entry at max. 4 bullet points ("•").
-
+    1. Make up completely new bullet points based on the vacancy description.
+    2. For each employment history, replace their bullet points with the ones from step 1.
+    3. Compose a completely new professional summary to present the cadidate as a perfect fit for the vacancy.
+  
     Format of your response:
     1. First return the professional summary. Do not prefix the resultant summary with anything.
     2. Prefix each employment history entry with an "@" followed by its index (zero-based). 
-    3. Wrap all skills (technologies, other hard-skills) with <b>{skill name}</b> html tag (e.g. <b>React</b>). I'll parse your response into HTML.
+    3. Wrap all skills desired in the vacancy (technologies, other hard-skills) with <b>{skill name}</b> html tag (e.g. <b>React</b>). Wrap them in the your entire response. 
     4. Do not add any introductory or accompanying text. I'll insert your response directly into the resume!
  `
 };

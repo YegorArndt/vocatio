@@ -122,7 +122,7 @@ model ExperienceEntry {
   place             String
   period            String
   description       String
-  // We automatically optimzie user's experience texts with gpt-4 at the beginning. They don't know. That helps weaker LLMS to generate better texts.
+  // We automatically optimzie user's experience texts with gpt-4 at the beginning. The user doesn't know. That helps weaker LLMS to generate better texts.
   shadowDescription String?
   skills            String[]
   image             String
@@ -130,62 +130,6 @@ model ExperienceEntry {
   user              User     @relation(fields: [userId], references: [id])
   userId            String
 }
-
-model DraftExperienceEntry {
-  id                        String   @id @default(uuid())
-  createdAt                 DateTime @default(now())
-  updatedAt                 DateTime @updatedAt
-  place                     String
-  period                    String
-  description               String
-  skills                    String[]
-  image                     String
-  title                     String
-  originalExperienceEntryId String
-  draft                     Draft?   @relation(fields: [draftId], references: [id])
-  draftId                   String?
-}
-
-model RecommendationsEntry {
-  id          String   @id @default(uuid())
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  place       String
-  period      String
-  description String
-  image       String
-  title       String
-  user        User     @relation(fields: [userId], references: [id])
-  userId      String
-}
-
-// model Contact {
-//   id          String        @id @default(uuid())
-//   createdAt   DateTime      @default(now())
-//   updatedAt   DateTime      @updatedAt
-//   email       String
-//   location    String?
-//   phone       String?
-//   github      String?
-//   linkedin    String?
-//   indeed      String?
-//   glassdoor   String?
-//   hh          String?
-//   facebook    String?
-//   instagram   String?
-//   twitter     String?
-//   telegram    String?
-//   skype       String?
-//   vk          String?
-//   website     String?
-//   address     String?
-//   country     String?
-//   city        String?
-//   zip         String?
-//   custom      CustomContact[]
-//   user        User          @relation(fields: [userId], references: [id])
-//   userId      String        @unique
-// }
 
 model User {
   id        String   @id @default(uuid())
@@ -205,39 +149,11 @@ model User {
   skills    SkillEntry[]
   contact   ContactEntry[]
 
-  education       EducationEntry[]
-  experience      ExperienceEntry[]
-  recommendations RecommendationsEntry[]
+  education  EducationEntry[]
+  experience ExperienceEntry[]
 
   vacancies Vacancy[]
-  drafts    Draft[]
   cvs       Cv[]
-}
-
-model Draft {
-  id        String   @id @default(uuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  professionalSummary String
-  jobTitle            String
-  experience          DraftExperienceEntry[]
-  topSkills           String[]
-
-  userId String
-  user   User   @relation(fields: [userId], references: [id])
-
-  vacancyId String
-  vacancy   Vacancy @relation(fields: [vacancyId], references: [id])
-}
-
-model VacancyGroup {
-  id        String   @id @default(uuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  name String
-  icon String?
 }
 
 model Vacancy {
@@ -257,9 +173,10 @@ model Vacancy {
   jobTitle        String?
   professionField ProfessionField?
 
-  summary        String? @db.Text
-  description    String? @db.Text
-  requiredSkills String?
+  summary          String?  @db.Text
+  description      String?  @db.Text
+  requiredSkills   String[]
+  responsibilities String[]
 
   group String?
 
@@ -274,9 +191,9 @@ model Vacancy {
   sourceUrl  String?
   sourceName String?
 
-  user   User[]
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
   cvs    Cv[]
-  drafts Draft[]
 }
 
 model Cv {

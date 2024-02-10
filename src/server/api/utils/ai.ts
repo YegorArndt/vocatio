@@ -1,6 +1,6 @@
 import { HfInference, TextGenerationArgs } from "@huggingface/inference";
 import { Configuration, OpenAIApi } from "openai";
-import { Models } from "~/modules/extension/types";
+import { Models } from "~/modules/create/design/extension/types";
 
 const { log } = console;
 
@@ -14,8 +14,11 @@ const openai = new OpenAIApi(configuration);
 export const hfFormat =
   'Do not include phrases like "Here is the revised text". Do not return my text itself. Do not use numeration if not asked to. Write in the first person';
 
-export const cleanAiOutput = (text: string, patterns: string[]) =>
-  patterns.reduce((acc, pattern) => acc.replace(pattern, "").trim(), text);
+export const cleanAiOutput = (text: string, patterns: (RegExp | string)[]) =>
+  patterns.reduce(
+    (acc, pattern) => (acc as string).replace(pattern, "").trim(),
+    text
+  ) as string;
 
 export const summarize = async (text: string, max_length?: number) =>
   await inference.summarization({
@@ -78,19 +81,19 @@ export const applyGpt = async (prompt: string, model: Models = "gpt-3.5") => {
   let response;
 
   if (model === "gpt-3.5") {
-    // response = await openai.createCompletion({
-    //   model: "gpt-3.5-turbo",
-    //   prompt,
-    // });
-
-    // return response?.data?.choices?.[0]?.text;
-
     response = await openai.createChatCompletion({
-      model: "gpt-3.5-turbo-0613",
+      model: "gpt-3.5-turbo",
       messages: [{ role: "user", content: prompt }],
     });
 
     return response?.data?.choices?.[0]?.message?.content;
+
+    // response = await openai.createChatCompletion({
+    //   model: "gpt-3.5-turbo-0613",
+    //   messages: [{ role: "user", content: prompt }],
+    // });
+
+    // return response?.data?.choices?.[0]?.message?.content;
   } else if (model === "gpt-4") {
     response = await openai.createChatCompletion({
       model: "gpt-4",

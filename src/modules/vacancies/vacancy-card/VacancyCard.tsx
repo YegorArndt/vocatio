@@ -13,6 +13,7 @@ import { Button } from "~/components/ui/buttons/Button";
 import { Gpt } from "~/icons";
 import { VacancyCardHeader } from "./VacancyCardHeader";
 import { getSalaryRange } from "./utils";
+import { usePersistentData } from "~/hooks/usePersistentData";
 
 const { log } = console;
 
@@ -22,6 +23,8 @@ type VacancyCardProps = {
 
 export const VacancyCard = (props: VacancyCardProps) => {
   const { vacancy } = props;
+
+  const { updateLs } = usePersistentData();
 
   const {
     salaryMax,

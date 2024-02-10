@@ -13,8 +13,8 @@ import { usePersistentData } from "~/hooks/usePersistentData";
 import { preferencesToolbar } from "~/modules/preferences/my-info/constants";
 import { BlurImage } from "~/components";
 import { Badge } from "~/components/ui/external/Badge";
-import { Models } from "~/modules/extension/types";
-import { typedEntries } from "~/modules/draft/utils/common";
+import { Models } from "~/modules/create/design/extension/types";
+import { typedEntries } from "~/__archieved/draft/utils/common";
 import { toast } from "sonner";
 import { Checkmark } from "~/components/icons";
 import {
@@ -139,14 +139,12 @@ const CustomizeAiPage = () => {
               best practices to compose your experience section.
             </p>
             <div className="flex flex-col gap-2">
-              {["Concise bullet point usage", "Skills first"].map(
-                (practice) => (
-                  <div key={practice} className="flex-y my-3 gap-2 text-sm">
-                    <Checkmark />
-                    {practice}
-                  </div>
-                )
-              )}
+              {["Concise", "Skills first"].map((practice) => (
+                <div key={practice} className="flex-y my-3 gap-2 text-sm">
+                  <Checkmark />
+                  {practice}
+                </div>
+              ))}
               {[
                 {
                   practice: "Stressing impact",

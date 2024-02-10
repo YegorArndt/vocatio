@@ -1,6 +1,9 @@
 import { useState } from "react";
 
-import type { PartialVacancy, RouterUser } from "~/modules/extension/types";
+import type {
+  PartialVacancy,
+  RouterUser,
+} from "~/modules/create/design/extension/types";
 
 type Payload = { user: RouterUser };
 type Data = { newVacancy: PartialVacancy; user: RouterUser };

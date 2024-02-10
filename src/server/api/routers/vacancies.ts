@@ -3,7 +3,6 @@ import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 import { PartialVacancySchema } from "../utils/schemas";
 import { Vacancy } from "@prisma/client";
-import { summarize } from "../utils/ai";
 
 const { log } = console;
 
@@ -19,15 +18,11 @@ export const vacanciesRouter = createTRPCRouter({
           message: "You are not authorized to perform this action",
         });
 
-      const { summary_text } = await summarize(input.description!);
-
       const createdVacancy = await ctx.prisma.vacancy.create({
+        // @ts-ignore
         data: {
-          ...(input as Vacancy),
-          summary: summary_text,
-          user: {
-            connect: { id: userId },
-          },
+          ...input,
+          userId,
         },
       });
 

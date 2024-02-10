@@ -14,7 +14,7 @@ export const Spinner = (props: DecoProps) => {
   const { className, size = 24 } = props;
 
   return (
-    <div className="lds-ring">
+    <div className={cn("lds-ring", className)}>
       <div></div>
       <div></div>
       <div></div>
@@ -148,52 +148,62 @@ export const SkeletonButtonStack = (props: DecoProps) => {
   );
 };
 
-export const EntryHydrationSkeleton = () => {
-  return (
-    <div className="flex flex-col gap-5">
-      <div className="grid grid-cols-2 gap-5">
-        {Array.from({ length: 4 }).map((_, i) => (
-          <div key={i} className="skeleton h-11 rounded-md" />
-        ))}
-      </div>
-      <div className="skeleton h-11 w-full rounded-md" />
-      <footer className="border-top flex-between [&>*]:skeleton py-5 [&>*]:rounded-md">
-        <div className="h-5 w-[200px]" />
-        <div className="h-8 w-[150px]" />
-      </footer>
-    </div>
-  );
-};
+// export const EntryHydrationSkeleton = () => {
+//   return (
+//     <div className="flex flex-col gap-5">
+//       <div className="grid grid-cols-2 gap-5">
+//         {Array.from({ length: 4 }).map((_, i) => (
+//           <div key={i} className="skeleton h-11 rounded-md" />
+//         ))}
+//       </div>
+//       <div className="skeleton h-11 w-full rounded-md" />
+//       <footer className="border-top flex-between [&>*]:skeleton py-5 [&>*]:rounded-md">
+//         <div className="h-5 w-[200px]" />
+//         <div className="h-8 w-[150px]" />
+//       </footer>
+//     </div>
+//   );
+// };
 
-export const BigEntryHydrationSkeleton = () => {
+// export const BigEntryHydrationSkeleton = () => {
+//   return (
+//     <div className="flex flex-col gap-5">
+//       <div className="grid grid-cols-[2fr_3fr] gap-9">
+//         <section className="flex-y gap-3">
+//           <div className="skeleton h-[100px] min-w-[100px] rounded-md" />
+//           <div className="flex w-full flex-col gap-2">
+//             <div className="skeleton h-8 w-full rounded-md" />
+//             <div className="flex-y gap-2">
+//               {Array.from({ length: 3 }).map((_, i) => (
+//                 <div key={i} className="skeleton h-5 w-5 rounded-md" />
+//               ))}
+//             </div>
+//           </div>
+//         </section>
+//         <section className="flex flex-col gap-3">
+//           {Array.from({ length: 4 }).map((_, i) => (
+//             <div
+//               key={i}
+//               className={cn("skeleton h-8 rounded-md", {
+//                 "h-[114px]": i === 2,
+//               })}
+//             />
+//           ))}
+//         </section>
+//       </div>
+//       <footer className="border-top [&>*]:skeleton py-5 [&>*]:rounded-md">
+//         <div className="ml-auto h-8 w-[150px]" />
+//       </footer>
+//     </div>
+//   );
+// };
+
+export const CvSpinner = (props: DecoProps) => {
+  const { className, size = 24 } = props;
+
   return (
-    <div className="flex flex-col gap-5">
-      <div className="grid grid-cols-[2fr_3fr] gap-9">
-        <section className="flex-y gap-3">
-          <div className="skeleton h-[100px] min-w-[100px] rounded-md" />
-          <div className="flex w-full flex-col gap-2">
-            <div className="skeleton h-8 w-full rounded-md" />
-            <div className="flex-y gap-2">
-              {Array.from({ length: 3 }).map((_, i) => (
-                <div key={i} className="skeleton h-5 w-5 rounded-md" />
-              ))}
-            </div>
-          </div>
-        </section>
-        <section className="flex flex-col gap-3">
-          {Array.from({ length: 4 }).map((_, i) => (
-            <div
-              key={i}
-              className={cn("skeleton h-8 rounded-md", {
-                "h-[114px]": i === 2,
-              })}
-            />
-          ))}
-        </section>
-      </div>
-      <footer className="border-top [&>*]:skeleton py-5 [&>*]:rounded-md">
-        <div className="ml-auto h-8 w-[150px]" />
-      </footer>
+    <div className="flex-center w-full py-5">
+      <Spinner className="[&>*]:border-current" />
     </div>
   );
 };

@@ -1,53 +1,48 @@
-import { GetServerSideProps } from "next";
 import Head from "next/head";
-
-import { DraftContext } from "~/modules/draft/DraftContext";
-import { DndProvider } from "~/modules/draft/components/DndProvider";
-import cn from "classnames";
-import { Layout } from "~/components/layout/Layout";
-import { DesignViewer } from "~/modules/draft/components/DesignViewer";
-import { PageBreak } from "~/modules/draft/components/PageBreak";
-import { Lines } from "~/components/Spinner";
+import { Rubik } from "next/font/google";
 import { useState, useRef, useEffect } from "react";
-import { RiDeleteBin6Line } from "react-icons/ri";
+import cn from "classnames";
+
+import { DndProvider } from "~/modules/create/design/baseComponents/DndProvider";
+import { PageBreak } from "~/modules/create/PageBreak";
+import { DesignContext } from "~/modules/create/design/contexts/DesignContext";
+import { useCurrentDraft } from "~/hooks/useCurrentDraft";
+import { A4_HEIGHT, A4_WIDTH } from "~/modules/create/design/constants";
+import {
+  ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup,
+} from "~/components/ui/external/Resizable";
+import { mainNav } from "~/components/layout/constants";
+import { NavigationLink } from "~/components";
+import { DiffDrawer } from "~/modules/create/DiffDrawer";
+import { BiDownload } from "react-icons/bi";
+import { usePersistentData } from "~/hooks/usePersistentData";
 import { Button } from "~/components/ui/buttons/Button";
-import { getDraftByVacancyId } from "~/utils/ls";
-import { toast } from "sonner";
-import { A4_HEIGHT, A4_WIDTH } from "~/modules/draft/constants";
-import { Toolbar } from "~/modules/draft/components/toolbar";
+import { downloadPdf } from "~/modules/create/toolbar/utils";
+import { RiDeleteBin6Line } from "react-icons/ri";
+import { Link } from "~/components/ui/buttons/Link";
+import { LinkedinColor } from "~/icons";
+import { RightPanel } from "~/modules/create/right-panel/RightPanel";
+import { Badge } from "~/components/ui/external/Badge";
 
 const { log } = console;
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const { vacancyId } = context.params || {};
+const rubik = Rubik({ subsets: ["latin"] });
 
-  if (typeof vacancyId !== "string")
-    throw new Error("vacancyId is not a string");
-
-  return {
-    props: {
-      vacancyId,
-    },
-  };
-};
-
-const CvBuilder = (props: { vacancyId: string }) => {
-  const { vacancyId } = props;
-
-  const draft = getDraftByVacancyId(vacancyId);
-  const { vacancy } = draft || {};
-
+const CvEditor = () => {
+  const { currentDraft } = useCurrentDraft();
+  const { ls } = usePersistentData();
   const { a4Ref, pages, setPages } = useA4();
-
-  useEffect(() => {
-    toast.dismiss();
-  }, []);
+  // useWarnOnUnload();
 
   return (
     <>
       <Head>
         <title>
-          {vacancy?.companyName ? `CV for ${vacancy.companyName}` : "Loading"}
+          {currentDraft?.vacancy?.companyName
+            ? `CV for ${currentDraft?.vacancy.companyName}`
+            : "Generating CV..."}
         </title>
         <meta
           name="description"
@@ -55,50 +50,87 @@ const CvBuilder = (props: { vacancyId: string }) => {
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      {draft ? (
-        <DraftContext draft={draft} a4Ref={a4Ref}>
+      {currentDraft && (
+        <DesignContext a4Ref={a4Ref}>
           {(context) => (
-            <Layout toolbar={<Toolbar />}>
-              <div className="two-col-grid">
+            <ResizablePanelGroup direction="horizontal">
+              {/* Main Nav */}
+              <ResizablePanel defaultSize={10}>
+                <nav className="fixed ml-5 mt-16 flex flex-col gap-3">
+                  {mainNav.map((link) => (
+                    <NavigationLink
+                      key={link.props.to}
+                      {...link.props}
+                      baseCn="nav-button"
+                    />
+                  ))}
+                  <DiffDrawer />
+                  <Button
+                    frontIcon={<BiDownload />}
+                    text="Download .pdf"
+                    className="nav-button !gap-0"
+                    onClick={() =>
+                      void downloadPdf({ a4Ref, draft: currentDraft })
+                    }
+                  />
+                  {currentDraft?.vacancy?.sourceUrl && (
+                    <Link
+                      frontIcon={<LinkedinColor />}
+                      text="Back to job posting"
+                      to={currentDraft.vacancy.sourceUrl}
+                      className="nav-button"
+                      newTab
+                    />
+                  )}
+                </nav>
+              </ResizablePanel>
+
+              {/* A4  */}
+              <div className="mb-16 pt-16">
                 <div
                   ref={a4Ref}
-                  className={cn("a4 main-center", context.design.a4)}
+                  className={cn(
+                    "a4 main-center",
+                    context.design.a4ClassName,
+                    rubik.className
+                  )}
                   style={{
                     height: A4_HEIGHT * pages,
                     width: A4_WIDTH,
-                    fontFamily: context.design.font,
                   }}
                 >
                   <DndProvider sections={context.design.sections} />
                 </div>
-                <DesignViewer />
+
                 {!!a4Ref.current && (
-                  <Button
-                    data-html2canvas-ignore
-                    frontIcon={<RiDeleteBin6Line />}
-                    text={`Delete ${pages} page`}
-                    onClick={() => setPages((prev) => prev - 1)}
-                    className="primary sm col-span-2 mx-auto mt-6 w-[200px]"
-                  />
+                  <div className="flex-center">
+                    <Button
+                      data-html2canvas-ignore
+                      frontIcon={<RiDeleteBin6Line />}
+                      text={`Delete ${pages} page`}
+                      onClick={() => setPages((prev) => prev - 1)}
+                      className="outlined sm mt-6"
+                    />
+                  </div>
                 )}
               </div>
-            </Layout>
+
+              {/* Design Viewer */}
+              <ResizableHandle className="z-layout mx-[50px]">
+                <div className="flex-evenly h-full flex-col">
+                  {Array.from({ length: pages * 2 }).map((_, i) => (
+                    <Badge key={i}>Resize</Badge>
+                  ))}
+                </div>
+              </ResizableHandle>
+              <ResizablePanel defaultSize={10} className="z-layout mr-3 pt-16">
+                <RightPanel />
+              </ResizablePanel>
+            </ResizablePanelGroup>
           )}
-        </DraftContext>
-      ) : (
-        <Layout toolbar={<Lines />}>
-          <div className="two-col-grid">
-            <div
-              className="a4 main-center skeleton rounded-md"
-              style={{
-                height: A4_HEIGHT * pages,
-                width: A4_WIDTH,
-              }}
-            />
-            <div className="right-aside skeleton rounded-md" />
-          </div>
-        </Layout>
+        </DesignContext>
       )}
+
       {Array.from({ length: pages - 1 }).map((_, i) => (
         <PageBreak
           key={i}
@@ -111,7 +143,7 @@ const CvBuilder = (props: { vacancyId: string }) => {
   );
 };
 
-export default CvBuilder;
+export default CvEditor;
 
 const useA4 = () => {
   const [pages, setPages] = useState(1);
@@ -132,4 +164,13 @@ const useA4 = () => {
   }, [a4Ref.current]);
 
   return { a4Ref, pages, setPages };
+};
+
+const useWarnOnUnload = () => {
+  useEffect(() => {
+    window.onbeforeunload = () => true;
+    return () => {
+      window.onbeforeunload = null;
+    };
+  }, []);
 };

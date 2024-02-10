@@ -1,10 +1,6 @@
-//@ts-nocheck
-
 import { BlurImage, Spinner } from "~/components";
-import { BigEntry } from "~/modules/extension/types";
 import { Button } from "~/components/ui/buttons/Button";
 import { FormContext } from "../../FormContext";
-import { omit } from "lodash-es";
 import { ArrayFormContext } from "../../ArrayFormContext";
 import { Fragment } from "react";
 import { LuCopyPlus } from "react-icons/lu";
@@ -12,7 +8,7 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import { TbRestore } from "react-icons/tb";
 import { AnimatedDiv } from "~/components/AnimatedDiv";
 import { Textarea } from "~/components/ui/inputs/Textarea";
-import { typedKeys } from "~/modules/draft/utils/common";
+import { typedKeys } from "~/__archieved/draft/utils/common";
 import { Text } from "~/components/ui/inputs/Text";
 import { BiMoveVertical } from "react-icons/bi";
 import { Divider } from "~/components/layout/Divider";
@@ -21,23 +17,11 @@ import { cn } from "~/utils";
 const { log } = console;
 
 //@ts-ignore
-const filterForClient = (entries): BigEntry[] => {
-  return (
-    //@ts-ignore
-    entries &&
-    //@ts-ignore
-    entries.map((e) => {
-      return omit(e, "id", "createdAt", "updatedAt", "userId");
-    })
-  );
-};
-
-//@ts-ignore
 export const BigEntryBox = (props) => {
   const { data, update, isUpdating, boxName } = props;
 
   const defaultValues = {
-    [boxName]: filterForClient(data[boxName]),
+    [boxName]: data[boxName],
   };
 
   const customUpdate = (data: typeof defaultValues) => {
@@ -45,6 +29,7 @@ export const BigEntryBox = (props) => {
 
     if (!bigEntryArray) return;
 
+    //@ts-ignore
     const formattedForServer = bigEntryArray.map((e) => {
       const { skills } = e;
 
@@ -127,6 +112,9 @@ export const BigEntryBox = (props) => {
                             "image",
                             "id",
                             "shadowDescription",
+                            "createdAt",
+                            "updatedAt",
+                            "userId",
                           ].includes(name);
 
                           if (!shouldRender) return null;
@@ -140,24 +128,6 @@ export const BigEntryBox = (props) => {
 
                           const Component =
                             name === "description" ? Textarea : Text;
-
-                          if (name === "skills") {
-                            return (
-                              <label key={name} className="flex flex-col gap-2">
-                                <div className="flex flex-col gap-1 rounded-md border bg-primary p-3">
-                                  ❗️ Add as many skills as possible. This will
-                                  reflect on the quality of CV tailoring.
-                                  <small className="clr-disabled">
-                                    If there are different ways of spelling the
-                                    same skill, e.g. &quot;REST API&quot; &
-                                    &quot;Restful API&quot;, consider including
-                                    both.
-                                  </small>
-                                </div>
-                                <Component {...props} />
-                              </label>
-                            );
-                          }
 
                           return <Component key={name} {...props} />;
                         })}

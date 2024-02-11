@@ -62,8 +62,6 @@ export const curEnv =
     ? "http://localhost:3000"
     : "https://www.vocatio.cat") || "https://www.vocatio.cat";
 
-export const publicRoutes = ["/privacy-policy", "/login", "/landing"];
-
 // Exact means "==="
 // Partial means "includes"
 

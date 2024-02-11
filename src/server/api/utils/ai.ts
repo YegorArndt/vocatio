@@ -68,15 +68,6 @@ export const toBulletPoints = async (text: string) => {
   return cleaned;
 };
 
-export const answerQuestion = async (question: string, context: string) =>
-  await inference.questionAnswering({
-    model: "deepset/roberta-base-squad2",
-    inputs: {
-      question,
-      context,
-    },
-  });
-
 export const applyGpt = async (prompt: string, model: Models = "gpt-3.5") => {
   let response;
 

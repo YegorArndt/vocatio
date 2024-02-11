@@ -1,6 +1,7 @@
 import { authMiddleware } from "@clerk/nextjs/server";
-import { publicRoutes } from "./constants";
 import { NextResponse } from "next/server";
+
+const publicRoutes = ["/privacy-policy", "/login"];
 
 const redirectUrl =
   (process.env.NODE_ENV === "development"

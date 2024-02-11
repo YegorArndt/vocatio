@@ -9,7 +9,6 @@ import {
 import { isEmpty, isNil, pick, startCase } from "lodash-es";
 import { Checkmark } from "~/components/icons";
 import { api, cn } from "~/utils";
-import { RouterUser } from "~/modules/create/design/extension/types";
 import { useScrollIntoView } from "~/hooks/useScrollIntoView";
 import { MainBox } from "./boxes/components/MainBox";
 import { BigEntryBox } from "./boxes/components/BigEntryBox";
@@ -31,6 +30,7 @@ import {
   ResizableHandle,
 } from "~/components/ui/external/Resizable";
 import { AnimatedDiv } from "~/components/AnimatedDiv";
+import { RouterUser } from "~/modules/init-gen/types";
 
 const { log } = console;
 

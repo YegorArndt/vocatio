@@ -1,6 +1,6 @@
 import { usePersistentData } from "~/hooks/usePersistentData";
 import { useComponentContext } from "../contexts/ComponentContext";
-import { DndProvider } from "./DndProvider";
+import { DndProvider } from "./dnd/DndProvider";
 
 const { log } = console;
 

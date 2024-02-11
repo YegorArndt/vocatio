@@ -16,4 +16,29 @@ Regards,
 
 
 Yegor`,
+  `Hi Jonas,
+
+
+
+Hope you're doing well! I saw you work at Langdock and I'm excited to learn more about the Frontend Developer (Vue.js) role.
+
+
+
+I have experience with Vue.js, Node.js, and Next.js from my previous projects. My work on Vocatio involved creating a Chrome extension to facilitate vacancy descriptions retrieval without manual copy-pasting.
+
+
+
+Langdock's mission of providing interactive chat assistant for teams aligns with my values. Can you tell me more about how I can contribute?
+
+
+
+Is this position still open? Thank you!
+
+
+
+Regards,
+
+
+
+Yegor`,
 ];

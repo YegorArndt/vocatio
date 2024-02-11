@@ -4,7 +4,7 @@ import { type PropsWithChildren, type ReactNode } from "react";
 import { LiaExternalLinkAltSolid } from "react-icons/lia";
 
 import { BlurImage } from "~/components";
-import { vacancyUI } from "../../vacancies/constants";
+import { vacancyUI } from "../../../vacancies/constants";
 import { Link } from "~/components/ui/buttons/Link";
 import {
   AccordionTrigger,
@@ -15,10 +15,10 @@ import {
 import { ExperienceEntry } from "@prisma/client";
 import { AFTER_GREEN, BEFORE_RED } from "~/modules/constants";
 import { stripHtmlTags } from "~/modules/utils";
-import { GeneratedDraft } from "../design/types";
 import { useCurrentDraft } from "~/hooks/useCurrentDraft";
 import { usePersistentData } from "~/hooks/usePersistentData";
 import { Badge } from "~/components/ui/external/Badge";
+import { GeneratedDraft } from "~/modules/init-gen/types";
 
 const { log } = console;
 

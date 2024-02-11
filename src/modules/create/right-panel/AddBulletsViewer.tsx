@@ -1,7 +1,6 @@
 import { useCurrentDraft } from "~/hooks/useCurrentDraft";
 import { useMemo, useState } from "react";
-import { GeneratedDraft, HydratableComponent } from "../design/types";
-import { ADD_BULLET_EVENT, SET_VIEW_EVENT } from "~/modules/init-gen/constants";
+import { HydratableComponent } from "../design/types";
 import { Button } from "~/components/ui/buttons/Button";
 import { IoIosArrowRoundBack } from "react-icons/io";
 import { BlurImage } from "~/components";
@@ -9,23 +8,27 @@ import { BsPlusCircleDotted } from "react-icons/bs";
 import { Link } from "~/components/ui/buttons/Link";
 import { cn } from "~/utils";
 import { Badge } from "~/components/ui/external/Badge";
+import {
+  ADD_BULLET_TO_ENTRY_EVENT,
+  SET_RIGHT_PANEL_VIEW_EVENT,
+} from "~/modules/constants";
 
 const { log } = console;
 
-export type BulletsProps = {
+export type AddBulletsViewerProps = {
   component: HydratableComponent;
 };
 
-type GeneratedExperience = GeneratedDraft["generatedExperience"];
-
-export const Bullets = (props: BulletsProps) => {
+export const AddBulletsViewer = (props: AddBulletsViewerProps) => {
   const { component: c } = props;
   const { currentDraft } = useCurrentDraft();
   const [activeTab, setActiveTab] = useState(0 as 0 | 1 | 2);
 
   const backToDesignViewer = () => {
     document.dispatchEvent(
-      new CustomEvent(SET_VIEW_EVENT, { detail: { view: "designs" } })
+      new CustomEvent(SET_RIGHT_PANEL_VIEW_EVENT, {
+        detail: { view: "designs" },
+      })
     );
   };
 
@@ -37,8 +40,8 @@ export const Bullets = (props: BulletsProps) => {
     if (!currentDraft || !entry) return;
 
     document.dispatchEvent(
-      new CustomEvent(ADD_BULLET_EVENT, {
-        detail: { newBullet: bullet },
+      new CustomEvent(ADD_BULLET_TO_ENTRY_EVENT, {
+        detail: { bullet, entryId: entry.id },
       })
     );
   };
@@ -81,16 +84,14 @@ export const Bullets = (props: BulletsProps) => {
           .filter((bullet) => bullet),
       },
       2: {
-        title: <h4>Original bullet points</h4>,
+        title: <h4>Original texts</h4>,
         description: (
-          <p className="clr-ghost">
-            Untouched initial bullet points you provided.
-          </p>
+          <p className="clr-ghost">Untouched initial texts you provided.</p>
         ),
         bullets: entry?.description?.split("•").filter((bullet) => bullet),
       },
     };
-  }, [currentDraft]);
+  }, [currentDraft, entry]);
 
   return (
     <div className="flex flex-col gap-3 @container">

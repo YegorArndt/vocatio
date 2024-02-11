@@ -1,6 +1,5 @@
 import { v4 as uuidv4 } from "uuid";
-
-import type { GeneratedDraft } from "../create/design/types";
+import { GeneratedDraft } from "./types";
 
 export const formatSkills = (skills: string[]) =>
   skills.map((x) => ({ id: uuidv4(), name: x }));
@@ -11,7 +10,7 @@ export const formatSkills = (skills: string[]) =>
 export const parseSkills = (skillsPromptReturn: string | undefined) => {
   let vacancySkills = [] as GeneratedDraft["vacancySkills"];
   let generatedSkills = [] as GeneratedDraft["generatedSkills"];
-  let vacancyResponsibilities = [] as GeneratedDraft["vacancyResponsibilities"];
+  let generatedProfessionalSummary = "";
 
   try {
     if (!skillsPromptReturn) throw new Error("No response from AI");
@@ -19,21 +18,23 @@ export const parseSkills = (skillsPromptReturn: string | undefined) => {
     const {
       vacancySkills: vs,
       generatedSkills: gs,
-      vacancyResponsibilities: vr,
+      professionalSummary,
     } = JSON.parse(skillsPromptReturn);
 
-    const formattedSkills = formatSkills(gs);
-
     vacancySkills = vs;
-    generatedSkills = formattedSkills;
-    vacancyResponsibilities = vr;
+    generatedSkills = formatSkills(gs);
+    generatedProfessionalSummary = professionalSummary;
   } catch (error) {}
 
-  return { vacancySkills, generatedSkills, vacancyResponsibilities };
+  return { vacancySkills, generatedSkills, generatedProfessionalSummary };
 };
 
+/**
+ * Parse GPT response for experience.
+ */
 export const parseExperience = (experiencePromptReturn: string | undefined) => {
   let json = {} as {
+    vacancyResponsibilities: string[];
     tuples: [string, string][];
     mergedTuples: string[];
   };
@@ -46,6 +47,7 @@ export const parseExperience = (experiencePromptReturn: string | undefined) => {
 
   const renamed = {
     generatedExperience: json.mergedTuples.filter((x) => x.length > 0),
+    vacancyResponsibilities: json.vacancyResponsibilities,
   };
 
   return renamed;

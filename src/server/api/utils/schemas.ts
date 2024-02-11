@@ -44,55 +44,51 @@ export const ProfessionField = z.enum([
 export const LanguageEntrySchema = z
   .object({
     id: z.string(),
-    createdAt: z.date(),
-    updatedAt: z.date(),
+    createdAt: z.string().optional(),
+    updatedAt: z.string().optional(),
     name: z.string(),
     value: z.string(),
-    userId: z.string(),
   })
   .partial();
 
 export const SkillEntrySchema = z
   .object({
     id: z.string().optional(),
-    createdAt: z.date().optional(),
-    updatedAt: z.date().optional(),
+    createdAt: z.string().optional(),
+    updatedAt: z.string().optional(),
     name: z.string().optional(),
     value: z.string(),
-    userId: z.string().optional(),
   })
   .partial();
 
 export const ContactEntrySchema = z
   .object({
     id: z.string().optional(),
-    createdAt: z.date().optional(),
-    updatedAt: z.date().optional(),
+    createdAt: z.string().optional(),
+    updatedAt: z.string().optional(),
     name: z.string(),
     value: z.string(),
-    userId: z.string().optional(),
   })
   .partial();
 
 export const EducationEntrySchema = z
   .object({
     id: z.string().uuid(),
-    createdAt: z.date(),
-    updatedAt: z.date(),
+    createdAt: z.string().optional(),
+    updatedAt: z.string().optional(),
     place: z.string(),
     period: z.string(),
     description: z.string(),
     image: z.string(),
     title: z.string(),
-    userId: z.string().uuid(),
   })
   .partial();
 
 export const ExperienceEntrySchema = z
   .object({
     id: z.string().uuid(),
-    createdAt: z.date(),
-    updatedAt: z.date(),
+    createdAt: z.string().optional(),
+    updatedAt: z.string().optional(),
     place: z.string().optional().nullable(),
     period: z.string().optional().nullable(),
     description: z.string().optional().nullable(),
@@ -100,7 +96,6 @@ export const ExperienceEntrySchema = z
     skills: z.array(z.string()).nullable(),
     image: z.string().optional().nullable(),
     title: z.string().optional().nullable(),
-    userId: z.string().uuid(),
   })
   .partial();
 

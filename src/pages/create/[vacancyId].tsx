@@ -3,7 +3,7 @@ import { Rubik } from "next/font/google";
 import { useState, useRef, useEffect } from "react";
 import cn from "classnames";
 
-import { DndProvider } from "~/modules/create/design/baseComponents/DndProvider";
+import { DndProvider } from "~/modules/create/design/baseComponents/dnd/DndProvider";
 import { PageBreak } from "~/modules/create/PageBreak";
 import { DesignContext } from "~/modules/create/design/contexts/DesignContext";
 import { useCurrentDraft } from "~/hooks/useCurrentDraft";
@@ -13,18 +13,11 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from "~/components/ui/external/Resizable";
-import { mainNav } from "~/components/layout/constants";
-import { NavigationLink } from "~/components";
-import { DiffDrawer } from "~/modules/create/DiffDrawer";
-import { BiDownload } from "react-icons/bi";
-import { usePersistentData } from "~/hooks/usePersistentData";
 import { Button } from "~/components/ui/buttons/Button";
-import { downloadPdf } from "~/modules/create/toolbar/utils";
 import { RiDeleteBin6Line } from "react-icons/ri";
-import { Link } from "~/components/ui/buttons/Link";
-import { LinkedinColor } from "~/icons";
 import { RightPanel } from "~/modules/create/right-panel/RightPanel";
 import { Badge } from "~/components/ui/external/Badge";
+import { LeftPanel } from "~/modules/create/left-panel/LeftPanel";
 
 const { log } = console;
 
@@ -32,7 +25,6 @@ const rubik = Rubik({ subsets: ["latin"] });
 
 const CvEditor = () => {
   const { currentDraft } = useCurrentDraft();
-  const { ls } = usePersistentData();
   const { a4Ref, pages, setPages } = useA4();
   // useWarnOnUnload();
 
@@ -56,37 +48,11 @@ const CvEditor = () => {
             <ResizablePanelGroup direction="horizontal">
               {/* Main Nav */}
               <ResizablePanel defaultSize={10}>
-                <nav className="fixed ml-5 mt-16 flex flex-col gap-3">
-                  {mainNav.map((link) => (
-                    <NavigationLink
-                      key={link.props.to}
-                      {...link.props}
-                      baseCn="nav-button"
-                    />
-                  ))}
-                  <DiffDrawer />
-                  <Button
-                    frontIcon={<BiDownload />}
-                    text="Download .pdf"
-                    className="nav-button !gap-0"
-                    onClick={() =>
-                      void downloadPdf({ a4Ref, draft: currentDraft })
-                    }
-                  />
-                  {currentDraft?.vacancy?.sourceUrl && (
-                    <Link
-                      frontIcon={<LinkedinColor />}
-                      text="Back to job posting"
-                      to={currentDraft.vacancy.sourceUrl}
-                      className="nav-button"
-                      newTab
-                    />
-                  )}
-                </nav>
+                <LeftPanel />
               </ResizablePanel>
 
               {/* A4  */}
-              <div className="mb-16 pt-16">
+              <div className="my-16">
                 <div
                   ref={a4Ref}
                   className={cn(
@@ -118,7 +84,7 @@ const CvEditor = () => {
               {/* Design Viewer */}
               <ResizableHandle className="z-layout mx-[50px]">
                 <div className="flex-evenly h-full flex-col">
-                  {Array.from({ length: pages * 2 }).map((_, i) => (
+                  {Array.from({ length: pages }).map((_, i) => (
                     <Badge key={i}>Resize</Badge>
                   ))}
                 </div>

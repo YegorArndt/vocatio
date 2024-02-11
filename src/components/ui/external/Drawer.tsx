@@ -107,8 +107,8 @@ const DrawerDescription = forwardRef<
 ));
 DrawerDescription.displayName = DrawerPrimitive.Description.displayName;
 
-const DrawerHandle = (props: { className?: string }) => (
-  <div className="col-span-2 cursor-grab">
+const DrawerHandle = (props: { className?: string; parentCn?: string }) => (
+  <div className={cn("col-span-2 cursor-grab", props.parentCn)}>
     <div
       className={cn(
         "mx-auto mb-5 h-4 w-20 rounded-md bg-card",

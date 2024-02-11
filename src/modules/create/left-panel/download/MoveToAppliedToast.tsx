@@ -1,38 +1,45 @@
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { Button } from "~/components/ui/buttons/Button";
+import { useCurrentDraft } from "~/hooks/useCurrentDraft";
 import { usePersistentData } from "~/hooks/usePersistentData";
 import { api } from "~/utils";
 
-export const MoveToAppliedButton = (props: { vacancyId: string }) => {
-  const { vacancyId } = props;
-  const { updateLs } = usePersistentData();
+export const MoveToAppliedToast = () => {
+  const { currentDraft } = useCurrentDraft();
+  const { vacancy } = currentDraft || {};
+
+  const { ls, updateLs } = usePersistentData();
   const { register, watch } = useForm();
 
   const { mutate: updateVacancy, isLoading } =
     api.vacancies.upsert.useMutation();
 
+  if (!currentDraft || !ls) return null;
+
   const moveToApplied = (shouldMove: boolean) => {
-    toast.dismiss("move-to-applied");
+    toast.dismiss();
 
-    const shouldAutoMoveToApplied = watch("shouldAutoMoveToApplied");
+    const shouldAutoApplied = watch("shouldAutoApplied");
 
-    if (shouldAutoMoveToApplied) {
+    if (shouldAutoApplied) {
       updateLs({
-        shouldAutoMoveToApplied,
+        shouldAutoApplied,
       });
     }
 
     if (!shouldMove) return;
 
     void updateVacancy({
-      id: vacancyId,
+      id: vacancy?.id,
       group: "applied",
     });
     toast.success("Moved to ✅ applied");
   };
 
-  return (
+  return ls.shouldAutoApplied ? (
+    <div>Moved to ✅ applied </div>
+  ) : (
     <div className="flex w-full flex-col gap-2">
       <div className="flex-y gap-2">
         Move vacancy to applied?
@@ -48,7 +55,7 @@ export const MoveToAppliedButton = (props: { vacancyId: string }) => {
         ))}
       </div>
       <label className="flex-y gap-2 text-[12px]">
-        <input type="checkbox" {...register("shouldAutoMoveToApplied")} />
+        <input type="checkbox" {...register("shouldAutoApplied")} />
         Always move to applied
       </label>
     </div>

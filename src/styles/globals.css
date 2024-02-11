@@ -59,7 +59,7 @@
     /* overflow-x: hidden; */
     display: flex;
     flex-direction: column;
-    @apply bg-primary text-default clr-primary;
+    @apply bg-primary text-default leading-5 clr-primary;
   }
 
   body:has(.modal) {
@@ -755,11 +755,6 @@
   .clr-ghost-muted {
     color: rgba(255, 255, 255, 0.282);
     /* background: rgba(255, 255, 255, 0.055); */
-  }
-
-  /* EDITOR  */
-  .nav-button {
-    @apply flex-y gap-1 text-[13px] text-[#a5a5a5] hover:underline;
   }
 
   .cv-section {

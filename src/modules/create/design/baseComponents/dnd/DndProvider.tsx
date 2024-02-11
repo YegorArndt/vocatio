@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from "uuid";
 import {
   DndContext,
   KeyboardSensor,
@@ -23,9 +24,9 @@ import { CSS } from "@dnd-kit/utilities";
 import {
   ComponentContext,
   useComponentContext,
-} from "../contexts/ComponentContext";
-import { typedKeys } from "../../../../__archieved/draft/utils/common";
-import { Toolbar } from "../toolbars";
+} from "../../contexts/ComponentContext";
+import { typedKeys } from "../../../../../__archieved/draft/utils/common";
+import { Toolbar } from "../../toolbars";
 import { cn } from "~/utils";
 import {
   AnySection,
@@ -34,8 +35,8 @@ import {
   SectionName,
   Sections,
 } from "~/modules/create/design/types";
-import { Contact } from "./Contact";
-import { Group } from "./Group";
+import { Contact } from "../Contact";
+import { Group } from "../Group";
 import { UserImage } from "~/modules/create/design/baseComponents/UserImage";
 import { UserName } from "~/modules/create/design/baseComponents/UserName";
 import { JobTitle } from "~/modules/create/design/baseComponents/JobTitle";
@@ -46,9 +47,10 @@ import { Experience } from "~/modules/create/design/baseComponents/Experience";
 import { Entry } from "~/modules/create/design/baseComponents/Entry";
 import { Languages } from "~/modules/create/design/baseComponents/Languages";
 import { Education } from "~/modules/create/design/baseComponents/Education";
-import { SkillsToolbar } from "../toolbars/skills/SkillsToolbar";
-import { ExperienceToolbar } from "../toolbars/experience/ExperienceToolbar";
-import { ExperienceEntryToolbar } from "../toolbars/experience/ExperienceEntryToolbar";
+import { SkillsToolbar } from "../../toolbars/skills/SkillsToolbar";
+import { ExperienceToolbar } from "../../toolbars/experience/ExperienceToolbar";
+import { ExperienceEntryToolbar } from "../../toolbars/experience/ExperienceEntryToolbar";
+import { AddComponentProps, CrudContext, RemoveComponentProps } from "./crud";
 
 const { log } = console;
 
@@ -220,6 +222,51 @@ export const DndProvider = (props: DndProviderProps) => {
     })
   );
 
+  const addComponent = (baseComponent: AddComponentProps) =>
+    setSections((prev) => {
+      const { sectionId } = baseComponent;
+      const section = prev[sectionId];
+      if (!section) return prev;
+
+      const newSections = { ...prev };
+
+      const index = section.components.findIndex(
+        (c) => c.id === activeId || c.id === baseComponent.id
+      );
+
+      //@ts-ignore
+      newSections[sectionId]!.components = [
+        ...section.components.slice(0, index + 1),
+        {
+          ...baseComponent,
+          hydratedProps: {
+            ...baseComponent.props,
+          },
+          id: uuidv4(),
+        },
+        ...section.components.slice(index + 1),
+      ];
+
+      return newSections;
+    });
+
+  const removeComponent = (component: RemoveComponentProps) =>
+    setSections((prev) => {
+      const { sectionId } = component;
+
+      const section = prev[sectionId];
+
+      if (!section) return prev;
+
+      const newSections = { ...prev };
+
+      newSections[sectionId]!.components = section.components.filter(
+        (c) => c.id !== component.id
+      );
+
+      return newSections;
+    });
+
   // useEffect(updateDesign, [sections]);
   /**
    * Reset sections when user selects a new design
@@ -353,13 +400,20 @@ export const DndProvider = (props: DndProviderProps) => {
       onDragOver={handleDragOver}
       onDragEnd={handleDragEnd}
     >
-      {typedKeys(sections).map((sectionId) => (
-        <Section
-          key={sectionId as string}
-          {...rest}
-          {...sections[sectionId]!}
-        />
-      ))}
+      <CrudContext.Provider
+        value={{
+          addComponent,
+          removeComponent,
+        }}
+      >
+        {typedKeys(sections).map((sectionId) => (
+          <Section
+            key={sectionId as string}
+            {...rest}
+            {...sections[sectionId]!}
+          />
+        ))}
+      </CrudContext.Provider>
     </DndContext>
   );
 };

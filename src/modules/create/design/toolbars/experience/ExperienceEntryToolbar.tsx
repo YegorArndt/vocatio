@@ -11,11 +11,11 @@ import { RiDragMove2Fill } from "react-icons/ri";
 
 import { BUTTON_CN } from "../constants";
 import { useComponentContext } from "../../contexts/ComponentContext";
-import { SET_VIEW_EVENT } from "~/modules/init-gen/constants";
 import { Button } from "~/components/ui/buttons/Button";
 import { BsPlusCircleDotted } from "react-icons/bs";
 import { useCurrentDraft } from "~/hooks/useCurrentDraft";
 import { BlurImage } from "~/components";
+import { SET_RIGHT_PANEL_VIEW_EVENT } from "~/modules/constants";
 
 const { log } = console;
 
@@ -39,7 +39,7 @@ export const ExperienceEntryToolbar = (props: ToolbarProps) => {
 
   const addBullets = () => {
     document.dispatchEvent(
-      new CustomEvent(SET_VIEW_EVENT, {
+      new CustomEvent(SET_RIGHT_PANEL_VIEW_EVENT, {
         detail: {
           view: "bullets",
           component: c,
@@ -74,7 +74,7 @@ export const ExperienceEntryToolbar = (props: ToolbarProps) => {
               </span>
               <Button
                 frontIcon={<BsPlusCircleDotted />}
-                text={`Add bullet points to ${place}`}
+                text={`Add bullet points to ${place ?? "entry"}`}
                 endIcon={<BlurImage src={image} className="ml-2" />}
                 baseCn="flex-y"
                 className={BUTTON_CN}

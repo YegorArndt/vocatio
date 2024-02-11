@@ -3,8 +3,8 @@ import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import { RefObject } from "react";
 import { A4_HEIGHT, A4_WIDTH } from "../design/constants";
-import { GeneratedDraft } from "../design/types";
 import { toast } from "sonner";
+import { GeneratedDraft } from "~/modules/init-gen/types";
 
 const { log } = console;
 

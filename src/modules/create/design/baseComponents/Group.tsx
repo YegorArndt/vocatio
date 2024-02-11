@@ -12,7 +12,6 @@ import {
   Autoresize,
   AutoresizeProps,
 } from "~/modules/create/design/baseComponents/Autoresize";
-import { typedKeys } from "~/__archieved/draft/utils/common";
 import { Blur } from "~/components/Blur";
 import { ImageProps } from "next/image";
 import { rest, startCase } from "lodash-es";
@@ -37,6 +36,36 @@ export type GroupProps = {
 
 type IconProps = Pick<GroupProps, "image" | "imageProps" | "imageSize">;
 
+const getIcon = (inputString: string) => {
+  const inputLower = inputString.toLowerCase();
+
+  // First, check for exact matches
+  for (let i = 0; i < icons.length; i++) {
+    const iconEntry = icons[i];
+    if (
+      iconEntry?.exact &&
+      iconEntry.exact.map((e) => e.toLowerCase()).includes(inputLower)
+    ) {
+      return iconEntry.icon;
+    }
+  }
+
+  // If no exact match is found, then check for partial matches
+  for (let i = 0; i < icons.length; i++) {
+    const iconEntry = icons[i];
+    if (iconEntry?.partial) {
+      for (let partialString of iconEntry.partial) {
+        if (inputLower.includes(partialString.toLowerCase())) {
+          return iconEntry.icon;
+        }
+      }
+    }
+  }
+
+  // Return null if no match is found
+  return null;
+};
+
 const BlurIcon = (props: ImageProps & { imageSize?: number }) => {
   const {
     src,
@@ -46,7 +75,7 @@ const BlurIcon = (props: ImageProps & { imageSize?: number }) => {
     alt,
     className,
   } = props;
-  const Icon = icons[src as keyof typeof icons];
+  const Icon = getIcon(src as string);
 
   const pps = { height, width, alt, className };
 
@@ -59,14 +88,19 @@ const Icon = (props: IconProps) => {
   const { image, imageProps, imageSize } = props;
   const [filter, setFilter] = useState("");
 
-  const c = useComponentContext();
-  // const { updateDesign } = useDraftContext();
-
-  // const onImageChange = (key: keyof typeof icons) => {
-  //   const newProps = { ...c.props, image: key };
-  //   c.props = newProps;
-  //   // updateDesign();
-  // };
+  const filteredIcons = icons.filter((iconEntry) => {
+    const searchString = filter.trim().toUpperCase();
+    return (
+      (iconEntry.exact &&
+        iconEntry.exact.some((exactMatch) =>
+          exactMatch.toUpperCase().includes(searchString)
+        )) ||
+      (iconEntry.partial &&
+        iconEntry.partial.some((partialMatch) =>
+          partialMatch.toUpperCase().includes(searchString)
+        ))
+    );
+  });
 
   return (
     <Menu
@@ -99,20 +133,27 @@ const Icon = (props: IconProps) => {
           />
         )}
       </FocusableItem>
-      {typedKeys(icons)
-        .filter((iconKey) =>
-          iconKey.toUpperCase().includes(filter.trim().toUpperCase())
-        )
-        .map((i) => (
+      {filteredIcons.map((iconEntry, index) => {
+        const label = iconEntry.exact
+          ? iconEntry.exact[0]
+          : iconEntry.partial
+          ? iconEntry.partial[0]
+          : "";
+        return (
           <MenuItem
-            key={i}
+            key={index}
             className="flex items-center gap-4 first-letter:capitalize hover:bg-transparent"
-            // onClick={() => onImageChange(i)}
+            // onClick={() => onImageChange(label)}
           >
-            <BlurIcon {...rest} {...(imageProps as { alt: string })} src={i} />
-            {startCase(i)}
+            <BlurIcon
+              {...rest}
+              {...(imageProps as { alt: string })}
+              src={label!}
+            />
+            {startCase(label)}
           </MenuItem>
-        ))}
+        );
+      })}
     </Menu>
   );
 };
@@ -127,7 +168,6 @@ export const Group = () => {
     labelProps,
     value,
     valueProps,
-    imageSize,
   } = hydratedProps as GroupProps;
 
   /**

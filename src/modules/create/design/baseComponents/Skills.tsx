@@ -1,21 +1,22 @@
 import { useEffect, useState } from "react";
 
-import { DndProvider } from "./DndProvider";
+import { DndProvider } from "./dnd/DndProvider";
 import { useComponentContext } from "../contexts/ComponentContext";
 import { useDesignContext } from "../contexts/DesignContext";
 import { useCurrentDraft } from "~/hooks/useCurrentDraft";
-import {
-  SKILLS_READY_EVENT,
-  SKILLS_UPDATED_EVENT,
-} from "~/modules/init-gen/constants";
 import { parseSkills } from "~/modules/init-gen/parsers";
 import { pick } from "lodash-es";
 import { cn } from "~/utils";
-import { GeneratedDraft } from "../types";
+import { GeneratedDraft } from "~/modules/init-gen/types";
+import {
+  SKILLS_GENERATED_EVENT,
+  SKILLS_UPDATED_BY_USER_EVENT,
+} from "~/modules/constants";
 
 const { log } = console;
 
 type Data = ReturnType<typeof parseSkills>;
+type SkillsUpdatedByUser = CustomEvent<GeneratedDraft["generatedSkills"]>;
 
 export const Skills = () => {
   const { currentDraft } = useCurrentDraft();
@@ -24,10 +25,8 @@ export const Skills = () => {
   const [data, setData] = useState({} as Data);
 
   useEffect(() => {
-    document.addEventListener(SKILLS_UPDATED_EVENT, (event) => {
-      const { newSkills } = (
-        event as CustomEvent<{ newSkills: GeneratedDraft["generatedSkills"] }>
-      ).detail;
+    document.addEventListener(SKILLS_UPDATED_BY_USER_EVENT, (event) => {
+      const newSkills = (event as SkillsUpdatedByUser).detail;
 
       setData((prev) => ({
         ...prev,
@@ -48,23 +47,24 @@ export const Skills = () => {
           "generatedSkills",
           "vacancySkills",
           "vacancyResponsibilities",
+          "generatedProfessionalSummary",
         ])
       );
 
       return;
     }
 
-    const handleSkillsReady = (event: Event) => {
+    const onSkillsGenerated = (event: Event) => {
       const customEvent = event as CustomEvent<Data>;
       const eventData = customEvent.detail;
       setData(eventData);
     };
 
-    document.addEventListener(SKILLS_READY_EVENT, handleSkillsReady);
+    document.addEventListener(SKILLS_GENERATED_EVENT, onSkillsGenerated);
 
     // Cleanup: Remove the event listener
     return () => {
-      document.removeEventListener(SKILLS_READY_EVENT, handleSkillsReady);
+      document.removeEventListener(SKILLS_GENERATED_EVENT, onSkillsGenerated);
     };
   }, [currentDraft]);
 

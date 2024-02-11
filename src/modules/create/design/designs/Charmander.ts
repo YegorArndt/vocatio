@@ -15,17 +15,7 @@ import {
   languages,
   education,
 } from "./utils";
-
-export const boldKeywords = (text: string, keywords: string) => {
-  const vacancyWords = new Set(keywords.toLowerCase().match(/\w+/g));
-
-  return text.replace(/\w+/g, (word) => {
-    if (vacancyWords.has(word.toLowerCase())) {
-      return `<span class="font-bold">${word}</span>`;
-    }
-    return word;
-  });
-};
+import { boldKeywords } from "../utils";
 
 const blueColor = "bg-[#22405C]";
 const grayColor = "#BDBDBD";
@@ -74,6 +64,9 @@ export const Charmander: Design = {
     education: {
       className: "flex flex-col gap-2",
     },
+    text: {
+      className: "text-[13px] leading-5",
+    },
   },
 
   sections: {
@@ -118,7 +111,7 @@ export const Charmander: Design = {
           components: (entry, len) => [
             {
               id: entry.id + "-title",
-              sectionId: "experience",
+              sectionId: entry.id,
               type: "group",
               hydratedProps: {
                 label: entry.title,
@@ -130,7 +123,7 @@ export const Charmander: Design = {
             },
             {
               id: entry.id + "-place",
-              sectionId: "experience",
+              sectionId: entry.id,
               type: getType(entry),
               hydratedProps: {
                 image: entry.image,
@@ -146,7 +139,7 @@ export const Charmander: Design = {
              */
             ...entry.generatedDescription?.map((bulletPoint, i) => ({
               id: entry.id + i + "-bullet",
-              sectionId: "experience",
+              sectionId: entry.id,
               type: "text",
               hydratedProps: {
                 value: boldKeywords(

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 
 import { getDraftByVacancyId, setDraftByVacancyId } from "~/utils/ls";
-import type { GeneratedDraft } from "~/modules/create/design/types";
+import type { GeneratedDraft } from "~/modules/init-gen/types";
 
 export const useCurrentDraft = () => {
   const [currentDraft, setCurrentDraft] = useState({} as GeneratedDraft);

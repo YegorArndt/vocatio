@@ -1,7 +1,6 @@
 import { useState } from "react";
 
 import { BlurImage } from "../../../components/BlurImage";
-import { Link } from "~/components/ui/buttons/Link";
 import { Charmander } from "~/modules/create/design/designs/Charmander";
 
 const designs = [Charmander];
@@ -33,11 +32,11 @@ export const DesignViewer = () => {
                 alt={d.name}
                 className="transform cursor-pointer transition hover:-translate-y-1 motion-reduce:transition-none"
               />
-              <footer className="flex-center mt-2 gap-2">
+              <footer className="flex-center clr-ghost mt-2 gap-2">
                 <BlurImage
                   src={`/designs/${d.pokemonImage}`}
-                  height={40}
-                  width={40}
+                  height={30}
+                  width={30}
                   alt={d.name}
                 />
                 {d.name}
@@ -45,11 +44,11 @@ export const DesignViewer = () => {
             </div>
           ))}
       </div>
-      <Link
+      {/* <Link
         text="Suggest a design ❤️"
         className="primary sm mt-8"
         to="mailto:yegorarndt@gmail.com"
-      />
+      /> */}
     </>
   );
 };

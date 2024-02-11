@@ -1,20 +1,39 @@
-//@ts-nocheck
+// @ts-nocheck
 
 import { icons } from "~/constants";
-import { typedKeys } from "~/__archieved/draft/utils/common";
 import { GroupProps } from "../baseComponents/Group";
-import {
-  BaseComponentType,
-  GeneratedDraft,
-  HydratableComponent,
-  SectionName,
-} from "../types";
+import { BaseComponentType, HydratableComponent, SectionName } from "../types";
 import { ExperienceEntry, EducationEntry, ContactEntry } from "@prisma/client";
+import { GeneratedDraft } from "~/modules/init-gen/types";
 
-const iconNames = typedKeys(icons);
+/**
+ * @returns icon name `string` that is then matched by `Group` component.
+ */
+export const defaultIcon = (entryName: string) => {
+  let iconName = "star";
 
-export const defaultIcon = (entryName: string) =>
-  iconNames.find((i) => i.includes(entryName?.toLowerCase())) || "star";
+  if (entryName) {
+    const entryNameLower = entryName.toLowerCase();
+
+    icons.forEach((i) => {
+      const isExactMatch = i.exact?.includes(entryNameLower);
+
+      if (isExactMatch) {
+        iconName = i.exact!.find((i) => i === entryNameLower)!;
+        return;
+      }
+
+      const isPartialMatch = i.partial?.some((p) => entryNameLower.includes(p));
+
+      if (isPartialMatch) {
+        iconName = i.partial!.find((p) => entryNameLower.includes(p))!;
+        return;
+      }
+    });
+  }
+
+  return iconName;
+};
 
 export const getType = (
   entry: ExperienceEntry | EducationEntry | ContactEntry

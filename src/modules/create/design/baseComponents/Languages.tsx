@@ -1,5 +1,5 @@
 import { usePersistentData } from "~/hooks/usePersistentData";
-import { DndProvider } from "./DndProvider";
+import { DndProvider } from "./dnd/DndProvider";
 import { useComponentContext } from "../contexts/ComponentContext";
 import { useDesignContext } from "../contexts/DesignContext";
 

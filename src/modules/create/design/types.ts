@@ -1,19 +1,7 @@
-import { DndProviderProps } from "./baseComponents/DndProvider";
+import { DndProviderProps } from "./baseComponents/dnd/DndProvider";
 import { GroupProps } from "./baseComponents/Group";
 import { AutoresizeProps } from "./baseComponents/Autoresize";
-import { ExperienceEntry } from "@prisma/client";
-import { PartialVacancy, RouterUser } from "./extension/types";
-
-export type GeneratedDraft = {
-  vacancy: PartialVacancy;
-  vacancyResponsibilities: string[];
-  vacancySkills: string[];
-
-  generatedProfessionalSummary: string;
-  generatedExperience: (ExperienceEntry & { generatedDescription: string[] })[];
-  generatedSkills: { id: string; name: string }[];
-  coverLetter?: string;
-} & RouterUser;
+import type { GeneratedDraft } from "~/modules/init-gen/types";
 
 export type Design = {
   id: string;

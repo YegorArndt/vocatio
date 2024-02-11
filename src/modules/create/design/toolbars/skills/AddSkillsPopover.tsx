@@ -11,8 +11,8 @@ import { Button } from "~/components/ui/buttons/Button";
 import { useMemo, useState } from "react";
 import { get } from "lodash-es";
 import { Switch } from "~/components/ui/external/Switch";
-import { SKILLS_UPDATED_EVENT } from "~/modules/init-gen/constants";
 import { BiPlus } from "react-icons/bi";
+import { SKILLS_UPDATED_BY_USER_EVENT } from "~/modules/constants";
 
 const { log } = console;
 
@@ -43,7 +43,7 @@ export const AddSkillsPopover = () => {
       generatedSkills: newSkills,
     });
     document.dispatchEvent(
-      new CustomEvent(SKILLS_UPDATED_EVENT, { detail: { newSkills } })
+      new CustomEvent(SKILLS_UPDATED_BY_USER_EVENT, { detail: newSkills })
     );
   };
 
@@ -59,7 +59,7 @@ export const AddSkillsPopover = () => {
           }}
           side="left"
           sideOffset={130}
-          className="w-[600px] !bg-card"
+          className="w-[800px] !bg-card"
         >
           <header className="grid grid-cols-2">
             {["From vacancy", "From my skills"].map((tab, i) => (
@@ -68,7 +68,6 @@ export const AddSkillsPopover = () => {
                 text={tab}
                 onClick={() => {
                   setActiveTab(i);
-                  log(i);
                 }}
                 className={cn("p-2", "hover:bg-gray-100", {
                   "border-bottom": i === activeTab,
@@ -83,7 +82,7 @@ export const AddSkillsPopover = () => {
             onChange={(e) => setSearch(e.target.value)}
             autoFocus
           />
-          <section className="flex flex-wrap gap-2">
+          <section className="flex flex-wrap gap-2 overflow-auto">
             {skills[activeTab as 0 | 1]
               .filter((s) => s.toLowerCase().includes(search.toLowerCase()))
               .filter(

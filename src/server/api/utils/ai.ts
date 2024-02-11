@@ -1,6 +1,6 @@
 import { HfInference, TextGenerationArgs } from "@huggingface/inference";
 import { Configuration, OpenAIApi } from "openai";
-import { Models } from "~/modules/create/design/extension/types";
+import { Models } from "~/modules/init-gen/types";
 
 const { log } = console;
 

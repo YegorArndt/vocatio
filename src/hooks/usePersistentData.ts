@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
+import { GeneratedDraft } from "~/modules/init-gen/types";
 
-import type { GeneratedDraft } from "~/modules/create/design/types";
 import {
   getPersistedState,
   initialPersistedState,

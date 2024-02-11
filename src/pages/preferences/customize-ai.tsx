@@ -13,7 +13,6 @@ import { usePersistentData } from "~/hooks/usePersistentData";
 import { preferencesToolbar } from "~/modules/preferences/my-info/constants";
 import { BlurImage } from "~/components";
 import { Badge } from "~/components/ui/external/Badge";
-import { Models } from "~/modules/create/design/extension/types";
 import { typedEntries } from "~/__archieved/draft/utils/common";
 import { toast } from "sonner";
 import { Checkmark } from "~/components/icons";
@@ -32,6 +31,7 @@ import {
   Tooltip,
   TooltipProvider,
 } from "~/components/ui/external/Tooltip";
+import { Models } from "~/modules/init-gen/types";
 
 const { log } = console;
 

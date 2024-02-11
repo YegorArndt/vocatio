@@ -16,7 +16,7 @@ import {
   MenubarContent,
   MenubarItem,
 } from "~/components/ui/external/MenuBar";
-import { Models } from "~/modules/create/design/extension/types";
+import { Models } from "~/modules/init-gen/types";
 
 type AiPickerProps = {
   onModelChange: (model: Models) => void;

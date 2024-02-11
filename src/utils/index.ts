@@ -1,7 +1,7 @@
 import type { ContactEntry } from "@prisma/client";
 import cn from "classnames";
 import { forIn } from "lodash-es";
-import { RouterUser } from "~/modules/create/design/extension/types";
+import { RouterUser } from "~/modules/init-gen/types";
 
 export { cn };
 

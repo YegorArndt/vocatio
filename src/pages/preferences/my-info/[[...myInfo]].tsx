@@ -12,10 +12,10 @@ import { useEffect } from "react";
 import { api, getMissingInfo } from "~/utils";
 import { pick, startCase } from "lodash-es";
 import { toast } from "sonner";
-import { RouterUser } from "~/modules/create/design/extension/types";
 import Image from "next/image";
 import { Link } from "~/components/ui/buttons/Link";
 import { linkedinJobsSearchUrl } from "~/constants";
+import { RouterUser } from "~/modules/init-gen/types";
 
 const { log } = console;
 

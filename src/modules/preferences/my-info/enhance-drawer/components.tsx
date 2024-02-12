@@ -172,7 +172,7 @@ export const EnhancementResult = () => {
           frontIcon={<Gpt />}
           text="Enhance my experience"
           className="primary sm"
-          disabled={!user || user.enhancementsCount < 1}
+          disabled={!user || user.enhancementsCount < 1 || isGenerating}
           onClick={() => {
             toast.loading("Enhancing...", { duration: Infinity });
             void generateEnhancedExperience();

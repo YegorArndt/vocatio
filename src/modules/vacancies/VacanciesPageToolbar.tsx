@@ -1,10 +1,8 @@
 import { HiOutlinePlusCircle } from "react-icons/hi2";
 import { DrawerTrigger } from "~/components/ui/external/Drawer";
 import { EditVacancyDrawer } from "./EditVacancyDrawer";
-import { api, cn } from "~/utils";
-import { Link } from "~/components/ui/buttons/Link";
-import { LinkedinColor } from "~/components/icons";
-import { linkedinJobsSearchUrl } from "../constants";
+import { api } from "~/utils";
+import { BrowseVacanciesLink } from "~/components/BrowseVacancies";
 
 const { log } = console;
 
@@ -32,19 +30,7 @@ export const VacanciesPageToolbar = () => {
           </DrawerTrigger>
         }
       />
-      <Link
-        frontIcon={<LinkedinColor />}
-        text="Browse vacancies"
-        to={
-          user?.vacancies.find((v) => v.sourceUrl)?.sourceUrl ||
-          linkedinJobsSearchUrl
-        }
-        baseCn="common hover flex-y gap-2"
-        className={cn({
-          "pointer-events-none opacity-50": userLoading,
-        })}
-        newTab
-      />
+      <BrowseVacanciesLink />
     </>
   );
 };

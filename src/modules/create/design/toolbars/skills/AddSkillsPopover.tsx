@@ -59,56 +59,58 @@ export const AddSkillsPopover = () => {
           }}
           side="left"
           sideOffset={130}
-          className="w-[800px] !bg-card"
+          className="h-full w-[800px] !bg-card"
         >
-          <header className="grid grid-cols-2">
-            {["From vacancy", "From my skills"].map((tab, i) => (
-              <Button
-                key={tab}
-                text={tab}
-                onClick={() => {
-                  setActiveTab(i);
-                }}
-                className={cn("p-2", "hover:bg-gray-100", {
-                  "border-bottom": i === activeTab,
-                })}
-              />
-            ))}
-          </header>
-          <input
-            placeholder="Search skills here..."
-            className="h-[70px] w-full bg-transparent outline-none"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            autoFocus
-          />
-          <section className="flex flex-wrap gap-2 overflow-auto">
-            {skills[activeTab as 0 | 1]
-              .filter((s) => s.toLowerCase().includes(search.toLowerCase()))
-              .filter(
-                (s) =>
-                  !displayOnlyMissing ||
-                  !currentDraft.generatedSkills
-                    .map((x) => x.name.toLowerCase())
-                    .includes(s.toLowerCase())
-              )
-              .map((s) => (
+          <div className="size-full overflow-auto">
+            <header className="grid grid-cols-2">
+              {["From vacancy", "From my skills"].map((tab, i) => (
                 <Button
-                  key={s}
-                  frontIcon={<BiPlus />}
-                  text={s}
-                  className="flex-y rounded-md border bg-primary p-2"
-                  onClick={() => addSkill(s)}
+                  key={tab}
+                  text={tab}
+                  onClick={() => {
+                    setActiveTab(i);
+                  }}
+                  className={cn("p-2", "hover:bg-gray-100", {
+                    "border-bottom": i === activeTab,
+                  })}
                 />
               ))}
-          </section>
-          <label className="flex-y gap-2 py-4">
-            <Switch
-              checked={displayOnlyMissing}
-              onClick={() => setDisplayOnlyMissing(!displayOnlyMissing)}
+            </header>
+            <input
+              placeholder="Search skills here..."
+              className="h-[70px] w-full bg-transparent outline-none"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              autoFocus
             />
-            Show only skills I haven&apos;t added yet
-          </label>
+            <section className="flex flex-wrap gap-2 overflow-auto">
+              {skills[activeTab as 0 | 1]
+                .filter((s) => s.toLowerCase().includes(search.toLowerCase()))
+                .filter(
+                  (s) =>
+                    !displayOnlyMissing ||
+                    !currentDraft.generatedSkills
+                      .map((x) => x.name.toLowerCase())
+                      .includes(s.toLowerCase())
+                )
+                .map((s) => (
+                  <Button
+                    key={s}
+                    frontIcon={<BiPlus />}
+                    text={s}
+                    className="flex-y rounded-md border bg-primary p-2"
+                    onClick={() => addSkill(s)}
+                  />
+                ))}
+            </section>
+            <label className="flex-y gap-2 py-4">
+              <Switch
+                checked={displayOnlyMissing}
+                onClick={() => setDisplayOnlyMissing(!displayOnlyMissing)}
+              />
+              Show only skills I haven&apos;t added yet
+            </label>
+          </div>
         </PopoverContent>
       )}
     </Popover>

@@ -7,6 +7,65 @@ import { GeneratedDraft } from "./types";
 import { EXPERIENCE_GENERATED_EVENT, SKILLS_GENERATED_EVENT } from "../events";
 import { PartialVacancy, RouterUser } from "../types";
 
+const escapeRegExp = (s: string) => {
+  // This function escapes special characters for regex
+  return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+};
+
+const processExperience = (
+  enhancedExperience: { generatedExperience: string[] },
+  user: RouterUser,
+  vacancy: PartialVacancy
+) => {
+  const companyNameRegex = new RegExp(escapeRegExp(vacancy.companyName!), "g");
+
+  return user.experience.map((x, i) => ({
+    ...x,
+    generatedDescription:
+      i === 0
+        ? enhancedExperience.generatedExperience.map((g) =>
+            g.replaceAll(companyNameRegex, x.place)
+          )
+        : toBulletPointArray(x.description!),
+  }));
+};
+
+const generateSkills = async (vacancy: PartialVacancy, user: RouterUser) => {
+  try {
+    const skillsPrompt = buildSkillsPrompt(user, vacancy);
+    const skillsResponse = await applyGpt(skillsPrompt);
+    const parsedSkills = parseSkills(skillsResponse);
+
+    document.dispatchEvent(
+      new CustomEvent(SKILLS_GENERATED_EVENT, { detail: parsedSkills })
+    );
+    return parsedSkills;
+  } catch (error) {
+    toast.error("Error generating skills");
+    throw error;
+  }
+};
+
+const generateExperience = async (
+  vacancy: PartialVacancy,
+  user: RouterUser
+) => {
+  try {
+    const experiencePrompt = buildExperiencePrompt(vacancy, user);
+    const experienceResponse = await applyGpt(experiencePrompt);
+    return parseExperience(experienceResponse);
+  } catch (error) {
+    toast.error("Error generating experience");
+    throw error;
+  }
+};
+
+const toBulletPointArray = (enhancedDescription: string) =>
+  enhancedDescription
+    .split("• ")
+    .slice(1)
+    .map((point) => "• " + point.trim());
+
 type InitDraftProps = {
   vacancy: PartialVacancy;
   user: RouterUser;
@@ -69,7 +128,7 @@ export const generateDraft = async (
     };
 
     setDraftByVacancyId(vacancy.id, generatedDraft);
-    toast.success("Generation complete");
+    toast.success("Generation complete. Please review.");
 
     return generatedDraft;
   } catch (error) {
@@ -79,64 +138,3 @@ export const generateDraft = async (
     toast.dismiss();
   }
 };
-
-const processExperience = (
-  enhancedExperience: { generatedExperience: string[] },
-  user: RouterUser,
-  vacancy: PartialVacancy
-) => {
-  return user.experience.map((x, i) => ({
-    ...x,
-    generatedDescription:
-      i === 0
-        ? /**
-           * LLM sometimes includes the name of the company from the vacancy.
-           * We need to replace it with the name of the company from the actual experience entry.
-           */
-          enhancedExperience.generatedExperience.map((g) =>
-            g.replaceAll(vacancy.companyName!, x.place)
-          )
-        : toBulletPointArray(x.description!),
-  }));
-};
-
-const generateSkills = async (vacancy: PartialVacancy, user: RouterUser) => {
-  try {
-    const skillsPrompt = buildSkillsPrompt(user, vacancy);
-    const skillsResponse = await applyGpt(skillsPrompt);
-    const parsedSkills = parseSkills(skillsResponse);
-
-    document.dispatchEvent(
-      new CustomEvent(SKILLS_GENERATED_EVENT, { detail: parsedSkills })
-    );
-    return parsedSkills;
-  } catch (error) {
-    toast.error("Error generating skills");
-    throw error;
-  }
-};
-
-const generateExperience = async (
-  vacancy: PartialVacancy,
-  user: RouterUser
-) => {
-  try {
-    const experiencePrompt = buildExperiencePrompt(vacancy, user);
-    const experienceResponse = await applyGpt(experiencePrompt);
-    return parseExperience(experienceResponse);
-  } catch (error) {
-    toast.error("Error generating experience");
-    throw error;
-  }
-};
-
-const getBulletPointsToEnhance = (user: RouterUser) => {
-  const { enhancedDescription, description } = user.experience[0] || {};
-  return enhancedDescription || description || "";
-};
-
-const toBulletPointArray = (enhancedDescription: string) =>
-  enhancedDescription
-    .split("• ")
-    .slice(1)
-    .map((point) => "• " + point.trim());

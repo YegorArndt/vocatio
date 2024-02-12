@@ -35,8 +35,15 @@ const InitGenerationPage = () => {
         void router.push("/preferences");
         return;
       }
+      if (!response.data?.newVacancy?.id) {
+        toast.error(
+          "You've probably turned on the extension recently. Please close the Vocatio and LinkedIn tabs and try again."
+        );
 
-      const { newVacancy } = response.data!;
+        return;
+      }
+
+      const { newVacancy } = response.data;
 
       void initDraft({
         vacancy: newVacancy,

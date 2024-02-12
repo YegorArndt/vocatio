@@ -3,7 +3,7 @@ import { Link, LinkProps } from "./ui/buttons/Link";
 import { linkedinJobsSearchUrl } from "~/modules/constants";
 import { LinkedinColor } from "./icons";
 
-export const BrowseVacanciesLink = (props: LinkProps) => {
+export const BrowseVacanciesLink = (props: Omit<LinkProps, "to">) => {
   const { data: user, isLoading: userLoading } = api.users.get.useQuery();
 
   return (

@@ -46,8 +46,8 @@ export const parseExperience = (experiencePromptReturn: string | undefined) => {
   } catch (error) {}
 
   const renamed = {
-    generatedExperience: json.mergedTuples.filter((x) => x.length > 0),
-    vacancyResponsibilities: json.vacancyResponsibilities,
+    generatedExperience: json?.mergedTuples?.filter((x) => x.length > 0),
+    vacancyResponsibilities: json?.vacancyResponsibilities,
   };
 
   return renamed;

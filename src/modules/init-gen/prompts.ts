@@ -17,18 +17,18 @@ export const buildSkillsPrompt = (
      - Tasks:
      
      1. Create an array of skills (technologies, hard and soft skills, e.g. "React", "TypeScript") from the vacancy without categorization.
-        Constraints: 
+        Conditions: 
         1) anything you include in the output for this task must be in the vacancy text.
      
      2. Find skills from task 1 that match any of the following skills: ${skillNames.join(", ")}. 
-        Constraints for task 2: 
+        Conditions for task 2: 
         1) anything you include in the output for this task must be in the vacancy text.
 
-     3. Create a professional summary to present me as a perfect fit for the vacancy. I will include it in the top of my resume. Wrap all hard skills and keywords in 
-        <span class="font-bold">{hard skill}</span> HTML tags for emphasis. I'll parse in the HTML tags later.
-        Constraints for task 3: 
+     3. Create a professional summary to present me as a perfect fit for the vacancy. I will include it in the top of my resume. 
+        Conditions for task 3: 
         1) do not mention anything about education in the summary.
-        2) omit personal pronouns, filler words and colloquial language from the summary to maintain a professional tone. 
+        2) omit personal pronouns, filler words and colloquial language from the summary to maintain a professional tone. "I" has no place in the summary.
+        3) wrap all hard skills from task 1 in <span class="font-bold">{hard skill}</span> HTML tags for emphasis in the professional summary. I'll parse in the HTML tags later.
  
      - Format of your response:
 
@@ -81,7 +81,7 @@ export const buildExperiencePrompt = (
     {
       vacancyResponsibilities: string[],
       tuples: tuple[],
-      mergedTuples: string[] <- must contain exactly the number of the bullet points I gave you in step 2.
+      mergedTuples: string[] <- must contain exactly the number of the bullet points I gave you in step 2. Must be an array of strings where each string is a bullet point.
     }
   
   - Constraints:

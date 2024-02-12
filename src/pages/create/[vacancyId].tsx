@@ -26,7 +26,6 @@ const rubik = Rubik({ subsets: ["latin"] });
 const CvEditor = () => {
   const { currentDraft } = useCurrentDraft();
   const { a4Ref, pages, setPages } = useA4();
-  // useWarnOnUnload();
 
   return (
     <>

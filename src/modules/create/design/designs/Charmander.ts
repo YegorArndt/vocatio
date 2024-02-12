@@ -108,7 +108,7 @@ export const Charmander: Design = {
           sectionId: "left",
         }),
         experience({
-          components: (entry, len) => [
+          components: (entry) => [
             {
               id: entry.id + "-title",
               sectionId: entry.id,

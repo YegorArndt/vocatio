@@ -30,6 +30,7 @@ const NOT_IMPLEMENTED_COMPONENTS = [
   "experience",
   "skills",
   "languages",
+  "entry",
 ];
 
 const mapping = {

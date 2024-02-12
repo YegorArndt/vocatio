@@ -84,7 +84,7 @@ export const RightEnhanceBox = () => {
     <section className="flex flex-col gap-3 rounded-md border p-5">
       <h6 className="flex-y gap-2 text-lg">
         <BlurImage src="/premium.png" />
-        Premium feature. Remaining enhancements:{" "}
+        Premium feature. Available enhancements:{" "}
         {user ? (
           <span className="clr-red">{user?.enhancementsCount}</span>
         ) : (

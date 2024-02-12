@@ -11,6 +11,7 @@ import { RiDragMove2Fill } from "react-icons/ri";
 
 import { BUTTON_CN } from "../constants";
 import { AddExperiencePopover } from "./AddExperiencePopover";
+import { PageBreakButton } from "../shared/PageBreakButton";
 
 const { log } = console;
 
@@ -48,6 +49,7 @@ export const ExperienceToolbar = (props: ToolbarProps) => {
         render={() => {
           return (
             <div className="flex-center gap-1" data-html2canvas-ignore>
+              <PageBreakButton />
               <span
                 {...listeners}
                 {...attributes}

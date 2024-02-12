@@ -11,6 +11,7 @@ import { RiDragMove2Fill } from "react-icons/ri";
 import { BUTTON_CN } from "../constants";
 import { Tooltip } from "react-tooltip";
 import { AddSkillsPopover } from "./AddSkillsPopover";
+import { PageBreakButton } from "../shared/PageBreakButton";
 
 const { log } = console;
 
@@ -48,6 +49,7 @@ export const SkillsToolbar = (props: ToolbarProps) => {
         render={() => {
           return (
             <div className="flex-center gap-1" data-html2canvas-ignore>
+              <PageBreakButton />
               <span
                 {...listeners}
                 {...attributes}

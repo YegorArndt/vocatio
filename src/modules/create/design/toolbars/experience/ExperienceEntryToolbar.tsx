@@ -16,6 +16,7 @@ import { BsPlusCircleDotted } from "react-icons/bs";
 import { useCurrentDraft } from "~/hooks/useCurrentDraft";
 import { BlurImage } from "~/components";
 import { SET_RIGHT_PANEL_VIEW_EVENT } from "~/modules/events";
+import { PageBreakButton } from "../shared/PageBreakButton";
 
 const { log } = console;
 
@@ -69,6 +70,7 @@ export const ExperienceEntryToolbar = (props: ToolbarProps) => {
         render={() => {
           return (
             <div className="flex-center" data-html2canvas-ignore>
+              <PageBreakButton />
               <span {...listeners} {...attributes} className={BUTTON_CN}>
                 <RiDragMove2Fill size={20} />
               </span>

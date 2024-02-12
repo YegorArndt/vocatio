@@ -79,25 +79,25 @@ export const userImage = (props: { sectionId: SectionName }) => {
   } as HydratableComponent;
 };
 
-export const userName = () =>
+export const userName = (sectionId?: SectionName = "top-left") =>
   ({
     type: "userName",
     id: "userName",
-    sectionId: "left",
+    sectionId,
   } as HydratableComponent);
 
-export const jobTitle = () =>
+export const jobTitle = (sectionId?: SectionName = "top-left") =>
   ({
     type: "jobTitle",
     id: "jobTitle",
-    sectionId: "left",
+    sectionId,
   } as HydratableComponent);
 
-export const professionalSummary = () =>
+export const professionalSummary = (sectionId?: SectionName = "left") =>
   ({
     type: "professionalSummary",
     id: "professionalSummary",
-    sectionId: "left",
+    sectionId,
   } as HydratableComponent);
 
 export const contact = (
@@ -112,7 +112,7 @@ export const contact = (
   return {
     type: "contact",
     id: "contact",
-    sectionId: sectionId || "left",
+    sectionId: sectionId || "top-left",
     hydratableProps: (draft: GeneratedDraft) => ({
       sections: {
         contact: {
@@ -176,7 +176,7 @@ export const skills = (
   return {
     type: "skills",
     id: "skills",
-    sectionId: sectionId || "left",
+    sectionId: sectionId || "right",
     hydratableProps: (draft: GeneratedDraft) => ({
       sections: {
         skills: {

@@ -16,6 +16,7 @@ export const separateEntries = (obj: Record<string, unknown>) => {
 };
 
 export const stripHtmlTags = (text: string) => {
+  if (!text) return "";
   return text.replace(/<[^>]*>?/gm, "");
 };
 
@@ -27,4 +28,14 @@ export const typedEntries = <T extends object>(
   obj: T
 ): [keyof T, T[keyof T]][] => {
   return Object.entries(obj) as [keyof T, T[keyof T]][];
+};
+
+const modelToString = {
+  GPT3_5: "gpt-3.5",
+  GPT4: "gpt-4",
+  // Add other mappings here if necessary
+};
+
+export const getModelString = (modelEnum: keyof typeof modelToString) => {
+  return modelToString[modelEnum] || "gpt-3.5";
 };

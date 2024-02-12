@@ -1,10 +1,10 @@
-// @ts-nocheck
+//@ts-nocheck
 
-import { icons } from "~/constants";
-import { GroupProps } from "../baseComponents/Group";
+import { GroupProps } from "../base-components/Group";
 import { BaseComponentType, HydratableComponent, SectionName } from "../types";
 import { ExperienceEntry, EducationEntry, ContactEntry } from "@prisma/client";
 import { GeneratedDraft } from "~/modules/init-gen/types";
+import { iconsMap } from "~/modules/icons-map";
 
 /**
  * @returns icon name `string` that is then matched by `Group` component.
@@ -15,7 +15,7 @@ export const defaultIcon = (entryName: string) => {
   if (entryName) {
     const entryNameLower = entryName.toLowerCase();
 
-    icons.forEach((i) => {
+    iconsMap.forEach((i) => {
       const isExactMatch = i.exact?.includes(entryNameLower);
 
       if (isExactMatch) {

@@ -12,7 +12,6 @@ import {
   MenubarItem,
 } from "~/components/ui/external/MenuBar";
 import { BlurImage } from "~/components";
-import { Gpt } from "~/icons";
 import {
   hfFormat,
   applyGpt,
@@ -28,13 +27,10 @@ import {
   Tooltip,
   TooltipProvider,
 } from "~/components/ui/external/Tooltip";
-import {
-  PartialVacancy,
-  RouterUser,
-  GeneratedDraft,
-  Models,
-} from "~/modules/init-gen/types";
+import { GeneratedDraft } from "~/modules/init-gen/types";
 import { useCurrentDraft } from "~/hooks/useCurrentDraft";
+import { Gpt } from "~/components/icons";
+import { PartialVacancy, RouterUser, Models } from "~/modules/types";
 
 type TextEditorToolbarProps = {
   vacancy: PartialVacancy;

@@ -2,14 +2,14 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { Button } from "~/components/ui/buttons/Button";
 import { useCurrentDraft } from "~/hooks/useCurrentDraft";
-import { usePersistentData } from "~/hooks/usePersistentData";
+import { useLs } from "~/hooks/useLs";
 import { api } from "~/utils";
 
 export const MoveToAppliedToast = () => {
   const { currentDraft } = useCurrentDraft();
   const { vacancy } = currentDraft || {};
 
-  const { ls, updateLs } = usePersistentData();
+  const { ls, updateLs } = useLs();
   const { register, watch } = useForm();
 
   const { mutate: updateVacancy, isLoading } =

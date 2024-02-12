@@ -67,9 +67,9 @@ enum ProfessionField {
 }
 
 enum DefaultModel {
-  GPT3
-  GPT4
-  MIXTRAL
+  GPT_3_5
+  GPT_4
+  // MIXTRAL
 }
 
 model ContactEntry {
@@ -116,19 +116,18 @@ model EducationEntry {
 }
 
 model ExperienceEntry {
-  id                String   @id @default(uuid())
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
-  place             String
-  period            String
-  description       String
-  // We automatically optimzie user's experience texts with gpt-4 at the beginning. The user doesn't know. That helps weaker LLMS to generate better texts.
-  shadowDescription String?
-  skills            String[]
-  image             String
-  title             String
-  user              User     @relation(fields: [userId], references: [id])
-  userId            String
+  id                  String   @id @default(uuid())
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+  place               String
+  period              String
+  description         String
+  enhancedDescription String?
+  skills              String[]
+  image               String
+  title               String
+  user                User     @relation(fields: [userId], references: [id])
+  userId              String
 }
 
 model User {
@@ -142,6 +141,10 @@ model User {
   linkedinId          String?
   email               String?
   professionalSummary String?
+
+  defaultModel DefaultModel? @default(GPT_3_5)
+
+  enhancementsCount Int @default(1)
 
   professionField ProfessionField?
 

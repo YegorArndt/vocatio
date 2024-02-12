@@ -10,7 +10,7 @@ import {
 } from "~/components/ui/external/Drawer";
 import { Text } from "~/components/ui/inputs/Text";
 import { FormContext } from "~/modules/preferences/my-info/FormContext";
-import { usePersistentData } from "~/hooks/usePersistentData";
+import { useLs } from "~/hooks/useLs";
 import { useCurrentDraft } from "~/hooks/useCurrentDraft";
 import { TextEditor } from "./TextEditor";
 import { NAV_BUTTON_CN } from "../constants";
@@ -20,7 +20,7 @@ const { log } = console;
 
 export const CoverLetterDrawer = () => {
   const { currentDraft } = useCurrentDraft();
-  const { ls } = usePersistentData();
+  const { ls } = useLs();
 
   const { user } = ls;
   const { vacancy } = currentDraft ?? {};

@@ -3,7 +3,7 @@ import { Rubik } from "next/font/google";
 import { useState, useRef, useEffect } from "react";
 import cn from "classnames";
 
-import { DndProvider } from "~/modules/create/design/baseComponents/dnd/DndProvider";
+import { DndProvider } from "~/modules/create/design/base-components/dnd/DndProvider";
 import { PageBreak } from "~/modules/create/PageBreak";
 import { DesignContext } from "~/modules/create/design/contexts/DesignContext";
 import { useCurrentDraft } from "~/hooks/useCurrentDraft";

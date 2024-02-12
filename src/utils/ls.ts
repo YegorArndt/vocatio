@@ -1,11 +1,12 @@
 import type { Vacancy } from "@prisma/client";
 import { toast } from "sonner";
-import { RouterUser, Models, GeneratedDraft } from "~/modules/init-gen/types";
+import { GeneratedDraft } from "~/modules/init-gen/types";
+import { RouterUser, Models } from "~/modules/types";
 
 export type PersistentData = {
-  shouldAutoApplied: boolean;
-  hasConnectedExtension: boolean;
-  hasShownCongratsMessage: boolean;
+  shouldAutoApplied: boolean | null;
+  hasConnectedExtension: boolean | null;
+  hasShownCongratsMessage: boolean | null;
   user: RouterUser | null;
   defaultModel: Models;
 };
@@ -14,9 +15,9 @@ export const LS_KEY = "vocatio-preferences";
 export const LS_UPDATE_EVENT = "vocatio-preferences-update";
 
 export const initialPersistedState: PersistentData = {
-  hasConnectedExtension: false,
-  hasShownCongratsMessage: false,
-  shouldAutoApplied: false,
+  hasConnectedExtension: null,
+  hasShownCongratsMessage: null,
+  shouldAutoApplied: null,
   user: null,
   defaultModel: "gpt-3.5",
 };

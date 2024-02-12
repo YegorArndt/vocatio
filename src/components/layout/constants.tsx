@@ -13,7 +13,7 @@ export const mainNav = [
 ].map((props) => (
   <NavigationLink
     key={props.text}
-    baseCn="common hover flex-y gap-1"
+    baseCn="common hover flex-y gap-2"
     activeCn="bg-hover"
     {...props}
   />

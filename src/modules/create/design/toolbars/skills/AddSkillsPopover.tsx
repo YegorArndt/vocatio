@@ -12,7 +12,7 @@ import { useMemo, useState } from "react";
 import { get } from "lodash-es";
 import { Switch } from "~/components/ui/external/Switch";
 import { BiPlus } from "react-icons/bi";
-import { SKILLS_UPDATED_BY_USER_EVENT } from "~/modules/constants";
+import { SKILLS_UPDATED_BY_USER_EVENT } from "~/modules/events";
 
 const { log } = console;
 

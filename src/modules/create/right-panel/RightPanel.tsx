@@ -2,9 +2,8 @@ import { useEffect, useState } from "react";
 import { DesignViewer } from "./DesignViewer";
 import { HydratableComponent } from "../design/types";
 import { AnimatedDiv } from "~/components/AnimatedDiv";
-import { cn } from "~/utils";
-import { SET_RIGHT_PANEL_VIEW_EVENT } from "~/modules/constants";
 import { AddBulletsViewer, AddBulletsViewerProps } from "./AddBulletsViewer";
+import { SET_RIGHT_PANEL_VIEW_EVENT } from "~/modules/events";
 
 const { log } = console;
 
@@ -29,11 +28,7 @@ export const RightPanel = () => {
   };
 
   return (
-    <AnimatedDiv
-      className={cn("border bg-secondary p-5", {
-        // fixed: view === "bullets",
-      })}
-    >
+    <AnimatedDiv className="border bg-secondary p-5">
       {mapping[view]}
     </AnimatedDiv>
   );

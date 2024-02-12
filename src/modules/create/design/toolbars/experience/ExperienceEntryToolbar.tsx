@@ -15,7 +15,7 @@ import { Button } from "~/components/ui/buttons/Button";
 import { BsPlusCircleDotted } from "react-icons/bs";
 import { useCurrentDraft } from "~/hooks/useCurrentDraft";
 import { BlurImage } from "~/components";
-import { SET_RIGHT_PANEL_VIEW_EVENT } from "~/modules/constants";
+import { SET_RIGHT_PANEL_VIEW_EVENT } from "~/modules/events";
 
 const { log } = console;
 

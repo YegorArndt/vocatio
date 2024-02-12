@@ -1,18 +1,17 @@
 import { useUser } from "@clerk/nextjs";
 
 import { BlurImage } from "~/components";
-import { usePersistentData } from "~/hooks/usePersistentData";
+import { api } from "~/utils";
 
 const { log } = console;
 
 export const ImageBox = () => {
   const defaultUserData = useUser();
-  const { ls } = usePersistentData();
-
-  const image = ls.user?.image || defaultUserData.user?.imageUrl;
+  const { data: user } = api.users.get.useQuery();
+  const image = user?.image || defaultUserData.user?.imageUrl;
 
   return (
-    ls.user && (
+    user && (
       <div className="flex justify-between pb-8">
         Your default CV image. Anytime update with LinkedIn.
         <BlurImage

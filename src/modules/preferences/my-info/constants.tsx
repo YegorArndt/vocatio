@@ -1,7 +1,6 @@
 import { NavigationLink } from "~/components";
 import { GoDatabase } from "react-icons/go";
 import { startCase } from "lodash-es";
-import { Gpt } from "~/icons";
 
 export const userBoxes = [
   "main",
@@ -23,14 +22,14 @@ export const preferencesToolbar = [
     activeCn="bg-hover"
     activeIfIncludes={["updateKey"]}
   />,
-  <NavigationLink
-    key="Customize AI"
-    frontIcon={<Gpt />}
-    text="Customize AI"
-    to="/preferences/customize-ai"
-    baseCn="common hover flex-y gap-1"
-    activeCn="bg-hover"
-  />,
+  // <NavigationLink
+  //   key="Customize AI"
+  //   frontIcon={<Gpt />}
+  //   text="Customize AI"
+  //   to="/preferences/customize-ai"
+  //   baseCn="common hover flex-y gap-1"
+  //   activeCn="bg-hover"
+  // />,
 ];
 
 export const languages = [

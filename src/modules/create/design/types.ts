@@ -1,6 +1,6 @@
-import { DndProviderProps } from "./baseComponents/dnd/DndProvider";
-import { GroupProps } from "./baseComponents/Group";
-import { AutoresizeProps } from "./baseComponents/Autoresize";
+import { DndProviderProps } from "./base-components/dnd/DndProvider";
+import { GroupProps } from "./base-components/Group";
+import { AutoresizeProps } from "./base-components/Autoresize";
 import type { GeneratedDraft } from "~/modules/init-gen/types";
 
 export type Design = {
@@ -20,7 +20,7 @@ export type HydratableComponent = {
   id: string;
   sectionId: SectionName;
   /**
-   * Hydratable means it will be hydrated with `ls.user` data or AI generated data.
+   * Hydratable means it will be hydrated with `user` data or AI generated data.
    * Used for `UserImage`, `Contact`, `Education`, `Experience`, `Skills`, `Languages` components.
    */
   hydratableProps?: (data: GeneratedDraft) => DndProviderProps;

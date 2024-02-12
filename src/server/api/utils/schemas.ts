@@ -19,6 +19,8 @@ export const EmploymentType = z.enum(["FULL_TIME", "PART_TIME", "CONTRACT"]);
 
 export const Seniority = z.enum(["JUNIOR", "MIDDLE", "SENIOR", "LEAD"]);
 
+export const DefaultModel = z.enum(["GPT3", "GPT4"]);
+
 export const ProfessionField = z.enum([
   "FRONTEND",
   "BACKEND",
@@ -41,11 +43,13 @@ export const ProfessionField = z.enum([
   "SCRUM_MASTER",
 ]);
 
+const DateOrString = z.union([z.string(), z.date()]);
+
 export const LanguageEntrySchema = z
   .object({
     id: z.string(),
-    createdAt: z.string().optional(),
-    updatedAt: z.string().optional(),
+    createdAt: DateOrString,
+    updatedAt: DateOrString,
     name: z.string(),
     value: z.string(),
   })
@@ -54,8 +58,8 @@ export const LanguageEntrySchema = z
 export const SkillEntrySchema = z
   .object({
     id: z.string().optional(),
-    createdAt: z.string().optional(),
-    updatedAt: z.string().optional(),
+    createdAt: DateOrString,
+    updatedAt: DateOrString,
     name: z.string().optional(),
     value: z.string(),
   })
@@ -64,8 +68,8 @@ export const SkillEntrySchema = z
 export const ContactEntrySchema = z
   .object({
     id: z.string().optional(),
-    createdAt: z.string().optional(),
-    updatedAt: z.string().optional(),
+    createdAt: DateOrString,
+    updatedAt: DateOrString,
     name: z.string(),
     value: z.string(),
   })
@@ -74,8 +78,8 @@ export const ContactEntrySchema = z
 export const EducationEntrySchema = z
   .object({
     id: z.string().uuid(),
-    createdAt: z.string().optional(),
-    updatedAt: z.string().optional(),
+    createdAt: DateOrString,
+    updatedAt: DateOrString,
     place: z.string(),
     period: z.string(),
     description: z.string(),
@@ -87,12 +91,12 @@ export const EducationEntrySchema = z
 export const ExperienceEntrySchema = z
   .object({
     id: z.string().uuid(),
-    createdAt: z.string().optional(),
-    updatedAt: z.string().optional(),
+    createdAt: DateOrString,
+    updatedAt: DateOrString,
     place: z.string().optional().nullable(),
     period: z.string().optional().nullable(),
     description: z.string().optional().nullable(),
-    shadowDescription: z.string().optional().nullable(),
+    enhancedDescription: z.string().optional().nullable(),
     skills: z.array(z.string()).nullable(),
     image: z.string().optional().nullable(),
     title: z.string().optional().nullable(),
@@ -108,6 +112,8 @@ export const UserUpdateSchema = z
 
     linkedinId: z.string().optional(),
     email: z.string().optional(),
+
+    defaultModel: DefaultModel.optional(),
 
     // professionField: ProfessionField,
 

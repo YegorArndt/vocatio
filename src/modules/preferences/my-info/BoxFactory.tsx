@@ -1,4 +1,3 @@
-import { usePersistentData } from "~/hooks/usePersistentData";
 import { ImageBox } from "./boxes/components/ImageBox";
 import {
   Accordion,
@@ -14,34 +13,19 @@ import { MainBox } from "./boxes/components/MainBox";
 import { BigEntryBox } from "./boxes/components/BigEntryBox";
 import { EntryBox } from "./boxes/components/EntryBox";
 import { toast } from "sonner";
-import { Link } from "~/components/ui/buttons/Link";
-import { LiaExternalLinkAltSolid } from "react-icons/lia";
-import { linkedinBaseUrl } from "~/constants";
-import {
-  TooltipTrigger,
-  TooltipContent,
-  Tooltip,
-  TooltipProvider,
-} from "~/components/ui/external/Tooltip";
-import { LinkedinColor } from "~/icons";
+
 import {
   ResizablePanelGroup,
   ResizablePanel,
   ResizableHandle,
 } from "~/components/ui/external/Resizable";
 import { AnimatedDiv } from "~/components/AnimatedDiv";
-import { RouterUser } from "~/modules/init-gen/types";
+import { RouterUser } from "~/modules/types";
+import { BoxName } from "./types";
+import { UpdateWithExtensionLink } from "./UpdateWithExtensionLink";
+import { EnhanceExperienceDrawer } from "./enhance-drawer/EnhanceExperienceDrawer";
 
 const { log } = console;
-
-export type BoxName =
-  | "image"
-  | "main"
-  | "contact"
-  | "skills"
-  | "languages"
-  | "experience"
-  | "education";
 
 type BoxFactoryProps = {
   boxName: BoxName;
@@ -91,60 +75,10 @@ const mapping: Mapping = {
   },
 };
 
-const UpdateWithExtensionLink = (props: {
-  boxName: BoxName;
-  linkedinId: string | null | undefined;
-}) => {
-  const { boxName, linkedinId } = props;
-
-  /**
-   * You can redirect the user to linkedinBaseUrl and LinkedIn will recognize the user anyway.
-   * However, redirecting to a specific profile section without the LinkedIn ID will not work.
-   */
-  const baseUrlWorks = ["main", "contact", "image"].includes(boxName);
-  const to = baseUrlWorks ? "" : `${linkedinId}/details/${boxName}`;
-  const disabled = !linkedinId && !baseUrlWorks;
-
-  return disabled ? (
-    <TooltipProvider>
-      <Tooltip>
-        <TooltipTrigger
-          className="flex-y cursor-not-allowed text-sm"
-          onClick={(e) => e.stopPropagation()}
-        >
-          ⚠️&nbsp;&nbsp;Update main section
-        </TooltipTrigger>
-        <TooltipContent>
-          This will also update the Contact section adding your LinkedIn ID. It
-          is needed in order to navigate to your LinkedIn {boxName} section.
-        </TooltipContent>
-      </Tooltip>
-    </TooltipProvider>
-  ) : (
-    <Link
-      frontIcon={<LiaExternalLinkAltSolid size={23} />}
-      text="Update with extension via:"
-      endIcon={<LinkedinColor fontSize={23} />}
-      to={`${linkedinBaseUrl}${to}`}
-      onClick={(e) => {
-        e.stopPropagation();
-        toast.info(
-          `Open the extension while on LinkedIn and click "Update ${boxName}"`,
-          {
-            duration: 10000,
-          }
-        );
-      }}
-      baseCn="flex-y hover:underline text-[1rem]"
-      newTab
-    />
-  );
-};
-
 export const BoxFactory = (props: BoxFactoryProps) => {
   const { boxName, updateKey, className } = props;
+
   const { data: user } = api.users.get.useQuery();
-  const { ls, updateLs } = usePersistentData();
   const { mutate: updateDatabase, isLoading: isUpdating } =
     api.users.update.useMutation();
 
@@ -156,13 +90,11 @@ export const BoxFactory = (props: BoxFactoryProps) => {
 
   const update = (updatedUser: Partial<RouterUser>) => {
     /**
-     * Update database. On success - update local storage.
+     * Update database.
      */
-    //@ts-ignore
+    // @ts-ignore
     updateDatabase(updatedUser, {
       onSuccess: () => {
-        // @ts-ignore
-        updateLs({ user: { ...user, ...updatedUser } });
         const keys = dataKeys.map(startCase).join(", ");
         toast.success(`Updated ${keys}.`);
       },
@@ -174,16 +106,18 @@ export const BoxFactory = (props: BoxFactoryProps) => {
     });
   };
 
-  const data = ls.user && pick(ls.user, dataKeys);
+  const data = user && pick(user, dataKeys);
 
-  const isDataComplete =
+  const isDataComplete = !!(
     data &&
-    dataKeys.every((key) => [isNil, isEmpty].every((fn) => !fn(data[key])));
+    dataKeys.every((key) => [isNil, isEmpty].every((fn) => !fn(data[key])))
+  );
 
   return (
-    ls.user && (
+    user &&
+    data && (
       <ResizablePanelGroup direction="horizontal">
-        <ResizablePanel>
+        <ResizablePanel defaultSize={70}>
           <AnimatedDiv
             className={cn(
               "flex flex-col gap-8 rounded-md border bg-card",
@@ -203,14 +137,22 @@ export const BoxFactory = (props: BoxFactoryProps) => {
                   id={boxName}
                   className="group grid w-full grid-cols-[1fr,20px] gap-5 p-6 text-lg hover:bg-hover"
                 >
-                  <span className="flex-between w-full">
+                  <span
+                    className={cn("flex w-full", {
+                      "justify-between": boxName !== "experience",
+                    })}
+                  >
                     <h6 className="flex-y gap-2 group-hover:underline">
                       {isDataComplete ? <Checkmark /> : <>❌ </>}
                       {startCase(boxName)}
                     </h6>
+                    {boxName === "experience" && <EnhanceExperienceDrawer />}
                     <UpdateWithExtensionLink
                       boxName={boxName}
-                      linkedinId={ls.user.linkedinId}
+                      linkedinId={user.linkedinId}
+                      className={cn({
+                        "ml-auto": boxName === "experience",
+                      })}
                     />
                   </span>
                 </AccordionTrigger>

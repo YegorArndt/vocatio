@@ -1,14 +1,16 @@
-import { useState } from "react";
-import { RouterUser, PartialVacancy } from "~/modules/init-gen/types";
+import { useEffect, useState } from "react";
+import { RouterUser, PartialVacancy } from "~/modules/types";
 
-type Payload = { user: RouterUser };
-type Data = { newVacancy: PartialVacancy; user: RouterUser };
+const { log } = console;
+
+type ExtensionPayload = { user: RouterUser };
+export type ExtensionData = { newVacancy: PartialVacancy; user: RouterUser };
 
 type Message = {
   type: "post-user" | "get-user" | "get-vacancy";
-  payload?: Payload;
+  payload?: ExtensionPayload;
 };
-export type ExtensionResponse = { success: boolean; data?: Data };
+export type ExtensionResponse = { success: boolean; data?: ExtensionData };
 
 const EXTENSION_ID_DEV = "aafhhnmdccfclebgdmndicbngcokddid";
 const EXTENSION_ID_PROD = "bknmlolcaccbfcedimgmpnfcjadfelbn";
@@ -49,6 +51,7 @@ export const useSendMessage = (props?: { expirationToken?: string | null }) => {
       setIsExpired(true);
       return;
     }
+
     try {
       if (window.chrome && chrome.runtime) {
         setHasSent(true);
@@ -61,19 +64,29 @@ export const useSendMessage = (props?: { expirationToken?: string | null }) => {
               setResponse(response);
               return;
             }
-            /**
-             * Assume the extension isn't installed.
-             */
-            setIsInstalled(false);
           }
         );
-      } else {
+      }
+    } catch (e) {}
+  };
+
+  useEffect(() => {
+    // This function will be called after 5 seconds if conditions are met
+    const handleCheck = () => {
+      if (hasSent && !response.success && isInstalled) {
         setIsInstalled(false);
       }
-    } catch (e) {
-      setIsInstalled(false);
-    }
-  };
+    };
+
+    // Set up a timer to execute handleCheck after 5 seconds
+    const timer = setTimeout(() => {
+      handleCheck();
+    }, 5000);
+
+    // Clear the timer if the component unmounts or if any dependencies change
+    // This is important to avoid memory leaks or state updates on unmounted components
+    return () => clearTimeout(timer);
+  }, [hasSent, response.success, isInstalled]);
 
   return { hasSent, sendMessage, isInstalled, response, isExpired };
 };

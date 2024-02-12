@@ -21,6 +21,7 @@ export const getUserUpdateArgs = async (
     linkedinId,
     email,
     image,
+    defaultModel,
   } = input;
 
   const userUpdateArgs = {
@@ -37,6 +38,7 @@ export const getUserUpdateArgs = async (
     image,
     professionalSummary,
     linkedinId,
+    defaultModel,
     email: email || prevUser.email,
 
     ...(skills && {

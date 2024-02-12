@@ -1,5 +1,4 @@
 import { toast } from "sonner";
-import { usePersistentData } from "~/hooks/usePersistentData";
 import { typedEntries } from "~/modules/utils";
 import { BlurImage } from "./BlurImage";
 import { Badge } from "./ui/external/Badge";
@@ -16,7 +15,8 @@ import {
   MenubarContent,
   MenubarItem,
 } from "~/components/ui/external/MenuBar";
-import { Models } from "~/modules/init-gen/types";
+import { api } from "~/utils";
+import { Models } from "~/modules/types";
 
 type AiPickerProps = {
   onModelChange: (model: Models) => void;
@@ -45,14 +45,16 @@ const models: Record<
 
 export const AiPicker = (props: AiPickerProps) => {
   const { onModelChange } = props;
-  const { ls } = usePersistentData();
+  const { data: user } = api.users.get.useQuery();
+
+  const { defaultModel } = user || {};
 
   return (
     <Menubar className="clr-card bg-card">
       <MenubarMenu>
         <MenubarTrigger className="flex-y cursor-pointer gap-2">
-          {models[ls.defaultModel].icon}
-          {ls.defaultModel}
+          {/* {models[defaultModel].icon} */}
+          {defaultModel}
         </MenubarTrigger>
         <MenubarContent className="bg-primary">
           {typedEntries(models).map(([key, value]) =>

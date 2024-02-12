@@ -12,7 +12,7 @@ type ProgressIncrementerProps = {
 
 export const ProgressIncrementer = ({
   canFinish,
-  incrementBy = 30,
+  incrementBy = 8,
   shouldHide,
   className,
   fixToTop,
@@ -36,9 +36,14 @@ export const ProgressIncrementer = ({
   };
 
   useEffect(() => {
+    // Very first time incrlement by 70%
+    setProgress(70);
+  }, []);
+
+  useEffect(() => {
     const timer = setInterval(() => {
       incrementProgress();
-    }, 1000); // Increment every second
+    }, 4000); // Increment every second
 
     if (canFinish) {
       clearInterval(timer);
@@ -61,13 +66,13 @@ export const ProgressIncrementer = ({
       <header className="fixed inset-0">
         <Progress
           value={progress}
-          className={(cn("fixed inset-0 w-screen shadow-md"), className)}
+          className={(cn("fixed inset-0 w-screen shadow-lg"), className)}
         />{" "}
       </header>
     ) : (
       <Progress
         value={progress}
-        className={(cn("fixed inset-0 w-screen shadow-md"), className)}
+        className={(cn("fixed inset-0 w-screen shadow-lg"), className)}
       />
     ))
   );

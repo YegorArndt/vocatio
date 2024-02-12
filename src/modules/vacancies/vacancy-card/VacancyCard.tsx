@@ -10,10 +10,10 @@ import { MdWorkOutline } from "react-icons/md";
 import { BsPersonWorkspace } from "react-icons/bs";
 
 import { Button } from "~/components/ui/buttons/Button";
-import { Gpt } from "~/icons";
 import { VacancyCardHeader } from "./VacancyCardHeader";
 import { getSalaryRange } from "./utils";
-import { usePersistentData } from "~/hooks/usePersistentData";
+import { useLs } from "~/hooks/useLs";
+import { Gpt } from "~/components/icons";
 
 const { log } = console;
 
@@ -24,7 +24,7 @@ type VacancyCardProps = {
 export const VacancyCard = (props: VacancyCardProps) => {
   const { vacancy } = props;
 
-  const { updateLs } = usePersistentData();
+  const { updateLs } = useLs();
 
   const {
     salaryMax,

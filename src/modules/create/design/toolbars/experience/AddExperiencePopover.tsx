@@ -1,7 +1,7 @@
 import { BsPlusCircleDotted } from "react-icons/bs";
 import { useCurrentDraft } from "~/hooks/useCurrentDraft";
 import { BUTTON_CN } from "../constants";
-import { cn } from "~/utils";
+import { api, cn } from "~/utils";
 import {
   Popover,
   PopoverTrigger,
@@ -10,25 +10,24 @@ import {
 import { Button } from "~/components/ui/buttons/Button";
 import { BiPlus } from "react-icons/bi";
 import { AiPicker } from "~/components/AiPicker";
-import { EXPERIENCE_ENTRY_ADDED_BY_USER_EVENT } from "~/modules/constants";
-import { usePersistentData } from "~/hooks/usePersistentData";
 import { GeneratedExperience } from "~/modules/init-gen/types";
+import { EXPERIENCE_ENTRY_ADDED_BY_USER_EVENT } from "~/modules/events";
 
 const { log } = console;
 
 export const AddExperiencePopover = () => {
   const { currentDraft } = useCurrentDraft();
-  const { ls } = usePersistentData();
+  const { data: user } = api.users.get.useQuery();
 
   const addExperience = (shouldGenerate?: boolean) => {
-    if (!currentDraft || !ls.user) return;
+    if (!currentDraft || !user) return;
 
     // @ts-ignore
     let newExperienceEntry: GeneratedExperience[number] = {
       ...currentDraft.generatedExperience[0],
       id: `${Math.random()}`,
       place: "Company name",
-      title: ls.user.jobTitle!,
+      title: user.jobTitle!,
     };
 
     const newExperience = [

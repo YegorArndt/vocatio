@@ -10,38 +10,44 @@ import { UserUpdateSchema } from "../utils/schemas";
 import { ExperienceEntry, User } from "@prisma/client";
 import { pick } from "lodash-es";
 import { applyGpt } from "../utils/ai";
-import { RouterUser } from "~/modules/init-gen/types";
+import { RouterUser } from "~/modules/types";
 
 const { log } = console;
 
-export const createShadowExperience = async (
+export const generateEnhancedDescriptions = async (
   experience: RouterUser["experience"]
 ) => {
   if (experience.length === 0) return;
 
   // TODO: array for bullet points
 
-  const prompt = `${experience
+  const prompt = `My experience entries: ${experience
     .map((x, i) => `@${i}: ${x.description}. [Skills: ${x.skills.join(", ")}]`)
     .join("\n")}\n
-    - Goal: creating an impression of constant engagement with large-scale, high-traffic systems.
-    - For that: rewrite my employment histories into concise bullet points adding "driving $1B in revenue", "serve millions of license requests daily" and similar phrases contextually appropriate to the employment history.
-    - Preferably, use seconds, money, number of users and similar metrics avoiding the usage of percentage based metrics.
-    - Smaller numbers should be written as numbers (e.g. 1000).
-    - Each bullet point starts with a "•" and a verb.
-    - As the first bullet of each employment history you should add a summary of what I did and spread the skills from what I have listed in square brackets after each employment history across the bullet points putting the most critical skills in the first bullet point (if they aren't already). Choose the skills recruiters look for the most. Remove the square brackets. Use strong verbs and zero cliches. This is the most important bullet point.
-    - Arrange the order of the remaining bullet points based on their importance.
-    - Try being concise.
-
-    Constraints:
-      - Do not add phrases like "driving $1B in revenue", "serve millions of license requests daily" to each bullet point. Instead add them to 1-2 bullet points per employment history.
-      - Be more modest choosing numbers for metrics.
-      - Do not omit details from the employment histories. Simply change the format to bullet points.
-
+    
+    Each separate experience entry is prefixed with "@" follow by its index. So we have a total of ${
+      experience.length
+    } experience entries.
+    
+    We will improve these experience entries by adhering to best resume writing practices in 3 steps.
+    
+    Step 1. Rewrite each experience entry into concise bullet points. 
+    Conditions for this step: 1) each bullet point starts with a "•" and a verb in past simple, 2) omit personal pronouns, filler words and colloquial language from the summary to maintain a professional tone, 3) compose the bullet point the way the best resumes for FAANG companies are composed.
+    
+    Step 2. Using the output from step 1, focus on the first bullet point of each (@{index} is considered a start of a new experience entry) experience entry. In the first bullet point, write a summary of the respective experience entry mentioning as many skills as possible. Keep the remanining bullet points as is.
+    
+    Step 3. Using the output from step 2, create an impression of constant engagement with large-scale, high-traffic systems by  adding phrases like "driving $1B in revenue", "serve millions of license requests daily" and similar phrases contextually appropriate to the experience entry / bullet point. Come up with more phrases on your own.
+    Conditions for this step: 
+    1) preferably, use money and time metrics, avoiding the usage of percentage based metrics - though not entirely, 
+    2) smaller numbers should be written as numbers (e.g. 1000), 
+    3) the number of bullet points in the output for this step must be the exact number of bullet points you came up during first step.
+    
+    As a starting point for each step use the respective experience entry from the previous step.
+    
     Format of your response:
-      - Return the reworded histories as JSON with keys being the indices of the employment histories (initially prefixed with "@").
-        Example: {"0": "reworded history" , "1": "reworded history" ...}
-      - Do not return anything else but the reworded employment histories. I'll parse the JSON and include the histories directly into the resume.
+    - Return the experience entries as JSON with keys being the indices of the experience entries (initially prefixed with "@"). I'm only interested in receiving the results of the third step. Perform all the steps in your memory, but return the third one for each experience entry.
+    Example: { "0": { "step3": ... } }
+    - Do not return anything else but the reworded experience entries. I'll parse the JSON and include the histories directly into the resume.
   `;
 
   const result = await applyGpt(prompt, "gpt-4");
@@ -57,22 +63,22 @@ export const createShadowExperience = async (
   return histories;
 };
 
-const getShadowExperience = async (
+const getEnhancedExperience = async (
   user: User & { experience: ExperienceEntry[] }
 ) => {
   const { experience } = user;
-  const shadowExperience: ExperienceEntry[] = [];
+  const enhancedExperience: ExperienceEntry[] = [];
 
   if (experience && experience.length > 0) {
-    const shadowDescriptions = await createShadowExperience(experience);
+    const enhancedDescriptions = await generateEnhancedDescriptions(experience);
 
-    if (!shadowDescriptions["0"]) {
+    if (!enhancedDescriptions["0"]) {
       log("Error: Shadow experience could not be generated.");
       return;
     }
 
     experience.forEach((x, i) => {
-      const withShadowDescription = {
+      const withEnhancedDescription = {
         ...pick(x, [
           "description",
           "title",
@@ -81,14 +87,15 @@ const getShadowExperience = async (
           "image",
           "skills",
         ]),
-        shadowDescription: shadowDescriptions[i] || x.description,
+        enhancedDescription: enhancedDescriptions[i]["step-3"] || x.description,
       };
 
-      shadowExperience.push(withShadowDescription as ExperienceEntry);
+      // @ts-ignore
+      enhancedExperience.push(withEnhancedDescription);
     });
   }
 
-  return shadowExperience;
+  return enhancedExperience;
 };
 
 export const usersRouter = createTRPCRouter({
@@ -117,10 +124,8 @@ export const usersRouter = createTRPCRouter({
         });
       }
 
-      const data = await getUserUpdateArgs(
-        input,
-        user as z.infer<typeof UserUpdateSchema>
-      );
+      // @ts-ignore
+      const data = await getUserUpdateArgs(input, user);
 
       const updatedUser = await ctx.prisma.user.update({
         where: { id: userId },
@@ -212,7 +217,7 @@ export const usersRouter = createTRPCRouter({
       return newUser;
     }),
 
-  createShadowExperience: publicProcedure.mutation(async ({ ctx }) => {
+  generateEnhancedExperience: publicProcedure.mutation(async ({ ctx }) => {
     const { userId } = ctx;
 
     if (!userId) {
@@ -245,26 +250,27 @@ export const usersRouter = createTRPCRouter({
       });
     }
 
-    if (existingUser.experience[0]?.shadowDescription) {
+    if (existingUser.experience[0]?.enhancedDescription) {
       return existingUser;
     }
 
-    const shadowExperience = await getShadowExperience(existingUser);
+    const enhancedExperience = await getEnhancedExperience(existingUser);
 
-    if (!shadowExperience) {
+    if (!enhancedExperience) {
       throw new TRPCError({
         code: "BAD_REQUEST",
-        message: "Shadow experience could not be generated",
+        message: "Enhanced experience could not be generated",
       });
     }
 
     const updatedUser = await ctx.prisma.user.update({
       where: { id: userId },
       data: {
+        enhancementsCount: existingUser.enhancementsCount - 1,
         experience: {
           deleteMany: {},
           createMany: {
-            data: shadowExperience,
+            data: enhancedExperience,
           },
         },
       },

@@ -1,6 +1,5 @@
 import { NavigationLink } from "~/components";
 import { mainNav } from "~/components/layout/constants";
-import { LinkedinColor } from "~/icons";
 import { DiffDrawer } from "./diff/DiffDrawer";
 import { useCurrentDraft } from "~/hooks/useCurrentDraft";
 import { Link } from "~/components/ui/buttons/Link";
@@ -8,6 +7,7 @@ import { CoverLetterDrawer } from "./cover-letter/CoverLetterDrawer";
 import { NAV_BUTTON_CN } from "./constants";
 import { Divider } from "~/components/layout/Divider";
 import { DownloadButton } from "./download/DownloadButton";
+import { LinkedinColor } from "~/components/icons";
 
 export const LeftPanel = () => {
   const { currentDraft } = useCurrentDraft();

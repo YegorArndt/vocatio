@@ -2,14 +2,14 @@ import { LiaExternalLinkAltSolid } from "react-icons/lia";
 
 import { BlurImage } from "~/components";
 import { Link } from "~/components/ui/buttons/Link";
-import { usePersistentData } from "~/hooks/usePersistentData";
-import { Linkedin } from "~/icons";
+import { useLs } from "~/hooks/useLs";
 import { api, cn } from "~/utils";
 import { useVacanciesContext } from "./VacanciesContext";
+import { Linkedin } from "~/components/icons";
 
 export const VacanciesPagePlaceholder = () => {
   const { currentGroup } = useVacanciesContext();
-  const { ls } = usePersistentData();
+  const { ls } = useLs();
   const { data: user } = api.users.get.useQuery();
 
   const stepOneDone = ls.hasConnectedExtension;

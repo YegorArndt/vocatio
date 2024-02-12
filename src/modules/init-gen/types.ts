@@ -1,15 +1,5 @@
-import type { ExperienceEntry, Vacancy } from "@prisma/client";
-import type { RouterOutputs } from "~/utils/api";
-
-export type RouterUser = RouterOutputs["users"]["get"];
-
-export type Models = "gpt-4" | "mixtral" | "gpt-3.5";
-
-export type PartialVacancy = Partial<Vacancy> &
-  Pick<
-    Vacancy,
-    "description" | "jobTitle" | "companyName" | "requiredSkills" | "id"
-  >;
+import type { ExperienceEntry } from "@prisma/client";
+import type { PartialVacancy, RouterUser } from "../types";
 
 export type GeneratedDraft = {
   vacancy: PartialVacancy;

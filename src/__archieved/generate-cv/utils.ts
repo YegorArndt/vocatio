@@ -35,7 +35,7 @@
 //     .map(
 //       (x, i) =>
 //         // prettier-ignore
-//         `@${i}: ${x.shadowDescription}`
+//         `@${i}: ${x.enhancedDescription}`
 //     )
 //     .join("\n");
 // };
@@ -135,7 +135,7 @@
 //       description:
 //         enhancedHistories?.[index] ||
 //         enhancedHistories?.[index.toString()] ||
-//         x.shadowDescription ||
+//         x.enhancedDescription ||
 //         x.description,
 //       originalExperienceEntryId: x.id,
 //       id: uuidv4(),

@@ -48,7 +48,7 @@
 //               .map((x) => `• ${x}`)
 //               .join("\n"),
 //           }
-//         : { ...x, description: x.shadowDescription }
+//         : { ...x, description: x.enhancedDescription }
 //     ),
 //   ];
 

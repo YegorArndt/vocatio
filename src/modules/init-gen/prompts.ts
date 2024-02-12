@@ -1,10 +1,10 @@
-import type { RouterUser, PartialVacancy } from "./types";
+import { RouterUser, PartialVacancy } from "../types";
 
-/**
- * Asks for:
- * 1) Tailored CV skills.
- * 2) Vacancy skills.
- */
+const getBulletPointsToEnhance = (user: RouterUser) => {
+  const { enhancedDescription, description } = user.experience[0] || {};
+  return enhancedDescription || description || "";
+};
+
 export const buildSkillsPrompt = (
   lsUser: RouterUser,
   vacancy: PartialVacancy
@@ -43,15 +43,12 @@ export const buildSkillsPrompt = (
   `;
 };
 
-/**
- * Asks for:
- * 1) Tailored experience at the first company.
- * 2) Vacancy responsibilities.
- */
 export const buildExperiencePrompt = (
   vacancy: PartialVacancy,
-  bulletPointsToEnhance: string
+  user: RouterUser
 ) => {
+  const bulletPointsToEnhance = getBulletPointsToEnhance(user);
+
   // prettier-ignore
   return `We will be tailoring my resume to a specific job posting. Here it is: "${vacancy.description}".
   

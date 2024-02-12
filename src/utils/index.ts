@@ -1,7 +1,6 @@
 import type { ContactEntry } from "@prisma/client";
 import cn from "classnames";
 import { forIn } from "lodash-es";
-import { RouterUser } from "~/modules/init-gen/types";
 
 export { cn };
 
@@ -24,18 +23,4 @@ export const getLinkedInUrlFromContact = (contact: ContactEntry) => {
       return v;
     }
   });
-};
-
-export const getMissingInfo = (user: RouterUser) => {
-  const keys: (keyof RouterUser)[] = [
-    "contact",
-    "education",
-    "experience",
-    "languages",
-    "skills",
-    "professionalSummary",
-  ];
-
-  //@ts-ignore
-  return keys.filter((key) => !user[key]?.length);
 };

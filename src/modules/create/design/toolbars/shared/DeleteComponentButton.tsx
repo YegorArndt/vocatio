@@ -1,7 +1,7 @@
 import { RiDeleteBin2Fill } from "react-icons/ri";
 import { Button } from "~/components/ui/buttons/Button";
 import { BUTTON_CN } from "../constants";
-import { useCrudContext } from "../../baseComponents/dnd/crud";
+import { useCrudContext } from "../../base-components/dnd/crud";
 import { useComponentContext } from "../../contexts/ComponentContext";
 import { useState } from "react";
 import {

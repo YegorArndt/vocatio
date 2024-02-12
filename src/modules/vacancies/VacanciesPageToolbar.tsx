@@ -4,7 +4,7 @@ import { EditVacancyDrawer } from "./EditVacancyDrawer";
 import { api, cn } from "~/utils";
 import { Link } from "~/components/ui/buttons/Link";
 import { LinkedinColor } from "~/components/icons";
-import { linkedinJobsSearchUrl } from "~/constants";
+import { linkedinJobsSearchUrl } from "../constants";
 
 const { log } = console;
 

@@ -4,8 +4,8 @@ import jsPDF from "jspdf";
 
 import { type RouterOutputs } from "~/utils/api";
 import { useFormContext } from "react-hook-form";
-import { PartialVacancy } from "~/modules/init-gen/types";
 import { TextEditorToolbar } from "./TextEditorToolbar";
+import { PartialVacancy } from "~/modules/types";
 
 type TextEditorProps = {
   vacancy: PartialVacancy;

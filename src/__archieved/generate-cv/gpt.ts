@@ -30,7 +30,7 @@
 //   ];
 
 //   const firstEmploymentHistoryBulletPoints =
-//     user.experience[0]?.shadowDescription;
+//     user.experience[0]?.enhancedDescription;
 
 //   // prettier-ignore
 //   return `

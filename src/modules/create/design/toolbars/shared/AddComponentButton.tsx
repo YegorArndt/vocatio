@@ -1,11 +1,11 @@
-import { useCrudContext } from "../../baseComponents/dnd/crud";
+import { useCrudContext } from "../../base-components/dnd/crud";
 import {
   Popover,
   PopoverTrigger,
   PopoverContent,
 } from "~/components/ui/external/Popover";
 import { BsPlusCircleDotted } from "react-icons/bs";
-import { cn } from "~/utils";
+import { api, cn } from "~/utils";
 import { BUTTON_CN } from "../constants";
 import { useDesignContext } from "../../contexts/DesignContext";
 import { typedEntries } from "~/modules/utils";
@@ -18,9 +18,9 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "~/components/ui/external/Tooltip";
-import { GeneratedDraft, RouterUser } from "~/modules/init-gen/types";
+import { GeneratedDraft } from "~/modules/init-gen/types";
 import { BaseComponentType, Design } from "../../types";
-import { usePersistentData } from "~/hooks/usePersistentData";
+import { RouterUser } from "~/modules/types";
 
 const { log } = console;
 
@@ -94,7 +94,7 @@ export const AddComponentPopover = () => {
   const { addComponent } = useCrudContext();
   const { design } = useDesignContext();
   const { currentDraft } = useCurrentDraft();
-  const { ls } = usePersistentData();
+  const { data: user } = api.users.get.useQuery();
 
   return (
     <Popover>
@@ -117,7 +117,7 @@ export const AddComponentPopover = () => {
                     className="flex-y lg gap-3 hover:bg-hover"
                     onClick={() =>
                       addComponent({
-                        props: { ...props },
+                        props: { ...props, value: "Sample text" },
                         type,
                         id: c.id,
                         sectionId: c.sectionId,
@@ -132,8 +132,8 @@ export const AddComponentPopover = () => {
                   </TooltipTrigger>
                   <TooltipContent side="left">
                     {currentDraft &&
-                      ls.user &&
-                      getTooltipContent(type, currentDraft, ls.user, design)}
+                      user &&
+                      getTooltipContent(type, currentDraft, user, design)}
                   </TooltipContent>
                 </Tooltip>
               )

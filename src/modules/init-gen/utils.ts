@@ -3,21 +3,19 @@ import { buildExperiencePrompt, buildSkillsPrompt } from "./prompts";
 import { applyGpt } from "~/server/api/utils/ai";
 import { parseExperience, parseSkills } from "./parsers";
 import { toast } from "sonner";
-import { PartialVacancy, RouterUser, GeneratedDraft } from "./types";
-import {
-  EXPERIENCE_GENERATED_EVENT,
-  SKILLS_GENERATED_EVENT,
-} from "../constants";
+import { GeneratedDraft } from "./types";
+import { EXPERIENCE_GENERATED_EVENT, SKILLS_GENERATED_EVENT } from "../events";
+import { PartialVacancy, RouterUser } from "../types";
 
 type InitDraftProps = {
   vacancy: PartialVacancy;
-  lsUser: RouterUser;
+  user: RouterUser;
   handleExistingDraft: () => void;
   onComplete: (x: GeneratedDraft) => void;
 };
 
 export const initDraft = async (props: InitDraftProps) => {
-  const { vacancy, lsUser, handleExistingDraft, onComplete } = props;
+  const { vacancy, user, handleExistingDraft, onComplete } = props;
 
   if (getDraftByVacancyId(vacancy.id)) {
     handleExistingDraft();
@@ -31,17 +29,17 @@ export const initDraft = async (props: InitDraftProps) => {
     vacancy,
     vacancyResponsibilities: [],
     vacancySkills: [],
-    ...lsUser,
+    ...user,
   };
 
   setDraftByVacancyId(vacancy.id, newDraft);
-  const generatedDraft = await generateDraft(newDraft, lsUser);
+  const generatedDraft = await generateDraft(newDraft, user);
   onComplete(generatedDraft as GeneratedDraft);
 };
 
 export const generateDraft = async (
   draft: GeneratedDraft,
-  lsUser: RouterUser
+  user: RouterUser
 ) => {
   const { vacancy } = draft;
   toast.loading("Generating draft", { duration: Infinity });
@@ -51,11 +49,11 @@ export const generateDraft = async (
      * Generate skills and experience with GPT-3.5
      */
     const [skills, experience] = await Promise.all([
-      generateSkills(vacancy, lsUser),
-      generateExperience(vacancy, lsUser),
+      generateSkills(vacancy, user),
+      generateExperience(vacancy, user),
     ]);
 
-    const generatedExperience = processExperience(experience, lsUser, vacancy);
+    const generatedExperience = processExperience(experience, user, vacancy);
     document.dispatchEvent(
       new CustomEvent(EXPERIENCE_GENERATED_EVENT, {
         detail: generatedExperience,
@@ -67,7 +65,7 @@ export const generateDraft = async (
       ...skills,
       generatedExperience,
       vacancyResponsibilities: experience.vacancyResponsibilities,
-      jobTitle: vacancy.jobTitle || lsUser.jobTitle,
+      jobTitle: vacancy.jobTitle || user.jobTitle,
     };
 
     setDraftByVacancyId(vacancy.id, generatedDraft);
@@ -84,10 +82,10 @@ export const generateDraft = async (
 
 const processExperience = (
   enhancedExperience: { generatedExperience: string[] },
-  lsUser: RouterUser,
+  user: RouterUser,
   vacancy: PartialVacancy
 ) => {
-  return lsUser.experience.map((x, i) => ({
+  return user.experience.map((x, i) => ({
     ...x,
     generatedDescription:
       i === 0
@@ -98,13 +96,13 @@ const processExperience = (
           enhancedExperience.generatedExperience.map((g) =>
             g.replaceAll(vacancy.companyName!, x.place)
           )
-        : toBulletPointArray(x.shadowDescription!),
+        : toBulletPointArray(x.description!),
   }));
 };
 
-const generateSkills = async (vacancy: PartialVacancy, lsUser: RouterUser) => {
+const generateSkills = async (vacancy: PartialVacancy, user: RouterUser) => {
   try {
-    const skillsPrompt = buildSkillsPrompt(lsUser, vacancy);
+    const skillsPrompt = buildSkillsPrompt(user, vacancy);
     const skillsResponse = await applyGpt(skillsPrompt);
     const parsedSkills = parseSkills(skillsResponse);
 
@@ -120,13 +118,10 @@ const generateSkills = async (vacancy: PartialVacancy, lsUser: RouterUser) => {
 
 const generateExperience = async (
   vacancy: PartialVacancy,
-  lsUser: RouterUser
+  user: RouterUser
 ) => {
   try {
-    const experiencePrompt = buildExperiencePrompt(
-      vacancy,
-      getShadowOrDescription(lsUser)
-    );
+    const experiencePrompt = buildExperiencePrompt(vacancy, user);
     const experienceResponse = await applyGpt(experiencePrompt);
     return parseExperience(experienceResponse);
   } catch (error) {
@@ -135,13 +130,13 @@ const generateExperience = async (
   }
 };
 
-const getShadowOrDescription = (lsUser: RouterUser) => {
-  const { shadowDescription, description } = lsUser.experience[0] || {};
-  return shadowDescription || description || "";
+const getBulletPointsToEnhance = (user: RouterUser) => {
+  const { enhancedDescription, description } = user.experience[0] || {};
+  return enhancedDescription || description || "";
 };
 
-const toBulletPointArray = (shadowDescription: string) =>
-  shadowDescription
+const toBulletPointArray = (enhancedDescription: string) =>
+  enhancedDescription
     .split("• ")
     .slice(1)
     .map((point) => "• " + point.trim());

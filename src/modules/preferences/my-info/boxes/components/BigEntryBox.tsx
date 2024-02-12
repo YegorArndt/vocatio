@@ -12,7 +12,6 @@ import { typedKeys } from "~/__archieved/draft/utils/common";
 import { Text } from "~/components/ui/inputs/Text";
 import { BiMoveVertical } from "react-icons/bi";
 import { Divider } from "~/components/layout/Divider";
-import { cn } from "~/utils";
 
 const { log } = console;
 
@@ -111,7 +110,7 @@ export const BigEntryBox = (props) => {
                             "place",
                             "image",
                             "id",
-                            "shadowDescription",
+                            "enhancedDescription",
                             "createdAt",
                             "updatedAt",
                             "userId",
@@ -123,7 +122,7 @@ export const BigEntryBox = (props) => {
                             name: `${boxName}.${index}.${name}`,
                             control,
                             placeholder: `Missing ${name}`,
-                            className: cn(`whitespace-pre-wrap`),
+                            // className: cn(`whitespace-pre-wrap`),
                           };
 
                           const Component =

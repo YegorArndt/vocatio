@@ -16,9 +16,9 @@ import { ExperienceEntry } from "@prisma/client";
 import { AFTER_GREEN, BEFORE_RED } from "~/modules/constants";
 import { stripHtmlTags } from "~/modules/utils";
 import { useCurrentDraft } from "~/hooks/useCurrentDraft";
-import { usePersistentData } from "~/hooks/usePersistentData";
 import { Badge } from "~/components/ui/external/Badge";
 import { GeneratedDraft } from "~/modules/init-gen/types";
+import { api } from "~/utils";
 
 const { log } = console;
 
@@ -261,7 +261,8 @@ const TopRight = (props: TopRightProps) => {
 
   if (!currentDraft?.vacancy) return null;
 
-  const { vacancy, vacancySkills, vacancyResponsibilities } = currentDraft!;
+  const { vacancy, vacancySkills, vacancyResponsibilities, generatedSkills } =
+    currentDraft!;
 
   return (
     <section className="flex h-full flex-col gap-3 overflow-auto rounded-md border p-5">
@@ -352,18 +353,22 @@ const Entry = (props: EntryProps) => {
 
 export const Diff = () => {
   const { currentDraft } = useCurrentDraft();
-  const { ls } = usePersistentData();
+  const { data: user } = api.users.get.useQuery();
 
-  if (!currentDraft?.vacancy || !ls.user) return null;
+  if (!currentDraft?.vacancy || !user) return null;
 
-  const { user } = ls;
-  const { vacancy } = currentDraft!;
+  const {
+    vacancy,
+    generatedProfessionalSummary,
+    generatedExperience,
+    generatedSkills,
+  } = currentDraft!;
 
   const keywords = [vacancy.description, vacancy.requiredSkills] as string[];
 
   const { highlighted: summaryHighlighted, count: summaryCount } =
     highlightKeywords({
-      text: stripHtmlTags(currentDraft?.generatedProfessionalSummary!),
+      text: stripHtmlTags(generatedProfessionalSummary!),
       keywords,
     });
 
@@ -376,7 +381,7 @@ export const Diff = () => {
 
   const { interleaved, newHighlightedCount } = getInterleaved(
     {
-      new: currentDraft?.generatedExperience!,
+      new: generatedExperience!,
       old: user.experience,
     },
     keywords
@@ -407,7 +412,7 @@ export const Diff = () => {
           }}
           jobTitle={{
             old: user.jobTitle!,
-            new: currentDraft?.vacancy.jobTitle!,
+            new: vacancy.jobTitle!,
           }}
         />
         <TopRight highlightedDescription={vacancyHighlighted} />
@@ -422,12 +427,11 @@ export const Diff = () => {
           </div>
           <div className="flex flex-col gap-2">
             <span>
-              After: {currentDraft?.generatedSkills!.length} generated based on
-              your skills 🎉
+              After: {generatedSkills!.length} generated based on your skills 🎉
             </span>
             <div className={cn("rounded-md p-3 clr-black", AFTER_GREEN)}>
               <span className="flex-y flex-wrap gap-2">
-                {currentDraft?.generatedSkills!.map((skill) => (
+                {generatedSkills!.map((skill) => (
                   <span key={skill.id} className="rounded-md bg-[#C7FBD5] p-1">
                     {skill.name}
                   </span>

@@ -18,7 +18,7 @@ export const Navbar = (props: PropsWithChildren<Record<string, unknown>>) => {
   const veryTop = name ? `${name}'s` : "Your";
 
   return (
-    <nav className="navbar border-right fixed inset-0 z-layout flex w-[240px] flex-col bg-secondary font-semibold clr-secondary [&>*]:px-4 [&>*]:py-1">
+    <nav className="navbar fixed inset-0 z-layout flex w-[240px] flex-col bg-secondary font-semibold clr-secondary [&>*]:px-4 [&>*]:py-1">
       <Menu
         menuButton={
           <MenuButton className="flex whitespace-nowrap !py-3 font-semibold clr-primary">

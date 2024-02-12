@@ -16,7 +16,7 @@ import { Button } from "~/components/ui/buttons/Button";
 import { BUTTON_CN } from "./constants";
 import { Tooltip } from "react-tooltip";
 import { TbPageBreak } from "react-icons/tb";
-import { useCrudContext } from "../baseComponents/dnd/crud";
+import { useCrudContext } from "../base-components/dnd/crud";
 import { AddComponentPopover } from "./shared/AddComponentButton";
 import { DeleteComponentButton } from "./shared/DeleteComponentButton";
 

@@ -10,12 +10,13 @@ import { AnimatedDiv } from "~/components/AnimatedDiv";
 import { Spinner } from "~/components";
 import { ProgressIncrementer } from "~/components/ProgressIncrementer";
 import { MessageContainer } from "~/components/MessageContainer";
-import { usePersistentData } from "~/hooks/usePersistentData";
+import { useLs } from "~/hooks/useLs";
 
 const { log } = console;
 
 const PrismaLayer = (props: { clerkUser: UserResource }) => {
   const { clerkUser } = props;
+  const { updateLs } = useLs();
 
   const {
     data: user,
@@ -29,12 +30,11 @@ const PrismaLayer = (props: { clerkUser: UserResource }) => {
     isLoading: creatingUser,
   } = api.users.create.useMutation();
 
-  const { updateLs } = usePersistentData();
   const router = useRouter();
 
   useEffect(() => {
     if (user || successCreating) {
-      updateLs({ user });
+      successCreating && updateLs({ hasConnectedExtension: false });
       void router.push("/vacancies");
       return;
     }

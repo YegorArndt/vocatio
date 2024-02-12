@@ -9,9 +9,9 @@ import { Link } from "~/components/ui/buttons/Link";
 import { cn } from "~/utils";
 import { Badge } from "~/components/ui/external/Badge";
 import {
-  ADD_BULLET_TO_ENTRY_EVENT,
   SET_RIGHT_PANEL_VIEW_EVENT,
-} from "~/modules/constants";
+  ADD_BULLET_TO_ENTRY_EVENT,
+} from "~/modules/events";
 
 const { log } = console;
 
@@ -59,14 +59,14 @@ export const AddBulletsViewer = (props: AddBulletsViewerProps) => {
         ),
         description: (
           <p className="clr-ghost">
-            The AI took your original bullet points, optimized, and then
-            tailored them to the vacancy responsibilities.
+            The AI took your original bullet points, enhanced, and then tailored
+            them to the vacancy responsibilities.
           </p>
         ),
         bullets: entry?.generatedDescription,
       },
       1: {
-        title: <h4>Optimized bullet points without tailoring</h4>,
+        title: <h4>Enhanced bullet points without tailoring</h4>,
         description: (
           <p className="clr-ghost">
             The AI enhanced your original bullet points to adhere to the best
@@ -79,9 +79,9 @@ export const AddBulletsViewer = (props: AddBulletsViewerProps) => {
             />
           </p>
         ),
-        bullets: entry?.shadowDescription
-          ?.split("•")
-          .filter((bullet) => bullet),
+        bullets:
+          entry?.enhancedDescription ||
+          entry?.description?.split("•").filter((bullet) => bullet),
       },
       2: {
         title: <h4>Original texts</h4>,
@@ -103,19 +103,20 @@ export const AddBulletsViewer = (props: AddBulletsViewerProps) => {
           onClick={backToDesignViewer}
         />
       </header>
-      <h2 className="flex-y flex-wrap gap-x-3">
+      <h2 className="flex-y flex-wrap gap-3 text-lg leading-7">
         Add to
-        <div className="flex-y gap-2">
+        <div className="flex-y gap-2 ">
           <BlurImage
             src={entry?.image}
             fallback={<BlurImage src="/loading-cat.gif" />}
+            width={20}
           />
           {entry?.place} <Badge>Beta</Badge>
         </div>
       </h2>
 
       <div className="mb-5 flex flex-col @md:grid @md:grid-cols-3">
-        {["Generated", "Optimized", "Original"].map((tab, i) => (
+        {["Generated", "Enhanced", "Original"].map((tab, i) => (
           <Button
             key={tab}
             text={tab}
@@ -132,7 +133,8 @@ export const AddBulletsViewer = (props: AddBulletsViewerProps) => {
           {tabs[activeTab].title}
           {tabs[activeTab].description}
           <div className="my-5 flex flex-col gap-4">
-            {tabs[activeTab].bullets?.map((bullet) => (
+            {/* @ts-ignore  */}
+            {tabs[activeTab].bullets?.map((bullet: string) => (
               <Button
                 key={bullet}
                 frontIcon={<BsPlusCircleDotted />}

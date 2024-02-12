@@ -2,7 +2,6 @@ import Head from "next/head";
 import { useEffect } from "react";
 
 import { useSendMessage } from "~/hooks/useSendMessage";
-import { usePersistentData } from "~/hooks/usePersistentData";
 import { ProgressIncrementer } from "~/components/ProgressIncrementer";
 import { AnimatedDiv } from "~/components/AnimatedDiv";
 import { Spinner } from "~/components";
@@ -15,7 +14,7 @@ const { log } = console;
 
 const InitGenerationPage = () => {
   const { sendMessage, hasSent, response } = useSendMessage();
-  const { ls } = usePersistentData();
+  const { data: user } = api.users.get.useQuery();
   const router = useRouter();
 
   const { mutate: createVacancy } = api.vacancies.create.useMutation({
@@ -26,9 +25,10 @@ const InitGenerationPage = () => {
 
   useEffect(() => {
     if (!hasSent) sendMessage({ type: "get-vacancy" });
+    if (!user) return;
 
     if (response.success) {
-      if (!ls.user) {
+      if (!user) {
         toast.error(
           "Aborting. Missing user data. Vocatio will try to load it again."
         );
@@ -40,7 +40,7 @@ const InitGenerationPage = () => {
 
       void initDraft({
         vacancy: newVacancy,
-        lsUser: ls.user,
+        user,
         handleExistingDraft: () => {
           toast.error(
             "Aborting. A draft for this vacancy already exists. Please delete it and try again."
@@ -59,14 +59,18 @@ const InitGenerationPage = () => {
 
       void router.push(`/create/${newVacancy.id}`);
     }
-  }, [response.success]);
+  }, [response.success, user]);
 
   return (
     <>
       <Head>
         <title>Initializing...</title>
       </Head>
-      <ProgressIncrementer fixToTop canFinish={response.success} shouldHide />
+      <ProgressIncrementer
+        fixToTop
+        canFinish={response.success && !!user}
+        shouldHide
+      />
       {!response.success && (
         <AnimatedDiv className="flex-center h-[95vh] gap-3">
           <Spinner size={12} /> Initializing...

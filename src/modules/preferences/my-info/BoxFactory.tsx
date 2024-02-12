@@ -24,6 +24,7 @@ import { RouterUser } from "~/modules/types";
 import { BoxName } from "./types";
 import { UpdateWithExtensionLink } from "./UpdateWithExtensionLink";
 import { EnhanceExperienceDrawer } from "./enhance-drawer/EnhanceExperienceDrawer";
+import { typedEntries } from "~/modules/utils";
 
 const { log } = console;
 
@@ -75,6 +76,18 @@ const mapping: Mapping = {
   },
 };
 
+const checkIfDataComplete = (data: Partial<RouterUser> | undefined) => {
+  const fieldsThatCanFail = ["professionalSummary"];
+
+  return (
+    !!data &&
+    typedEntries(data).every(([k, v]) => {
+      if (fieldsThatCanFail.includes(k)) return true;
+      return !isNil(v) && !isEmpty(v);
+    })
+  );
+};
+
 export const BoxFactory = (props: BoxFactoryProps) => {
   const { boxName, updateKey, className } = props;
 
@@ -107,11 +120,7 @@ export const BoxFactory = (props: BoxFactoryProps) => {
   };
 
   const data = user && pick(user, dataKeys);
-
-  const isDataComplete = !!(
-    data &&
-    dataKeys.every((key) => [isNil, isEmpty].every((fn) => !fn(data[key])))
-  );
+  const isDataComplete = checkIfDataComplete(data);
 
   return (
     user &&

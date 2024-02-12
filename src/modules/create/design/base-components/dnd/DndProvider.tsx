@@ -51,6 +51,7 @@ import { SkillsToolbar } from "../../toolbars/skills/SkillsToolbar";
 import { ExperienceToolbar } from "../../toolbars/experience/ExperienceToolbar";
 import { ExperienceEntryToolbar } from "../../toolbars/experience/ExperienceEntryToolbar";
 import { AddComponentProps, CrudContext, RemoveComponentProps } from "./crud";
+import { useCurrentDraft } from "~/hooks/useCurrentDraft";
 
 const { log } = console;
 
@@ -190,7 +191,7 @@ const Section = (props: AnySection & Pick<DndProviderProps, "decorated">) => {
     >
       <ul ref={setNodeRef} className={className}>
         {components.map((c) => {
-          const { Component, Toolbar } = mapping.find(({ keys }) =>
+          const { Component } = mapping.find(({ keys }) =>
             keys.includes(c.type)
           )!;
 
@@ -213,7 +214,7 @@ export const DndProvider = (props: DndProviderProps) => {
   const { sections: initialSections, ...rest } = props;
   const [sections, setSections] = useState(initialSections);
   const [activeId, setActiveId] = useState<null | string>(null);
-  // const { updateDesign } = useDraftContext();
+  const { updateDraft, currentDraft } = useCurrentDraft();
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -263,6 +264,15 @@ export const DndProvider = (props: DndProviderProps) => {
       newSections[sectionId]!.components = section.components.filter(
         (c) => c.id !== component.id
       );
+
+      if (sectionId === "skills") {
+        updateDraft?.({
+          ...currentDraft,
+          generatedSkills: currentDraft?.generatedSkills?.filter(
+            (s) => s.id !== component.id
+          ),
+        });
+      }
 
       return newSections;
     });

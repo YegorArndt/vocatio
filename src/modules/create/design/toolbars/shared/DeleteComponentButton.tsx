@@ -11,6 +11,8 @@ import {
   TooltipTrigger,
 } from "~/components/ui/external/Tooltip";
 
+const { log } = console;
+
 export const DeleteComponentButton = () => {
   const [isClicked, setIsClicked] = useState(false);
 

@@ -174,7 +174,7 @@ export const EnhancementResult = () => {
           className="primary sm"
           disabled={!user || user.enhancementsCount < 1}
           onClick={() => {
-            toast.loading("Enhacing...");
+            toast.loading("Enhancing...", { duration: Infinity });
             void generateEnhancedExperience();
           }}
         />

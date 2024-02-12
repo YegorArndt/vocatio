@@ -22,7 +22,7 @@ const PrismaLayer = (props: { clerkUser: UserResource }) => {
     data: user,
     isLoading: userLoading,
     isError,
-  } = api.users.get.useQuery(undefined, { retry: false });
+  } = api.users.get.useQuery();
 
   const {
     mutate: createUser,

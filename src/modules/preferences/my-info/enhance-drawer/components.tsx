@@ -132,6 +132,8 @@ export const EnhancementResult = () => {
     onSuccess: (x) => {
       log(x);
       refetchUser();
+      toast.dismiss();
+      toast.success("Enhanced. Please review.");
     },
   });
 
@@ -172,6 +174,7 @@ export const EnhancementResult = () => {
           className="primary sm"
           disabled={!user || user.enhancementsCount < 1}
           onClick={() => {
+            toast.loading("Enhacing...");
             void generateEnhancedExperience();
           }}
         />

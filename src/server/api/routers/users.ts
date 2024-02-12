@@ -87,7 +87,7 @@ const getEnhancedExperience = async (
           "image",
           "skills",
         ]),
-        enhancedDescription: enhancedDescriptions[i]["step-3"] || x.description,
+        enhancedDescription: enhancedDescriptions[i]["step3"] || x.description,
       };
 
       // @ts-ignore

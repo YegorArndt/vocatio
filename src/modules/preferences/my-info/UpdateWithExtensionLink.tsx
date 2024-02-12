@@ -30,7 +30,7 @@ export const UpdateWithExtensionLink = (props: {
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger
-          className="flex-y cursor-not-allowed text-sm"
+          className="flex-y ml-auto cursor-not-allowed text-sm"
           onClick={(e) => e.stopPropagation()}
         >
           ⚠️&nbsp;&nbsp;Update main section

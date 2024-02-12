@@ -157,12 +157,14 @@ export const BoxFactory = (props: BoxFactoryProps) => {
                   </span>
                 </AccordionTrigger>
                 <AccordionContent className="mt-6 p-6">
-                  <Component
-                    data={data}
-                    update={update}
-                    isUpdating={isUpdating}
-                    boxName={boxName}
-                  />
+                  {isDataComplete && (
+                    <Component
+                      data={data}
+                      update={update}
+                      isUpdating={isUpdating}
+                      boxName={boxName}
+                    />
+                  )}
                 </AccordionContent>
               </AccordionItem>
             </Accordion>

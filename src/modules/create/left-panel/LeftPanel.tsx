@@ -23,7 +23,6 @@ export const LeftPanel = () => {
       ))}
       <Divider />
       <CoverLetterDrawer />
-      {/* <QuestionAnsweringDrawer /> */}
       <DiffDrawer />
       <DownloadButton />
       {currentDraft?.vacancy?.sourceUrl && (

@@ -19,6 +19,7 @@ import {
   TooltipProvider,
 } from "~/components/ui/external/Tooltip";
 import { toast } from "sonner";
+import { isUrl } from "../utils";
 
 const { log } = console;
 
@@ -108,17 +109,6 @@ const restoreSelection = (savedRange: SavedRange) => {
   } catch (err) {
     console.error("Error restoring selection: ", err);
     // Handle the error as needed
-  }
-};
-
-const isUrl = (url: string | null | undefined) => {
-  if (!url) return false;
-
-  try {
-    new URL(url);
-    return true;
-  } catch (error) {
-    return false;
   }
 };
 

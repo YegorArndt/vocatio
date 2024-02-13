@@ -15,8 +15,9 @@ import {
   FaJenkins,
   FaGitlab,
   FaLess,
+  FaFigma,
 } from "react-icons/fa";
-import { IoIosStarOutline, IoLogoJavascript } from "react-icons/io";
+import { IoIosLink, IoIosStarOutline, IoLogoJavascript } from "react-icons/io";
 import { IoColorPaletteOutline } from "react-icons/io5";
 import { LiaMoneyCheckSolid } from "react-icons/lia";
 import {
@@ -141,4 +142,6 @@ export const iconsMap = [
   { partial: ["styled-components"], icon: SiStyledcomponents },
   { partial: ["vercel"], icon: SiVercel },
   { exact: ["less"], icon: FaLess },
+  { partial: ["figma"], icon: FaFigma },
+  { exact: ["link"], icon: IoIosLink },
 ];

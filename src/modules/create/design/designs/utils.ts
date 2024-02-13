@@ -1,15 +1,22 @@
-//@ts-nocheck
+// @ts-nocheck
 
 import { GroupProps } from "../base-components/Group";
 import { BaseComponentType, HydratableComponent, SectionName } from "../types";
 import { ExperienceEntry, EducationEntry, ContactEntry } from "@prisma/client";
 import { GeneratedDraft } from "~/modules/init-gen/types";
 import { iconsMap } from "~/modules/icons-map";
+import { isUrlPermissive } from "../utils";
+
+const { log } = console;
 
 /**
- * @returns icon name `string` that is then matched by `Group` component.
+ * @returns icon name (exact or partial) `string` that is then matched by `Group` component.
  */
-export const defaultIcon = (entryName: string) => {
+export const defaultIcon = (
+  entry: ExperienceEntry | EducationEntry | ContactEntry
+) => {
+  const entryName = entry.name;
+
   let iconName = "star";
 
   if (entryName) {
@@ -32,6 +39,8 @@ export const defaultIcon = (entryName: string) => {
     });
   }
 
+  if (isUrlPermissive(entry.value) && iconName === "star") return "link";
+
   return iconName;
 };
 
@@ -44,9 +53,7 @@ export const getType = (
   if (entry.image === "") return "text";
 
   // @ts-ignore
-  if (defaultIcon(entry.name)) return "icon-group";
-  // @ts-ignore
-  if (entry.name) return "text";
+  if (defaultIcon(entry)) return "icon-group";
 
   return "text";
 };
@@ -121,7 +128,7 @@ export const contact = (
             sectionId: "contact",
             type: type || getType(entry),
             hydratedProps: {
-              image: defaultIcon(entry.name),
+              image: defaultIcon(entry),
               value: entry.value,
               ...groupItemProps,
             },
@@ -186,7 +193,7 @@ export const skills = (
               sectionId: "skills",
               type: type || "text",
               hydratedProps: {
-                image: defaultIcon(entry.name),
+                image: defaultIcon(entry),
                 value: entry.name,
                 valueProps: { className: "text-[12px]" },
                 ...groupItemProps,

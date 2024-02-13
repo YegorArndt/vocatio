@@ -3,9 +3,9 @@ import { BaseComponentType, SectionName } from "../../types";
 
 export type AddComponentProps = {
   sectionId: SectionName;
-  id: string;
   type: BaseComponentType;
   props: Record<string, unknown>;
+  id?: string;
 };
 
 export type RemoveComponentProps = {

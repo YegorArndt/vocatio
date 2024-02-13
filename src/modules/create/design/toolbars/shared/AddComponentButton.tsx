@@ -15,7 +15,6 @@ import { useCurrentDraft } from "~/hooks/useCurrentDraft";
 import {
   Tooltip,
   TooltipContent,
-  TooltipProvider,
   TooltipTrigger,
 } from "~/components/ui/external/Tooltip";
 import { GeneratedDraft } from "~/modules/init-gen/types";
@@ -99,47 +98,48 @@ export const AddComponentPopover = () => {
 
   return (
     <Popover>
-      <PopoverTrigger className={cn(BUTTON_CN, "gap-2 p-2")}>
-        <BsPlusCircleDotted /> Add below
-      </PopoverTrigger>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <PopoverTrigger className={cn(BUTTON_CN, "gap-2 p-2")}>
+            <BsPlusCircleDotted />
+          </PopoverTrigger>
+        </TooltipTrigger>
+        <TooltipContent>Add below</TooltipContent>
+      </Tooltip>
       <PopoverContent
-        onClick={(e) => {
-          e.stopPropagation();
-        }}
+        onClick={(e) => e.stopPropagation()}
         side="top"
         className="flex flex-col gap-2 overflow-auto !bg-card !px-0"
       >
-        <TooltipProvider>
-          {typedEntries(design.baseComponents).map(
-            ([type, props]) =>
-              !NOT_IMPLEMENTED_COMPONENTS.includes(type) && (
-                <Tooltip key={type}>
-                  <TooltipTrigger
-                    className="flex-y lg gap-3 hover:bg-hover"
-                    onClick={() =>
-                      addComponent({
-                        props: { ...props, value: "Sample text" },
-                        type,
-                        id: c.id,
-                        sectionId: c.sectionId,
-                      })
-                    }
-                  >
-                    <BlurImage
-                      src={mapping?.[type as keyof typeof mapping].path}
-                      width={40}
-                    />
-                    {mapping?.[type as keyof typeof mapping].name}
-                  </TooltipTrigger>
-                  <TooltipContent side="left">
-                    {currentDraft &&
-                      user &&
-                      getTooltipContent(type, currentDraft, user, design)}
-                  </TooltipContent>
-                </Tooltip>
-              )
-          )}
-        </TooltipProvider>
+        {typedEntries(design.baseComponents).map(
+          ([type, props]) =>
+            !NOT_IMPLEMENTED_COMPONENTS.includes(type) && (
+              <Tooltip key={type}>
+                <TooltipTrigger
+                  className="flex-y lg gap-3 hover:bg-hover"
+                  onClick={() =>
+                    addComponent({
+                      props: { ...props, value: "Sample text" },
+                      type,
+                      sectionId: c.sectionId,
+                      id: c.id,
+                    })
+                  }
+                >
+                  <BlurImage
+                    src={mapping?.[type as keyof typeof mapping].path}
+                    width={40}
+                  />
+                  {mapping?.[type as keyof typeof mapping].name}
+                </TooltipTrigger>
+                <TooltipContent side="left">
+                  {currentDraft &&
+                    user &&
+                    getTooltipContent(type, currentDraft, user, design)}
+                </TooltipContent>
+              </Tooltip>
+            )
+        )}
       </PopoverContent>
     </Popover>
   );

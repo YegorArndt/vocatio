@@ -95,14 +95,12 @@ export const AddBulletsViewer = (props: AddBulletsViewerProps) => {
 
   return (
     <div className="flex flex-col gap-3 @container">
-      <header>
-        <Button
-          text="Back to designs"
-          frontIcon={<IoIosArrowRoundBack />}
-          className="flex-y clr-ghost hover:underline"
-          onClick={backToDesignViewer}
-        />
-      </header>
+      <Button
+        text="Back to designs"
+        frontIcon={<IoIosArrowRoundBack />}
+        className="flex-y clr-ghost hover:underline"
+        onClick={backToDesignViewer}
+      />
       <h2 className="flex-y flex-wrap gap-3 text-lg leading-7">
         Add to
         <div className="flex-y gap-2 ">

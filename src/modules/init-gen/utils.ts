@@ -101,7 +101,7 @@ export const generateDraft = async (
   user: RouterUser
 ) => {
   const { vacancy } = draft;
-  toast.loading("Generating draft", { duration: Infinity });
+  toast.loading("Writing CV...", { duration: Infinity });
 
   try {
     /**
@@ -128,7 +128,7 @@ export const generateDraft = async (
     };
 
     setDraftByVacancyId(vacancy.id, generatedDraft);
-    toast.success("Generation complete. Please review.");
+    toast.success("Process complete. Please review.");
 
     return generatedDraft;
   } catch (error) {

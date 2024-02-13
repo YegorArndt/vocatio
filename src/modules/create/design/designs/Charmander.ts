@@ -134,9 +134,7 @@ export const Charmander: Design = {
                 containerClassName: "grid-cols-[40px_1fr] gap-[10px]",
               },
             },
-            /**
-             * Show only 3 first bullet points if the experience history is longer than 2
-             */
+
             ...entry.generatedDescription?.map((bulletPoint, i) => ({
               id: entry.id + i + "-bullet",
               sectionId: entry.id,
@@ -147,7 +145,7 @@ export const Charmander: Design = {
                   entry.skills.join(" ")
                 ).replace("•", ""),
                 valueProps: {
-                  className: `text-[#384347] text-[13px] ${textLeading}`,
+                  className: `text-[#384347] text-[13px] my-1 ${textLeading}`,
                 },
               },
             })),

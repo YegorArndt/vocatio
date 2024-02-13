@@ -5,18 +5,18 @@ import {
   type PropsWithChildren,
   MutableRefObject,
 } from "react";
-import cn from "classnames";
 import { Tooltip } from "react-tooltip";
-import { RiDragMove2Fill } from "react-icons/ri";
 
 import { BUTTON_CN } from "../constants";
 import { useComponentContext } from "../../contexts/ComponentContext";
 import { Button } from "~/components/ui/buttons/Button";
 import { BsPlusCircleDotted } from "react-icons/bs";
 import { useCurrentDraft } from "~/hooks/useCurrentDraft";
-import { BlurImage } from "~/components";
 import { SET_RIGHT_PANEL_VIEW_EVENT } from "~/modules/events";
 import { PageBreakButton } from "../shared/PageBreakButton";
+import { TooltipProvider } from "~/components/ui/external/Tooltip";
+import { MoveComponentButton } from "../shared/MoveComponentButton";
+import { BlurImage } from "~/components";
 
 const { log } = console;
 
@@ -49,39 +49,43 @@ export const ExperienceEntryToolbar = (props: ToolbarProps) => {
     );
   };
 
+  const entryHeader = place || "entry";
+
   return (
-    <li
-      ref={dndRef}
-      data-tooltip-id={c.id}
-      className={cn("toolbar group", className)}
-      {...rest}
-    >
+    <li ref={dndRef} data-tooltip-id={c.id} className={className} {...rest}>
       {children}
       <Tooltip
         id={c.id}
         globalCloseEvents={{ clickOutsideAnchor: true }}
-        className={cn("!z-tooltip !p-0")}
+        className="z-tooltip !p-0"
         clickable
         openOnClick
-        place="top"
+        place="right"
         delayShow={400}
         delayHide={200}
         data-html2canvas-ignore
         render={() => {
           return (
-            <div className="flex-center" data-html2canvas-ignore>
-              <PageBreakButton />
-              <span {...listeners} {...attributes} className={BUTTON_CN}>
-                <RiDragMove2Fill size={20} />
-              </span>
-              <Button
-                frontIcon={<BsPlusCircleDotted />}
-                text={`Add bullet points to ${place ?? "entry"}`}
-                endIcon={<BlurImage src={image} className="ml-2" />}
-                baseCn="flex-y"
-                className={BUTTON_CN}
-                onClick={addBullets}
-              />
+            <div className="flex flex-col" data-html2canvas-ignore>
+              <header className="flex-y border-bottom gap-2 p-2 text-lg">
+                <BlurImage src={image} /> {entryHeader}
+              </header>
+              <section className="flex-center">
+                <TooltipProvider>
+                  <PageBreakButton />
+                  <MoveComponentButton
+                    listeners={listeners}
+                    attributes={attributes}
+                  />
+                  <Button
+                    frontIcon={<BsPlusCircleDotted />}
+                    text="Add bullet points"
+                    baseCn="flex-y"
+                    className={BUTTON_CN}
+                    onClick={addBullets}
+                  />
+                </TooltipProvider>
+              </section>
             </div>
           );
         }}

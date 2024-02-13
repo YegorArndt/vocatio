@@ -12,6 +12,7 @@ import { RiDragMove2Fill } from "react-icons/ri";
 import { BUTTON_CN } from "../constants";
 import { AddExperiencePopover } from "./AddExperiencePopover";
 import { PageBreakButton } from "../shared/PageBreakButton";
+import { TooltipProvider } from "~/components/ui/external/Tooltip";
 
 const { log } = console;
 
@@ -32,7 +33,7 @@ export const ExperienceToolbar = (props: ToolbarProps) => {
     <li
       ref={dndRef}
       data-tooltip-id="experience"
-      className={cn("toolstrip group", className)}
+      className={className}
       {...rest}
     >
       {children}
@@ -49,15 +50,17 @@ export const ExperienceToolbar = (props: ToolbarProps) => {
         render={() => {
           return (
             <div className="flex-center gap-1" data-html2canvas-ignore>
-              <PageBreakButton />
-              <span
-                {...listeners}
-                {...attributes}
-                className={cn(BUTTON_CN, "p-2")}
-              >
-                <RiDragMove2Fill size={20} />
-              </span>
-              <AddExperiencePopover />
+              <TooltipProvider>
+                <PageBreakButton />
+                <span
+                  {...listeners}
+                  {...attributes}
+                  className={cn(BUTTON_CN, "p-2")}
+                >
+                  <RiDragMove2Fill size={20} />
+                </span>
+                <AddExperiencePopover />
+              </TooltipProvider>
             </div>
           );
         }}

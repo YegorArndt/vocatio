@@ -14,6 +14,7 @@ import {
   FaJava,
   FaJenkins,
   FaGitlab,
+  FaLess,
 } from "react-icons/fa";
 import { IoIosStarOutline, IoLogoJavascript } from "react-icons/io";
 import { IoColorPaletteOutline } from "react-icons/io5";
@@ -39,6 +40,7 @@ import {
   SiGradle,
   SiMocha,
   SiStyledcomponents,
+  SiVercel,
 } from "react-icons/si";
 import { TbApi, TbBrandCypress, TbBrandVite, TbSql } from "react-icons/tb";
 import {
@@ -90,17 +92,16 @@ export const iconsMap = [
   { partial: ["javascript"], exact: ["js"], icon: IoLogoJavascript },
   { partial: ["typescript"], exact: ["ts"], icon: SiTypescript },
   {
-    exact: ["nodejs", "node.js"],
     partial: ["nodejs", "node.js"],
     icon: FaNodeJs,
   },
-  { exact: ["react", "reactjs", "react.js"], icon: FaReact },
+  { exact: ["react"], partial: ["reactjs", "react.js"], icon: FaReact },
   { exact: ["laravel"], icon: FaLaravel },
-  { exact: ["nextjs", "next.js"], icon: SiNextdotjs },
+  { partial: ["nextjs", "next.js"], icon: SiNextdotjs },
   { partial: ["tailwind", "tailwindcss", "tailwind css"], icon: SiTailwindcss },
   { partial: ["vue.js", "vue", "vuejs"], icon: FaVuejs },
   { partial: ["html5", "html"], icon: FaHtml5 },
-  { partial: ["css3", "css"], icon: BsFiletypeCss },
+  { exact: ["css3", "css"], icon: BsFiletypeCss },
   { partial: ["scss"], icon: BsFiletypeScss },
   { partial: ["RESTful APIs", "REST API"], icon: TbApi },
   { exact: ["json"], icon: VscJson },
@@ -138,4 +139,6 @@ export const iconsMap = [
   { partial: ["jenkins"], icon: FaJenkins },
   { partial: ["mocha"], icon: SiMocha },
   { partial: ["styled-components"], icon: SiStyledcomponents },
+  { partial: ["vercel"], icon: SiVercel },
+  { exact: ["less"], icon: FaLess },
 ];

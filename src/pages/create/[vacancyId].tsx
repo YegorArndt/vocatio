@@ -67,7 +67,7 @@ const CvEditor = () => {
                   <DndProvider sections={context.design.sections} />
                 </div>
 
-                {!!a4Ref.current && (
+                {!!a4Ref.current && pages > 1 && (
                   <div className="flex-center">
                     <Button
                       data-html2canvas-ignore

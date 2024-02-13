@@ -45,7 +45,7 @@ export const getStructuredCvText = (draft: GeneratedDraft): string => {
    * Employment History
    */
   if (draft.experience && draft.experience.length > 0) {
-    formattedText += `   WORK EXPERIENCE:\n `;
+    formattedText += `   EXPERIENCE:\n `;
     draft.generatedExperience.forEach((history) => {
       formattedText += `  Company name: ${history.place}, Job title: ${
         history.title

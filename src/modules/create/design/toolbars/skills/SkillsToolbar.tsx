@@ -5,13 +5,12 @@ import {
   type PropsWithChildren,
   MutableRefObject,
 } from "react";
-import cn from "classnames";
 
-import { RiDragMove2Fill } from "react-icons/ri";
-import { BUTTON_CN } from "../constants";
 import { Tooltip } from "react-tooltip";
 import { AddSkillsPopover } from "./AddSkillsPopover";
 import { PageBreakButton } from "../shared/PageBreakButton";
+import { TooltipProvider } from "~/components/ui/external/Tooltip";
+import { MoveComponentButton } from "../shared/MoveComponentButton";
 
 const { log } = console;
 
@@ -29,17 +28,12 @@ export const SkillsToolbar = (props: ToolbarProps) => {
     props;
 
   return (
-    <li
-      ref={dndRef}
-      data-tooltip-id="skills"
-      className={cn("toolstrip group", className)}
-      {...rest}
-    >
+    <li ref={dndRef} data-tooltip-id="skills" className={className} {...rest}>
       {children}
       <Tooltip
         id="skills"
         globalCloseEvents={{ clickOutsideAnchor: true }}
-        className={cn("!z-tooltip -translate-y-[50px] transform !p-0")}
+        className="z-tooltip -translate-y-[50px] transform !p-0"
         clickable
         openOnClick
         place="top"
@@ -49,15 +43,14 @@ export const SkillsToolbar = (props: ToolbarProps) => {
         render={() => {
           return (
             <div className="flex-center gap-1" data-html2canvas-ignore>
-              <PageBreakButton />
-              <span
-                {...listeners}
-                {...attributes}
-                className={cn(BUTTON_CN, "p-2")}
-              >
-                <RiDragMove2Fill size={20} />
-              </span>
-              <AddSkillsPopover />
+              <TooltipProvider>
+                <PageBreakButton />
+                <MoveComponentButton
+                  listeners={listeners}
+                  attributes={attributes}
+                />
+                <AddSkillsPopover />
+              </TooltipProvider>
             </div>
           );
         }}

@@ -1,13 +1,12 @@
 import type { Vacancy } from "@prisma/client";
 import { toast } from "sonner";
 import { GeneratedDraft } from "~/modules/init-gen/types";
-import { RouterUser, Models } from "~/modules/types";
+import { Models } from "~/modules/types";
 
 export type PersistentData = {
   shouldAutoApplied: boolean | null;
   hasConnectedExtension: boolean | null;
   hasShownCongratsMessage: boolean | null;
-  user: RouterUser | null;
   defaultModel: Models;
 };
 
@@ -18,7 +17,6 @@ export const initialPersistedState: PersistentData = {
   hasConnectedExtension: null,
   hasShownCongratsMessage: null,
   shouldAutoApplied: null,
-  user: null,
   defaultModel: "gpt-3.5",
 };
 

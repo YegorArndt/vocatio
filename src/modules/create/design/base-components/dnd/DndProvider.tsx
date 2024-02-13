@@ -18,7 +18,7 @@ import {
   useSortable,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import { type PropsWithChildren, useState, useEffect, Fragment } from "react";
+import { type PropsWithChildren, useState, useEffect } from "react";
 import { CSS } from "@dnd-kit/utilities";
 
 import {
@@ -52,12 +52,12 @@ import { ExperienceToolbar } from "../../toolbars/experience/ExperienceToolbar";
 import { ExperienceEntryToolbar } from "../../toolbars/experience/ExperienceEntryToolbar";
 import { AddComponentProps, CrudContext, RemoveComponentProps } from "./crud";
 import { useCurrentDraft } from "~/hooks/useCurrentDraft";
+import { omit } from "lodash-es";
 
 const { log } = console;
 
 export type DndProviderProps = {
   sections: Sections;
-  decorated?: boolean;
   className?: string;
 };
 
@@ -127,10 +127,8 @@ export const getSectionIdByComponentId = (
   return sectionId;
 };
 
-const SortableItem = (
-  props: PropsWithChildren<Pick<DndProviderProps, "decorated">>
-) => {
-  const { children, decorated } = props;
+const SortableItem = (props: PropsWithChildren<Record<string, unknown>>) => {
+  const { children } = props;
   const c = useComponentContext();
   const {
     attributes,
@@ -157,28 +155,21 @@ const SortableItem = (
       node={node}
       attributes={attributes}
       style={style}
+      /**
+       * Hacks. Cound't target the `li` element in the design file (e.g. `Charmander`).
+       */
       className={cn({
-        "relative pl-6": decorated,
         "flex-center": c.type === "userImage",
         "list-disc": c.id?.includes("bullet"),
       })}
     >
-      {decorated && (
-        <Fragment>
-          <div
-            id={`ball-${c.id}`}
-            className="absolute left-0 top-2 z-10 h-3 w-3 rounded-full border-2 border-solid !border-black bg-white"
-          />
-          <div className="absolute left-[.36rem] top-2 h-full w-[0.5px] bg-black" />
-        </Fragment>
-      )}
       {children}
     </Toolbar>
   );
 };
 
-const Section = (props: AnySection & Pick<DndProviderProps, "decorated">) => {
-  const { id, components, className, decorated } = props;
+const Section = (props: AnySection) => {
+  const { id, components, className } = props;
   const { setNodeRef } = useDroppable({
     id,
   });
@@ -197,9 +188,7 @@ const Section = (props: AnySection & Pick<DndProviderProps, "decorated">) => {
 
           return (
             <ComponentContext.Provider key={c.id} value={c}>
-              <SortableItem
-                decorated={decorated && !c.type.includes("heading")}
-              >
+              <SortableItem>
                 <Component />
               </SortableItem>
             </ComponentContext.Provider>
@@ -239,7 +228,7 @@ export const DndProvider = (props: DndProviderProps) => {
       newSections[sectionId]!.components = [
         ...section.components.slice(0, index + 1),
         {
-          ...baseComponent,
+          ...omit(baseComponent, "props"),
           hydratedProps: {
             ...baseComponent.props,
           },

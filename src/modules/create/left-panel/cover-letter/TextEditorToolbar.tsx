@@ -18,7 +18,6 @@ import {
   instruct,
   cleanAiOutput,
 } from "~/server/api/utils/ai";
-import { COVER_LETTER_FIELD } from "./constants";
 import { Badge } from "~/components/ui/external/Badge";
 
 import {
@@ -57,6 +56,9 @@ const getPrompt = (draft: GeneratedDraft) => {
       My contact info: ${draft.contact
         .map((x) => `${x.name}: ${x.value}`)
         .join(", ")}.
+      My language skills (if needed): ${draft.languages
+        .map((x) => x.name)
+        .join(", ")}.
       Date: ${new Date().toLocaleDateString()}.
       Email: ${draft.email}.
 
@@ -69,17 +71,21 @@ export const TextEditorToolbar = (props: TextEditorToolbarProps) => {
   const { methods } = props;
   const { onCopy, onGenerate, onDownloadPdf } = methods;
 
-  const { currentDraft } = useCurrentDraft();
+  const { currentDraft, updateDraft } = useCurrentDraft();
 
   const generateCoverLetter = async (model: Models) => {
     if (!currentDraft) return;
 
+    let generatedCoverLetter = currentDraft.coverLetter;
+
+    if (generatedCoverLetter) {
+      onGenerate(generatedCoverLetter);
+      return;
+    }
+
     toast.loading(`Generating cover letter with ${model}`, {
-      id: COVER_LETTER_FIELD,
       duration: Infinity,
     });
-
-    let generatedCoverLetter;
 
     const prompt = getPrompt(currentDraft);
 
@@ -92,7 +98,7 @@ export const TextEditorToolbar = (props: TextEditorToolbarProps) => {
       ]);
     }
 
-    toast.dismiss(COVER_LETTER_FIELD);
+    toast.dismiss();
 
     if (!generatedCoverLetter) {
       toast.error("Failed to generate cover letter", {
@@ -101,11 +107,17 @@ export const TextEditorToolbar = (props: TextEditorToolbarProps) => {
       return;
     }
 
+    const coverLetter = cleanAiOutput(generatedCoverLetter, [
+      "[Company Address]",
+      "[City, State, Zip Code]",
+    ]);
+
     toast.success("Cover letter generated", {
       duration: 5000,
     });
 
-    onGenerate(generatedCoverLetter);
+    updateDraft({ ...currentDraft, coverLetter });
+    onGenerate(coverLetter);
   };
 
   return (

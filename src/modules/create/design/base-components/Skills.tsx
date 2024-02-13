@@ -81,7 +81,7 @@ export const Skills = () => {
     );
 
   const providerProps = {
-    className: cn(design.baseComponents?.skills?.className, "cv-section"),
+    className: cn(design.baseComponents?.skills?.className, "skills-section"),
     /**
      * Always passed for the `DndProvider` component.
      */

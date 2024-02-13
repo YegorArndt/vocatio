@@ -8,12 +8,22 @@ import {
 import cn from "classnames";
 
 import { useComponentContext } from "../contexts/ComponentContext";
-import { RiDragMove2Fill } from "react-icons/ri";
 import { BUTTON_CN } from "./constants";
 import { Tooltip } from "react-tooltip";
 import { AddComponentPopover } from "./shared/AddComponentButton";
 import { DeleteComponentButton } from "./shared/DeleteComponentButton";
 import { PageBreakButton } from "./shared/PageBreakButton";
+import { BiDuplicate } from "react-icons/bi";
+import { useCrudContext } from "../base-components/dnd/crud";
+import {
+  TooltipProvider,
+  TooltipTrigger,
+  Tooltip as RadixTooltip,
+  TooltipContent,
+} from "~/components/ui/external/Tooltip";
+import { MoveComponentButton } from "./shared/MoveComponentButton";
+import { startCase } from "lodash-es";
+import { useDesignContext } from "../contexts/DesignContext";
 
 const { log } = console;
 
@@ -30,20 +40,17 @@ export const Toolbar = (props: ToolbarProps) => {
   const { dndRef, listeners, attributes, children, className, node, ...rest } =
     props;
 
-  const { id } = useComponentContext();
+  const { addComponent } = useCrudContext();
+  const c = useComponentContext();
+  const { design } = useDesignContext();
 
   return (
-    <li
-      ref={dndRef}
-      data-tooltip-id={id}
-      className={cn("toolbar", className)}
-      {...rest}
-    >
+    <li ref={dndRef} data-tooltip-id={c.id} className={className} {...rest}>
       {children}
       <Tooltip
-        id={id}
+        id={c.id}
         globalCloseEvents={{ clickOutsideAnchor: true }}
-        className={cn("!z-tooltip !p-0 [&>*]:h-full", {})}
+        className="z-tooltip !p-0"
         clickable
         openOnClick
         place="top"
@@ -53,16 +60,38 @@ export const Toolbar = (props: ToolbarProps) => {
         render={() => {
           return (
             <div className="flex-center gap-1" data-html2canvas-ignore>
-              <PageBreakButton />
-              <span
-                {...listeners}
-                {...attributes}
-                className={cn(BUTTON_CN, "p-2")}
-              >
-                <RiDragMove2Fill size={20} />
-              </span>
-              <AddComponentPopover />
-              <DeleteComponentButton />
+              <TooltipProvider>
+                <PageBreakButton />
+                <MoveComponentButton
+                  listeners={listeners}
+                  attributes={attributes}
+                />
+                {/* Duplicate button  */}
+                <RadixTooltip>
+                  <TooltipTrigger
+                    className={cn(BUTTON_CN, "p-2")}
+                    onClick={() =>
+                      addComponent({
+                        ...c,
+                        props: {
+                          ...(c.hydratedProps ?? {}),
+                          className: cn(
+                            design.baseComponents[c.type]?.className,
+                            {
+                              "list-disc": c.id?.includes("bullet"),
+                            }
+                          ),
+                        },
+                      })
+                    }
+                  >
+                    <BiDuplicate />
+                  </TooltipTrigger>
+                  <TooltipContent>Duplicate {startCase(c.type)}</TooltipContent>
+                </RadixTooltip>
+                <AddComponentPopover />
+                <DeleteComponentButton />
+              </TooltipProvider>
             </div>
           );
         }}

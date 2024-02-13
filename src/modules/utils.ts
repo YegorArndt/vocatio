@@ -1,4 +1,5 @@
 import { assign, isNil } from "lodash-es";
+import { v4 } from "uuid";
 
 export const separateEntries = (obj: Record<string, unknown>) => {
   const definedEntries = {};
@@ -30,12 +31,13 @@ export const typedEntries = <T extends object>(
   return Object.entries(obj) as [keyof T, T[keyof T]][];
 };
 
-const modelToString = {
+const dbUiModelMapping = {
   GPT3_5: "gpt-3.5",
   GPT4: "gpt-4",
-  // Add other mappings here if necessary
 };
 
-export const getModelString = (modelEnum: keyof typeof modelToString) => {
-  return modelToString[modelEnum] || "gpt-3.5";
+export const getModel = (modelEnum: keyof typeof dbUiModelMapping) => {
+  return dbUiModelMapping[modelEnum] || "gpt-3.5";
 };
+
+export const uuidv4 = () => v4();

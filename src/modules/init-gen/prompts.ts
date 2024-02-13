@@ -16,7 +16,7 @@ export const buildSkillsPrompt = (
       
      - Tasks:
      
-     1. Create an array of skills (technologies, hard and soft skills, e.g. "React", "TypeScript") from the vacancy without categorization.
+     1. Create an array of skills (technologies, and other hard skills, e.g. "React", "TypeScript", "debugging") from the vacancy without categorization.
         Conditions: 
         1) anything you include in the output for this task must be in the vacancy text.
      
@@ -29,6 +29,7 @@ export const buildSkillsPrompt = (
         1) do not mention anything about education in the summary.
         2) omit personal pronouns, filler words and colloquial language from the summary to maintain a professional tone. "I" has no place in the summary.
         3) wrap all hard skills from task 1 in <span class="font-bold">{hard skill}</span> HTML tags for emphasis in the professional summary. I'll parse in the HTML tags later.
+        4) the summary must be concise, emphasizing the most relevant skills and experience for the vacancy.
  
      - Format of your response:
 
@@ -67,7 +68,7 @@ export const buildExperiencePrompt = (
   Step 3. Creatively merge the elements of each tuple into an organic bullet point that flows naturally. 
     
       Constraints for step 3:
-      1) each bullet point must be just one sentence.
+      1) each bullet point must be just one concise sentence.
       2) each bullet point starts with tuple[0] element and ends with tuple[1] element effectively being something in between.
       3) each bullet point starts with the main verb of the responsibility in the past simple tense.
       4) highlight all hard skills by enclosing them in <span class="font-bold">{hard skill}</span> HTML tags for emphasis.

@@ -67,10 +67,12 @@ export const TextEditor = (props: TextEditorProps) => {
       saveTextAsPdf(value, watch("file-name"));
     },
     onGenerate: (generatedCoverLetter: string) => {
+      if (!editableRef.current) return;
+
       /**
        * Toast handled in TextEditorToolbar.tsx
        */
-      editableRef.current!.innerText = generatedCoverLetter;
+      editableRef.current.innerText = generatedCoverLetter;
     },
   };
 

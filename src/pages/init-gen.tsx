@@ -37,7 +37,7 @@ const InitGenerationPage = () => {
       }
       if (!response.data?.newVacancy?.id) {
         toast.error(
-          "You've probably turned on the extension recently. Please close the Vocatio and LinkedIn tabs and try again."
+          "You've probably turned on the extension recently. Please close all Vocatio and LinkedIn tabs and try again."
         );
 
         return;
@@ -85,7 +85,7 @@ const InitGenerationPage = () => {
       )}
       {response.success && (
         <AnimatedDiv className="flex-center h-[95vh] gap-3">
-          <Spinner size={12} /> Redirecting to CV Editor...
+          Redirecting to CV Editor...
         </AnimatedDiv>
       )}
     </>

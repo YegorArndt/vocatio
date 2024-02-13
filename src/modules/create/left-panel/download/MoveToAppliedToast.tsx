@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { Button } from "~/components/ui/buttons/Button";
@@ -12,10 +13,8 @@ export const MoveToAppliedToast = () => {
   const { ls, updateLs } = useLs();
   const { register, watch } = useForm();
 
-  const { mutate: updateVacancy, isLoading } =
+  const { mutate: updateVacancy, isLoading: isMovingVacancy } =
     api.vacancies.upsert.useMutation();
-
-  if (!currentDraft || !ls) return null;
 
   const moveToApplied = (shouldMove: boolean) => {
     toast.dismiss();
@@ -37,6 +36,12 @@ export const MoveToAppliedToast = () => {
     toast.success("Moved to ✅ applied");
   };
 
+  useEffect(() => {
+    if (ls.shouldAutoApplied && !isMovingVacancy) {
+      moveToApplied(true);
+    }
+  }, [ls.shouldAutoApplied]);
+
   return ls.shouldAutoApplied ? (
     <div>Moved to ✅ applied </div>
   ) : (
@@ -48,7 +53,7 @@ export const MoveToAppliedToast = () => {
             key={index}
             onClick={() => moveToApplied(index === 0)}
             baseCn="!cursor-pointer rounded-md"
-            disabled={isLoading}
+            disabled={isMovingVacancy}
           >
             {icon}
           </Button>

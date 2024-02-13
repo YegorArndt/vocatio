@@ -45,7 +45,7 @@ export const AddExperiencePopover = () => {
   return (
     <Popover>
       <PopoverTrigger className={cn(BUTTON_CN, "gap-2 p-2")}>
-        <BsPlusCircleDotted /> Add new experience entry
+        <BsPlusCircleDotted /> Add new entry
       </PopoverTrigger>
       {currentDraft && (
         <PopoverContent

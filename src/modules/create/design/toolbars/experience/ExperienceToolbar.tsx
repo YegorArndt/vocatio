@@ -7,12 +7,11 @@ import {
 } from "react";
 import cn from "classnames";
 import { Tooltip } from "react-tooltip";
-import { RiDragMove2Fill } from "react-icons/ri";
 
-import { BUTTON_CN } from "../constants";
 import { AddExperiencePopover } from "./AddExperiencePopover";
 import { PageBreakButton } from "../shared/PageBreakButton";
 import { TooltipProvider } from "~/components/ui/external/Tooltip";
+import { MoveComponentButton } from "../shared/MoveComponentButton";
 
 const { log } = console;
 
@@ -49,18 +48,20 @@ export const ExperienceToolbar = (props: ToolbarProps) => {
         data-html2canvas-ignore
         render={() => {
           return (
-            <div className="flex-center gap-1" data-html2canvas-ignore>
-              <TooltipProvider>
-                <PageBreakButton />
-                <span
-                  {...listeners}
-                  {...attributes}
-                  className={cn(BUTTON_CN, "p-2")}
-                >
-                  <RiDragMove2Fill size={20} />
-                </span>
-                <AddExperiencePopover />
-              </TooltipProvider>
+            <div className="flex flex-col" data-html2canvas-ignore>
+              <header className="flex-y border-bottom gap-2 p-2 text-lg">
+                Experience section
+              </header>
+              <div className="flex-center">
+                <TooltipProvider>
+                  <PageBreakButton />
+                  <MoveComponentButton
+                    listeners={listeners}
+                    attributes={attributes}
+                  />
+                  <AddExperiencePopover />
+                </TooltipProvider>
+              </div>
             </div>
           );
         }}

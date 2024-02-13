@@ -16,10 +16,12 @@ import { SKILLS_UPDATED_BY_USER_EVENT } from "~/modules/events";
 
 const { log } = console;
 
+type ActiveTab = 0 | 1;
+
 export const AddSkillsPopover = () => {
   const { currentDraft, updateDraft } = useCurrentDraft();
 
-  const [activeTab, setActiveTab] = useState(0);
+  const [activeTab, setActiveTab] = useState<ActiveTab>(0);
   const [search, setSearch] = useState("");
   const [displayOnlyMissing, setDisplayOnlyMissing] = useState(false);
 
@@ -54,9 +56,7 @@ export const AddSkillsPopover = () => {
       </PopoverTrigger>
       {currentDraft && (
         <PopoverContent
-          onClick={(e) => {
-            e.stopPropagation();
-          }}
+          onClick={(e) => e.stopPropagation()}
           side="left"
           sideOffset={130}
           className="h-full w-[800px] !bg-card"
@@ -67,9 +67,7 @@ export const AddSkillsPopover = () => {
                 <Button
                   key={tab}
                   text={tab}
-                  onClick={() => {
-                    setActiveTab(i);
-                  }}
+                  onClick={() => setActiveTab(i as ActiveTab)}
                   className={cn("p-2", "hover:bg-gray-100", {
                     "border-bottom": i === activeTab,
                   })}
@@ -84,7 +82,7 @@ export const AddSkillsPopover = () => {
               autoFocus
             />
             <section className="flex flex-wrap gap-2 overflow-auto">
-              {skills[activeTab as 0 | 1]
+              {skills[activeTab as ActiveTab]
                 .filter((s) => s.toLowerCase().includes(search.toLowerCase()))
                 .filter(
                   (s) =>

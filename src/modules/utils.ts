@@ -1,5 +1,6 @@
 import { assign, isNil } from "lodash-es";
 import { v4 } from "uuid";
+import { DefaultModel } from "@prisma/client";
 
 export const separateEntries = (obj: Record<string, unknown>) => {
   const definedEntries = {};
@@ -31,13 +32,28 @@ export const typedEntries = <T extends object>(
   return Object.entries(obj) as [keyof T, T[keyof T]][];
 };
 
-const dbUiModelMapping = {
-  GPT3_5: "gpt-3.5",
-  GPT4: "gpt-4",
+type AiModels = Record<
+  DefaultModel,
+  { imageSrc: string; badge: string; name: string }
+>;
+
+export const aiModels: AiModels = {
+  [DefaultModel.GPT_4]: {
+    imageSrc: "/ai/gpt-4.png",
+    badge: "most capable",
+    name: "gpt-4",
+  },
+  [DefaultModel.GPT_3_5]: {
+    imageSrc: "/ai/gpt-3.png",
+    badge: "default",
+    name: "gpt-3.5",
+  },
 };
 
-export const getModel = (modelEnum: keyof typeof dbUiModelMapping) => {
-  return dbUiModelMapping[modelEnum] || "gpt-3.5";
+export const getModelUi = (
+  modelEnum: keyof typeof aiModels | null | undefined
+) => {
+  return aiModels[modelEnum || "GPT_3_5"];
 };
 
 export const uuidv4 = () => v4();

@@ -93,7 +93,7 @@ export const initDraft = async (props: InitDraftProps) => {
 
   setDraftByVacancyId(vacancy.id, newDraft);
   const generatedDraft = await generateDraft(newDraft, user);
-  onComplete(generatedDraft as GeneratedDraft);
+  onComplete(generatedDraft);
 };
 
 export const generateDraft = async (
@@ -105,7 +105,7 @@ export const generateDraft = async (
 
   try {
     /**
-     * Generate skills and experience with GPT-3.5
+     * Generate skills and experience with `GPT-3.5`
      */
     const [skills, experience] = await Promise.all([
       generateSkills(vacancy, user),

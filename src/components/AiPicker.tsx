@@ -1,5 +1,5 @@
 import { toast } from "sonner";
-import { typedEntries } from "~/modules/utils";
+import { getModelUi, aiModels, typedEntries } from "~/modules/utils";
 import { BlurImage } from "./BlurImage";
 import { Badge } from "./ui/external/Badge";
 import {
@@ -16,31 +16,10 @@ import {
   MenubarItem,
 } from "~/components/ui/external/MenuBar";
 import { api } from "~/utils";
-import { Models } from "~/modules/types";
+import { DefaultModel } from "@prisma/client";
 
 type AiPickerProps = {
-  onModelChange: (model: Models) => void;
-};
-
-const models: Record<
-  Models,
-  {
-    icon: JSX.Element;
-    badge: string;
-  }
-> = {
-  "gpt-4": {
-    icon: <BlurImage src="/ai/gpt-4.png" className="rounded-full" />,
-    badge: "most capable",
-  },
-  "gpt-3.5": {
-    icon: <BlurImage src="/ai/gpt-3.png" className="rounded-full" />,
-    badge: "default",
-  },
-  mixtral: {
-    icon: <BlurImage src="/ai/mistral.png" />,
-    badge: "fastest",
-  },
+  onModelChange: (model: DefaultModel) => void;
 };
 
 export const AiPicker = (props: AiPickerProps) => {
@@ -49,16 +28,19 @@ export const AiPicker = (props: AiPickerProps) => {
 
   const { defaultModel } = user || {};
 
+  const { imageSrc, badge, name } = getModelUi(defaultModel);
+
   return (
     <Menubar className="clr-card bg-card">
       <MenubarMenu>
         <MenubarTrigger className="flex-y cursor-pointer gap-2">
-          {/* {models[defaultModel].icon} */}
-          {defaultModel}
+          <BlurImage src={imageSrc} className="rounded-full" />
+          {name}
+          <Badge variant="outline">{badge}</Badge>
         </MenubarTrigger>
         <MenubarContent className="bg-primary">
-          {typedEntries(models).map(([key, value]) =>
-            key === "gpt-4" ? (
+          {typedEntries(aiModels).map(([key, value]) =>
+            key === DefaultModel.GPT_4 ? (
               <TooltipProvider key={key}>
                 <Tooltip>
                   <TooltipTrigger asChild>
@@ -68,8 +50,11 @@ export const AiPicker = (props: AiPickerProps) => {
                       }}
                       className="flex-y cursor-pointer gap-2 hover:bg-hover"
                     >
-                      {value.icon}
-                      {key}
+                      <BlurImage
+                        src={value.imageSrc}
+                        className="rounded-full"
+                      />
+                      {value.name}
                       <Badge variant="outline">{value.badge}</Badge>
                       <BlurImage src="/premium.png" />
                     </MenubarItem>
@@ -85,8 +70,8 @@ export const AiPicker = (props: AiPickerProps) => {
                   onModelChange(key);
                 }}
               >
-                {value.icon}
-                {key}
+                <BlurImage src={value.imageSrc} className="rounded-full" />
+                {value.name}
                 <Badge variant="outline">{value.badge}</Badge>
               </MenubarItem>
             )

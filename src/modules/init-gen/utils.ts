@@ -1,33 +1,52 @@
-import { getDraftByVacancyId, setDraftByVacancyId } from "~/utils/ls";
+import { getLsGeneratedData, setLsGeneratedData } from "~/utils/ls";
 import { buildExperiencePrompt, buildSkillsPrompt } from "./prompts";
 import { applyGpt } from "~/server/api/utils/ai";
 import { parseExperience, parseSkills } from "./parsers";
 import { toast } from "sonner";
-import { GeneratedDraft } from "./types";
-import { EXPERIENCE_GENERATED_EVENT, SKILLS_GENERATED_EVENT } from "../events";
+import { GeneratedData } from "./types";
 import { PartialVacancy, RouterUser } from "../types";
+import {
+  Events,
+  ExperienceGeneratedDetail,
+  SkillsUpdatedDetail,
+  eventManager,
+} from "../EventManager";
+
+const { log } = console;
 
 const escapeRegExp = (s: string) => {
   // This function escapes special characters for regex
   return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 };
 
+/**
+ * Tech debt. This function is a mess.
+ */
 const processExperience = (
   enhancedExperience: { generatedExperience: string[] },
   user: RouterUser,
   vacancy: PartialVacancy
-) => {
-  const companyNameRegex = new RegExp(escapeRegExp(vacancy.companyName!), "g");
+): ExperienceGeneratedDetail => {
+  // Check if companyName is provided
+  if (vacancy.companyName) {
+    const companyNameRegex = new RegExp(escapeRegExp(vacancy.companyName), "g");
 
-  return user.experience.map((x, i) => ({
-    ...x,
-    generatedDescription:
-      i === 0
-        ? enhancedExperience.generatedExperience.map((g) =>
-            g.replaceAll(companyNameRegex, x.place)
-          )
-        : toBulletPointArray(x.description!),
-  }));
+    return user.experience.map((x, i) => ({
+      ...x,
+      description:
+        i === 0
+          ? enhancedExperience.generatedExperience.map((g) =>
+              g.replaceAll(companyNameRegex, x.place)
+            )
+          : toBulletPointArray(x.description!),
+    }));
+  } else {
+    // If companyName is not provided, return the experience without modification
+    return user.experience.map((x) => ({
+      ...x,
+      description: x.description ? toBulletPointArray(x.description) : [],
+    }));
+  }
 };
 
 const generateSkills = async (vacancy: PartialVacancy, user: RouterUser) => {
@@ -36,9 +55,11 @@ const generateSkills = async (vacancy: PartialVacancy, user: RouterUser) => {
     const skillsResponse = await applyGpt(skillsPrompt);
     const parsedSkills = parseSkills(skillsResponse);
 
-    document.dispatchEvent(
-      new CustomEvent(SKILLS_GENERATED_EVENT, { detail: parsedSkills })
+    eventManager.emit<SkillsUpdatedDetail>(
+      Events.SKILLS_UPDATED_EVENT,
+      parsedSkills.generatedSkills
     );
+
     return parsedSkills;
   } catch (error) {
     toast.error("Error generating skills");
@@ -46,6 +67,9 @@ const generateSkills = async (vacancy: PartialVacancy, user: RouterUser) => {
   }
 };
 
+/**
+ * @description Generates experience for the first entry.
+ */
 const generateExperience = async (
   vacancy: PartialVacancy,
   user: RouterUser
@@ -69,19 +93,19 @@ const toBulletPointArray = (enhancedDescription: string) =>
 type InitDraftProps = {
   vacancy: PartialVacancy;
   user: RouterUser;
-  handleExistingDraft: () => void;
-  onComplete: (x: GeneratedDraft) => void;
+  handleExistingDraft?: () => void;
+  onComplete: (x: GeneratedData) => void;
 };
 
 export const initDraft = async (props: InitDraftProps) => {
   const { vacancy, user, handleExistingDraft, onComplete } = props;
 
-  if (getDraftByVacancyId(vacancy.id)) {
-    handleExistingDraft();
+  if (getLsGeneratedData(vacancy.id)) {
+    handleExistingDraft?.();
     return;
   }
 
-  const newDraft: GeneratedDraft = {
+  const newGen: GeneratedData = {
     generatedExperience: [],
     generatedProfessionalSummary: "",
     generatedSkills: [],
@@ -91,48 +115,51 @@ export const initDraft = async (props: InitDraftProps) => {
     ...user,
   };
 
-  setDraftByVacancyId(vacancy.id, newDraft);
-  const generatedDraft = await generateDraft(newDraft, user);
-  onComplete(generatedDraft);
+  setLsGeneratedData(newGen);
+  const gen = await genData(newGen, user);
+
+  onComplete(gen);
 };
 
-export const generateDraft = async (
-  draft: GeneratedDraft,
-  user: RouterUser
-) => {
-  const { vacancy } = draft;
+const genData = async (gen: GeneratedData, user: RouterUser) => {
+  const { vacancy } = gen;
   toast.loading("Writing CV...", { duration: Infinity });
 
   try {
     /**
      * Generate skills and experience with `GPT-3.5`
      */
-    const [skills, experience] = await Promise.all([
+    const [skillsContext, experienceContext] = await Promise.all([
       generateSkills(vacancy, user),
       generateExperience(vacancy, user),
     ]);
 
-    const generatedExperience = processExperience(experience, user, vacancy);
-    document.dispatchEvent(
-      new CustomEvent(EXPERIENCE_GENERATED_EVENT, {
-        detail: generatedExperience,
-      })
+    const generatedExperience = processExperience(
+      experienceContext,
+      user,
+      vacancy
     );
 
-    const generatedDraft: GeneratedDraft = {
-      ...draft,
-      ...skills,
+    eventManager.emit<ExperienceGeneratedDetail>(
+      Events.EXPERIENCE_GENERATED_EVENT,
+      generatedExperience
+    );
+
+    const generatedData: GeneratedData = {
+      ...gen,
+      vacancySkills: skillsContext.vacancySkills,
+      generatedSkills: skillsContext.generatedSkills,
+      generatedProfessionalSummary: skillsContext.generatedProfessionalSummary,
       generatedExperience,
-      vacancyResponsibilities: experience.vacancyResponsibilities,
+      vacancyResponsibilities: experienceContext.vacancyResponsibilities,
       jobTitle: vacancy.jobTitle || user.jobTitle,
     };
 
-    setDraftByVacancyId(vacancy.id, generatedDraft);
     toast.success("Process complete. Please review.");
 
-    return generatedDraft;
+    return generatedData;
   } catch (error) {
-    toast.error("An error occurred during draft generation");
+    toast.error("An error occurred during generation");
     throw error;
   } finally {
     toast.dismiss();

@@ -16,7 +16,6 @@ import { CustomMenu } from "~/components/ui/external/CustomMenu";
 import { CustomMenuButton } from "~/components/ui/external/CustomMenuButton";
 import { CustomMenuItem } from "~/components/ui/external/CustomMenuItem";
 import { DrawerTrigger } from "~/components/ui/external/Drawer";
-import { typedKeys } from "~/__archieved/draft/utils/common";
 import { api, cn } from "~/utils";
 import { EditVacancyDrawer } from "../EditVacancyDrawer";
 import { useVacanciesContext } from "../VacanciesContext";
@@ -24,6 +23,7 @@ import { omit } from "lodash-es";
 import { Link } from "~/components/ui/buttons/Link";
 import { defaultGroups } from "../constants";
 import { Diamond } from "~/components/icons";
+import { typedKeys } from "~/modules/utils";
 
 const { log } = console;
 

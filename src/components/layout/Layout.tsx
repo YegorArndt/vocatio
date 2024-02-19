@@ -8,7 +8,6 @@ import {
   PopoverContent,
 } from "~/components/ui/external/Popover";
 import { Bell } from "../icons";
-import { useLs } from "~/hooks/useLs";
 
 const { log } = console;
 
@@ -18,8 +17,6 @@ type LayoutProps = PropsWithChildren<{
 }>;
 
 const Notifications = () => {
-  const { ls } = useLs();
-
   return (
     <Popover>
       <PopoverTrigger

@@ -7,14 +7,14 @@ import {
 } from "react";
 import cn from "classnames";
 
-import { useComponentContext } from "../contexts/ComponentContext";
+import { useComponentContext } from "../../contexts/ComponentContext";
 import { BUTTON_CN } from "./constants";
 import { Tooltip } from "react-tooltip";
 import { AddComponentPopover } from "./shared/AddComponentButton";
 import { DeleteComponentButton } from "./shared/DeleteComponentButton";
 import { PageBreakButton } from "./shared/PageBreakButton";
 import { BiDuplicate } from "react-icons/bi";
-import { useCrudContext } from "../base-components/dnd/crud";
+import { useCrudContext } from "../dnd/crud";
 import {
   TooltipProvider,
   TooltipTrigger,
@@ -23,7 +23,7 @@ import {
 } from "~/components/ui/external/Tooltip";
 import { MoveComponentButton } from "./shared/MoveComponentButton";
 import { startCase } from "lodash-es";
-import { useDesignContext } from "../contexts/DesignContext";
+import { useDesignContext } from "../../contexts/DesignContext";
 
 const { log } = console;
 
@@ -70,20 +70,17 @@ export const Toolbar = (props: ToolbarProps) => {
                 <RadixTooltip>
                   <TooltipTrigger
                     className={cn(BUTTON_CN, "p-2")}
-                    onClick={() =>
+                    onClick={() => {
                       addComponent({
                         ...c,
                         props: {
                           ...(c.hydratedProps ?? {}),
                           className: cn(
-                            design.baseComponents[c.type]?.className,
-                            {
-                              "list-disc": c.id?.includes("bullet"),
-                            }
+                            design.baseComponents[c.type]?.className
                           ),
                         },
-                      })
-                    }
+                      });
+                    }}
                   >
                     <BiDuplicate />
                   </TooltipTrigger>

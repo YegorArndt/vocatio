@@ -15,8 +15,8 @@ const { log } = console;
 export const DiffDrawer = () => {
   return (
     <Drawer>
-      <DrawerTrigger className={cn(NAV_BUTTON_CN, "gap-2")}>
-        <SlMagnifier /> Review changes <Badge>Beta</Badge>
+      <DrawerTrigger className={cn(NAV_BUTTON_CN, "gap-2")} disabled>
+        <SlMagnifier /> Review changes <Badge>Soon</Badge>
       </DrawerTrigger>
       <DrawerContent className="max-h-[95vh] bg-primary px-10 py-5">
         <DrawerHandle />

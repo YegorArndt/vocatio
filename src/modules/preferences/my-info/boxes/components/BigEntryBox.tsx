@@ -8,10 +8,10 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import { TbRestore } from "react-icons/tb";
 import { AnimatedDiv } from "~/components/AnimatedDiv";
 import { Textarea } from "~/components/ui/inputs/Textarea";
-import { typedKeys } from "~/__archieved/draft/utils/common";
 import { Text } from "~/components/ui/inputs/Text";
 import { BiMoveVertical } from "react-icons/bi";
 import { Divider } from "~/components/layout/Divider";
+import { typedKeys } from "~/modules/utils";
 
 const { log } = console;
 

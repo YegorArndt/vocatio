@@ -1,7 +1,10 @@
 import { DndProviderProps } from "./base-components/dnd/DndProvider";
 import { GroupProps } from "./base-components/Group";
 import { AutoresizeProps } from "./base-components/Autoresize";
-import type { GeneratedDraft } from "~/modules/init-gen/types";
+import type {
+  GeneratedData,
+  GeneratedExperienceEntry,
+} from "~/modules/init-gen/types";
 
 export type Design = {
   id: string;
@@ -15,6 +18,15 @@ export type Design = {
   background: string;
 };
 
+export type HydrationData =
+  | {
+      generatedSkills: {
+        id: string;
+        name: string;
+      }[];
+    }
+  | GeneratedExperienceEntry[];
+
 export type HydratableComponent = {
   type: BaseComponentType;
   id: string;
@@ -23,7 +35,7 @@ export type HydratableComponent = {
    * Hydratable means it will be hydrated with `user` data or AI generated data.
    * Used for `UserImage`, `Contact`, `Education`, `Experience`, `Skills`, `Languages` components.
    */
-  hydratableProps?: (data: GeneratedDraft) => DndProviderProps;
+  hydratableProps?: (data: GeneratedData | HydrationData) => DndProviderProps;
   /**
    * Hydrated means it doesn't expect any fn to hydrate it.
    * Used for `Group` component.
@@ -69,6 +81,8 @@ export type BaseComponentType =
   | "skills"
   | "education"
   | "experience"
+  | "experience-entry"
+  | "bullet"
   | `heading-${number}`
   | "group"
   | "icon-group"

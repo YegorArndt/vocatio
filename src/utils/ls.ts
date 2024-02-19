@@ -1,6 +1,6 @@
-import type { Vacancy } from "@prisma/client";
 import { toast } from "sonner";
-import { GeneratedDraft } from "~/modules/init-gen/types";
+import { Events, eventManager } from "~/modules/EventManager";
+import { GeneratedData } from "~/modules/init-gen/types";
 import { Models } from "~/modules/types";
 
 export type PersistentData = {
@@ -8,6 +8,8 @@ export type PersistentData = {
   hasConnectedExtension: boolean | null;
   hasShownCongratsMessage: boolean | null;
   defaultModel: Models;
+  modifiableItems: string[];
+  hasHydrated: boolean | null;
 };
 
 export const LS_KEY = "vocatio-preferences";
@@ -18,6 +20,8 @@ export const initialPersistedState: PersistentData = {
   hasShownCongratsMessage: null,
   shouldAutoApplied: null,
   defaultModel: "gpt-3.5",
+  modifiableItems: [],
+  hasHydrated: null,
 };
 
 export const getPersistedState = (): PersistentData => {
@@ -35,7 +39,7 @@ export const updatePersistedState = (
   return newData;
 };
 
-export const getDraftByVacancyId = (vacancyId?: Vacancy["id"]) => {
+export const getLsGeneratedData = (vacancyId?: string) => {
   if (!vacancyId) return;
 
   try {
@@ -43,11 +47,11 @@ export const getDraftByVacancyId = (vacancyId?: Vacancy["id"]) => {
 
     for (let i = 0; i < localStorage.length; i++) {
       const key = localStorage.key(i);
-      if (key === `draft-${vacancyId}`) {
+      if (key === `gen-${vacancyId}`) {
         const value = localStorage.getItem(key);
 
         if (value) {
-          return JSON.parse(value) as GeneratedDraft;
+          return JSON.parse(value) as GeneratedData;
         }
       }
     }
@@ -56,14 +60,12 @@ export const getDraftByVacancyId = (vacancyId?: Vacancy["id"]) => {
   }
 };
 
-export const setDraftByVacancyId = (
-  vacancyId: Vacancy["id"],
-  draft: GeneratedDraft
-) => {
+export const setLsGeneratedData = (gen: GeneratedData) => {
   if (!localStorage) return;
 
   try {
-    localStorage.setItem(`draft-${vacancyId}`, JSON.stringify(draft));
+    localStorage.setItem(`gen-${gen.vacancy.id}`, JSON.stringify(gen));
+    eventManager.emit(Events.GENERATED_DATA_UPDATED, gen);
     return true;
   } catch (e) {
     const isLsQuotaExceededError =

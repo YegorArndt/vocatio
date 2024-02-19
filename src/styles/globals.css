@@ -767,4 +767,19 @@
 
     @apply group-hover:border-green;
   }
+
+  /* TODO  */
+  .bullet-point > *:not(.z-tooltip)::before {
+    content: "•";
+    color: black;
+    padding-right: 11px;
+    margin-left: -1rem;
+  }
+
+  .bullet-point-direct {
+    content: "•";
+    color: black;
+    padding-right: 11px;
+    margin-left: -1rem;
+  }
 }

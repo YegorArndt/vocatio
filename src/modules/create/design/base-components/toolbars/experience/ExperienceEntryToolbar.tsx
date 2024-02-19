@@ -7,16 +7,13 @@ import {
 } from "react";
 import { Tooltip } from "react-tooltip";
 
-import { BUTTON_CN } from "../constants";
-import { useComponentContext } from "../../contexts/ComponentContext";
-import { Button } from "~/components/ui/buttons/Button";
-import { BsPlusCircleDotted } from "react-icons/bs";
-import { useCurrentDraft } from "~/hooks/useCurrentDraft";
-import { SET_RIGHT_PANEL_VIEW_EVENT } from "~/modules/events";
+import { useComponentContext } from "../../../contexts/ComponentContext";
+import { useGeneratedData } from "~/hooks/useGeneratedData";
 import { PageBreakButton } from "../shared/PageBreakButton";
 import { TooltipProvider } from "~/components/ui/external/Tooltip";
 import { MoveComponentButton } from "../shared/MoveComponentButton";
 import { BlurImage } from "~/components";
+import { AddBulletPointsPopover } from "./AddBulletPointsPopover";
 
 const { log } = console;
 
@@ -33,21 +30,10 @@ export const ExperienceEntryToolbar = (props: ToolbarProps) => {
   const { dndRef, listeners, attributes, children, className, node, ...rest } =
     props;
   const c = useComponentContext();
-  const { currentDraft } = useCurrentDraft();
+  const { generated } = useGeneratedData();
 
-  const entry = currentDraft?.generatedExperience?.find((e) => e.id === c.id);
+  const entry = generated?.generatedExperience?.find((e) => e.id === c.id);
   const { place, image } = entry || {};
-
-  const addBullets = () => {
-    document.dispatchEvent(
-      new CustomEvent(SET_RIGHT_PANEL_VIEW_EVENT, {
-        detail: {
-          view: "bullets",
-          component: c,
-        },
-      })
-    );
-  };
 
   const entryHeader = place || "entry";
 
@@ -77,13 +63,7 @@ export const ExperienceEntryToolbar = (props: ToolbarProps) => {
                     listeners={listeners}
                     attributes={attributes}
                   />
-                  <Button
-                    frontIcon={<BsPlusCircleDotted />}
-                    text="Add bullet points"
-                    baseCn="flex-y"
-                    className={BUTTON_CN}
-                    onClick={addBullets}
-                  />
+                  <AddBulletPointsPopover />
                 </TooltipProvider>
               </section>
             </div>

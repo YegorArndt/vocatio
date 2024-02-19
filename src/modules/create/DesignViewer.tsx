@@ -1,7 +1,8 @@
 import { useState } from "react";
 
-import { BlurImage } from "../../../components/BlurImage";
+import { BlurImage } from "../../components/BlurImage";
 import { Charmander } from "~/modules/create/design/designs/Charmander";
+import { AnimatedDiv } from "~/components/AnimatedDiv";
 
 const designs = [Charmander];
 
@@ -9,7 +10,7 @@ export const DesignViewer = () => {
   const [search, setSearch] = useState("");
 
   return (
-    <>
+    <AnimatedDiv className="border bg-secondary p-5">
       <input
         placeholder="Search designs here..."
         className="bg-transparent outline-none"
@@ -31,6 +32,7 @@ export const DesignViewer = () => {
                 width={200}
                 alt={d.name}
                 className="transform cursor-pointer transition hover:-translate-y-1 motion-reduce:transition-none"
+                priority
               />
               <footer className="flex-center clr-ghost mt-2 gap-2">
                 <BlurImage
@@ -44,11 +46,6 @@ export const DesignViewer = () => {
             </div>
           ))}
       </div>
-      {/* <Link
-        text="Suggest a design ❤️"
-        className="primary sm mt-8"
-        to="mailto:yegorarndt@gmail.com"
-      /> */}
-    </>
+    </AnimatedDiv>
   );
 };

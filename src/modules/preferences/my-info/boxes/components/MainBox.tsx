@@ -1,5 +1,4 @@
 import { startCase } from "lodash-es";
-import { typedKeys } from "../../../../../__archieved/draft/utils/common";
 import { Text } from "~/components/ui/inputs/Text";
 import { Fragment } from "react";
 import { FormContext } from "../../FormContext";
@@ -7,6 +6,7 @@ import { Textarea } from "~/components/ui/inputs/Textarea";
 import { Button } from "~/components/ui/buttons/Button";
 import { Spinner } from "~/components";
 import { AnimatedDiv } from "~/components/AnimatedDiv";
+import { typedKeys } from "~/modules/utils";
 
 const { log } = console;
 
@@ -39,7 +39,7 @@ export const MainBox = (props) => {
             <label htmlFor="professionalSummary">Professional summary</label>
             <Textarea
               name="professionalSummary"
-              placeholder="Please copy-paste manually from LinkedIn."
+              placeholder="Please enter manually."
               control={control}
               className="col-span-2"
               rows={10}

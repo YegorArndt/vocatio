@@ -1,11 +1,10 @@
-import { LiaExternalLinkAltSolid } from "react-icons/lia";
-
 import { BlurImage } from "~/components";
 import { Link } from "~/components/ui/buttons/Link";
 import { useLs } from "~/hooks/useLs";
 import { api, cn } from "~/utils";
 import { useVacanciesContext } from "./VacanciesContext";
 import { Linkedin } from "~/components/icons";
+import { FaChrome } from "react-icons/fa";
 
 export const VacanciesPagePlaceholder = () => {
   const { currentGroup } = useVacanciesContext();
@@ -43,18 +42,18 @@ export const VacanciesPagePlaceholder = () => {
             className={cn({
               "line-through": stepOneDone,
             })}
-            frontIcon={<LiaExternalLinkAltSolid />}
+            frontIcon={<FaChrome />}
             text="Connect chrome extension"
             endIcon={<small className="clr-disabled">~20 seconds</small>}
           />
           <Link
-            to="/preferences/my-info"
+            to="/preferences"
             baseCn="flex-y clr-blue"
             className={cn({
               "line-through": stepTwoDone,
             })}
             frontIcon={<Linkedin />}
-            text="Import your info from LinkedIn"
+            text="Import your profile"
             endIcon={<small className="clr-disabled">~3 minutes</small>}
           />
         </>

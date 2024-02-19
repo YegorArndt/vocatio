@@ -3,14 +3,14 @@
 import { GroupProps } from "../base-components/Group";
 import { BaseComponentType, HydratableComponent, SectionName } from "../types";
 import { ExperienceEntry, EducationEntry, ContactEntry } from "@prisma/client";
-import { GeneratedDraft } from "~/modules/init-gen/types";
+import { GeneratedData } from "~/modules/init-gen/types";
 import { iconsMap } from "~/modules/icons-map";
 import { isUrlPermissive } from "../utils";
 
 const { log } = console;
 
 /**
- * @returns icon name (exact or partial) `string` that is then matched by `Group` component.
+ * @returns icon name (exact or) `string` that is then matched by `Group` component.
  */
 export const defaultIcon = (
   entry: ExperienceEntry | EducationEntry | ContactEntry
@@ -120,7 +120,7 @@ export const contact = (
     type: "contact",
     id: "contact",
     sectionId: sectionId || "top-left",
-    hydratableProps: (draft: GeneratedDraft) => ({
+    hydratableProps: (draft: GeneratedData) => ({
       sections: {
         contact: {
           components: draft.contact.map((entry) => ({
@@ -152,7 +152,7 @@ export const languages = (
     type: "languages",
     id: "languages",
     sectionId: sectionId || "left",
-    hydratableProps: (draft: GeneratedDraft) => ({
+    hydratableProps: (draft: GeneratedData) => ({
       sections: {
         languages: {
           components: draft.languages.map((entry) => ({
@@ -184,7 +184,7 @@ export const skills = (
     type: "skills",
     id: "skills",
     sectionId: sectionId || "right",
-    hydratableProps: (draft: GeneratedDraft) => ({
+    hydratableProps: (draft: GeneratedData) => ({
       sections: {
         skills: {
           components:
@@ -222,21 +222,26 @@ export const experience = (
     type: "experience",
     id: "experience",
     sectionId: sectionId || "left",
-    hydratableProps: (draft: GeneratedDraft) => ({
+    hydratableProps: (experience) => ({
       sections: {
         experience: {
           components:
-            draft.generatedExperience?.map((entry, _, arr) => ({
+            experience.map((entry, _, arr) => ({
               type: "entry",
               id: entry.id,
               sectionId: "experience",
-              hydratableProps: () => ({
-                sections: {
-                  [entry.id]: {
-                    components: components?.(entry, arr.length) || [],
+              hydratableProps: (generatedEntry) => {
+                const en =
+                  generatedEntry?.id === entry.id ? generatedEntry : entry;
+
+                return {
+                  sections: {
+                    [entry.id]: {
+                      components: components?.(en, arr.length) || [],
+                    },
                   },
-                },
-              }),
+                };
+              },
             })) || [],
         },
       },
@@ -258,7 +263,7 @@ export const education = (
     type: "education",
     id: "education",
     sectionId: sectionId || "left",
-    hydratableProps: (draft: GeneratedDraft) => ({
+    hydratableProps: (draft: GeneratedData) => ({
       sections: {
         education: {
           components:

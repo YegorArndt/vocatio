@@ -1,4 +1,4 @@
-import { useCrudContext } from "../../base-components/dnd/crud";
+import { useCrudContext } from "../../dnd/crud";
 import {
   Popover,
   PopoverTrigger,
@@ -7,18 +7,18 @@ import {
 import { BsPlusCircleDotted } from "react-icons/bs";
 import { api, cn } from "~/utils";
 import { BUTTON_CN } from "../constants";
-import { useDesignContext } from "../../contexts/DesignContext";
+import { useDesignContext } from "../../../contexts/DesignContext";
 import { typedEntries } from "~/modules/utils";
-import { useComponentContext } from "../../contexts/ComponentContext";
+import { useComponentContext } from "../../../contexts/ComponentContext";
 import { BlurImage } from "~/components";
-import { useCurrentDraft } from "~/hooks/useCurrentDraft";
+import { useGeneratedData } from "~/hooks/useGeneratedData";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "~/components/ui/external/Tooltip";
-import { GeneratedDraft } from "~/modules/init-gen/types";
-import { BaseComponentType, Design } from "../../types";
+import { GeneratedData } from "~/modules/init-gen/types";
+import { BaseComponentType, Design } from "../../../types";
 import { RouterUser } from "~/modules/types";
 
 const { log } = console;
@@ -31,6 +31,8 @@ const NOT_IMPLEMENTED_COMPONENTS = [
   "languages",
   "entry",
 ];
+
+// TODO jobTitle
 
 const mapping = {
   "heading-1": {
@@ -65,7 +67,7 @@ const mapping = {
 
 const getTooltipContent = (
   type: BaseComponentType,
-  draft: GeneratedDraft,
+  draft: GeneratedData,
   user: RouterUser,
   design: Design
 ) => {
@@ -93,7 +95,7 @@ export const AddComponentPopover = () => {
   const c = useComponentContext();
   const { addComponent } = useCrudContext();
   const { design } = useDesignContext();
-  const { currentDraft } = useCurrentDraft();
+  const { generated } = useGeneratedData();
   const { data: user } = api.users.get.useQuery();
 
   return (
@@ -133,9 +135,9 @@ export const AddComponentPopover = () => {
                   {mapping?.[type as keyof typeof mapping].name}
                 </TooltipTrigger>
                 <TooltipContent side="left">
-                  {currentDraft &&
+                  {generated &&
                     user &&
-                    getTooltipContent(type, currentDraft, user, design)}
+                    getTooltipContent(type, generated, user, design)}
                 </TooltipContent>
               </Tooltip>
             )

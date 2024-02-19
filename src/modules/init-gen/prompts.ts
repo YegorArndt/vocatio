@@ -5,11 +5,12 @@ const getBulletPointsToEnhance = (user: RouterUser) => {
   return enhancedDescription || description || "";
 };
 
+// Skills required in vacancy, skills user has, and a professional summary
 export const buildSkillsPrompt = (
-  lsUser: RouterUser,
+  user: RouterUser,
   vacancy: PartialVacancy
 ) => {
-  const skillNames = lsUser.skills.map((x) => x.name);
+  const skillNames = user.skills.map((x) => x.name);
 
   // prettier-ignore
   return `Vacancy text: "${vacancy.description}".
@@ -24,12 +25,12 @@ export const buildSkillsPrompt = (
         Conditions for task 2: 
         1) anything you include in the output for this task must be in the vacancy text.
 
-     3. Create a professional summary to present me as a perfect fit for the vacancy. I will include it in the top of my resume. 
+     3. Create a professional summary of the ideal candidate for the job. I will include it in the top of my resume. 
         Conditions for task 3: 
         1) do not mention anything about education in the summary.
         2) omit personal pronouns, filler words and colloquial language from the summary to maintain a professional tone. "I" has no place in the summary.
         3) wrap all hard skills from task 1 in <span class="font-bold">{hard skill}</span> HTML tags for emphasis in the professional summary. I'll parse in the HTML tags later.
-        4) the summary must be concise, emphasizing the most relevant skills and experience for the vacancy.
+        4) min. 3 sentences, max. 5 sentences.
  
      - Format of your response:
 
@@ -44,6 +45,7 @@ export const buildSkillsPrompt = (
   `;
 };
 
+// Responsibilities in vacancy, user's first entry experience
 export const buildExperiencePrompt = (
   vacancy: PartialVacancy,
   user: RouterUser

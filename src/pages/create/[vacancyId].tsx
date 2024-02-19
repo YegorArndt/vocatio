@@ -6,7 +6,7 @@ import cn from "classnames";
 import { DndProvider } from "~/modules/create/design/base-components/dnd/DndProvider";
 import { PageBreak } from "~/modules/create/PageBreak";
 import { DesignContext } from "~/modules/create/design/contexts/DesignContext";
-import { useCurrentDraft } from "~/hooks/useCurrentDraft";
+import { useGeneratedData } from "~/hooks/useGeneratedData";
 import { A4_HEIGHT, A4_WIDTH } from "~/modules/create/design/constants";
 import {
   ResizableHandle,
@@ -15,24 +15,24 @@ import {
 } from "~/components/ui/external/Resizable";
 import { Button } from "~/components/ui/buttons/Button";
 import { RiDeleteBin6Line } from "react-icons/ri";
-import { RightPanel } from "~/modules/create/right-panel/RightPanel";
 import { Badge } from "~/components/ui/external/Badge";
 import { LeftPanel } from "~/modules/create/left-panel/LeftPanel";
+import { DesignViewer } from "~/modules/create/DesignViewer";
 
 const { log } = console;
 
 const rubik = Rubik({ subsets: ["latin"] });
 
 const CvEditor = () => {
-  const { currentDraft } = useCurrentDraft();
+  const { generated } = useGeneratedData();
   const { a4Ref, pages, setPages } = useA4();
 
   return (
     <>
       <Head>
         <title>
-          {currentDraft?.vacancy?.companyName
-            ? `CV for ${currentDraft?.vacancy.companyName}`
+          {generated?.vacancy?.companyName
+            ? `CV for ${generated?.vacancy.companyName}`
             : "Generating CV..."}
         </title>
         <meta
@@ -41,7 +41,8 @@ const CvEditor = () => {
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      {currentDraft && (
+      {generated && (
+        // @ts-ignore
         <DesignContext a4Ref={a4Ref}>
           {(context) => (
             <ResizablePanelGroup direction="horizontal">
@@ -67,7 +68,7 @@ const CvEditor = () => {
                   <DndProvider sections={context.design.sections} />
                 </div>
 
-                {!!a4Ref.current && pages > 1 && (
+                {pages > 1 && (
                   <div className="flex-center">
                     <Button
                       data-html2canvas-ignore
@@ -89,7 +90,7 @@ const CvEditor = () => {
                 </div>
               </ResizableHandle>
               <ResizablePanel defaultSize={10} className="z-layout mr-3 pt-16">
-                <RightPanel />
+                <DesignViewer />
               </ResizablePanel>
             </ResizablePanelGroup>
           )}
@@ -115,27 +116,36 @@ const useA4 = () => {
   const a4Ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const a4 = a4Ref.current;
-    if (!a4) return;
+    // Function to calculate and set pages
+    const calculatePages = () => {
+      if (a4Ref.current) {
+        const pageCount = Math.ceil(a4Ref.current.scrollHeight / A4_HEIGHT);
+        setPages(pageCount);
+      }
+    };
 
-    const observer = new MutationObserver(() => {
-      const pageCount = Math.ceil(a4.scrollHeight / A4_HEIGHT);
-      setPages(pageCount);
-    });
+    let observer: MutationObserver;
 
-    observer.observe(a4, { childList: true, subtree: true });
+    // Delay setup of MutationObserver by 5 seconds
+    const timer = setTimeout(() => {
+      if (a4Ref.current) {
+        observer = new MutationObserver(calculatePages);
 
-    return () => observer.disconnect();
-  }, [a4Ref.current]);
+        observer.observe(a4Ref.current, { childList: true, subtree: true });
+
+        // Initial calculation
+        calculatePages();
+      }
+    }, 5000);
+
+    // Cleanup function
+    return () => {
+      clearTimeout(timer);
+      if (observer) {
+        observer.disconnect();
+      }
+    };
+  }, []); // Empty dependencies array ensures this runs once after initial render
 
   return { a4Ref, pages, setPages };
-};
-
-const useWarnOnUnload = () => {
-  useEffect(() => {
-    window.onbeforeunload = () => true;
-    return () => {
-      window.onbeforeunload = null;
-    };
-  }, []);
 };

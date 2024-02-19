@@ -33,7 +33,7 @@ export const UpdateWithExtensionLink = (props: {
           className="flex-y ml-auto cursor-not-allowed text-sm"
           onClick={(e) => e.stopPropagation()}
         >
-          ⚠️&nbsp;&nbsp;Update main section
+          ⚠️&nbsp;&nbsp;Update main section with extension
         </TooltipTrigger>
         <TooltipContent>
           This will also update the Contact section adding your LinkedIn ID. It

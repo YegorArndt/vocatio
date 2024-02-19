@@ -1,9 +1,9 @@
-import { SKILLS_GENERATED_EVENT } from "~/modules/events";
+import { GENERATED_DATA_UPDATED } from "~/modules/events";
 import { useComponentContext } from "../contexts/ComponentContext";
 import { useDesignContext } from "../contexts/DesignContext";
 import { Autoresize } from "./Autoresize";
 import { useEffect, useState } from "react";
-import { useCurrentDraft } from "~/hooks/useCurrentDraft";
+import { useGeneratedData } from "~/hooks/useGeneratedData";
 
 const { log } = console;
 
@@ -17,29 +17,31 @@ export const ProfessionalSummary = () => {
   const { design } = useDesignContext();
   const c = useComponentContext();
   const [summary, setSummary] = useState("");
-  const { currentDraft } = useCurrentDraft();
+  const { generated } = useGeneratedData();
 
   useEffect(() => {
-    if (currentDraft?.generatedProfessionalSummary) {
-      setSummary(currentDraft.generatedProfessionalSummary);
-      return;
-    }
+    if (!generated || summary) return;
+    const { generatedProfessionalSummary } = generated;
 
-    const onSkillsGenerated = (event: Event) => {
+    setSummary(generatedProfessionalSummary);
+  }, [generated]);
+
+  useEffect(() => {
+    const onSummaryGenerated = (event: Event) => {
       const { generatedProfessionalSummary } = (event as SummaryGeneratedEvent)
         .detail;
 
       setSummary(generatedProfessionalSummary);
     };
 
-    document.addEventListener(SKILLS_GENERATED_EVENT, onSkillsGenerated);
+    document.addEventListener(GENERATED_DATA_UPDATED, onSummaryGenerated);
 
     return () => {
-      document.removeEventListener(SKILLS_GENERATED_EVENT, onSkillsGenerated);
+      document.removeEventListener(GENERATED_DATA_UPDATED, onSummaryGenerated);
     };
-  }, [currentDraft]);
+  }, []);
 
-  if (summary === "" || !currentDraft?.vacancySkills)
+  if (summary === "")
     return (
       <section className="flex flex-col gap-2">
         {Array.from({ length: 3 }).map((_, i) => (

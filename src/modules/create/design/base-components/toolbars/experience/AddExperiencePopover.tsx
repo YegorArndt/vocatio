@@ -1,5 +1,5 @@
 import { BsPlusCircleDotted } from "react-icons/bs";
-import { useCurrentDraft } from "~/hooks/useCurrentDraft";
+import { useGeneratedData } from "~/hooks/useGeneratedData";
 import { BUTTON_CN } from "../constants";
 import { api, cn } from "~/utils";
 import {
@@ -10,21 +10,21 @@ import {
 import { Button } from "~/components/ui/buttons/Button";
 import { BiPlus } from "react-icons/bi";
 import { AiPicker } from "~/components/AiPicker";
-import { GeneratedExperience } from "~/modules/init-gen/types";
+import { GeneratedExperienceEntry } from "~/modules/init-gen/types";
 import { EXPERIENCE_ENTRY_ADDED_BY_USER_EVENT } from "~/modules/events";
 
 const { log } = console;
 
 export const AddExperiencePopover = () => {
-  const { currentDraft } = useCurrentDraft();
+  const { generated } = useGeneratedData();
   const { data: user } = api.users.get.useQuery();
 
   const addExperience = (shouldGenerate?: boolean) => {
-    if (!currentDraft || !user) return;
+    if (!generated || !user) return;
 
     // @ts-ignore
-    let newExperienceEntry: GeneratedExperience[number] = {
-      ...currentDraft.generatedExperience[0],
+    let newExperienceEntry: GeneratedExperienceEntry = {
+      ...generated.generatedExperience[0],
       id: `${Math.random()}`,
       place: "Company name",
       title: user.jobTitle!,
@@ -32,7 +32,7 @@ export const AddExperiencePopover = () => {
 
     const newExperience = [
       newExperienceEntry,
-      ...currentDraft.generatedExperience,
+      ...generated.generatedExperience,
     ];
 
     document.dispatchEvent(
@@ -47,7 +47,7 @@ export const AddExperiencePopover = () => {
       <PopoverTrigger className={cn(BUTTON_CN, "gap-2 p-2")}>
         <BsPlusCircleDotted /> Add new entry
       </PopoverTrigger>
-      {currentDraft && (
+      {generated && (
         <PopoverContent
           onClick={(e) => {
             e.stopPropagation();

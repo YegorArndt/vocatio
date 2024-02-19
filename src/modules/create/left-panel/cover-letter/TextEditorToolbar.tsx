@@ -26,8 +26,8 @@ import {
   Tooltip,
   TooltipProvider,
 } from "~/components/ui/external/Tooltip";
-import { GeneratedDraft } from "~/modules/init-gen/types";
-import { useCurrentDraft } from "~/hooks/useCurrentDraft";
+import { GeneratedData } from "~/modules/init-gen/types";
+import { useGeneratedData } from "~/hooks/useGeneratedData";
 import { Gpt } from "~/components/icons";
 import { PartialVacancy, RouterUser, Models } from "~/modules/types";
 
@@ -41,7 +41,7 @@ type TextEditorToolbarProps = {
   };
 };
 
-const getPrompt = (draft: GeneratedDraft) => {
+const getPrompt = (draft: GeneratedData) => {
   const { experience, professionalSummary, name, vacancy } = draft;
   return `
   -   Write a cover letter for the following vacancy posting by company ${
@@ -71,12 +71,12 @@ export const TextEditorToolbar = (props: TextEditorToolbarProps) => {
   const { methods } = props;
   const { onCopy, onGenerate, onDownloadPdf } = methods;
 
-  const { currentDraft, updateDraft } = useCurrentDraft();
+  const { generated, updateGeneratedData } = useGeneratedData();
 
   const generateCoverLetter = async (model: Models) => {
-    if (!currentDraft) return;
+    if (!generated) return;
 
-    let generatedCoverLetter = currentDraft.coverLetter;
+    let generatedCoverLetter = generated.coverLetter;
 
     if (generatedCoverLetter) {
       onGenerate(generatedCoverLetter);
@@ -87,7 +87,7 @@ export const TextEditorToolbar = (props: TextEditorToolbarProps) => {
       duration: Infinity,
     });
 
-    const prompt = getPrompt(currentDraft);
+    const prompt = getPrompt(generated);
 
     if (model === "gpt-3.5") {
       generatedCoverLetter = await applyGpt(prompt, model);
@@ -116,7 +116,7 @@ export const TextEditorToolbar = (props: TextEditorToolbarProps) => {
       duration: 5000,
     });
 
-    updateDraft({ ...currentDraft, coverLetter });
+    updateGeneratedData({ ...generated, coverLetter });
     onGenerate(coverLetter);
   };
 

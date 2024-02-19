@@ -2,13 +2,13 @@ import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { Button } from "~/components/ui/buttons/Button";
-import { useCurrentDraft } from "~/hooks/useCurrentDraft";
+import { useGeneratedData } from "~/hooks/useGeneratedData";
 import { useLs } from "~/hooks/useLs";
 import { api } from "~/utils";
 
 export const MoveToAppliedToast = () => {
-  const { currentDraft } = useCurrentDraft();
-  const { vacancy } = currentDraft || {};
+  const { generated } = useGeneratedData();
+  const { vacancy } = generated || {};
 
   const { ls, updateLs } = useLs();
   const { register, watch } = useForm();

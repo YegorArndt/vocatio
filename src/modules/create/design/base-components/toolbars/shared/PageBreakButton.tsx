@@ -1,7 +1,7 @@
 import { ImPageBreak } from "react-icons/im";
 import { useState, useEffect } from "react";
-import { useComponentContext } from "../../contexts/ComponentContext";
-import { useDesignContext } from "../../contexts/DesignContext";
+import { useComponentContext } from "../../../contexts/ComponentContext";
+import { useDesignContext } from "../../../contexts/DesignContext";
 import { cn } from "~/utils";
 import { BUTTON_CN } from "../constants";
 import {

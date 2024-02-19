@@ -129,8 +129,7 @@ export const EnhancementResult = () => {
     isLoading: isGenerating,
     isSuccess: isSuccessGenerating,
   } = api.users.generateEnhancedExperience.useMutation({
-    onSuccess: (x) => {
-      log(x);
+    onSuccess: () => {
       refetchUser();
       toast.dismiss();
       toast.success("Enhanced. Please review.");

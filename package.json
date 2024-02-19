@@ -40,6 +40,7 @@
     "classnames": "^2.3.2",
     "cmdk": "^0.2.0",
     "cookies": "^0.8.0",
+    "embla-carousel-react": "^8.0.0-rc22",
     "framer-motion": "^10.16.5",
     "fuse.js": "^7.0.0",
     "html2canvas": "^1.4.1",

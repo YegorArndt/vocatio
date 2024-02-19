@@ -1,5 +1,7 @@
 import { v4 as uuidv4 } from "uuid";
-import { GeneratedDraft } from "./types";
+import { GeneratedData } from "./types";
+
+const { log } = console;
 
 export const formatSkills = (skills: string[]) =>
   skills.map((x) => ({ id: uuidv4(), name: x }));
@@ -8,8 +10,8 @@ export const formatSkills = (skills: string[]) =>
  * Parse GPT response for skills.
  */
 export const parseSkills = (skillsPromptReturn: string | undefined) => {
-  let vacancySkills = [] as GeneratedDraft["vacancySkills"];
-  let generatedSkills = [] as GeneratedDraft["generatedSkills"];
+  let vacancySkills = [] as GeneratedData["vacancySkills"];
+  let generatedSkills = [] as GeneratedData["generatedSkills"];
   let generatedProfessionalSummary = "";
 
   try {

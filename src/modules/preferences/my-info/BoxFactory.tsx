@@ -25,6 +25,7 @@ import { BoxName } from "./types";
 import { UpdateWithExtensionLink } from "./UpdateWithExtensionLink";
 import { EnhanceExperienceDrawer } from "./enhance-drawer/EnhanceExperienceDrawer";
 import { typedEntries } from "~/modules/utils";
+import { useSendMessage } from "~/hooks/useSendMessage";
 
 const { log } = console;
 
@@ -99,6 +100,8 @@ export const BoxFactory = (props: BoxFactoryProps) => {
     shouldScroll: boxName === updateKey,
   });
 
+  const { sendMessage } = useSendMessage();
+
   const { Component, dataKeys } = mapping[boxName];
 
   const update = (updatedUser: Partial<RouterUser>) => {
@@ -107,7 +110,7 @@ export const BoxFactory = (props: BoxFactoryProps) => {
      */
     // @ts-ignore
     updateDatabase(updatedUser, {
-      onSuccess: () => {
+      onSuccess: (user) => {
         const keys = dataKeys.map(startCase).join(", ");
         toast.success(`Updated ${keys}.`);
       },

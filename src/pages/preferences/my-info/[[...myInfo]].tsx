@@ -10,6 +10,7 @@ import { api } from "~/utils";
 import { BoxName } from "~/modules/preferences/my-info/types";
 import { useUpdateWithExtension } from "~/modules/preferences/my-info/useUpdateWithExtension";
 import { useCongratUser } from "~/modules/preferences/my-info/useCongratUser";
+import { ImportWithLinkedInPopover } from "~/modules/preferences/my-info/ImportWithLinkedInPopover";
 
 const { log } = console;
 
@@ -72,6 +73,12 @@ export const MyInfoPage = (
           <p>Vocatio will use it to generate your CVs.</p>
           {isReady && (
             <div className="flex flex-col gap-8">
+              <header className="flex-y gap-3">
+                <ImportWithLinkedInPopover text="Import" />
+                <small className="rounded-md border bg-secondary px-3 clr-secondary">
+                  ❗️ This rewrites your profile.
+                </small>
+              </header>
               {boxes.map((boxName) => (
                 <BoxFactory
                   key={boxName}

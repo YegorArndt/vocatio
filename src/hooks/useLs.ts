@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { GeneratedDraft } from "~/modules/init-gen/types";
 
 import {
   getPersistedState,
@@ -7,8 +6,6 @@ import {
   updatePersistedState,
   type PersistentData,
   LS_UPDATE_EVENT,
-  getDraftByVacancyId,
-  setDraftByVacancyId,
 } from "~/utils/ls";
 
 const { log } = console;
@@ -41,14 +38,5 @@ export const useLs = () => {
     setLs(newData);
   };
 
-  const updateDraft = (updated: Partial<GeneratedDraft>, vacancyId: string) => {
-    const target = getDraftByVacancyId(vacancyId);
-    if (!target) return;
-
-    const newData = { ...target, ...updated };
-
-    setDraftByVacancyId(vacancyId, newData);
-  };
-
-  return { ls, updateLs, updateDraft } as const;
+  return { ls, updateLs } as const;
 };

@@ -8,7 +8,7 @@ export const mainNav = [
     text: "Preferences",
     to: "/preferences/my-info",
     frontIcon: <IoSettingsOutline />,
-    activeIfIncludes: ["customize-ai", "updateKey"],
+    activeIfIncludes: ["customize-ai", "updateKey", "preferences"],
   },
 ].map((props) => (
   <NavigationLink

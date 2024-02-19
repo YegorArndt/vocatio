@@ -1,4 +1,3 @@
-import { v4 as uuidv4 } from "uuid";
 import {
   DndContext,
   KeyboardSensor,
@@ -18,15 +17,19 @@ import {
   useSortable,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import { type PropsWithChildren, useState, useEffect } from "react";
+import {
+  type PropsWithChildren,
+  useState,
+  forwardRef,
+  useImperativeHandle,
+} from "react";
 import { CSS } from "@dnd-kit/utilities";
 
 import {
   ComponentContext,
   useComponentContext,
 } from "../../contexts/ComponentContext";
-import { typedKeys } from "../../../../../__archieved/draft/utils/common";
-import { Toolbar } from "../../toolbars";
+import { Toolbar } from "../toolbars";
 import { cn } from "~/utils";
 import {
   AnySection,
@@ -42,19 +45,23 @@ import { UserName } from "~/modules/create/design/base-components/UserName";
 import { JobTitle } from "~/modules/create/design/base-components/JobTitle";
 import { ProfessionalSummary } from "~/modules/create/design/base-components/ProfessionalSummary";
 import { Heading } from "~/modules/create/design/base-components/Heading";
-import { Skills } from "~/modules/create/design/base-components/Skills";
-import { Experience } from "~/modules/create/design/base-components/Experience";
-import { Entry } from "~/modules/create/design/base-components/Entry";
+import { Skills } from "~/modules/create/design/base-components/skills/Skills";
+import { Experience } from "~/modules/create/design/base-components/experience/Experience";
 import { Languages } from "~/modules/create/design/base-components/Languages";
 import { Education } from "~/modules/create/design/base-components/Education";
-import { SkillsToolbar } from "../../toolbars/skills/SkillsToolbar";
-import { ExperienceToolbar } from "../../toolbars/experience/ExperienceToolbar";
-import { ExperienceEntryToolbar } from "../../toolbars/experience/ExperienceEntryToolbar";
-import { AddComponentProps, CrudContext, RemoveComponentProps } from "./crud";
-import { useCurrentDraft } from "~/hooks/useCurrentDraft";
-import { omit } from "lodash-es";
+import { SkillsToolbar } from "../toolbars/skills/SkillsToolbar";
+import { ExperienceToolbar } from "../toolbars/experience/ExperienceToolbar";
+import { ExperienceEntryToolbar } from "../toolbars/experience/ExperienceEntryToolbar";
+import { CrudContext, addComponent, removeComponent } from "./crud";
+import { Entry } from "../Entry";
+import { useGeneratedData } from "~/hooks/useGeneratedData";
+import { typedKeys } from "~/modules/utils";
 
 const { log } = console;
+
+export type ImperativeHandleRef = {
+  updateSections: (fn: (prev: Sections) => Sections) => void;
+};
 
 export type DndProviderProps = {
   sections: Sections;
@@ -110,10 +117,7 @@ const mapping: Mapping = [
   },
 ];
 
-export const getSectionIdByComponentId = (
-  sections: Sections,
-  componentId: string
-) => {
+const getSectionIdByComponentId = (sections: Sections, componentId: string) => {
   if (componentId in sections) return componentId;
 
   const sectionId = typedKeys(sections).find((id) => {
@@ -160,7 +164,7 @@ const SortableItem = (props: PropsWithChildren<Record<string, unknown>>) => {
        */
       className={cn({
         "flex-center": c.type === "userImage",
-        "list-disc": c.id?.includes("bullet"),
+        "bullet-point": c.id?.includes("bullet"),
       })}
     >
       {children}
@@ -199,11 +203,18 @@ const Section = (props: AnySection) => {
   );
 };
 
-export const DndProvider = (props: DndProviderProps) => {
+export const DndProvider = forwardRef((props: DndProviderProps, ref) => {
   const { sections: initialSections, ...rest } = props;
   const [sections, setSections] = useState(initialSections);
   const [activeId, setActiveId] = useState<null | string>(null);
-  const { updateDraft, currentDraft } = useCurrentDraft();
+
+  const { generated } = useGeneratedData();
+
+  useImperativeHandle(ref, () => ({
+    updateSections: (fn: (prev: Sections) => Sections) => {
+      setSections(fn);
+    },
+  }));
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -211,66 +222,6 @@ export const DndProvider = (props: DndProviderProps) => {
       coordinateGetter: sortableKeyboardCoordinates,
     })
   );
-
-  const addComponent = (baseComponent: AddComponentProps) =>
-    setSections((prev) => {
-      const { sectionId } = baseComponent;
-      const section = prev[sectionId];
-      if (!section) return prev;
-
-      const newSections = { ...prev };
-
-      const index = section.components.findIndex(
-        (c) => c.id === activeId || c.id === baseComponent.id
-      );
-
-      //@ts-ignore
-      newSections[sectionId]!.components = [
-        ...section.components.slice(0, index + 1),
-        {
-          ...omit(baseComponent, "props"),
-          hydratedProps: {
-            ...baseComponent.props,
-          },
-          id: uuidv4(),
-        },
-        ...section.components.slice(index + 1),
-      ];
-
-      return newSections;
-    });
-
-  const removeComponent = (component: RemoveComponentProps) =>
-    setSections((prev) => {
-      const { sectionId } = component;
-
-      const section = prev[sectionId];
-
-      if (!section) return prev;
-
-      const newSections = { ...prev };
-
-      newSections[sectionId]!.components = section.components.filter(
-        (c) => c.id !== component.id
-      );
-
-      if (sectionId === "skills") {
-        updateDraft?.({
-          ...currentDraft,
-          generatedSkills: currentDraft?.generatedSkills?.filter(
-            (s) => s.id !== component.id
-          ),
-        });
-      }
-
-      return newSections;
-    });
-
-  // useEffect(updateDesign, [sections]);
-  /**
-   * Reset sections when user selects a new design
-   */
-  useEffect(() => setSections(initialSections), [initialSections]);
 
   const handleDragStart = ({ active }: DragStartEvent) => {
     setActiveId(active.id as string);
@@ -342,9 +293,6 @@ export const DndProvider = (props: DndProviderProps) => {
       over?.id as string
     );
 
-    // const activeSectionId = active.data.current.sectionId;
-    // const overSectionId = over?.data.current.sectionId;
-
     const outsideSortable = !activeSectionId || !overSectionId;
     const isSameSection = activeSectionId === overSectionId;
     const shouldAbort = outsideSortable || !isSameSection;
@@ -401,8 +349,9 @@ export const DndProvider = (props: DndProviderProps) => {
     >
       <CrudContext.Provider
         value={{
-          addComponent,
-          removeComponent,
+          addComponent: addComponent(setSections, activeId),
+          removeComponent: removeComponent(setSections),
+          setSections,
         }}
       >
         {typedKeys(sections).map((sectionId) => (
@@ -415,4 +364,6 @@ export const DndProvider = (props: DndProviderProps) => {
       </CrudContext.Provider>
     </DndContext>
   );
-};
+});
+
+DndProvider.displayName = "DndProvider";

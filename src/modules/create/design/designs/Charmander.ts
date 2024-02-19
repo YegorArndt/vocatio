@@ -144,8 +144,10 @@ export const Charmander: Design = {
                 containerClassName: "grid-cols-[40px_1fr] gap-[10px]",
               },
             },
-
-            ...entry.generatedDescription?.map((bulletPoint, i) => ({
+            /**
+             * Bullet points.
+             */
+            ...entry.description.map((bulletPoint, i) => ({
               id: entry.id + i + "-bullet",
               sectionId: entry.id,
               type: "text",

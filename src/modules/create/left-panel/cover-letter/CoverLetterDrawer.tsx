@@ -10,7 +10,7 @@ import {
 } from "~/components/ui/external/Drawer";
 import { Text } from "~/components/ui/inputs/Text";
 import { FormContext } from "~/modules/preferences/my-info/FormContext";
-import { useCurrentDraft } from "~/hooks/useCurrentDraft";
+import { useGeneratedData } from "~/hooks/useGeneratedData";
 import { TextEditor } from "./TextEditor";
 import { NAV_BUTTON_CN } from "../constants";
 import { api, cn } from "~/utils";
@@ -19,10 +19,10 @@ import { Fragment } from "react";
 const { log } = console;
 
 export const CoverLetterDrawer = () => {
-  const { currentDraft } = useCurrentDraft();
+  const { generated } = useGeneratedData();
   const { data: user } = api.users.get.useQuery();
 
-  const { vacancy } = currentDraft ?? {};
+  const { vacancy } = generated ?? {};
 
   const defaultValues = user &&
     vacancy && {

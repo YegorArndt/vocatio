@@ -4,11 +4,11 @@ import jsPDF from "jspdf";
 import { RefObject } from "react";
 import { A4_HEIGHT, A4_WIDTH } from "../design/constants";
 import { toast } from "sonner";
-import { GeneratedDraft } from "~/modules/init-gen/types";
+import { GeneratedData } from "~/modules/init-gen/types";
 
 const { log } = console;
 
-export const getStructuredCvText = (draft: GeneratedDraft): string => {
+export const getStructuredCvText = (draft: GeneratedData): string => {
   let formattedText = "";
 
   /**
@@ -51,7 +51,7 @@ export const getStructuredCvText = (draft: GeneratedDraft): string => {
         history.title
       }, Period of employment: ${
         history.period
-      }, description: ${history.generatedDescription.join("\n")}\n`;
+      }, description: ${history.description.join("\n")}\n`;
     });
   }
 
@@ -70,7 +70,7 @@ export const getStructuredCvText = (draft: GeneratedDraft): string => {
 
 type DownloadPdfProps = {
   a4Ref: RefObject<HTMLDivElement>;
-  draft: GeneratedDraft;
+  draft: GeneratedData;
 };
 
 export const downloadPdf = async (props: DownloadPdfProps) => {
@@ -78,7 +78,7 @@ export const downloadPdf = async (props: DownloadPdfProps) => {
 
   if (!a4Ref.current) return;
 
-  toast.info("Generating PDF...");
+  toast.info("Preparing your PDF...");
 
   const a4 = a4Ref.current;
   const pageCount = Math.ceil(a4.clientHeight / A4_HEIGHT);

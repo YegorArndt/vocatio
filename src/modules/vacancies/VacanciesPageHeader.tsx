@@ -6,7 +6,6 @@ import { CustomMenuButton } from "~/components/ui/external/CustomMenuButton";
 import { Button, ButtonProps } from "~/components/ui/buttons/Button";
 import { cn } from "~/utils";
 import { GroupedVacancies, useVacanciesContext } from "./VacanciesContext";
-import { typedKeys } from "../../__archieved/draft/utils/common";
 import { CustomMenuItem } from "~/components/ui/external/CustomMenuItem";
 import { Text } from "~/components/ui/inputs/Text";
 import { useForm } from "react-hook-form";
@@ -14,6 +13,7 @@ import { ReactNode } from "react";
 import { defaultGroups } from "./constants";
 import { SkeletonButtonStack } from "~/components/Spinner";
 import { Diamond } from "~/components/icons";
+import { typedKeys } from "../utils";
 
 type Group = GroupedVacancies[keyof GroupedVacancies];
 

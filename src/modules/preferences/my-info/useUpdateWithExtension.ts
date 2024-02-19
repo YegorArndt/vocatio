@@ -9,7 +9,7 @@ import { RouterUser } from "~/modules/types";
 const { log } = console;
 
 type UseUpdateWithExtensionProps = {
-  updateKey: BoxName;
+  updateKey: BoxName | "all";
   expirationToken: string;
 };
 
@@ -50,7 +50,10 @@ export const useUpdateWithExtension = (props: UseUpdateWithExtensionProps) => {
   } = api.users.update.useMutation();
 
   useEffect(() => {
-    if (!updateKey || isExpired || successUpdating) return;
+    if (!updateKey || isExpired || successUpdating) {
+      user && sendMessage({ type: "post-user", payload: { user } });
+      return;
+    }
     if (!hasSent) return sendMessage({ type: "get-user" });
 
     try {
@@ -60,7 +63,31 @@ export const useUpdateWithExtension = (props: UseUpdateWithExtensionProps) => {
       const { data } = response;
       if (!data) throw new Error();
 
-      const slice = updateKeyToDbKeys(data, updateKey, user);
+      let slice = pick(data.user, [
+        "name",
+        "jobTitle",
+        "linkedinId",
+        "image",
+        "education",
+        "experience",
+        "contact",
+        "skills",
+        "languages",
+      ]);
+      slice.contact = [
+        {
+          name: "Email",
+          // @ts-ignore
+          value: user.email,
+        },
+        ...(slice.contact || []),
+      ];
+
+      if (updateKey !== "all") {
+        //@ts-ignore
+        slice = updateKeyToDbKeys(data, updateKey, user);
+      }
+      //@ts-ignore
       updateDatabase(slice);
 
       toast.success(`${startCase(updateKey)} updated.`);

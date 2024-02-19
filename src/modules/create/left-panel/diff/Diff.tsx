@@ -15,9 +15,9 @@ import {
 import { ExperienceEntry } from "@prisma/client";
 import { AFTER_GREEN, BEFORE_RED } from "~/modules/constants";
 import { stripHtmlTags } from "~/modules/utils";
-import { useCurrentDraft } from "~/hooks/useCurrentDraft";
+import { useGeneratedData } from "~/hooks/useGeneratedData";
 import { Badge } from "~/components/ui/external/Badge";
-import { GeneratedDraft } from "~/modules/init-gen/types";
+import { GeneratedData } from "~/modules/init-gen/types";
 import { api } from "~/utils";
 
 const { log } = console;
@@ -86,7 +86,7 @@ const ignoreList = new Set([
 
 const getInterleaved = (
   experience: {
-    new: GeneratedDraft["generatedExperience"];
+    new: GeneratedData["generatedExperience"];
     old: ExperienceEntry[];
   },
   keywords: string[]
@@ -95,12 +95,14 @@ const getInterleaved = (
 
   const withHighlights = experience.new.map((entry, index) => {
     const currentCount = highlightKeywords({
+      // @ts-ignore
       text: stripHtmlTags(entry.description),
       keywords,
     }).count;
     newHighlightedCount += currentCount;
 
     const oldDescription = experience.old[index]?.description || "";
+    // @ts-ignore
     const newDescription = stripHtmlTags(entry.generatedDescription.join("\n"));
 
     // Function to extract capitalized words
@@ -257,12 +259,12 @@ const TopLeft = (props: TopLeftProps) => {
 
 const TopRight = (props: TopRightProps) => {
   const { highlightedDescription } = props;
-  const { currentDraft } = useCurrentDraft();
+  const { generated } = useGeneratedData();
 
-  if (!currentDraft?.vacancy) return null;
+  if (!generated?.vacancy) return null;
 
   const { vacancy, vacancySkills, vacancyResponsibilities, generatedSkills } =
-    currentDraft!;
+    generated!;
 
   return (
     <section className="flex h-full flex-col gap-3 overflow-auto rounded-md border p-5">
@@ -352,17 +354,17 @@ const Entry = (props: EntryProps) => {
 };
 
 export const Diff = () => {
-  const { currentDraft } = useCurrentDraft();
+  const { generated } = useGeneratedData();
   const { data: user } = api.users.get.useQuery();
 
-  if (!currentDraft?.vacancy || !user) return null;
+  if (!generated?.vacancy || !user) return null;
 
   const {
     vacancy,
     generatedProfessionalSummary,
     generatedExperience,
     generatedSkills,
-  } = currentDraft!;
+  } = generated!;
 
   const keywords = [vacancy.description, vacancy.requiredSkills] as string[];
 
@@ -398,7 +400,7 @@ export const Diff = () => {
             newHighlightedCount +
             summaryCount +
             vacancyCount +
-            currentDraft?.generatedSkills.length!
+            generated?.generatedSkills.length!
           } keywords included 🎉`}
           className="ml-5 pb-7 text-center text-lg"
         />

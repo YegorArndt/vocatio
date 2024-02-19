@@ -5,7 +5,7 @@
 //   PartialVacancy,
 // } from "~/modules/create/design/extension/types";
 // import { generateDraft } from "~/__archieved/generate-cv";
-// import { getPersistedState, setDraftByVacancyId } from "./ls";
+// import { getPersistedState, setLsGeneratedData } from "./ls";
 // import { LiaExternalLinkAltSolid } from "react-icons/lia";
 // import { getMissingInfo } from ".";
 
@@ -82,7 +82,7 @@
 //       /**
 //        * Save draft to local storage (toast handled in function)
 //        */
-//       const isSaveSuccessful = setDraftByVacancyId(vacancyId, res);
+//       const isSaveSuccessful = setLsGeneratedData(vacancyId, res);
 
 //       if (!isSaveSuccessful) return;
 

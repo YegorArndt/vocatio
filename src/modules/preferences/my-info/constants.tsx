@@ -22,14 +22,6 @@ export const preferencesToolbar = [
     activeCn="bg-hover"
     activeIfIncludes={["updateKey"]}
   />,
-  // <NavigationLink
-  //   key="Customize AI"
-  //   frontIcon={<Gpt />}
-  //   text="Customize AI"
-  //   to="/preferences/customize-ai"
-  //   baseCn="common hover flex-y gap-1"
-  //   activeCn="bg-hover"
-  // />,
 ];
 
 export const languages = [

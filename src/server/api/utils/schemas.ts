@@ -115,8 +115,6 @@ export const UserUpdateSchema = z
 
     defaultModel: DefaultModel.optional(),
 
-    // professionField: ProfessionField,
-
     contact: z.array(ContactEntrySchema),
     languages: z.array(LanguageEntrySchema),
     skills: z.array(SkillEntrySchema),
@@ -182,7 +180,7 @@ export const PartialVacancySchema = z.object({
   responsibilities: z.array(z.string()).nullable().optional(),
 });
 
-export const GeneratedDraft = z.object({
+export const GeneratedData = z.object({
   vacancyId: z.string(),
   jobTitle: z.string(),
   professionalSummary: z.string(),

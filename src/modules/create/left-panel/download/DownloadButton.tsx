@@ -1,6 +1,6 @@
 import { BiDownload } from "react-icons/bi";
 import { Button } from "~/components/ui/buttons/Button";
-import { useCurrentDraft } from "~/hooks/useCurrentDraft";
+import { useGeneratedData } from "~/hooks/useGeneratedData";
 import { useDesignContext } from "../../design/contexts/DesignContext";
 import { downloadPdf } from "../utils";
 import { NAV_BUTTON_CN } from "../constants";
@@ -11,9 +11,9 @@ const { log } = console;
 
 export const DownloadButton = () => {
   const { a4Ref } = useDesignContext();
-  const { currentDraft } = useCurrentDraft();
+  const { generated } = useGeneratedData();
 
-  if (!currentDraft) return null;
+  if (!generated) return null;
 
   return (
     <Button
@@ -21,7 +21,7 @@ export const DownloadButton = () => {
       text="Download PDF"
       className={NAV_BUTTON_CN}
       onClick={() =>
-        void downloadPdf({ a4Ref, draft: currentDraft }).then(() => {
+        void downloadPdf({ a4Ref, draft: generated }).then(() => {
           toast.info(<MoveToAppliedToast />, {
             duration: 10000,
           });

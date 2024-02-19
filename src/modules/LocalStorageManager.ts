@@ -13,14 +13,11 @@ export enum Items {
 export class LocalStorageManager {
   private static instance: LocalStorageManager;
   private vacancyId: string;
-  private readonly baseUrl =
-    process.env.NODE_ENV === "development"
-      ? "http://localhost:3000"
-      : "https://vocatio.cat";
 
   private constructor() {
     const url = window.location.href;
-    const match = url.match(`${this.baseUrl}/create/([a-f0-9-]+)`);
+    const pattern = /https?:\/\/[^/]+\/create\/([a-f0-9-]+)/;
+    const match = url.match(pattern);
     if (match && match[1]) {
       this.vacancyId = match[1];
     } else {

@@ -117,6 +117,8 @@ export const Skills = () => {
     onAdd: (e) => {
       const { component, newSections } = e.detail;
 
+      if (component.sectionId !== "skills") return;
+
       const index = newSections.skills?.components.findIndex(
         (c) => c.id === component.id
       );

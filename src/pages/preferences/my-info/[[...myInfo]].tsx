@@ -74,7 +74,7 @@ export const MyInfoPage = (
           {isReady && (
             <div className="flex flex-col gap-8">
               <header className="flex-y gap-3">
-                <ImportWithLinkedInPopover text="Import" />
+                <ImportWithLinkedInPopover />
                 <small className="rounded-md border bg-secondary px-3 clr-secondary">
                   ❗️ This rewrites your profile.
                 </small>

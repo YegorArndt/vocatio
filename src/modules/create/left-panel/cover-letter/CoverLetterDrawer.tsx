@@ -9,7 +9,7 @@ import {
   DrawerHandle,
 } from "~/components/ui/external/Drawer";
 import { Text } from "~/components/ui/inputs/Text";
-import { FormContext } from "~/modules/preferences/my-info/FormContext";
+import { FormContext } from "~/modules/settings/my-info/FormContext";
 import { useGeneratedData } from "~/hooks/useGeneratedData";
 import { TextEditor } from "./TextEditor";
 import { NAV_BUTTON_CN } from "../constants";

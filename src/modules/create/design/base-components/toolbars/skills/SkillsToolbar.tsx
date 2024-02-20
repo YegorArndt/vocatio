@@ -42,15 +42,20 @@ export const SkillsToolbar = (props: ToolbarProps) => {
         data-html2canvas-ignore
         render={() => {
           return (
-            <div className="flex-center gap-1" data-html2canvas-ignore>
-              <TooltipProvider>
-                <PageBreakButton />
-                <MoveComponentButton
-                  listeners={listeners}
-                  attributes={attributes}
-                />
-                <AddSkillsPopover />
-              </TooltipProvider>
+            <div data-html2canvas-ignore>
+              <header className="flex-y border-bottom gap-2 p-2 text-lg">
+                Skills section
+              </header>
+              <section className="flex-center gap-1">
+                <TooltipProvider>
+                  <PageBreakButton />
+                  <MoveComponentButton
+                    listeners={listeners}
+                    attributes={attributes}
+                  />
+                  <AddSkillsPopover />
+                </TooltipProvider>
+              </section>
             </div>
           );
         }}

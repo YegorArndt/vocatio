@@ -2,7 +2,7 @@
 // import { Fragment } from "react";
 // import ScrollToTop from "react-scroll-to-top";
 // import { Layout } from "~/components/layout/Layout";
-// import { preferencesToolbar } from "~/modules/preferences/my-info/constants";
+// import { settingsToolbar } from "~/modules/settings/my-info/constants";
 // import { BlurImage } from "~/components";
 // import { Badge } from "~/components/ui/external/Badge";
 // import { Checkmark } from "~/components/icons";
@@ -14,7 +14,7 @@
 // } from "~/components/ui/external/Accordion";
 // import { IoArrowRedoSharp } from "react-icons/io5";
 // import { Switch } from "~/components/ui/external/Switch";
-// import { BestPracticesDrawer } from "~/modules/preferences/customize-ai/BestPracticesDrawer";
+// import { BestPracticesDrawer } from "~/modules/settings/customize-ai/BestPracticesDrawer";
 // import { api } from "~/utils";
 
 // const { log } = console;
@@ -32,7 +32,7 @@
 //         />
 //         <link rel="icon" href="/favicon.ico" />
 //       </Head>
-//       <Layout toolbar={preferencesToolbar}>
+//       <Layout toolbar={settingsToolbar}>
 //         <div className="breakout">
 //           <h1>Customize AI.</h1>
 //           <p>

@@ -2,15 +2,16 @@ import Head from "next/head";
 import ScrollToTop from "react-scroll-to-top";
 
 import { Layout } from "~/components/layout/Layout";
-import { preferencesToolbar } from "~/modules/preferences/my-info/constants";
 import { ProgressIncrementer } from "~/components/ProgressIncrementer";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
-import { BoxFactory } from "~/modules/preferences/my-info/BoxFactory";
+import { BoxFactory } from "~/modules/settings/my-info/BoxFactory";
 import { api } from "~/utils";
-import { BoxName } from "~/modules/preferences/my-info/types";
-import { useUpdateWithExtension } from "~/modules/preferences/my-info/useUpdateWithExtension";
-import { useCongratUser } from "~/modules/preferences/my-info/useCongratUser";
-import { ImportWithLinkedInPopover } from "~/modules/preferences/my-info/ImportWithLinkedInPopover";
+import { BoxName } from "~/modules/settings/my-info/types";
+import { useUpdateWithExtension } from "~/modules/settings/my-info/useUpdateWithExtension";
+import { useCongratUser } from "~/modules/settings/my-info/useCongratUser";
+import { ImportWithLinkedInPopover } from "~/modules/settings/my-info/ImportWithLinkedInPopover";
+import { NavigationLink } from "~/components";
+import { MeImage } from "~/components/MeImage";
 
 const { log } = console;
 
@@ -37,7 +38,7 @@ export const getServerSideProps: GetServerSideProps<ServerProps> = async (
   };
 };
 
-export const MyInfoPage = (
+export const MePage = (
   props: InferGetServerSidePropsType<typeof getServerSideProps>
 ) => {
   const { updateKey, expirationToken } = props;
@@ -57,11 +58,22 @@ export const MyInfoPage = (
   return (
     <>
       <Head>
-        <title>My info - Vocatio</title>
+        <title>Me - Vocatio</title>
         <meta name="description" content="Fine-tune your Vocatio." />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Layout toolbar={preferencesToolbar}>
+      <Layout
+        toolbar={
+          <NavigationLink
+            frontIcon={<MeImage />}
+            text="Me"
+            to="/settings/me"
+            baseCn="common hover flex-y gap-1"
+            activeCn="bg-hover"
+            activeIfIncludes={["updateKey"]}
+          />
+        }
+      >
         <ProgressIncrementer
           className="left-[240px]"
           fixToTop
@@ -70,7 +82,7 @@ export const MyInfoPage = (
         />
         <section className="breakout">
           <h1>Review your info.</h1>
-          <p>Vocatio will use it to generate your CVs.</p>
+          <p className="clr-ghost">Vocatio will use it to generate your CVs.</p>
           {isReady && (
             <div className="flex flex-col gap-8">
               <header className="flex-y gap-3">
@@ -105,4 +117,4 @@ export const MyInfoPage = (
   );
 };
 
-export default MyInfoPage;
+export default MePage;

@@ -11,7 +11,7 @@
 // import { Text } from "~/components/ui/inputs/Text";
 // import { Textarea } from "~/components/ui/inputs/Textarea";
 // import { api } from "~/utils";
-// import { normalizeHookFormValues } from "../preferences/my-info/FormContext";
+// import { normalizeHookFormValues } from "../settings/my-info/FormContext";
 // import { SaveButton } from "~/components/SaveButton";
 // import { LiaEditSolid } from "react-icons/lia";
 

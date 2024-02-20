@@ -25,9 +25,9 @@ export const BlurImage = (props: BlurImageProps) => {
   if (!src) return fallback || null;
 
   return (
-    <div className={cn("bg-gray-200 shrink-0 overflow-hidden", className)}>
+    <div className={cn("shrink-0 overflow-hidden", className)}>
       <Image
-        src={src}
+        src={src!}
         height={height}
         width={width}
         className={cn(

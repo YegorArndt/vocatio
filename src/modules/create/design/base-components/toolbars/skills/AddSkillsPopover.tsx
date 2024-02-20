@@ -89,7 +89,7 @@ export const AddSkillsPopover = () => {
                   key={tab}
                   text={tab}
                   onClick={() => setActiveTab(i as ActiveTab)}
-                  className={cn("p-2", "hover:bg-gray-100", {
+                  className={cn("hover:bg-gray-100 p-2 text-lg", {
                     "border-bottom": i === activeTab,
                   })}
                 />

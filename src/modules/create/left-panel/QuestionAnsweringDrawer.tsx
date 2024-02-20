@@ -7,7 +7,7 @@
 // import { NAV_BUTTON_CN } from "./constants";
 // import { SiAnswer } from "react-icons/si";
 // import { cn } from "~/utils";
-// import { FormContext } from "~/modules/preferences/my-info/FormContext";
+// import { FormContext } from "~/modules/settings/my-info/FormContext";
 // import { Textarea } from "~/components/ui/inputs/Textarea";
 // import { Button } from "~/components/ui/buttons/Button";
 // import { useState } from "react";

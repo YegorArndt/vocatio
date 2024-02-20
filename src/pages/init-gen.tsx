@@ -53,7 +53,7 @@ const InitGenerationPage = () => {
     toast.error(
       "Aborting. Missing CV data. Vocatio will try to load it again."
     );
-    void router.push("/preferences");
+    void router.push("/settings");
   };
 
   const handleModifiableEntry = () => {

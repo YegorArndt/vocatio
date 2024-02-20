@@ -47,7 +47,7 @@ export const VacanciesPagePlaceholder = () => {
             endIcon={<small className="clr-disabled">~20 seconds</small>}
           />
           <Link
-            to="/preferences"
+            to="/settings"
             baseCn="flex-y clr-blue"
             className={cn({
               "line-through": stepTwoDone,

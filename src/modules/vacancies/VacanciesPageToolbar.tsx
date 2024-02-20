@@ -1,8 +1,9 @@
-import { HiOutlinePlusCircle } from "react-icons/hi2";
+import { HiPlusCircle } from "react-icons/hi2";
 import { DrawerTrigger } from "~/components/ui/external/Drawer";
 import { EditVacancyDrawer } from "./EditVacancyDrawer";
 import { api } from "~/utils";
 import { BrowseVacanciesLink } from "~/components/BrowseVacancies";
+import { Badge } from "~/components/ui/external/Badge";
 
 const { log } = console;
 
@@ -25,8 +26,13 @@ export const VacanciesPageToolbar = () => {
           </div>
         }
         trigger={
-          <DrawerTrigger role="button" className="common hover flex-y gap-3">
-            <HiOutlinePlusCircle /> Add manually
+          <DrawerTrigger
+            role="button"
+            className="common hover flex-y gap-3"
+            disabled
+          >
+            <HiPlusCircle size={17} />
+            New vacancy <Badge>Soon</Badge>
           </DrawerTrigger>
         }
       />

@@ -38,7 +38,7 @@
 //         <Link
 //           text="Add."
 //           endIcon={<LiaExternalLinkAltSolid />}
-//           to="/preferences/my-info"
+//           to="/settings/my-info"
 //           className="flex-y clr-blue"
 //           onClick={() => toast.dismiss(id)}
 //         />
@@ -58,7 +58,7 @@
 //         description: (
 //           <Link
 //             text="Add them here."
-//             to="/preferences/my-info"
+//             to="/settings/my-info"
 //             className="clr-blue"
 //             onClick={() => toast.dismiss(id)}
 //           />

@@ -12,7 +12,7 @@
 // import { AFTER_GREEN, BEFORE_RED } from "~/modules/constants";
 // import { stripHtmlTags } from "~/modules/utils";
 // import { api, cn } from "~/utils";
-// import { FormContext } from "../../modules/preferences/my-info/FormContext";
+// import { FormContext } from "../../modules/settings/my-info/FormContext";
 // import { Textarea } from "~/components/ui/inputs/Textarea";
 // import { AnimatedDiv } from "~/components/AnimatedDiv";
 // import { BsSave2Fill } from "react-icons/bs";

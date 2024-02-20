@@ -219,7 +219,7 @@ const PrivacyPolicy = () => {
           </h2>
           <p>
             You have the right to withdraw your consent at any time. To do so,
-            please adjust your preferences in the extension&apos;s settings or
+            please adjust your settings in the extension&apos;s settings or
             contact us directly.
           </p>
         </section>

@@ -12,8 +12,8 @@ export type PersistentData = {
   hasHydrated: boolean | null;
 };
 
-export const LS_KEY = "vocatio-preferences";
-export const LS_UPDATE_EVENT = "vocatio-preferences-update";
+export const LS_KEY = "vocatio-settings";
+export const LS_UPDATE_EVENT = "vocatio-settings-update";
 
 export const initialPersistedState: PersistentData = {
   hasConnectedExtension: null,

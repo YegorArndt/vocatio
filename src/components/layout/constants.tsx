@@ -5,10 +5,10 @@ import { NavigationLink } from "../NavigationLink";
 export const mainNav = [
   { text: "My vacancies", to: "/vacancies", frontIcon: <TfiLayoutGrid4 /> },
   {
-    text: "Preferences",
-    to: "/preferences/my-info",
+    text: "Settings",
+    to: "/settings/me",
     frontIcon: <IoSettingsOutline />,
-    activeIfIncludes: ["customize-ai", "updateKey", "preferences"],
+    activeIfIncludes: ["customize-ai", "updateKey", "settings"],
   },
 ].map((props) => (
   <NavigationLink

@@ -56,7 +56,7 @@ export const UpdateWithExtensionLink = (props: {
           }
         );
       }}
-      baseCn="flex-y hover:underline text-[1rem]"
+      baseCn="flex-y hover:underline text-[0.9rem]"
       className={className}
       newTab
     />

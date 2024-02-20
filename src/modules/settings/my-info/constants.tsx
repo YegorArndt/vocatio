@@ -1,5 +1,3 @@
-import { NavigationLink } from "~/components";
-import { GoDatabase } from "react-icons/go";
 import { startCase } from "lodash-es";
 
 export const userBoxes = [
@@ -11,18 +9,6 @@ export const userBoxes = [
   "experience",
   "education",
 ] as const;
-
-export const preferencesToolbar = [
-  <NavigationLink
-    key="My info"
-    frontIcon={<GoDatabase />}
-    text="My info"
-    to="/preferences/my-info"
-    baseCn="common hover flex-y gap-1"
-    activeCn="bg-hover"
-    activeIfIncludes={["updateKey"]}
-  />,
-];
 
 export const languages = [
   "chinese",

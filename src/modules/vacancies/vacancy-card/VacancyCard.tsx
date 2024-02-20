@@ -12,8 +12,7 @@ import { BsPersonWorkspace } from "react-icons/bs";
 import { Button } from "~/components/ui/buttons/Button";
 import { VacancyCardHeader } from "./VacancyCardHeader";
 import { getSalaryRange } from "./utils";
-import { useLs } from "~/hooks/useLs";
-import { Gpt } from "~/components/icons";
+import { Gpt, Linkedin } from "~/components/icons";
 
 const { log } = console;
 
@@ -23,9 +22,6 @@ type VacancyCardProps = {
 
 export const VacancyCard = (props: VacancyCardProps) => {
   const { vacancy } = props;
-
-  const { updateLs } = useLs();
-
   const {
     salaryMax,
     salaryMin,
@@ -44,12 +40,23 @@ export const VacancyCard = (props: VacancyCardProps) => {
         )}
       >
         <VacancyCardHeader vacancy={vacancy} />
-        <Link
-          to={`create/${vacancy.id}`}
-          frontIcon={<Gpt />}
-          text="View CV"
-          baseCn="flex-y hover:underline text-[0.8rem] p-3 w-min whitespace-nowrap"
-        />
+        <section className="grid grid-cols-3 gap-3">
+          <Link
+            to={`create/${vacancy.id}`}
+            frontIcon={<Gpt />}
+            text="View CV"
+            baseCn="flex-y gap-1 hover:underline text-[0.8rem] p-3 w-min whitespace-nowrap"
+          />
+          {vacancy.sourceUrl && (
+            <Link
+              frontIcon={<Linkedin />}
+              text="View source"
+              to={vacancy.sourceUrl}
+              baseCn="flex-y gap-1 hover:underline text-[0.8rem] p-3 w-min whitespace-nowrap"
+              newTab
+            />
+          )}
+        </section>
         <Accordion
           trigger={(expanded, setExpanded) => (
             <Button

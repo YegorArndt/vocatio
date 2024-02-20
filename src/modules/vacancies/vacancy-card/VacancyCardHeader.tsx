@@ -7,7 +7,6 @@ import {
 } from "~/components/ui/external/Tooltip";
 import { MenuHeader, SubMenu } from "@szhsin/react-menu";
 import { BsThreeDots } from "react-icons/bs";
-import { FaLinkedin } from "react-icons/fa";
 import { LiaEditSolid } from "react-icons/lia";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { toast } from "sonner";
@@ -20,7 +19,6 @@ import { api, cn } from "~/utils";
 import { EditVacancyDrawer } from "../EditVacancyDrawer";
 import { useVacanciesContext } from "../VacanciesContext";
 import { omit } from "lodash-es";
-import { Link } from "~/components/ui/buttons/Link";
 import { defaultGroups } from "../constants";
 import { Diamond } from "~/components/icons";
 import { typedKeys } from "~/modules/utils";
@@ -79,7 +77,6 @@ export const VacancyCardHeader = (props: { vacancy: Vacancy }) => {
     update({
       id: vacancy.id,
       group: newGroup,
-      description: vacancy.description,
     });
   };
 
@@ -117,7 +114,7 @@ export const VacancyCardHeader = (props: { vacancy: Vacancy }) => {
   const menu = (
     <CustomMenu
       menuButton={
-        <CustomMenuButton className="shrink-0 rounded-full px-1 py-3">
+        <CustomMenuButton className="shrink-0 rounded-full px-1">
           <BsThreeDots />
         </CustomMenuButton>
       }
@@ -143,18 +140,6 @@ export const VacancyCardHeader = (props: { vacancy: Vacancy }) => {
           <MenuHeader className="normal-case">None yet</MenuHeader>
         )}
       </SubMenu>
-
-      {!!vacancy.sourceUrl && (
-        <CustomMenuItem>
-          <Link
-            frontIcon={<FaLinkedin />}
-            text="View Source"
-            to={vacancy.sourceUrl}
-            newTab
-            className="flex-y"
-          />
-        </CustomMenuItem>
-      )}
 
       <CustomMenuItem onClick={deleteVacancyFromGroups}>
         <RiDeleteBin6Line />
@@ -206,7 +191,7 @@ export const VacancyCardHeader = (props: { vacancy: Vacancy }) => {
         </section>
         <TooltipProvider>
           <Tooltip>
-            <TooltipTrigger className="cursor-default truncate text-start text-[0.8rem] italic">
+            <TooltipTrigger className="clr-ghost cursor-default truncate text-start text-[0.8rem] italic">
               {vacancy.jobTitle}
             </TooltipTrigger>
             <TooltipContent>{vacancy.jobTitle}</TooltipContent>

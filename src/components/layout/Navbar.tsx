@@ -7,6 +7,7 @@ import { api } from "~/utils";
 import { useRouter } from "next/router";
 import { PiSignOutDuotone } from "react-icons/pi";
 import { mainNav } from "./constants";
+import Image from "next/image";
 
 export const Navbar = (props: PropsWithChildren<Record<string, unknown>>) => {
   const { children } = props;
@@ -21,8 +22,9 @@ export const Navbar = (props: PropsWithChildren<Record<string, unknown>>) => {
     <nav className="navbar fixed inset-0 z-layout flex w-[240px] flex-col bg-secondary clr-secondary [&>*]:px-4 [&>*]:py-1 [&>*]:font-medium">
       <Menu
         menuButton={
-          <MenuButton className="flex whitespace-nowrap !py-3 font-semibold clr-primary">
-            🐈 &nbsp;&nbsp; {veryTop} vocatio
+          <MenuButton className="flex-y whitespace-nowrap !py-3 font-semibold clr-primary">
+            <Image src="/favicon.ico" alt="" height={15} width={15} />
+            &nbsp;&nbsp; {veryTop} vocatio
           </MenuButton>
         }
         transition

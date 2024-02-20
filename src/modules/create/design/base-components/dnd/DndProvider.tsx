@@ -56,6 +56,7 @@ import { CrudContext, addComponent, removeComponent } from "./crud";
 import { Entry } from "../Entry";
 import { useGeneratedData } from "~/hooks/useGeneratedData";
 import { typedKeys } from "~/modules/utils";
+import { ContactToolbar } from "../toolbars/ContactToolbar";
 
 const { log } = console;
 
@@ -91,7 +92,7 @@ type Mapping = Array<{
 }>;
 
 const mapping: Mapping = [
-  { keys: ["contact"], Component: Contact, Toolbar },
+  { keys: ["contact"], Component: Contact, Toolbar: ContactToolbar },
   { keys: ["userImage"], Component: UserImage, Toolbar },
   { keys: ["userName"], Component: UserName, Toolbar },
   { keys: ["jobTitle"], Component: JobTitle, Toolbar },

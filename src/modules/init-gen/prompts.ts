@@ -20,6 +20,7 @@ export const buildSkillsPrompt = (
      1. Create an array of skills (technologies, and other hard skills, e.g. "React", "TypeScript", "debugging") from the vacancy without categorization.
         Conditions: 
         1) anything you include in the output for this task must be in the vacancy text.
+        2) make sure that what you include is an actual skill.
      
      2. Find skills from task 1 that match any of the following skills: ${skillNames.join(", ")}. 
         Conditions for task 2: 

@@ -134,6 +134,8 @@ const genData = async (gen: GeneratedData, user: RouterUser) => {
       generateExperience(vacancy, user),
     ]);
 
+    log(experienceContext);
+
     const generatedExperience = processExperience(
       experienceContext,
       user,

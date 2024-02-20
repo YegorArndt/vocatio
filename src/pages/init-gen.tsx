@@ -56,9 +56,11 @@ const InitGenerationPage = () => {
     void router.push("/preferences");
   };
 
-  const handleMissingModifiableItems = () => {
-    if (ls.modifiableItems.length === 0 && user?.experience[0]) {
-      updateLs({ modifiableItems: [user.experience[0].id] });
+  const handleModifiableEntry = () => {
+    const firstEntry = user?.experience[0];
+
+    if (firstEntry) {
+      updateLs({ modifiableItems: [firstEntry.id] });
     }
   };
 
@@ -68,7 +70,7 @@ const InitGenerationPage = () => {
 
     if (response.success) {
       if (!user) return handleMissingCvData();
-      handleMissingModifiableItems();
+      handleModifiableEntry();
 
       const hasLostConnectionContext = !response.data?.newVacancy?.id;
       if (hasLostConnectionContext) {

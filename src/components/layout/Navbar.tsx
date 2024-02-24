@@ -9,7 +9,11 @@ import { PiSignOutDuotone } from "react-icons/pi";
 import { mainNav } from "./constants";
 import Image from "next/image";
 
-export const Navbar = (props: PropsWithChildren<Record<string, unknown>>) => {
+const { log } = console;
+
+type NavbarProps = PropsWithChildren<Record<string, unknown>>;
+
+export const Navbar = (props: NavbarProps) => {
   const { children } = props;
   const { user: clerkUser } = useUser();
   const { data: user } = api.users.get.useQuery();
@@ -29,6 +33,8 @@ export const Navbar = (props: PropsWithChildren<Record<string, unknown>>) => {
         }
         transition
         className="[&>*]:p-3"
+        direction="right"
+        portal
       >
         <SignOutButton signOutCallback={() => router.push("/landing")}>
           <span className="flex-y cursor-pointer gap-2">

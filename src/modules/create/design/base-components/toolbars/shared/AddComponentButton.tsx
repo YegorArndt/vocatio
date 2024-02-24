@@ -35,6 +35,10 @@ const NOT_IMPLEMENTED_COMPONENTS = [
 // TODO jobTitle
 
 const mapping = {
+  userName: {
+    path: "/base-components/heading-1.png",
+    name: "Name",
+  },
   "heading-1": {
     path: "/base-components/heading-1.png",
     name: "Heading 1",
@@ -118,7 +122,7 @@ export const AddComponentPopover = () => {
             !NOT_IMPLEMENTED_COMPONENTS.includes(type) && (
               <Tooltip key={type}>
                 <TooltipTrigger
-                  className="flex-y lg gap-3 hover:bg-hover"
+                  className="flex-y lg hover:main-hover gap-3"
                   onClick={() =>
                     addComponent({
                       props: { ...props, value: "Sample text" },

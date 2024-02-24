@@ -192,7 +192,7 @@ export const TextEditorToolbar = (props: TextEditorToolbarProps) => {
                           onClick={() => {
                             toast.info("Upgrade to premium to use gpt-4");
                           }}
-                          className="flex-y cursor-pointer gap-2 hover:bg-hover"
+                          className="flex-y hover:main-hover cursor-pointer gap-2"
                         >
                           {icon}
                           {label}
@@ -206,7 +206,7 @@ export const TextEditorToolbar = (props: TextEditorToolbarProps) => {
                 ) : (
                   <MenubarItem
                     key={label}
-                    className="flex-y cursor-pointer gap-2 hover:bg-hover"
+                    className="flex-y hover:main-hover cursor-pointer gap-2"
                     disabled={!onClick}
                     onClick={onClick}
                   >

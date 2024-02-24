@@ -8,9 +8,9 @@ export const BrowseVacanciesLink = (props: Omit<LinkProps, "to">) => {
 
   return (
     <Link
-      frontIcon={<LinkedinColor />}
+      frontIcon={<LinkedinColor fontSize={20} className="-ml-[2.5px]" />}
       text="Browse vacancies"
-      baseCn="common hover flex-y gap-2"
+      baseCn="common hover:main-hover flex-y gap-2"
       className={cn({
         "pointer-events-none opacity-50": userLoading,
       })}

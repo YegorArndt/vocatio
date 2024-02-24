@@ -4,7 +4,7 @@ import { api, cn } from "~/utils";
 
 const { log } = console;
 
-const IMAGE_CN = "h-[200px] w-[200px] rounded-full";
+const IMAGE_CN = "h-[140px] w-[140px] rounded-full";
 
 export const UserImage = () => {
   const { data: user } = api.users.get.useQuery();
@@ -12,7 +12,7 @@ export const UserImage = () => {
   const { design } = useDesignContext();
   const c = useComponentContext();
 
-  if (!user) return <div className={cn("skeleton", IMAGE_CN)} />;
+  if (!user) return <div className={cn("light-skeleton", IMAGE_CN)} />;
 
   const userImageProps = {
     className: design.baseComponents?.userImage?.className ?? IMAGE_CN,

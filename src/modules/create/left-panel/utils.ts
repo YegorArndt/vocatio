@@ -5,6 +5,7 @@ import { RefObject } from "react";
 import { A4_HEIGHT, A4_WIDTH } from "../design/constants";
 import { toast } from "sonner";
 import { GeneratedData } from "~/modules/init-gen/types";
+import { Events, eventManager } from "~/modules/EventManager";
 
 const { log } = console;
 
@@ -70,11 +71,11 @@ export const getStructuredCvText = (draft: GeneratedData): string => {
 
 type DownloadPdfProps = {
   a4Ref: RefObject<HTMLDivElement>;
-  draft: GeneratedData;
+  generated: GeneratedData;
 };
 
 export const downloadPdf = async (props: DownloadPdfProps) => {
-  const { a4Ref, draft } = props;
+  const { a4Ref, generated } = props;
 
   if (!a4Ref.current) return;
 
@@ -91,7 +92,7 @@ export const downloadPdf = async (props: DownloadPdfProps) => {
   const width = pdf.internal.pageSize.getWidth();
   const height = pdf.internal.pageSize.getHeight();
 
-  const cvText = getStructuredCvText(draft);
+  const cvText = getStructuredCvText(generated);
   pdf.setFontSize(0);
   const maxWidth = width - 40; // 20px margin on each side
   const lines: string[] = pdf.splitTextToSize(cvText, maxWidth);
@@ -124,5 +125,6 @@ export const downloadPdf = async (props: DownloadPdfProps) => {
     }
   }
 
-  pdf.save(`${draft.name}. CV for ${draft.vacancy.companyName}.pdf`);
+  pdf.save(`${generated.fileName}.pdf`);
+  eventManager.emit(Events.DOWNLOAD_CV_EVENT, {});
 };

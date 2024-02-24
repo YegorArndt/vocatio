@@ -4,14 +4,15 @@ import ScrollToTop from "react-scroll-to-top";
 import { Layout } from "~/components/layout/Layout";
 import { ProgressIncrementer } from "~/components/ProgressIncrementer";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
-import { BoxFactory } from "~/modules/settings/my-info/BoxFactory";
+import { BoxFactory } from "~/modules/settings/me/BoxFactory";
 import { api } from "~/utils";
-import { BoxName } from "~/modules/settings/my-info/types";
-import { useUpdateWithExtension } from "~/modules/settings/my-info/useUpdateWithExtension";
-import { useCongratUser } from "~/modules/settings/my-info/useCongratUser";
-import { ImportWithLinkedInPopover } from "~/modules/settings/my-info/ImportWithLinkedInPopover";
+import { BoxName } from "~/modules/settings/me/types";
+import { useUpdateWithExtension } from "~/modules/settings/me/useUpdateWithExtension";
+import { useCongratUser } from "~/modules/settings/me/useCongratUser";
+import { ImportWithLinkedInPopover } from "~/modules/settings/me/ImportWithLinkedInPopover";
 import { NavigationLink } from "~/components";
 import { MeImage } from "~/components/MeImage";
+import { BuildDefaultCvLink } from "~/modules/settings/me/BuildDefaultCvLink";
 
 const { log } = console;
 
@@ -69,7 +70,7 @@ export const MePage = (
             text="Me"
             to="/settings/me"
             baseCn="common hover flex-y gap-1"
-            activeCn="bg-hover"
+            activeCn="main-hover"
             activeIfIncludes={["updateKey"]}
           />
         }
@@ -86,10 +87,8 @@ export const MePage = (
           {isReady && (
             <div className="flex flex-col gap-8">
               <header className="flex-y gap-3">
+                <BuildDefaultCvLink />
                 <ImportWithLinkedInPopover />
-                <small className="rounded-md border bg-secondary px-3 clr-secondary">
-                  ❗️ This rewrites your profile.
-                </small>
               </header>
               {boxes.map((boxName) => (
                 <BoxFactory

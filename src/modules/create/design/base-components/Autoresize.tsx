@@ -117,7 +117,6 @@ export const Autoresize = (props: AutoresizeProps) => {
   const initialValue = useRef(value);
   const divRef = useRef<HTMLDivElement>(null);
   const c = useComponentContext();
-  // const { updateDesign } = useDraftContext();
 
   const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
   const [showTooltip, setShowTooltip] = useState(false);
@@ -244,7 +243,7 @@ export const Autoresize = (props: AutoresizeProps) => {
             transform: "translateY(100%)",
             zIndex: 1000,
           }}
-          className="autoresize-panel flex-y"
+          className="autoresize-toolbar flex-y"
           onMouseEnter={handleMouseEnterToolbar}
           onMouseLeave={handleMouseLeaveToolbar}
         >
@@ -252,7 +251,7 @@ export const Autoresize = (props: AutoresizeProps) => {
             {actions.map((x) => (
               <Tooltip key={x.tooltip}>
                 <TooltipTrigger
-                  className="sm hover"
+                  className="sm hover:main-hover"
                   onClick={() => wrapSelectedText(x.className)}
                 >
                   {x.icon}

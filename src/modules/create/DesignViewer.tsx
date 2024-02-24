@@ -3,11 +3,14 @@ import { useState } from "react";
 import { BlurImage } from "../../components/BlurImage";
 import { Charmander } from "~/modules/create/design/designs/Charmander";
 import { AnimatedDiv } from "~/components/AnimatedDiv";
+import { Charmeleon } from "./design/designs/Charmeleon";
+import { useDesignContext } from "./design/contexts/DesignContext";
 
-const designs = [Charmander];
+const designs = [Charmander, Charmeleon];
 
 export const DesignViewer = () => {
   const [search, setSearch] = useState("");
+  const { changeDesign } = useDesignContext();
 
   return (
     <AnimatedDiv className="border bg-secondary p-5">
@@ -26,9 +29,11 @@ export const DesignViewer = () => {
           .map((d) => (
             <div key={d.name}>
               <BlurImage
-                // onClick={() => changeDesign(d)}
+                onClick={() => {
+                  changeDesign(d);
+                }}
                 src={`/designs/${d.image}`}
-                height={200}
+                height={280}
                 width={200}
                 alt={d.name}
                 className="transform cursor-pointer transition hover:-translate-y-1 motion-reduce:transition-none"

@@ -9,7 +9,10 @@ export const MeImage = () => {
   return (
     <BlurImage
       src={user?.image}
-      className="rounded-full"
+      className="!overflow-visible"
+      rounded
+      height={20}
+      width={20}
       fallback={<div className="skeleton h-[20px] w-[20px] rounded-full" />}
     />
   );

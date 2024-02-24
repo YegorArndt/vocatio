@@ -1,3 +1,5 @@
+import { Rubik, EB_Garamond, Noto_Serif } from "next/font/google";
+
 import { DndProviderProps } from "./base-components/dnd/DndProvider";
 import { GroupProps } from "./base-components/Group";
 import { AutoresizeProps } from "./base-components/Autoresize";
@@ -5,6 +7,35 @@ import type {
   GeneratedData,
   GeneratedExperienceEntry,
 } from "~/modules/init-gen/types";
+
+const rubik = Rubik({ subsets: ["latin"] });
+const garamond = EB_Garamond({ subsets: ["latin"] });
+const notoSerif = Noto_Serif({ subsets: ["latin"] });
+
+export const fonts = {
+  rubik: {
+    name: "Rubik",
+    font: rubik,
+  },
+  garamond: {
+    name: "Garamond",
+    font: garamond,
+  },
+  serif: {
+    name: "Serif",
+    font: notoSerif,
+  },
+  times: {
+    name: "Times New Roman",
+    font: "times",
+  },
+  arial: {
+    name: "Arial",
+    font: "arial",
+  },
+};
+
+export type DesignFont = keyof typeof fonts;
 
 export type Design = {
   id: string;
@@ -14,7 +45,7 @@ export type Design = {
   baseComponents: Record<BaseComponentType, BaseComponentProps>;
   image: string;
   pokemonImage: string;
-  font: string;
+  font: DesignFont;
   background: string;
 };
 

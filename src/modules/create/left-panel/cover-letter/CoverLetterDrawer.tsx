@@ -8,13 +8,13 @@ import {
   DrawerContent,
   DrawerHandle,
 } from "~/components/ui/external/Drawer";
-import { Text } from "~/components/ui/inputs/Text";
-import { FormContext } from "~/modules/settings/my-info/FormContext";
+import { FormContext } from "~/modules/settings/me/FormContext";
 import { useGeneratedData } from "~/hooks/useGeneratedData";
 import { TextEditor } from "./TextEditor";
 import { NAV_BUTTON_CN } from "../constants";
 import { api, cn } from "~/utils";
 import { Fragment } from "react";
+import { Text } from "~/components/ui/inputs/Text";
 
 const { log } = console;
 
@@ -37,7 +37,7 @@ export const CoverLetterDrawer = () => {
         disabled={!!!defaultValues}
       >
         <Blur element={<RiDraftLine />} />
-        Cover letter
+        Generate cover letter
       </DrawerTrigger>
       <DrawerContent className="flex h-screen flex-col gap-5 bg-primary clr-primary">
         {defaultValues && (

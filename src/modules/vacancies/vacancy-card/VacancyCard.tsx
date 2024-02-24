@@ -43,16 +43,16 @@ export const VacancyCard = (props: VacancyCardProps) => {
         <section className="grid grid-cols-3 gap-3">
           <Link
             to={`create/${vacancy.id}`}
-            frontIcon={<Gpt />}
+            frontIcon={<Gpt fontSize={15} />}
             text="View CV"
-            baseCn="flex-y gap-1 hover:underline text-[0.8rem] p-3 w-min whitespace-nowrap"
+            baseCn="flex-y gap-1 hover:underline text-sm p-3 w-min whitespace-nowrap"
           />
           {vacancy.sourceUrl && (
             <Link
               frontIcon={<Linkedin />}
               text="View source"
               to={vacancy.sourceUrl}
-              baseCn="flex-y gap-1 hover:underline text-[0.8rem] p-3 w-min whitespace-nowrap"
+              baseCn="flex-y gap-1 hover:underline text-sm p-3 w-min whitespace-nowrap"
               newTab
             />
           )}
@@ -61,7 +61,7 @@ export const VacancyCard = (props: VacancyCardProps) => {
           trigger={(expanded, setExpanded) => (
             <Button
               text={expanded ? "Hide details" : "Quick details"}
-              className="border-top flex-y border-top w-full p-3 text-[0.8rem]"
+              className="border-top flex-y border-top w-full p-3 text-sm"
               onClick={() => setExpanded(!expanded)}
               frontIcon={expanded ? <IoMdEyeOff /> : <IoEye />}
             />
@@ -84,7 +84,7 @@ export const VacancyCard = (props: VacancyCardProps) => {
             ].map(
               ([icon, value], i) =>
                 !!value && (
-                  <li key={i} className="flex-y gap-3 text-[0.8rem]">
+                  <li key={i} className="flex-y gap-3 text-sm">
                     {icon}
                     {value}
                   </li>
@@ -93,7 +93,7 @@ export const VacancyCard = (props: VacancyCardProps) => {
             {!!summary && (
               <li className="mt-3 flex flex-col gap-1">
                 <h4 className="text-[0.9rem]">✨ AI generated summary</h4>
-                <span className="text-[0.8rem]">{summary}</span>
+                <span className="text-sm">{summary}</span>
               </li>
             )}
           </ul>

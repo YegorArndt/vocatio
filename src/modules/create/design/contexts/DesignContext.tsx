@@ -1,6 +1,13 @@
-import React, { createContext, useContext, useState } from "react";
+import React, {
+  MutableRefObject,
+  createContext,
+  useContext,
+  useRef,
+  useState,
+} from "react";
 import { Design } from "../types";
 import { Charmander } from "../designs/Charmander";
+import { ImperativeHandleRef } from "../base-components/dnd/DndProvider";
 
 const { log } = console;
 
@@ -12,6 +19,8 @@ type DesignContextInput = {
 type DesignContextOutput = {
   a4Ref: DesignContextInput["a4Ref"];
   design: Design;
+  changeDesign: (newDesign: Design) => void;
+  imperative: MutableRefObject<ImperativeHandleRef | null>;
 };
 
 const Context = createContext({} as DesignContextOutput);
@@ -26,9 +35,20 @@ export const DesignContext = (props: DesignContextInput) => {
 
   const [design, setDesign] = useState<Design>(Charmander);
 
+  const imperative = useRef<ImperativeHandleRef | null>(null);
+
+  const changeDesign = (newDesign: Design) => {
+    if (!imperative.current) return;
+
+    setDesign(newDesign);
+    imperative.current.updateSections(() => newDesign.sections);
+  };
+
   const context = {
     a4Ref,
     design,
+    changeDesign,
+    imperative,
   };
 
   return (

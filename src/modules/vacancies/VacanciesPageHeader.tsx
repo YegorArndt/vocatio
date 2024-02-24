@@ -1,6 +1,6 @@
 import { FocusableItem, MenuDivider, MenuHeader } from "@szhsin/react-menu";
 import { get } from "lodash-es";
-import { HiOutlinePlusCircle } from "react-icons/hi2";
+import { HiOutlinePlusCircle, HiPlusCircle } from "react-icons/hi2";
 import { CustomMenu } from "~/components/ui/external/CustomMenu";
 import { CustomMenuButton } from "~/components/ui/external/CustomMenuButton";
 import { Button, ButtonProps } from "~/components/ui/buttons/Button";
@@ -15,13 +15,15 @@ import { SkeletonButtonStack } from "~/components/Spinner";
 import { Diamond } from "~/components/icons";
 import { typedKeys } from "../utils";
 
+const { log } = console;
+
 type Group = GroupedVacancies[keyof GroupedVacancies];
 
 const HEADER_BUTTON_CN =
-  "sm clr-card flex-y relative rounded-md last:-ml-2 hover:bg-hover whitespace-nowrap";
+  "sm clr-ghost font-medium flex-y relative rounded-md last:-ml-2 hover:main-hover hover:text-weiss common whitespace-nowrap";
 
 const HEADER_BUTTON_AFTER =
-  "after:absolute after:-bottom-2 after:left-0 after:h-[0.5px] after:w-full after:bg-white";
+  "after:absolute after:-bottom-2 after:left-0 after:h-[2px] after:w-full after:bg-weiss";
 
 const getSuggestedGroupNames = (gropedVacancies: GroupedVacancies) => {
   const alreadyExisting = typedKeys(gropedVacancies);
@@ -53,6 +55,7 @@ const GroupButton = (
       baseCn={HEADER_BUTTON_CN}
       className={cn({
         [HEADER_BUTTON_AFTER]: isActive,
+        "!text-weiss": isActive,
       })}
     />
   );
@@ -86,29 +89,31 @@ export const VacanciesPageHeader = () => {
   const suggestedGroupNames = getSuggestedGroupNames(groupedVacancies);
 
   return (
-    <header className="flex-between border-bottom sticky top-5 z-layout bg-primary pb-2 before:absolute before:-top-16 before:left-0 before:h-16 before:w-full before:bg-primary">
+    <header className="flex-between border-bottom sticky top-0 z-layout bg-primary py-2">
       <section className="flex-y gap-3">
         {loadingVacancies && <SkeletonButtonStack length={2} />}
-        {typedKeys(groupedVacancies).map((groupName) => (
-          <GroupButton
-            key={groupName}
-            group={groupedVacancies[groupName]!}
-            onClick={() => setCurrentGroup(groupName)}
-            isActive={groupName === currentGroup}
-            endIcon={
-              <span className="ml-1">
-                ({groupedVacancies[groupName]?.vacancies.length})
-              </span>
-            }
-          />
-        ))}
+        {typedKeys(groupedVacancies).map((groupName) => {
+          return (
+            <GroupButton
+              key={groupName}
+              group={groupedVacancies[groupName]!}
+              onClick={() => setCurrentGroup(groupName)}
+              isActive={groupName === currentGroup}
+              endIcon={
+                <span className="ml-1">
+                  ({groupedVacancies[groupName]?.vacancies.length})
+                </span>
+              }
+            />
+          );
+        })}
         {!loadingVacancies && (
           <CustomMenu
             gap={10}
             menuButton={
-              <CustomMenuButton className="flex-y sm gap-2 rounded-md hover:bg-hover">
-                <HiOutlinePlusCircle />
-                Add a new group
+              <CustomMenuButton className="flex-y sm clr-ghost hover:main-hover gap-2 rounded-md">
+                <HiPlusCircle size={17} />
+                New group
               </CustomMenuButton>
             }
           >
@@ -132,7 +137,7 @@ export const VacanciesPageHeader = () => {
                   <Text
                     name="newGroup"
                     control={control}
-                    className="outlined !border-none [&>*]:text-black"
+                    className="outlined !border-none"
                     placeholder="Type a new group name"
                   />
                   <Button

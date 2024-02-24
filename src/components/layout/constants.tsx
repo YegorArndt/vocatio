@@ -1,9 +1,13 @@
 import { IoSettingsOutline } from "react-icons/io5";
-import { TfiLayoutGrid4 } from "react-icons/tfi";
 import { NavigationLink } from "../NavigationLink";
+import { MdDashboardCustomize } from "react-icons/md";
 
 export const mainNav = [
-  { text: "My vacancies", to: "/vacancies", frontIcon: <TfiLayoutGrid4 /> },
+  {
+    text: "My vacancies",
+    to: "/vacancies",
+    frontIcon: <MdDashboardCustomize />,
+  },
   {
     text: "Settings",
     to: "/settings/me",
@@ -13,8 +17,8 @@ export const mainNav = [
 ].map((props) => (
   <NavigationLink
     key={props.text}
-    baseCn="common hover flex-y gap-2"
-    activeCn="bg-hover"
+    baseCn="common hover:main-hover flex-y gap-2"
+    activeCn="main-hover"
     {...props}
   />
 ));

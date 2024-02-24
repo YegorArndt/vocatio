@@ -119,7 +119,7 @@ export const AddBulletPointsPopover = () => {
                         frontIcon={<BsPlusCircleDotted />}
                         text={bullet.replace("•", "")}
                         onClick={() => addBullet(bullet)}
-                        className="clr-ghost flex-y gap-3 bg-card p-3 text-left !text-white hover:bg-primary"
+                        className="clr-ghost flex-y gap-3 bg-card p-3 text-left !text-weiss hover:bg-primary"
                       />
                     ))}
                   </CarouselItem>

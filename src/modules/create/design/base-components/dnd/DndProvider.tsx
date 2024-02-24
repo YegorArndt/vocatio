@@ -53,10 +53,10 @@ import { SkillsToolbar } from "../toolbars/skills/SkillsToolbar";
 import { ExperienceToolbar } from "../toolbars/experience/ExperienceToolbar";
 import { ExperienceEntryToolbar } from "../toolbars/experience/ExperienceEntryToolbar";
 import { CrudContext, addComponent, removeComponent } from "./crud";
-import { Entry } from "../Entry";
-import { useGeneratedData } from "~/hooks/useGeneratedData";
+import { ExperienceEntry } from "../ExperienceEntry";
 import { typedKeys } from "~/modules/utils";
 import { ContactToolbar } from "../toolbars/ContactToolbar";
+import { Entry } from "../Entry";
 
 const { log } = console;
 
@@ -78,6 +78,7 @@ type Component =
   | typeof Heading
   | typeof Skills
   | typeof Experience
+  | typeof ExperienceEntry
   | typeof Entry
   | typeof Languages
   | typeof Education
@@ -108,7 +109,16 @@ const mapping: Mapping = [
   },
   { keys: ["skills"], Component: Skills, Toolbar: SkillsToolbar },
   { keys: ["experience"], Component: Experience, Toolbar: ExperienceToolbar },
-  { keys: ["entry"], Component: Entry, Toolbar: ExperienceEntryToolbar },
+  {
+    keys: ["experience-entry"],
+    Component: ExperienceEntry,
+    Toolbar: ExperienceEntryToolbar,
+  },
+  {
+    keys: ["entry"],
+    Component: Entry,
+    Toolbar,
+  },
   { keys: ["languages"], Component: Languages, Toolbar },
   { keys: ["education"], Component: Education, Toolbar },
   {
@@ -208,8 +218,6 @@ export const DndProvider = forwardRef((props: DndProviderProps, ref) => {
   const { sections: initialSections, ...rest } = props;
   const [sections, setSections] = useState(initialSections);
   const [activeId, setActiveId] = useState<null | string>(null);
-
-  const { generated } = useGeneratedData();
 
   useImperativeHandle(ref, () => ({
     updateSections: (fn: (prev: Sections) => Sections) => {

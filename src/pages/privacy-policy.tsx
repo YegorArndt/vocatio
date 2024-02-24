@@ -6,7 +6,7 @@ const PrivacyPolicy = () => {
       <Head>
         <title>Privacy Policy - Vocatio</title>
       </Head>
-      <main className="container mx-auto my-6 rounded-md bg-white p-6 shadow-xl clr-secondary">
+      <main className="container mx-auto my-6 rounded-md bg-weiss p-6 shadow-xl clr-secondary">
         <h1 className="text-gray-900 text-xl font-semibold">
           Privacy Policy - Vocatio
         </h1>

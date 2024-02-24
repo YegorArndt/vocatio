@@ -1,6 +1,14 @@
-import { assign, isNil } from "lodash-es";
+import { assign, get, isNil } from "lodash-es";
 import { v4 } from "uuid";
 import { DefaultModel } from "@prisma/client";
+
+import { DesignFont, fonts } from "./create/design/types";
+import { RouterUser } from "./types";
+
+export const getFont = (font: DesignFont) => {
+  const { font: f } = fonts[font];
+  return get(f, "className", f);
+};
 
 export const separateEntries = (obj: Record<string, unknown>) => {
   const definedEntries = {};
@@ -32,6 +40,10 @@ export const typedEntries = <T extends object>(
   return Object.entries(obj) as [keyof T, T[keyof T]][];
 };
 
+export const typedValues = <T extends object>(obj: T): T[keyof T][] => {
+  return Object.values(obj) as T[keyof T][];
+};
+
 type AiModels = Record<
   DefaultModel,
   { imageSrc: string; badge: string; name: string }
@@ -57,3 +69,12 @@ export const getModelUi = (
 };
 
 export const uuidv4 = () => v4();
+
+/**
+ * @description Splits the user's experience description into an array of strings (bullet points).
+ */
+export const splitDescription = (user: RouterUser) =>
+  user.experience.map((entry) => ({
+    ...entry,
+    description: entry.description.split("•"),
+  }));

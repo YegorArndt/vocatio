@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 
 import { getLsGeneratedData, setLsGeneratedData } from "~/utils/ls";
 import type { GeneratedData } from "~/modules/init-gen/types";
-import { GENERATED_DATA_UPDATED } from "~/modules/events";
+import { Events, eventManager } from "~/modules/EventManager";
 
 const { log } = console;
 
@@ -23,19 +23,17 @@ export const useGeneratedData = () => {
     setGenerated(gen);
     setLsGeneratedData(gen);
 
-    document.dispatchEvent(
-      new CustomEvent(GENERATED_DATA_UPDATED, { detail: gen })
-    );
+    eventManager.emit(Events.GENERATED_DATA_UPDATED, gen);
   };
 
   useEffect(() => {
-    document.addEventListener(GENERATED_DATA_UPDATED, (e) => {
-      setGenerated((e as CustomEvent<GeneratedData>).detail);
+    eventManager.on<GeneratedData>(Events.GENERATED_DATA_UPDATED, (e) => {
+      setGenerated(e.detail);
     });
 
     return () => {
-      document.removeEventListener(GENERATED_DATA_UPDATED, (e) => {
-        setGenerated((e as CustomEvent<GeneratedData>).detail);
+      eventManager.off<GeneratedData>(Events.GENERATED_DATA_UPDATED, (e) => {
+        setGenerated(e.detail);
       });
     };
   }, []);

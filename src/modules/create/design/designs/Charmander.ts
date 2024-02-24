@@ -45,7 +45,7 @@ export const Charmander: Design = {
   a4ClassName: `grid-cols-[1fr_250px] bg-[#fff] text-[#000] tracking-tight`,
   image: "charmander.png",
   pokemonImage: "charmander-pokemon.png",
-  font: "Arial",
+  font: "rubik",
   background: "white",
 
   baseComponents: {
@@ -66,7 +66,8 @@ export const Charmander: Design = {
         "flex flex-wrap w-full gap-2 [&>*]:bg-[#3A5068] [&>*]:p-1 [&>*]:rounded-md",
     },
     experience: {
-      className: "flex flex-col gap-4",
+      className:
+        "flex flex-col gap-4 text-[#384347] [&_*.title-container]:!grid-cols-2 [&_*.title-label]:text-[17px] [&_*.title-label]:leading-7 [&_*.title-value]:text-right [&_*.place-container]:!grid-cols-[40px_1fr] [&_*.place-container]:gap-[10px] [&_*.place-value]:text-[17px] [&_*.place-value]:leading-7 [&_*.place-value]:text-[#008cff] [&_*.place-image]:w-[40px] [&_*.place-image]:h-[40px] [&_*.place-image]:rounded-full [&_*.bullet]:text-[13px] [&_*.bullet]:leading-5 [&_*.bullet]:my-1",
     },
     languages: {
       className: "flex flex-col gap-1 text-[13px]",
@@ -126,9 +127,9 @@ export const Charmander: Design = {
               hydratedProps: {
                 label: entry.title,
                 value: entry.period,
-
-                labelProps: { className: `${expHeading}` },
-                containerClassName: "!grid-cols-2 text-[#384347]",
+                labelProps: { className: "title-label" },
+                valueProps: { className: "title-value" },
+                containerClassName: "title-container",
               },
             },
             {
@@ -138,10 +139,11 @@ export const Charmander: Design = {
               hydratedProps: {
                 image: entry.image,
                 value: entry.place,
-                valueProps: { className: `${expHeading} text-[#008cff]` },
-                imageProps: { className: "w-[40px] h-[40px] rounded-full" },
 
-                containerClassName: "grid-cols-[40px_1fr] gap-[10px]",
+                labelProps: { className: "place-label" },
+                valueProps: { className: "place-value" },
+                imageProps: { className: "place-image" },
+                containerClassName: "place-container",
               },
             },
             /**
@@ -156,9 +158,8 @@ export const Charmander: Design = {
                   bulletPoint,
                   entry.skills.join(" ")
                 ).replace("•", ""),
-                valueProps: {
-                  className: `text-[#384347] text-[13px] my-1 ${textLeading}`,
-                },
+
+                valueProps: { className: "bullet" },
               },
             })),
           ],
@@ -200,7 +201,8 @@ export const Charmander: Design = {
                 image: entry.image,
                 value: entry.place,
 
-                containerClassName: "grid-cols-[40px_1fr] gap-[10px] py-[5px]",
+                containerClassName:
+                  "grid-cols-[40px_1fr] gap-[10px] py-[5px] pplace",
                 imageProps: {
                   height: 40,
                   width: 40,
@@ -215,7 +217,9 @@ export const Charmander: Design = {
               type: "text",
               hydratedProps: {
                 value: entry.title,
-                valueProps: { className: "text-[13px] border-top py-[3px]" },
+                valueProps: {
+                  className: "text-[13px] border-top py-[3px] ttitle",
+                },
               },
             },
             {
@@ -224,7 +228,9 @@ export const Charmander: Design = {
               type: "text",
               hydratedProps: {
                 value: entry.period,
-                valueProps: { className: "text-[13px] border-top pt-[3px]" },
+                valueProps: {
+                  className: "text-[13px] border-top pt-[3px] pperiod",
+                },
               },
             },
           ],

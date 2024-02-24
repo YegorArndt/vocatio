@@ -25,6 +25,7 @@ export type AddBulletPoint = {
   bullet: string;
   entry: GeneratedExperienceEntry;
 };
+export type ExperienceEntryAddedDetail = GeneratedExperienceEntry;
 
 /**
  * General.
@@ -47,14 +48,19 @@ export enum Events {
    * Experience.
    */
   EXPERIENCE_GENERATED_EVENT = "experience-generated",
-  EXPERIENCE_ENTRY_ADDED_BY_USER_EVENT = "experience-entry-added-by-user",
   ADD_BULLET_TO_ENTRY_EVENT = "add-bullet-to-entry",
+  EXPERIENCE_ENTRY_ADDED_BY_USER_EVENT = "experience-entry-added-by-user",
   /**
    * General.
    */
   GENERATED_DATA_UPDATED = "generated-data-updated",
   COMPONENT_REMOVED_EVENT = "component-removed",
   COMPONENT_ADDED_EVENT = "component-added",
+
+  /**
+   * Download.
+   */
+  DOWNLOAD_CV_EVENT = "download-cv-event",
 }
 
 export type EventHandler<T> = (event: CustomEvent<T>) => void;

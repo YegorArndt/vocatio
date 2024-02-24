@@ -7,8 +7,8 @@ import { api } from "~/utils";
 import { Layout } from "~/components/layout/Layout";
 import { Spinner } from "~/components";
 import { useLs } from "~/hooks/useLs";
-import { ImportWithLinkedInPopover } from "~/modules/settings/my-info/ImportWithLinkedInPopover";
-import { UploadCvPopover } from "~/modules/settings/my-info/UploadCvPopover";
+import { ImportWithLinkedInPopover } from "~/modules/settings/me/ImportWithLinkedInPopover";
+import { UploadCvPopover } from "~/modules/settings/me/UploadCvPopover";
 import { Button } from "~/components/ui/buttons/Button";
 
 const settings = () => {

@@ -27,28 +27,33 @@ export const ContactToolbar = (props: ToolbarProps) => {
     props;
 
   return (
-    <li ref={dndRef} data-tooltip-id="skills" className={className} {...rest}>
+    <li ref={dndRef} data-tooltip-id="contact" className={className} {...rest}>
       {children}
       <Tooltip
-        id="skills"
+        id="contact"
         globalCloseEvents={{ clickOutsideAnchor: true }}
         className="z-tooltip -translate-y-[50px] transform !p-0"
         clickable
+        positionStrategy="fixed"
         openOnClick
-        place="top"
         delayShow={400}
         delayHide={200}
         data-html2canvas-ignore
         render={() => {
           return (
-            <div className="flex-center gap-1" data-html2canvas-ignore>
-              <TooltipProvider>
-                <PageBreakButton />
-                <MoveComponentButton
-                  listeners={listeners}
-                  attributes={attributes}
-                />
-              </TooltipProvider>
+            <div data-html2canvas-ignore>
+              <header className="flex-y border-bottom gap-2 p-2 text-lg">
+                Contact section
+              </header>
+              <section className="flex-center gap-1">
+                <TooltipProvider>
+                  <PageBreakButton />
+                  <MoveComponentButton
+                    listeners={listeners}
+                    attributes={attributes}
+                  />
+                </TooltipProvider>
+              </section>
             </div>
           );
         }}

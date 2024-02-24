@@ -154,10 +154,7 @@ export const Skills = () => {
     if (lsSkills) setter(lsSkills);
   }, [vacancyId]);
 
-  const className = cn(
-    design.baseComponents?.skills?.className,
-    "skills-section"
-  );
+  const className = cn(design.baseComponents?.skills?.className);
 
   return <DndProvider ref={imperative} sections={{}} className={className} />;
 };

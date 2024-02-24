@@ -84,7 +84,7 @@ export const TextEditor = (props: TextEditorProps) => {
         contentEditable
         suppressContentEditableWarning
         data-placeholder={`Dear hiring team at ${vacancy.companyName},`}
-        className="mx-auto w-[793px] whitespace-pre-wrap rounded-md bg-white p-5 clr-black"
+        className="mx-auto w-[793px] whitespace-pre-wrap rounded-md bg-weiss p-5 clr-black"
       />
     </section>
   );

@@ -114,7 +114,7 @@ export const VacancyCardHeader = (props: { vacancy: Vacancy }) => {
   const menu = (
     <CustomMenu
       menuButton={
-        <CustomMenuButton className="shrink-0 rounded-full px-1">
+        <CustomMenuButton className="shrink-0 rounded-full px-2">
           <BsThreeDots />
         </CustomMenuButton>
       }

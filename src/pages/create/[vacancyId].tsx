@@ -1,7 +1,6 @@
 import Head from "next/head";
-import { Rubik } from "next/font/google";
-import { useState, useRef, useEffect } from "react";
 import cn from "classnames";
+import { RiDeleteBin6Line } from "react-icons/ri";
 
 import { DndProvider } from "~/modules/create/design/base-components/dnd/DndProvider";
 import { PageBreak } from "~/modules/create/PageBreak";
@@ -14,14 +13,15 @@ import {
   ResizablePanelGroup,
 } from "~/components/ui/external/Resizable";
 import { Button } from "~/components/ui/buttons/Button";
-import { RiDeleteBin6Line } from "react-icons/ri";
 import { Badge } from "~/components/ui/external/Badge";
 import { LeftPanel } from "~/modules/create/left-panel/LeftPanel";
 import { DesignViewer } from "~/modules/create/DesignViewer";
+import { getFont } from "~/modules/utils";
+import { useA4 } from "~/hooks/useA4";
+import { BlurImage } from "~/components";
+import { FileName } from "~/modules/create/FileName";
 
 const { log } = console;
-
-const rubik = Rubik({ subsets: ["latin"] });
 
 const CvEditor = () => {
   const { generated } = useGeneratedData();
@@ -42,7 +42,6 @@ const CvEditor = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       {generated && (
-        // @ts-ignore
         <DesignContext a4Ref={a4Ref}>
           {(context) => (
             <ResizablePanelGroup direction="horizontal">
@@ -52,20 +51,24 @@ const CvEditor = () => {
               </ResizablePanel>
 
               {/* A4  */}
-              <div className="my-16">
+              <section>
+                <FileName />
                 <div
                   ref={a4Ref}
                   className={cn(
                     "a4 main-center",
                     context.design.a4ClassName,
-                    rubik.className
+                    getFont(context.design.font)
                   )}
                   style={{
                     height: A4_HEIGHT * pages,
                     width: A4_WIDTH,
                   }}
                 >
-                  <DndProvider sections={context.design.sections} />
+                  <DndProvider
+                    ref={context.imperative}
+                    sections={context.design.sections}
+                  />
                 </div>
 
                 {pages > 1 && (
@@ -79,17 +82,23 @@ const CvEditor = () => {
                     />
                   </div>
                 )}
-              </div>
+              </section>
 
               {/* Design Viewer */}
-              <ResizableHandle className="z-layout mx-[50px]">
+              <ResizableHandle className="z-layout mx-[50px] hover:bg-weiss">
                 <div className="flex-evenly h-full flex-col">
                   {Array.from({ length: pages }).map((_, i) => (
                     <Badge key={i}>Resize</Badge>
                   ))}
                 </div>
               </ResizableHandle>
-              <ResizablePanel defaultSize={10} className="z-layout mr-3 pt-16">
+
+              <ResizablePanel defaultSize={10} className="z-layout mr-3">
+                <header className="flex-y h-20 justify-end gap-3">
+                  Applying for
+                  <BlurImage src={generated?.vacancy.image} rounded />
+                  {generated?.vacancy.companyName}
+                </header>
                 <DesignViewer />
               </ResizablePanel>
             </ResizablePanelGroup>
@@ -110,42 +119,3 @@ const CvEditor = () => {
 };
 
 export default CvEditor;
-
-const useA4 = () => {
-  const [pages, setPages] = useState(1);
-  const a4Ref = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    // Function to calculate and set pages
-    const calculatePages = () => {
-      if (a4Ref.current) {
-        const pageCount = Math.ceil(a4Ref.current.scrollHeight / A4_HEIGHT);
-        setPages(pageCount);
-      }
-    };
-
-    let observer: MutationObserver;
-
-    // Delay setup of MutationObserver by 5 seconds
-    const timer = setTimeout(() => {
-      if (a4Ref.current) {
-        observer = new MutationObserver(calculatePages);
-
-        observer.observe(a4Ref.current, { childList: true, subtree: true });
-
-        // Initial calculation
-        calculatePages();
-      }
-    }, 5000);
-
-    // Cleanup function
-    return () => {
-      clearTimeout(timer);
-      if (observer) {
-        observer.disconnect();
-      }
-    };
-  }, []); // Empty dependencies array ensures this runs once after initial render
-
-  return { a4Ref, pages, setPages };
-};

@@ -46,6 +46,17 @@ export class LocalStorageManager {
     );
   }
 
+  test() {
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+
+      if (key?.includes(`${Items.EXPERIENCE_ENTRY}-${this.vacancyId}`)) {
+        // Delete it
+        localStorage.removeItem(key);
+      }
+    }
+  }
+
   removeItem(item: Items): void {
     localStorage.removeItem(`${item}-${this.vacancyId}`);
   }

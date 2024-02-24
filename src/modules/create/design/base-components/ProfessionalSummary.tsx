@@ -1,9 +1,9 @@
-import { GENERATED_DATA_UPDATED } from "~/modules/events";
 import { useComponentContext } from "../contexts/ComponentContext";
 import { useDesignContext } from "../contexts/DesignContext";
 import { Autoresize } from "./Autoresize";
 import { useEffect, useState } from "react";
 import { useGeneratedData } from "~/hooks/useGeneratedData";
+import { Events, eventManager } from "~/modules/EventManager";
 
 const { log } = console;
 
@@ -34,10 +34,16 @@ export const ProfessionalSummary = () => {
       setSummary(generatedProfessionalSummary);
     };
 
-    document.addEventListener(GENERATED_DATA_UPDATED, onSummaryGenerated);
+    eventManager.on<SummaryGeneratedEvent>(
+      Events.GENERATED_DATA_UPDATED,
+      onSummaryGenerated
+    );
 
     return () => {
-      document.removeEventListener(GENERATED_DATA_UPDATED, onSummaryGenerated);
+      eventManager.off<SummaryGeneratedEvent>(
+        Events.GENERATED_DATA_UPDATED,
+        onSummaryGenerated
+      );
     };
   }, []);
 

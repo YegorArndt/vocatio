@@ -1,1 +1,1 @@
-export const NAV_BUTTON_CN = "flex-y common hover flex-y";
+export const NAV_BUTTON_CN = "primary !justify-start sm";

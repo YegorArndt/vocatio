@@ -5,6 +5,7 @@ import cn from "classnames";
 export type BlurImageProps = {
   imageClassName?: string;
   fallback?: ReactNode;
+  rounded?: boolean;
 } & Omit<ImageProps, "alt" | "src"> & {
     alt?: string;
     src: string | undefined | null;
@@ -18,6 +19,7 @@ export const BlurImage = (props: BlurImageProps) => {
     alt = "",
     src,
     fallback,
+    rounded,
     ...rest
   } = props;
   const [isLoading, setIsLoading] = useState(true);
@@ -34,7 +36,10 @@ export const BlurImage = (props: BlurImageProps) => {
           "duration-700 ease-in-out group-hover:opacity-75 [&>img]:inline-block",
           isLoading
             ? "scale-110 blur-2xl grayscale"
-            : "scale-100 blur-0 grayscale-0"
+            : "scale-100 blur-0 grayscale-0",
+          {
+            "rounded-full": rounded,
+          }
         )}
         alt={alt}
         {...rest}

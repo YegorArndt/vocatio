@@ -21,7 +21,7 @@ export const EnhanceExperienceDrawer = () => {
   return (
     <Drawer>
       <DrawerTrigger
-        className="primary ml-5 gap-2 whitespace-nowrap px-2 py-1 text-sm"
+        className="flex-y ml-5 gap-2 whitespace-nowrap rounded-md bg-blue px-2 py-1 text-sm text-white"
         disabled={!!!user?.experience.length}
       >
         <Gpt /> Enhance with AI

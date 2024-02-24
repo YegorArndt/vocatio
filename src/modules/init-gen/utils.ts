@@ -1,4 +1,8 @@
-import { getLsGeneratedData, setLsGeneratedData } from "~/utils/ls";
+import {
+  getLsGeneratedData,
+  getPersistedState,
+  setLsGeneratedData,
+} from "~/utils/ls";
 import { buildExperiencePrompt, buildSkillsPrompt } from "./prompts";
 import { applyGpt } from "~/server/api/utils/ai";
 import { parseExperience, parseSkills } from "./parsers";
@@ -11,6 +15,7 @@ import {
   SkillsUpdatedDetail,
   eventManager,
 } from "../EventManager";
+import { createFileName } from "../create/FileName";
 
 const { log } = console;
 
@@ -97,6 +102,28 @@ type InitDraftProps = {
   onComplete: (x: GeneratedData) => void;
 };
 
+const customSnakeCase = (s?: string | null) =>
+  s ? s.replace(/\s+/g, "_") : "";
+
+const generateFileName = (
+  user: RouterUser,
+  vacancy: PartialVacancy
+): string => {
+  // Ensure that each part of the file name is defined and formatted
+  const namePart = customSnakeCase(user.name) || "Unknown_Name";
+  const jobTitlePart = customSnakeCase(vacancy.jobTitle || user.jobTitle);
+  const companyPart = vacancy.companyName
+    ? `For_${customSnakeCase(vacancy.companyName)}`
+    : "";
+
+  // Build the file name
+  const fileNameParts = [namePart, jobTitlePart, "CV", companyPart].filter(
+    Boolean
+  );
+
+  return `${fileNameParts.join("_")}.pdf`;
+};
+
 export const initDraft = async (props: InitDraftProps) => {
   const { vacancy, user, handleExistingDraft, onComplete } = props;
 
@@ -104,6 +131,13 @@ export const initDraft = async (props: InitDraftProps) => {
     handleExistingDraft?.();
     return;
   }
+  const settings = getPersistedState();
+
+  const fileName = createFileName({
+    ...settings.fileNameConfig,
+    user,
+    vacancy,
+  });
 
   const newGen: GeneratedData = {
     generatedExperience: [],
@@ -112,6 +146,7 @@ export const initDraft = async (props: InitDraftProps) => {
     vacancy,
     vacancyResponsibilities: [],
     vacancySkills: [],
+    fileName,
     ...user,
   };
 
@@ -123,7 +158,7 @@ export const initDraft = async (props: InitDraftProps) => {
 
 const genData = async (gen: GeneratedData, user: RouterUser) => {
   const { vacancy } = gen;
-  toast.loading("Writing CV...", { duration: Infinity });
+  toast.loading("Tailoring your CV...", { duration: Infinity });
 
   try {
     /**
@@ -133,8 +168,6 @@ const genData = async (gen: GeneratedData, user: RouterUser) => {
       generateSkills(vacancy, user),
       generateExperience(vacancy, user),
     ]);
-
-    log(experienceContext);
 
     const generatedExperience = processExperience(
       experienceContext,

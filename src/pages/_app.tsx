@@ -1,50 +1,17 @@
-import { useState, useEffect } from "react";
 import { type AppType } from "next/app";
 import Head from "next/head";
 import { ClerkProvider } from "@clerk/nextjs";
 
-import { Inter } from "next/font/google";
-
-import "@szhsin/react-menu/dist/index.css";
+import "~/styles/react-menu.css";
 import "@szhsin/react-menu/dist/transitions/slide.css";
 
 import "~/styles/globals.css";
 import { api } from "~/utils";
 import { Toaster } from "~/components/ui/external/Sonner";
-
-const inter = Inter({ subsets: ["latin"] });
-
-type Theme = "light" | "d";
-
-const useTheme = () => {
-  const [theme, setTheme] = useState<Theme>("d");
-
-  /**
-   * Get theme from local storage
-   */
-  useEffect(() => {
-    const theme = localStorage.getItem("theme") as Theme;
-    if (theme) setTheme(theme);
-  }, []);
-
-  /**
-   * Set theme on local storage
-   */
-  useEffect(() => {
-    localStorage.setItem("theme", theme);
-    /**
-     * Set it on body
-     */
-    const body = document.body;
-    body.dataset.theme = theme;
-    body.classList.add(inter.className);
-  }, [theme]);
-
-  return [theme, setTheme] as const;
-};
+import { useInitTheme } from "~/hooks/useInitTheme";
 
 const MyApp: AppType = ({ Component, pageProps }) => {
-  const [theme, setTheme] = useTheme();
+  useInitTheme();
 
   return (
     <ClerkProvider {...pageProps}>

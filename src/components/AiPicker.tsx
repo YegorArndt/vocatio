@@ -48,7 +48,7 @@ export const AiPicker = (props: AiPickerProps) => {
                       onClick={() => {
                         toast.info("Upgrade to premium to use gpt-4");
                       }}
-                      className="flex-y cursor-pointer gap-2 hover:bg-hover"
+                      className="flex-y hover:main-hover cursor-pointer gap-2"
                     >
                       <BlurImage
                         src={value.imageSrc}
@@ -65,7 +65,7 @@ export const AiPicker = (props: AiPickerProps) => {
             ) : (
               <MenubarItem
                 key={key}
-                className="flex-y cursor-pointer gap-2 hover:bg-hover"
+                className="flex-y hover:main-hover cursor-pointer gap-2"
                 onClick={() => {
                   onModelChange(key);
                 }}

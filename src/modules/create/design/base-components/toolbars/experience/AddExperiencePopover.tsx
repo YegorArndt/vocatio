@@ -11,7 +11,7 @@ import { Button } from "~/components/ui/buttons/Button";
 import { BiPlus } from "react-icons/bi";
 import { AiPicker } from "~/components/AiPicker";
 import { GeneratedExperienceEntry } from "~/modules/init-gen/types";
-import { EXPERIENCE_ENTRY_ADDED_BY_USER_EVENT } from "~/modules/events";
+import { Events, eventManager } from "~/modules/EventManager";
 
 const { log } = console;
 
@@ -35,10 +35,9 @@ export const AddExperiencePopover = () => {
       ...generated.generatedExperience,
     ];
 
-    document.dispatchEvent(
-      new CustomEvent(EXPERIENCE_ENTRY_ADDED_BY_USER_EVENT, {
-        detail: newExperience,
-      })
+    eventManager.emit(
+      Events.EXPERIENCE_ENTRY_ADDED_BY_USER_EVENT,
+      newExperience
     );
   };
 

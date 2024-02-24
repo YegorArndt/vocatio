@@ -19,6 +19,7 @@ import {
   LocalStorageManager,
   LsSkills,
 } from "~/modules/LocalStorageManager";
+import { Badge } from "~/components/ui/external/Badge";
 
 const { log } = console;
 
@@ -89,9 +90,17 @@ export const AddSkillsPopover = () => {
                   key={tab}
                   text={tab}
                   onClick={() => setActiveTab(i as ActiveTab)}
-                  className={cn("hover:bg-gray-100 p-2 text-lg", {
-                    "border-bottom": i === activeTab,
-                  })}
+                  className={cn(
+                    "hover:main-hover flex-center gap-3 p-2 text-lg",
+                    {
+                      "main-hover border-bottom": i === activeTab,
+                    }
+                  )}
+                  endIcon={
+                    <Badge className="rounded-md bg-red">
+                      {skills[i as ActiveTab].length}
+                    </Badge>
+                  }
                 />
               ))}
             </header>

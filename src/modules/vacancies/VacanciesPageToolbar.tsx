@@ -27,8 +27,7 @@ export const VacanciesPageToolbar = () => {
         }
         trigger={
           <DrawerTrigger
-            role="button"
-            className="common hover flex-y gap-3"
+            className="common hover:main-hover flex-y gap-3"
             disabled
           >
             <HiPlusCircle size={17} />

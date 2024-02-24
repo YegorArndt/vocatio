@@ -121,9 +121,9 @@
 //           <Fragment>
 //             <div
 //               id={`ball-${c.id}`}
-//               className="absolute left-0 top-2 z-10 h-3 w-3 rounded-full border-2 border-solid !border-black bg-white"
+//               className="absolute left-0 top-2 z-10 h-3 w-3 rounded-full border-2 border-solid !border-black bg-weiss"
 //             />
-//             <div className="absolute left-[.36rem] top-2 h-full w-[0.5px] bg-black" />
+//             <div className="absolute left-[.36rem] top-2 h-full w-[0.5px] bg-schwarz" />
 //           </Fragment>
 //         )}
 //         {children}

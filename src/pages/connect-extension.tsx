@@ -68,7 +68,7 @@ const ConnectExtensionPage = () => {
             <Link
               text="View dashboard"
               to="/vacancies"
-              className="flex-y sm rounded-md tracking-wide hover:bg-hover"
+              className="flex-y sm hover:main-hover rounded-md tracking-wide"
               endIcon={<MdArrowRightAlt size={20} />}
             />
           </AnimatedDiv>

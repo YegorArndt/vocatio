@@ -6,6 +6,7 @@ import { ExperienceEntry, EducationEntry, ContactEntry } from "@prisma/client";
 import { GeneratedData } from "~/modules/init-gen/types";
 import { iconsMap } from "~/modules/icons-map";
 import { isUrlPermissive } from "../utils";
+import { RouterUser } from "~/modules/types";
 
 const { log } = console;
 
@@ -227,7 +228,7 @@ export const experience = (
         experience: {
           components:
             experience.map((entry, _, arr) => ({
-              type: "entry",
+              type: "experience-entry",
               id: entry.id,
               sectionId: "experience",
               hydratableProps: (generatedEntry) => {
@@ -255,19 +256,22 @@ export const education = (
     sectionId: SectionName;
     groupItemProps: Partial<GroupProps>;
     components: (x: EducationEntry) => HydratableComponent[];
+    className?: string;
   }>
 ) => {
-  const { type, sectionId, groupItemProps, components } = props || {};
+  const { type, sectionId, groupItemProps, components, className } =
+    props || {};
 
   return {
     type: "education",
     id: "education",
     sectionId: sectionId || "left",
-    hydratableProps: (draft: GeneratedData) => ({
+    hydratableProps: (user: RouterUser) => ({
       sections: {
         education: {
+          className,
           components:
-            draft.education?.map((entry) => ({
+            user.education?.map((entry) => ({
               type: "entry",
               id: entry.id,
               sectionId: "education",

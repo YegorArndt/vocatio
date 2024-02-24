@@ -1,15 +1,39 @@
 import { toast } from "sonner";
+import { Theme } from "~/hooks/useTheme";
 import { Events, eventManager } from "~/modules/EventManager";
 import { GeneratedData } from "~/modules/init-gen/types";
-import { Models } from "~/modules/types";
+
+export const fileNameSeparators = ["_", "-", " "] as const;
+
+export type FileNameConfig = {
+  myName: boolean;
+  myJobTitle: boolean;
+  vacancyJobTitle: boolean;
+  companyName: boolean;
+  date: boolean;
+  separator: (typeof fileNameSeparators)[number];
+};
+
+const initialFileNameConfig: FileNameConfig = {
+  myName: true,
+  myJobTitle: false,
+  vacancyJobTitle: true,
+  companyName: true,
+  date: true,
+  separator: "_",
+};
 
 export type PersistentData = {
   shouldAutoApplied: boolean | null;
   hasConnectedExtension: boolean | null;
   hasShownCongratsMessage: boolean | null;
-  defaultModel: Models;
   modifiableItems: string[];
   hasHydrated: boolean | null;
+  enableDefaultIcon: boolean | null;
+  theme: Theme;
+  isLoaded: boolean;
+  spellCheck: boolean | null;
+  fileNameConfig: FileNameConfig;
 };
 
 export const LS_KEY = "vocatio-settings";
@@ -19,9 +43,13 @@ export const initialPersistedState: PersistentData = {
   hasConnectedExtension: null,
   hasShownCongratsMessage: null,
   shouldAutoApplied: null,
-  defaultModel: "gpt-3.5",
   modifiableItems: [],
   hasHydrated: null,
+  enableDefaultIcon: null,
+  theme: "dark",
+  isLoaded: true,
+  spellCheck: null,
+  fileNameConfig: initialFileNameConfig,
 };
 
 export const getPersistedState = (): PersistentData => {

@@ -1,6 +1,6 @@
 import { useComponentContext } from "../contexts/ComponentContext";
 import { useDesignContext } from "../contexts/DesignContext";
-import { api, cn } from "~/utils";
+import { api } from "~/utils";
 import { Autoresize } from "./Autoresize";
 
 const { log } = console;
@@ -13,7 +13,13 @@ export const UserName = () => {
   const { design } = useDesignContext();
   const c = useComponentContext();
 
-  if (!user) return <div className={cn("skeleton", USER_NAME_CN)} />;
+  if (!user)
+    return (
+      <div className="flex-y gap-3">
+        <div className="light-skeleton h-[40px] w-[150px] rounded-md" />
+        <div className="light-skeleton h-[40px] w-[150px] rounded-md" />
+      </div>
+    );
 
   const userNameProps = {
     className: design.baseComponents?.userName?.className ?? USER_NAME_CN,

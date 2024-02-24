@@ -147,7 +147,7 @@ export const BoxFactory = (props: BoxFactoryProps) => {
               <AccordionItem value="item-1">
                 <AccordionTrigger
                   id={boxName}
-                  className="group grid w-full grid-cols-[1fr,20px] gap-5 p-6 text-lg hover:bg-hover"
+                  className="hover:main-hover group grid w-full grid-cols-[1fr,20px] gap-5 p-6 text-lg"
                 >
                   <span
                     className={cn("flex w-full", {

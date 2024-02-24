@@ -18,7 +18,7 @@ import {
   FaFigma,
 } from "react-icons/fa";
 import { IoIosLink, IoIosStarOutline, IoLogoJavascript } from "react-icons/io";
-import { IoColorPaletteOutline } from "react-icons/io5";
+import { IoColorPaletteOutline, IoLogoFirebase } from "react-icons/io5";
 import { LiaMoneyCheckSolid } from "react-icons/lia";
 import {
   SiTypescript,
@@ -42,6 +42,8 @@ import {
   SiMocha,
   SiStyledcomponents,
   SiVercel,
+  SiApachekafka,
+  SiMongodb,
 } from "react-icons/si";
 import { TbApi, TbBrandCypress, TbBrandVite, TbSql } from "react-icons/tb";
 import {
@@ -61,7 +63,7 @@ import {
   Location,
 } from "~/components/icons";
 import { VscJson } from "react-icons/vsc";
-import { DiMysql } from "react-icons/di";
+import { DiJqueryLogo, DiMysql } from "react-icons/di";
 import { DiPostgresql } from "react-icons/di";
 import { DiScrum } from "react-icons/di";
 import { GrGraphQl } from "react-icons/gr";
@@ -90,13 +92,25 @@ export const iconsMap = [
   { exact: ["bird"], icon: Bird },
   { exact: ["check"], icon: LiaMoneyCheckSolid },
   { exact: ["star"], icon: IoIosStarOutline },
-  { partial: ["javascript"], exact: ["js"], icon: IoLogoJavascript },
+  { partial: ["jquery"], icon: DiJqueryLogo },
+  { exact: ["kafka"], icon: SiApachekafka },
+  {
+    partial: ["javascript", "ecmascript", "es6", "es5"],
+    exact: ["js"],
+    icon: IoLogoJavascript,
+  },
   { partial: ["typescript"], exact: ["ts"], icon: SiTypescript },
+  { partial: ["firebase"], icon: IoLogoFirebase },
+  { partial: ["mongo", "mongoose"], icon: SiMongodb },
   {
     partial: ["nodejs", "node.js"],
     icon: FaNodeJs,
   },
-  { exact: ["react"], partial: ["reactjs", "react.js"], icon: FaReact },
+  {
+    exact: ["react"],
+    partial: ["reactjs", "react.js", "react native"],
+    icon: FaReact,
+  },
   { exact: ["laravel"], icon: FaLaravel },
   { partial: ["nextjs", "next.js"], icon: SiNextdotjs },
   { partial: ["tailwind", "tailwindcss", "tailwind css"], icon: SiTailwindcss },

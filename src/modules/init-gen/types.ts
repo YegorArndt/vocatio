@@ -15,5 +15,6 @@ export type GeneratedData = {
   generatedProfessionalSummary: string;
   generatedExperience: GeneratedExperienceEntry[];
   generatedSkills: { id: string; name: string }[];
+  fileName: string;
   coverLetter?: string;
 } & RouterUser;

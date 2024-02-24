@@ -2,12 +2,14 @@ import { type ReactNode, type PropsWithChildren } from "react";
 import cn from "classnames";
 
 import { Navbar } from "./Navbar";
+import { DarkThemeSwitch, LightThemeSwitch } from "../icons";
 import {
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-} from "~/components/ui/external/Popover";
-import { Bell } from "../icons";
+  TooltipProvider,
+  TooltipContent,
+  Tooltip,
+  TooltipTrigger,
+} from "~/components/ui/external/Tooltip";
+import { useTheme } from "~/hooks/useTheme";
 
 const { log } = console;
 
@@ -16,24 +18,20 @@ type LayoutProps = PropsWithChildren<{
   toolbar?: ReactNode;
 }>;
 
-const Notifications = () => {
+const ThemeSwitcher = () => {
+  const [theme, setTheme] = useTheme();
+
   return (
-    <Popover>
-      <PopoverTrigger
-        className={cn(
-          "fixed right-5 top-5 z-dropdown rounded-full border bg-primary p-2",
-          {
-            "after:absolute after:right-0 after:top-0 after:h-2 after:w-2 after:rounded-full after:bg-[#51A8FF]":
-              false,
-          }
-        )}
-      >
-        <Bell />
-      </PopoverTrigger>
-      <PopoverContent>
-        <div className="flex-center gap-2">No notifications</div>
-      </PopoverContent>
-    </Popover>
+    <TooltipTrigger
+      className="rounded-full border bg-primary p-2"
+      onClick={() => setTheme(theme === "light" ? "dark" : "light")}
+    >
+      {theme === "dark" ? (
+        <DarkThemeSwitch fontSize={17} />
+      ) : (
+        <LightThemeSwitch fontSize={17} />
+      )}
+    </TooltipTrigger>
   );
 };
 
@@ -42,7 +40,14 @@ export const Layout = (props: LayoutProps) => {
 
   return (
     <>
-      <Notifications />
+      <header className="flex-center fixed right-5 top-5 z-dropdown gap-2">
+        <TooltipProvider>
+          <Tooltip>
+            <ThemeSwitcher />
+            <TooltipContent>Change theme</TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      </header>
       <div className={cn("app-container", className)}>
         <Navbar>{toolbar}</Navbar>
         <main className="main-container">{children}</main>

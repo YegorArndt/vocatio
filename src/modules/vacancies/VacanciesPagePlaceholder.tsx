@@ -61,13 +61,13 @@ export const VacanciesPagePlaceholder = () => {
       {bothStepsDone && <div>Use the extension to generate your first CV.</div>}
     </section>
   ) : (
-    <section className="flex-y flex-col">
+    <section className="flex-y flex-col gap-2">
       <h3>Empty</h3>
       <div className="flex-y gap-3">
         <BlurImage
           src="/loading-cat.gif"
-          height={30}
-          width={30}
+          height={25}
+          width={25}
           className="rounded-md"
           alt=""
         />

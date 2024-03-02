@@ -1,5 +1,3 @@
-import { User, ExperienceEntry } from "@prisma/client";
-import { pick } from "lodash-es";
 import { RouterUser } from "~/modules/types";
 import { typedKeys } from "~/modules/utils";
 
@@ -62,32 +60,4 @@ export const parseEnhancedDescription = (
   } catch (error) {}
 
   return formatted;
-};
-
-export const assignEnhancedDescriptions = (
-  user: User & { experience: ExperienceEntry[] },
-  enhancedDescriptions: { [key: string]: string } = {}
-) => {
-  const { experience } = user;
-  const enhancedExperience: ExperienceEntry[] = [];
-
-  if (!enhancedDescriptions["0"]) return;
-
-  experience.forEach((x, i) => {
-    const withEnhancedDescription = {
-      ...pick(x, [
-        "description",
-        "title",
-        "place",
-        "period",
-        "image",
-        "skills",
-      ]),
-      enhancedDescription: enhancedDescriptions[i] || x.description,
-    } as ExperienceEntry;
-
-    enhancedExperience.push(withEnhancedDescription);
-  });
-
-  return enhancedExperience;
 };

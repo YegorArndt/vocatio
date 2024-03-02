@@ -110,7 +110,6 @@ export const BigEntryBox = (props) => {
                             "place",
                             "image",
                             "id",
-                            "enhancedDescription",
                             "createdAt",
                             "updatedAt",
                             "userId",

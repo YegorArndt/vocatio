@@ -7,12 +7,6 @@ import {
 } from "~/server/api/trpc";
 import { getUserUpdateArgs } from "../utils/getUserUpdateArgs";
 import { UserUpdateSchema } from "../utils/schemas";
-import { applyGpt } from "../utils/ai";
-import {
-  assignEnhancedDescriptions,
-  buildEnhanceDescriptionPrompt,
-  parseEnhancedDescription,
-} from "../utils/enhance-description/utils";
 
 const { log } = console;
 
@@ -134,69 +128,4 @@ export const usersRouter = createTRPCRouter({
 
       return newUser;
     }),
-
-  generateEnhancedExperience: publicProcedure.mutation(async ({ ctx }) => {
-    const { userId } = ctx;
-
-    if (!userId) {
-      throw new TRPCError({
-        code: "UNAUTHORIZED",
-        message: "You must be logged in to create a user record",
-      });
-    }
-
-    const existingUser = await ctx.prisma.user.findFirst({
-      where: {
-        id: userId,
-      },
-      include: {
-        experience: true,
-      },
-    });
-
-    if (!existingUser) {
-      throw new TRPCError({
-        code: "BAD_REQUEST",
-        message: "User does not exist",
-      });
-    }
-
-    if (existingUser.experience.length === 0) {
-      throw new TRPCError({
-        code: "BAD_REQUEST",
-        message: "No experience provided",
-      });
-    }
-
-    if (existingUser.experience[0]?.enhancedDescription) {
-      return existingUser;
-    }
-
-    const prompt = buildEnhanceDescriptionPrompt(existingUser.experience);
-    const gptResponse = await applyGpt(prompt);
-    const parsedResponse = parseEnhancedDescription(gptResponse);
-    const result = assignEnhancedDescriptions(existingUser, parsedResponse);
-
-    if (!result) {
-      throw new TRPCError({
-        code: "BAD_REQUEST",
-        message: "Enhanced experience could not be generated",
-      });
-    }
-
-    const updatedUser = await ctx.prisma.user.update({
-      where: { id: userId },
-      data: {
-        enhancementsCount: existingUser.enhancementsCount - 1,
-        experience: {
-          deleteMany: {},
-          createMany: {
-            data: result,
-          },
-        },
-      },
-    });
-
-    return updatedUser;
-  }),
 });

@@ -23,7 +23,6 @@ import { AnimatedDiv } from "~/components/AnimatedDiv";
 import { RouterUser } from "~/modules/types";
 import { BoxName } from "./types";
 import { UpdateWithExtensionLink } from "./UpdateWithExtensionLink";
-import { EnhanceExperienceDrawer } from "./enhance-drawer/EnhanceExperienceDrawer";
 import { typedEntries } from "~/modules/utils";
 import { useSendMessage } from "~/hooks/useSendMessage";
 
@@ -158,7 +157,6 @@ export const BoxFactory = (props: BoxFactoryProps) => {
                       {isDataComplete ? <Checkmark /> : <>❌ </>}
                       {startCase(boxName)}
                     </h6>
-                    {boxName === "experience" && <EnhanceExperienceDrawer />}
                     <UpdateWithExtensionLink
                       boxName={boxName}
                       linkedinId={user.linkedinId}

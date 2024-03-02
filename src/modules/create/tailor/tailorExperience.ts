@@ -11,8 +11,8 @@ import { CvContextManager } from "~/modules/CvContextManager";
 export type ExperienceContext = Gen["experience"][0];
 
 const getBulletPointsToEnhance = (user: RouterUser) => {
-  const { enhancedDescription, description } = user.experience[0] || {};
-  return enhancedDescription || description || "";
+  const { description } = user.experience[0] || {};
+  return description || "";
 };
 
 export const buildExperiencePrompt = (

@@ -1,14 +1,6 @@
 import cn from "classnames";
-import {
-  useCallback,
-  type CSSProperties,
-  useRef,
-  FormEvent,
-  useState,
-} from "react";
+import { type CSSProperties, useRef, useState } from "react";
 import { AnimatedDiv } from "~/components/AnimatedDiv";
-import { useComponentContext } from "../contexts/ComponentContext";
-import { debounce } from "lodash-es";
 import { BsArrowsCollapse } from "react-icons/bs";
 import { FaBold, FaItalic, FaUnderline } from "react-icons/fa";
 import { RxLetterCaseUppercase } from "react-icons/rx";
@@ -20,6 +12,7 @@ import {
 } from "~/components/ui/external/Tooltip";
 import { toast } from "sonner";
 import { isUrl } from "../utils";
+import { stripHtmlTags } from "~/modules/utils";
 
 const { log } = console;
 
@@ -116,11 +109,9 @@ export const Autoresize = (props: AutoresizeProps) => {
   const { value, style, className, type = "value" } = props;
   const initialValue = useRef(value);
   const divRef = useRef<HTMLDivElement>(null);
-  const c = useComponentContext();
 
   const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
   const [showTooltip, setShowTooltip] = useState(false);
-
   const [isMouseOverToolbar, setIsMouseOverToolbar] = useState(false);
 
   const handleBlur = () => {
@@ -193,22 +184,10 @@ export const Autoresize = (props: AutoresizeProps) => {
     }
   };
 
-  const debouncedUpdateDesign = useCallback(
-    debounce((text) => {
-      //@ts-ignore
-      const newProps = { ...c.props, [type]: text };
-      //@ts-ignore
-      c.props = newProps;
-      // updateDesign(); // TODO: whitespace collapse
-    }, 5000),
-    []
-  );
-
   const handlePaste = (e: ClipboardEvent) => {
     e.preventDefault();
     const text = e.clipboardData?.getData("text/plain") || "";
     document.execCommand("insertText", false, text);
-    debouncedUpdateDesign(text);
   };
 
   if (!initialValue.current) return null;
@@ -217,20 +196,18 @@ export const Autoresize = (props: AutoresizeProps) => {
     <>
       <AnimatedDiv
         contentEditable
-        data-placeholder={value}
-        className={cn("!block whitespace-pre-wrap", className, {
+        data-placeholder={stripHtmlTags(initialValue.current)}
+        className={cn("autoresize !block whitespace-pre-wrap", className, {
           "break-words": !isUrl(value),
           "break-all": isUrl(value),
         })}
         style={style}
         suppressContentEditableWarning
-        onInput={(e: FormEvent<HTMLDivElement>) => {
-          const { innerHTML } = e.currentTarget;
-          debouncedUpdateDesign(innerHTML.toString());
-        }}
         ref={divRef}
         onPaste={handlePaste}
-        dangerouslySetInnerHTML={{ __html: value }}
+        dangerouslySetInnerHTML={{
+          __html: value,
+        }}
         onSelect={handleSelect}
         onBlur={handleBlur}
       />
@@ -238,12 +215,12 @@ export const Autoresize = (props: AutoresizeProps) => {
         <div
           style={{
             position: "absolute",
-            left: `${tooltipPosition.x - 350}px`,
+            left: `${tooltipPosition.x - 470}px`,
             top: `${tooltipPosition.y - 70}px`,
             transform: "translateY(100%)",
             zIndex: 1000,
           }}
-          className="autoresize-toolbar flex-y"
+          className="autoresize-toolbar"
           onMouseEnter={handleMouseEnterToolbar}
           onMouseLeave={handleMouseLeaveToolbar}
         >

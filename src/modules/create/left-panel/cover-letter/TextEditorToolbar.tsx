@@ -26,10 +26,14 @@ import {
   Tooltip,
   TooltipProvider,
 } from "~/components/ui/external/Tooltip";
-import { GeneratedData } from "~/modules/init-gen/types";
-import { useGeneratedData } from "~/hooks/useGeneratedData";
 import { Gpt } from "~/components/icons";
 import { PartialVacancy, RouterUser, Models } from "~/modules/types";
+import { Cv, Gen } from "~/modules/init-gen/types";
+import { api } from "~/utils";
+import { CvContextManager } from "~/modules/CvContextManager";
+import { stripHtmlTags } from "~/modules/utils";
+
+const { log } = console;
 
 type TextEditorToolbarProps = {
   vacancy: PartialVacancy;
@@ -41,45 +45,54 @@ type TextEditorToolbarProps = {
   };
 };
 
-const getPrompt = (draft: GeneratedData) => {
-  const { experience, professionalSummary, name, vacancy } = draft;
-  return `
+const getPrompt = (gen: Gen, cv: Cv, user: RouterUser) => {
+  const { vacancy } = gen;
+  const { userName, contact, experience, summary, languages } = cv;
+  const prompt = `
   -   Write a cover letter for the following vacancy posting by company ${
     vacancy.companyName
   }: ${vacancy.description}.
    - Insert my data into the cover letter:
-      My employment history: ${draft.experience
-        .map((x) => `${x.description}`)
+      My employment history: ${experience
+        .map((x) => stripHtmlTags(`${x.bullets.map((x) => x.text).join("\n")}`))
         .join(", ")}.
-      My professional summary: ${professionalSummary}.
-      My name: ${name}.
-      My contact info: ${draft.contact
+      My professional summary: ${summary}.
+      My name: ${userName}.
+      My contact info: ${contact
         .map((x) => `${x.name}: ${x.value}`)
         .join(", ")}.
-      My language skills (if needed): ${draft.languages
+      My language skills (if needed): ${languages
         .map((x) => x.name)
         .join(", ")}.
       Date: ${new Date().toLocaleDateString()}.
-      Email: ${draft.email}.
+      Email: ${user.email}.
 
    - Format of the cover letter: ${hfFormat}. Use professional tone. Use the common structure of a cover letter. Make it sound more like a human, not AI! Write the cover letter in the language in which the vacancy posting is written. We do not know any contact data on the receiver. So do not include "[Company Address]
    [City, State, Zip Code]".  
     `;
+
+  log("Prompt: ", prompt);
+
+  return prompt;
 };
 
 export const TextEditorToolbar = (props: TextEditorToolbarProps) => {
   const { methods } = props;
   const { onCopy, onGenerate, onDownloadPdf } = methods;
-
-  const { generated, updateGeneratedData } = useGeneratedData();
+  const { data: user } = api.users.get.useQuery();
 
   const generateCoverLetter = async (model: Models) => {
-    if (!generated) return;
+    const instance = CvContextManager.getInstance();
+    const cv = instance.getCv();
+    const gen = instance.getGen();
 
-    let generatedCoverLetter = generated.coverLetter;
+    if (!cv || !gen || !user) return;
 
-    if (generatedCoverLetter) {
-      onGenerate(generatedCoverLetter);
+    let letter = cv.coverLetter;
+
+    // Existing letter ?
+    if (letter) {
+      onGenerate(letter);
       return;
     }
 
@@ -87,27 +100,25 @@ export const TextEditorToolbar = (props: TextEditorToolbarProps) => {
       duration: Infinity,
     });
 
-    const prompt = getPrompt(generated);
+    const prompt = getPrompt(gen, cv, user);
 
     if (model === "gpt-3.5") {
-      generatedCoverLetter = await applyGpt(prompt, model);
+      letter = await applyGpt(prompt, model);
     } else {
       const clByMixtral = await instruct(prompt, { max_new_tokens: 1000 });
-      generatedCoverLetter = cleanAiOutput(clByMixtral.generated_text, [
-        prompt,
-      ]);
+      letter = cleanAiOutput(clByMixtral.generated_text, [prompt]);
     }
 
     toast.dismiss();
 
-    if (!generatedCoverLetter) {
+    if (!letter) {
       toast.error("Failed to generate cover letter", {
         duration: 5000,
       });
       return;
     }
 
-    const coverLetter = cleanAiOutput(generatedCoverLetter, [
+    const coverLetter = cleanAiOutput(letter, [
       "[Company Address]",
       "[City, State, Zip Code]",
     ]);
@@ -116,7 +127,7 @@ export const TextEditorToolbar = (props: TextEditorToolbarProps) => {
       duration: 5000,
     });
 
-    updateGeneratedData({ ...generated, coverLetter });
+    CvContextManager.getInstance().updateCv({ coverLetter });
     onGenerate(coverLetter);
   };
 

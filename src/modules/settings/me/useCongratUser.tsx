@@ -2,7 +2,7 @@ import Image from "next/image";
 import { useEffect } from "react";
 import { toast } from "sonner";
 import { Link } from "~/components/ui/buttons/Link";
-import { useLs } from "~/hooks/useLs";
+import { useSettings } from "~/hooks/useSettings";
 import { linkedinJobsSearchUrl } from "~/modules/constants";
 import { RouterUser } from "~/modules/types";
 import { api } from "~/utils";
@@ -22,21 +22,21 @@ export const getMissingInfo = (user: RouterUser) => {
 };
 
 export const useCongratUser = () => {
-  const { ls, updateLs } = useLs();
+  const { settings, updateSettings } = useSettings();
   const { data: user } = api.users.get.useQuery();
 
   useEffect(() => {
     if (
       !user ||
-      ls.hasShownCongratsMessage ||
-      ls.hasShownCongratsMessage === null
+      settings.hasShownCongratsMessage ||
+      settings.hasShownCongratsMessage === null
     )
       return;
 
     const missingInfo = getMissingInfo(user);
 
     if (missingInfo.length === 0) {
-      updateLs({ hasShownCongratsMessage: true });
+      updateSettings({ hasShownCongratsMessage: true });
       toast.dismiss();
       toast.success(
         <div className="flex-y gap-3">

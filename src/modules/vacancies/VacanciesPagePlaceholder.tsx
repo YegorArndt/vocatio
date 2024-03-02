@@ -1,6 +1,6 @@
 import { BlurImage } from "~/components";
 import { Link } from "~/components/ui/buttons/Link";
-import { useLs } from "~/hooks/useLs";
+import { useSettings } from "~/hooks/useSettings";
 import { api, cn } from "~/utils";
 import { useVacanciesContext } from "./VacanciesContext";
 import { Linkedin } from "~/components/icons";
@@ -8,10 +8,10 @@ import { FaChrome } from "react-icons/fa";
 
 export const VacanciesPagePlaceholder = () => {
   const { currentGroup } = useVacanciesContext();
-  const { ls } = useLs();
+  const { settings } = useSettings();
   const { data: user } = api.users.get.useQuery();
 
-  const stepOneDone = ls.hasConnectedExtension;
+  const stepOneDone = settings.hasConnectedExtension;
   const stepTwoDone =
     user?.experience?.length !== 0 ||
     user?.education?.length !== 0 ||

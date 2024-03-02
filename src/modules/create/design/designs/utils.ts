@@ -7,6 +7,7 @@ import { GeneratedData } from "~/modules/init-gen/types";
 import { iconsMap } from "~/modules/icons-map";
 import { isUrlPermissive } from "../utils";
 import { RouterUser } from "~/modules/types";
+import { CvSubset } from "~/modules/events/types";
 
 const { log } = console;
 
@@ -185,11 +186,11 @@ export const skills = (
     type: "skills",
     id: "skills",
     sectionId: sectionId || "right",
-    hydratableProps: (draft: GeneratedData) => ({
+    hydratableProps: (cv: CvSubset) => ({
       sections: {
         skills: {
           components:
-            draft.generatedSkills?.map((entry) => ({
+            cv?.skills?.map((entry) => ({
               id: entry.id,
               sectionId: "skills",
               type: type || "text",
@@ -223,11 +224,11 @@ export const experience = (
     type: "experience",
     id: "experience",
     sectionId: sectionId || "left",
-    hydratableProps: (experience) => ({
+    hydratableProps: (data) => ({
       sections: {
         experience: {
           components:
-            experience.map((entry, _, arr) => ({
+            data.experience.map((entry, _, arr) => ({
               type: "experience-entry",
               id: entry.id,
               sectionId: "experience",

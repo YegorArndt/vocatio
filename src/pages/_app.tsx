@@ -8,10 +8,10 @@ import "@szhsin/react-menu/dist/transitions/slide.css";
 import "~/styles/globals.css";
 import { api } from "~/utils";
 import { Toaster } from "~/components/ui/external/Sonner";
-import { useInitTheme } from "~/hooks/useInitTheme";
+import { useTheme } from "~/hooks/useTheme";
 
 const MyApp: AppType = ({ Component, pageProps }) => {
-  useInitTheme();
+  useTheme();
 
   return (
     <ClerkProvider {...pageProps}>

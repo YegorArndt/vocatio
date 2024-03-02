@@ -9,7 +9,9 @@ import {
   Tooltip,
   TooltipTrigger,
 } from "~/components/ui/external/Tooltip";
-import { useTheme } from "~/hooks/useTheme";
+import { eventManager } from "~/modules/events/EventManager";
+import { Events } from "~/modules/events/types";
+import { useSettings } from "~/hooks/useSettings";
 
 const { log } = console;
 
@@ -19,14 +21,20 @@ type LayoutProps = PropsWithChildren<{
 }>;
 
 const ThemeSwitcher = () => {
-  const [theme, setTheme] = useTheme();
+  const { settings, updateSettings } = useSettings();
+
+  const handler = () => {
+    const theme = settings.theme === "dark" ? "light" : "dark";
+    updateSettings({ theme });
+    eventManager.emit(Events.THEME_UPDATED, { theme });
+  };
 
   return (
     <TooltipTrigger
       className="rounded-full border bg-primary p-2"
-      onClick={() => setTheme(theme === "light" ? "dark" : "light")}
+      onClick={handler}
     >
-      {theme === "dark" ? (
+      {settings.theme === "dark" ? (
         <DarkThemeSwitch fontSize={17} />
       ) : (
         <LightThemeSwitch fontSize={17} />

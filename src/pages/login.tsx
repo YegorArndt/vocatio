@@ -10,13 +10,14 @@ import { AnimatedDiv } from "~/components/AnimatedDiv";
 import { Spinner } from "~/components";
 import { ProgressIncrementer } from "~/components/ProgressIncrementer";
 import { MessageContainer } from "~/components/MessageContainer";
-import { useLs } from "~/hooks/useLs";
+import { useSettings } from "~/hooks/useSettings";
+import { PopoverEvents } from "~/modules/events/types";
 
 const { log } = console;
 
 const PrismaLayer = (props: { clerkUser: UserResource }) => {
   const { clerkUser } = props;
-  const { updateLs } = useLs();
+  const { updateSettings } = useSettings();
 
   const {
     data: user,
@@ -34,7 +35,12 @@ const PrismaLayer = (props: { clerkUser: UserResource }) => {
 
   useEffect(() => {
     if (user || successCreating) {
-      successCreating && updateLs({ hasConnectedExtension: false });
+      successCreating &&
+        updateSettings({
+          hasConnectedExtension: false,
+          [PopoverEvents.BOLDEN_BULLETS]: true,
+          [PopoverEvents.BOLDEN_SUMMARY]: true,
+        });
       void router.push("/vacancies");
       return;
     }

@@ -10,15 +10,13 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "~/components/ui/external/Tooltip";
-import { useGeneratedData } from "~/hooks/useGeneratedData";
 import { NAV_BUTTON_CN } from "./constants";
 import { useState } from "react";
 import { fonts } from "../design/types";
+import { CvContextManager } from "~/modules/CvContextManager";
 
 export const FontFamilyButton = () => {
   const { design, changeDesign } = useDesignContext();
-  const { generated } = useGeneratedData();
-
   const [filter, setFilter] = useState("");
 
   return (
@@ -67,7 +65,10 @@ export const FontFamilyButton = () => {
                   {v.name} font
                 </h3>
                 <div className="text-md">
-                  {stripHtmlTags(generated?.generatedProfessionalSummary || "")}
+                  {typeof window !== "undefined" &&
+                    stripHtmlTags(
+                      CvContextManager.getInstance().getCv()?.summary || ""
+                    )}
                 </div>
               </TooltipContent>
             </Tooltip>

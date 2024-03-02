@@ -1,25 +1,23 @@
-import { useState, useEffect } from "react";
-import { useLs } from "./useLs";
+import { useEffect } from "react";
+import { useEvents } from "./useEvents";
+import { EventHandler, Events } from "~/modules/events/types";
+import { getSettings } from "~/modules/settings/settings";
 
 const { log } = console;
 
 export type Theme = "light" | "dark";
 
 export const useTheme = () => {
-  const [theme, setTheme] = useState<Theme>("dark");
-  const { ls, updateLs } = useLs();
-
-  useEffect(() => {
-    if (!ls.isLoaded) return;
-
-    const { theme } = ls;
-    if (theme) setTheme(theme);
-  }, [ls]);
-
-  const updateTheme = (theme: Theme) => {
-    setTheme(theme);
-    updateLs({ theme });
+  const handler: EventHandler<{ theme: Theme }> = (payload) => {
+    const settings = getSettings();
+    const { theme } = payload?.detail ?? settings;
+    const { body } = document;
+    body.dataset.theme = theme;
   };
 
-  return [theme, updateTheme] as const;
+  useEffect(handler, []);
+
+  useEvents({
+    [Events.THEME_UPDATED]: handler,
+  });
 };

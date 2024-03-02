@@ -2,7 +2,10 @@ import { Dispatch, SetStateAction, createContext, useContext } from "react";
 import { BaseComponentType, SectionName, Sections } from "../../types";
 import { omit } from "lodash-es";
 import { uuidv4 } from "~/modules/utils";
-import { Events, eventManager } from "~/modules/EventManager";
+import { PopoverEvents } from "~/modules/events/types";
+import { CvContextManager } from "~/modules/CvContextManager";
+import { BulletPoint } from "~/modules/init-gen/types";
+import { eventManager } from "~/modules/events/EventManager";
 
 const { log } = console;
 
@@ -29,6 +32,72 @@ export const CrudContext = createContext({} as CrudContextType);
 export const useCrudContext = () => {
   const context = useContext(CrudContext);
   return context;
+};
+
+const handleCvContext = (
+  newSections: Sections,
+  component: RemoveComponentProps
+) => {
+  let eventType: PopoverEvents | null = null;
+
+  if (component.sectionId.includes("skills")) {
+    eventType = PopoverEvents.SKILLS_UPDATED;
+    updateSkills(newSections);
+  }
+
+  if (component.id.includes("bullet")) {
+    eventType = PopoverEvents.EXPERIENCE_UPDATED;
+    updateBullets(newSections);
+  }
+
+  if (!eventType) return;
+
+  eventManager.emit(eventType);
+};
+
+const updateSkills = (newSections: Sections) => {
+  const { components } = newSections.skills || {};
+  if (!components) return;
+
+  CvContextManager.getInstance().updateCv((prev) => {
+    const formatted = components.map((c) => ({
+      id: c.id,
+      name: c.hydratedProps?.value || "",
+    }));
+
+    return {
+      ...prev,
+      skills: formatted,
+    };
+  });
+};
+
+const updateBullets = (newSections: Sections) => {
+  const firstKey = Object.keys(newSections)[0];
+  if (!firstKey) return;
+  const { components } = newSections[firstKey]!;
+
+  CvContextManager.getInstance().updateCv((prev) => {
+    const entries = prev.experience;
+    const target = entries.find((e) => e.id === firstKey);
+
+    if (!target) return prev;
+
+    const newBullets = components.filter((c) => c.id.includes("bullet"));
+    const formatted: BulletPoint[] = newBullets.map((b) => ({
+      id: b.id,
+      text: b.hydratedProps?.value || "",
+    }));
+    const newEntry = { ...target, bullets: formatted };
+    const newEntries = entries.map((e) =>
+      e.id === newEntry.id ? newEntry : e
+    );
+
+    return {
+      ...prev,
+      experience: newEntries,
+    };
+  });
 };
 
 export const addComponent =
@@ -61,10 +130,7 @@ export const addComponent =
         ...section.components.slice(index + 1),
       ];
 
-      eventManager.emit(Events.COMPONENT_ADDED_EVENT, {
-        component: baseComponent,
-        newSections,
-      });
+      handleCvContext(newSections, baseComponent);
 
       return newSections;
     });
@@ -85,10 +151,7 @@ export const removeComponent =
         (c) => c.id !== component.id
       );
 
-      eventManager.emit(Events.COMPONENT_REMOVED_EVENT, {
-        component,
-        newSections,
-      });
+      handleCvContext(newSections, component);
 
       return newSections;
     });

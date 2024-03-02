@@ -34,8 +34,9 @@ export const ContactToolbar = (props: ToolbarProps) => {
         globalCloseEvents={{ clickOutsideAnchor: true }}
         className="z-tooltip -translate-y-[50px] transform !p-0"
         clickable
-        positionStrategy="fixed"
+        place="bottom"
         openOnClick
+        offset={100}
         delayShow={400}
         delayHide={200}
         data-html2canvas-ignore

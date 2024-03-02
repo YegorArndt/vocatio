@@ -8,7 +8,7 @@
 //   DrawerHandle,
 //   DrawerTrigger,
 // } from "~/components/ui/external/Drawer";
-// import { useLs } from "~/hooks/useLs";
+// import { useSettings } from "~/hooks/useSettings";
 // import { AFTER_GREEN, BEFORE_RED } from "~/modules/constants";
 // import { stripHtmlTags } from "~/modules/utils";
 // import { api, cn } from "~/utils";
@@ -27,7 +27,7 @@
 // };
 
 // export const BestPracticesDrawer = () => {
-//   const { ls, updateLs } = useLs();
+//   const { ls, updateLs } = useSettings();
 //   const [isEditing, setIsEditing] = useState(false);
 
 //   const { mutate: updateUser, isLoading: isUpdating } =

@@ -1,6 +1,6 @@
 import { RiDraftLine } from "react-icons/ri";
 
-import { BlurImage } from "~/components";
+import { BlurImage, Spinner } from "~/components";
 import { Blur } from "~/components/Blur";
 import {
   Drawer,
@@ -9,20 +9,21 @@ import {
   DrawerHandle,
 } from "~/components/ui/external/Drawer";
 import { FormContext } from "~/modules/settings/me/FormContext";
-import { useGeneratedData } from "~/hooks/useGeneratedData";
 import { TextEditor } from "./TextEditor";
 import { NAV_BUTTON_CN } from "../constants";
 import { api, cn } from "~/utils";
 import { Fragment } from "react";
 import { Text } from "~/components/ui/inputs/Text";
+import { useCvContext } from "~/hooks/useCvContext";
 
 const { log } = console;
 
 export const CoverLetterDrawer = () => {
-  const { generated } = useGeneratedData();
   const { data: user } = api.users.get.useQuery();
+  const { gen } = useCvContext() ?? {};
 
-  const { vacancy } = generated ?? {};
+  if (!gen?.vacancy) return <Spinner size={10} />;
+  const { vacancy } = gen;
 
   const defaultValues = user &&
     vacancy && {

@@ -125,7 +125,11 @@ export const iconsMap = [
   { partial: ["mysql"], icon: DiMysql },
   { partial: ["postgres"], icon: DiPostgresql },
   { partial: ["sass"], icon: FaSass },
-  { exact: [".net", "dotnet"], partial: ["dotnet"], icon: SiDotnet },
+  {
+    exact: [".net", "dotnet"],
+    partial: ["dotnet", ".net core"],
+    icon: SiDotnet,
+  },
   { partial: ["c#"], icon: SiCsharp },
   { exact: ["cypress"], icon: TbBrandCypress },
   { partial: ["react testing library"], icon: SiTestinglibrary },

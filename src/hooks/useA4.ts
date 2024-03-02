@@ -1,6 +1,8 @@
 import { useState, useRef, useEffect } from "react";
 import { A4_HEIGHT } from "~/modules/create/design/constants";
 
+const { log } = console;
+
 export const useA4 = () => {
   const [pages, setPages] = useState(1);
   const a4Ref = useRef<HTMLDivElement>(null);

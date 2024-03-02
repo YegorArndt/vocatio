@@ -78,6 +78,9 @@ export const Charmander: Design = {
     text: {
       className: "text-[13px] leading-5",
     },
+    bullet: {
+      className: "text-[13px] leading-5",
+    },
   },
 
   sections: {
@@ -121,43 +124,42 @@ export const Charmander: Design = {
         experience({
           components: (entry) => [
             {
-              id: entry.id + "-title",
-              sectionId: entry.id,
-              type: "group",
-              hydratedProps: {
-                label: entry.title,
-                value: entry.period,
-                labelProps: { className: "title-label" },
-                valueProps: { className: "title-value" },
-                containerClassName: "title-container",
-              },
-            },
-            {
               id: entry.id + "-place",
               sectionId: entry.id,
               type: getType(entry),
               hydratedProps: {
                 image: entry.image,
-                value: entry.place,
+                value: // prettier-ignore
+                `<div class="flex justify-between">
+                  <section class="flex flex-col">
+                    <span class="font-bold text-left ${expHeading}">${entry.place}</span>
+                    <span class="italic text-left">${entry.title}</span>
+                  </section>
+                  <span class="font-bold leading-7">${entry.period}</span>
+                </div>`,
+                containerClassName: "grid-cols-[40px_1fr] gap-[10px] pb-[10px]",
+                imageProps: {
+                  height: 40,
+                  width: 40,
+                  className: "rounded-full",
+                },
 
-                labelProps: { className: "place-label" },
-                valueProps: { className: "place-value" },
-                imageProps: { className: "place-image" },
-                containerClassName: "place-container",
+                labelProps: { className: "title-label" },
+                valueProps: { className: "title-value" },
               },
             },
             /**
              * Bullet points.
              */
-            ...entry.description.map((bulletPoint, i) => ({
-              id: entry.id + i + "-bullet",
+            ...entry.bullets.map((bullet) => ({
+              id: bullet.id,
               sectionId: entry.id,
-              type: "text",
+              type: "bullet",
               hydratedProps: {
                 value: boldKeywords(
-                  bulletPoint,
-                  entry.skills.join(" ")
-                ).replace("•", ""),
+                  bullet.text,
+                  entry?.skills?.join(" ")
+                )?.replace("•", ""),
 
                 valueProps: { className: "bullet" },
               },
@@ -201,8 +203,7 @@ export const Charmander: Design = {
                 image: entry.image,
                 value: entry.place,
 
-                containerClassName:
-                  "grid-cols-[40px_1fr] gap-[10px] py-[5px] pplace",
+                containerClassName: "grid-cols-[40px_1fr] gap-[10px] py-[5px]",
                 imageProps: {
                   height: 40,
                   width: 40,
@@ -218,7 +219,7 @@ export const Charmander: Design = {
               hydratedProps: {
                 value: entry.title,
                 valueProps: {
-                  className: "text-[13px] border-top py-[3px] ttitle",
+                  className: "text-[13px] border-top py-[3px]",
                 },
               },
             },
@@ -229,7 +230,7 @@ export const Charmander: Design = {
               hydratedProps: {
                 value: entry.period,
                 valueProps: {
-                  className: "text-[13px] border-top pt-[3px] pperiod",
+                  className: "text-[13px] border-top pt-[3px]",
                 },
               },
             },

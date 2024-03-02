@@ -10,6 +10,7 @@ import {
   heading1,
   userName,
 } from "./utils";
+import { Cv } from "~/modules/init-gen/types";
 
 const boldKeywords = (text: string, keywords: string) => {
   const vacancyWords = new Set(keywords.toLowerCase().match(/\w+/g));
@@ -69,6 +70,9 @@ export const Charmeleon: Design = {
     text: {
       className: "text-[15px] leading-5",
     },
+    bullet: {
+      className: "text-[15px] leading-5",
+    },
   },
 
   sections: {
@@ -76,8 +80,9 @@ export const Charmeleon: Design = {
       id: "top-left",
       className: `bg-[#fff] text-[#000] ${pt} ${leftPl} ${leftPr}`,
       components: [
-        userName(),
+        userName({ sectionId: "left" }),
         contact({
+          sectionId: "left",
           groupItemProps: {
             imageSize: 15,
             containerClassName: "gap-2",
@@ -90,6 +95,7 @@ export const Charmeleon: Design = {
           sectionId: "left",
         }),
         experience({
+          sectionId: "left",
           components: (entry) => [
             {
               id: entry.id + "-place",
@@ -122,16 +128,17 @@ export const Charmeleon: Design = {
             /**
              * Bullet points.
              */
-            ...entry.description.map((bulletPoint, i) => ({
-              id: entry.id + i + "-bullet",
+            ...entry.bullets.map((bullet) => ({
+              id: bullet.id,
               sectionId: entry.id,
-              type: "text",
+              type: "bullet",
               hydratedProps: {
                 value: boldKeywords(
-                  bulletPoint,
-                  entry.skills.join(" ")
-                ).replace("•", ""),
-                valueProps: { className: "place-value" },
+                  bullet.text,
+                  entry?.skills?.join(" ")
+                )?.replace("•", ""),
+
+                valueProps: { className: "bullet" },
               },
             })),
           ],
@@ -188,11 +195,11 @@ export const Charmeleon: Design = {
           type: "skills",
           id: "skills",
           sectionId: "left",
-          hydratableProps: (draft: GeneratedData) => ({
+          hydratableProps: (cv: Cv) => ({
             sections: {
               skills: {
                 components:
-                  draft.generatedSkills?.map((entry) => ({
+                  cv?.skills?.map((entry) => ({
                     id: entry.id,
                     sectionId: "skills",
                     type: "text",

@@ -1,7 +1,6 @@
 import { ImPageBreak } from "react-icons/im";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useComponentContext } from "../../../contexts/ComponentContext";
-import { useDesignContext } from "../../../contexts/DesignContext";
 import { cn } from "~/utils";
 import { BUTTON_CN } from "../constants";
 import {
@@ -9,32 +8,14 @@ import {
   TooltipContent,
   Tooltip,
 } from "~/components/ui/external/Tooltip";
+import { useEvents } from "~/hooks/useEvents";
+import { Events } from "~/modules/events/types";
 
 export const PageBreakButton = () => {
   const [element, setElement] = useState<HTMLElement | null>(null);
-  const { design } = useDesignContext();
   const { id } = useComponentContext();
 
-  useEffect(() => {
-    // Initialize the state based on the presence of the adjusted-margin class
-    const initialElement = document.querySelector(
-      `[data-tooltip-id="${id}"].adjusted-margin`
-    ) as HTMLElement;
-    setElement(initialElement || null);
-
-    // Reverse margin when design changes
-    if (element) {
-      element.style.marginTop = "0px";
-      const splitWord = id.includes("place") ? "place" : "title";
-      const numId = id.split(`${splitWord}-`)[1];
-      const ball = document.getElementById(`ball-${numId}`);
-      if (ball) {
-        ball.style.marginTop = "0px";
-      }
-    }
-  }, [design.name, id]);
-
-  useEffect(() => {
+  const reverse = () => {
     if (!element) return;
     // Reverse margin
     element.style.marginTop = "0px";
@@ -49,7 +30,19 @@ export const PageBreakButton = () => {
     if (ball) {
       ball.style.marginTop = "0px";
     }
-  }, [design.name]);
+  };
+
+  const initialize = () => {
+    const initialElement = document.querySelector(
+      `[data-tooltip-id="${id}"].adjusted-margin`
+    ) as HTMLElement;
+    setElement(initialElement || null);
+  };
+
+  useEvents({
+    [Events.ON_LOAD]: initialize,
+    [Events.DESIGN_CHANGED]: reverse,
+  });
 
   return (
     <Tooltip>

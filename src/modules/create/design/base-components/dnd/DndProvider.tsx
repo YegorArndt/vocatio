@@ -43,20 +43,25 @@ import { Group } from "../Group";
 import { UserImage } from "~/modules/create/design/base-components/UserImage";
 import { UserName } from "~/modules/create/design/base-components/UserName";
 import { JobTitle } from "~/modules/create/design/base-components/JobTitle";
-import { ProfessionalSummary } from "~/modules/create/design/base-components/ProfessionalSummary";
 import { Heading } from "~/modules/create/design/base-components/Heading";
-import { Skills } from "~/modules/create/design/base-components/skills/Skills";
-import { Experience } from "~/modules/create/design/base-components/experience/Experience";
+import {
+  Skills,
+  SkillsToolbar,
+} from "~/modules/create/design/base-components/ai-generated/Skills";
 import { Languages } from "~/modules/create/design/base-components/Languages";
 import { Education } from "~/modules/create/design/base-components/Education";
-import { SkillsToolbar } from "../toolbars/skills/SkillsToolbar";
-import { ExperienceToolbar } from "../toolbars/experience/ExperienceToolbar";
-import { ExperienceEntryToolbar } from "../toolbars/experience/ExperienceEntryToolbar";
 import { CrudContext, addComponent, removeComponent } from "./crud";
-import { ExperienceEntry } from "../ExperienceEntry";
+import {
+  Experience,
+  ExperienceEntry,
+  ExperienceEntryToolbar,
+  ExperienceToolbar,
+} from "../ai-generated/Experience";
 import { typedKeys } from "~/modules/utils";
 import { ContactToolbar } from "../toolbars/ContactToolbar";
 import { Entry } from "../Entry";
+import { Summary } from "../ai-generated/Summary";
+import { Bullet } from "../Bullet";
 
 const { log } = console;
 
@@ -74,7 +79,7 @@ type Component =
   | typeof UserImage
   | typeof UserName
   | typeof JobTitle
-  | typeof ProfessionalSummary
+  | typeof Summary
   | typeof Heading
   | typeof Skills
   | typeof Experience
@@ -99,7 +104,7 @@ const mapping: Mapping = [
   { keys: ["jobTitle"], Component: JobTitle, Toolbar },
   {
     keys: ["professionalSummary"],
-    Component: ProfessionalSummary,
+    Component: Summary,
     Toolbar,
   },
   {
@@ -124,6 +129,11 @@ const mapping: Mapping = [
   {
     keys: ["group", "icon-group", "text"],
     Component: Group,
+    Toolbar: Toolbar,
+  },
+  {
+    keys: ["bullet"],
+    Component: Bullet,
     Toolbar: Toolbar,
   },
 ];
@@ -175,7 +185,7 @@ const SortableItem = (props: PropsWithChildren<Record<string, unknown>>) => {
        */
       className={cn({
         "flex-center": c.type === "userImage",
-        "bullet-point": c.id?.includes("bullet"),
+        "bullet-point": c.type === "bullet",
       })}
     >
       {children}
@@ -364,11 +374,7 @@ export const DndProvider = forwardRef((props: DndProviderProps, ref) => {
         }}
       >
         {typedKeys(sections).map((sectionId) => (
-          <Section
-            key={sectionId as string}
-            {...rest}
-            {...sections[sectionId]!}
-          />
+          <Section key={sectionId} {...rest} {...sections[sectionId]!} />
         ))}
       </CrudContext.Provider>
     </DndContext>

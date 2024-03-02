@@ -46,7 +46,7 @@ export const Navbar = (props: NavbarProps) => {
       <Divider />
       {children}
       <footer className="flex-center mx-auto mb-5 mt-auto flex-col gap-2">
-        <small>Vocatio Beta, v. 0.1</small>
+        <small>Vocatio Beta, v0.1</small>
       </footer>
     </nav>
   );

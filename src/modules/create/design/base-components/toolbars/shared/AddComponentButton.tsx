@@ -11,15 +11,15 @@ import { useDesignContext } from "../../../contexts/DesignContext";
 import { typedEntries } from "~/modules/utils";
 import { useComponentContext } from "../../../contexts/ComponentContext";
 import { BlurImage } from "~/components";
-import { useGeneratedData } from "~/hooks/useGeneratedData";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "~/components/ui/external/Tooltip";
-import { GeneratedData } from "~/modules/init-gen/types";
 import { BaseComponentType, Design } from "../../../types";
 import { RouterUser } from "~/modules/types";
+import { Gen } from "~/modules/init-gen/types";
+import { useCvContext } from "~/hooks/useCvContext";
 
 const { log } = console;
 
@@ -32,7 +32,7 @@ const NOT_IMPLEMENTED_COMPONENTS = [
   "entry",
 ];
 
-// TODO jobTitle
+// TODO jobTitle WHENEVER a new cmp is added it breaks
 
 const mapping = {
   userName: {
@@ -67,11 +67,15 @@ const mapping = {
     path: "/base-components/user-image.png",
     name: "Image",
   },
+  bullet: {
+    path: "/base-components/text.png",
+    name: "Bullet point text",
+  },
 };
 
 const getTooltipContent = (
   type: BaseComponentType,
-  draft: GeneratedData,
+  gen: Gen,
   user: RouterUser,
   design: Design
 ) => {
@@ -88,7 +92,7 @@ const getTooltipContent = (
     return (
       <div
         className="max-w-[300px] text-sm"
-        dangerouslySetInnerHTML={{ __html: draft.generatedProfessionalSummary }}
+        dangerouslySetInnerHTML={{ __html: gen.professionalSummary }}
       />
     );
 
@@ -99,8 +103,9 @@ export const AddComponentPopover = () => {
   const c = useComponentContext();
   const { addComponent } = useCrudContext();
   const { design } = useDesignContext();
-  const { generated } = useGeneratedData();
   const { data: user } = api.users.get.useQuery();
+
+  const { gen } = useCvContext() || {};
 
   return (
     <Popover>
@@ -136,12 +141,10 @@ export const AddComponentPopover = () => {
                     src={mapping?.[type as keyof typeof mapping].path}
                     width={40}
                   />
-                  {mapping?.[type as keyof typeof mapping].name}
+                  {mapping?.[type as keyof typeof mapping]?.name}
                 </TooltipTrigger>
                 <TooltipContent side="left">
-                  {generated &&
-                    user &&
-                    getTooltipContent(type, generated, user, design)}
+                  {gen && user && getTooltipContent(type, gen, user, design)}
                 </TooltipContent>
               </Tooltip>
             )

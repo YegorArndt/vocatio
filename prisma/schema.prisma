@@ -122,7 +122,6 @@ model ExperienceEntry {
   place               String
   period              String
   description         String
-  enhancedDescription String?
   skills              String[]
   image               String
   title               String

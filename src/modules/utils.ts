@@ -3,8 +3,8 @@ import { v4 } from "uuid";
 import { DefaultModel } from "@prisma/client";
 
 import { DesignFont, fonts } from "./create/design/types";
-import { RouterUser } from "./types";
 
+// todo: getFontCn
 export const getFont = (font: DesignFont) => {
   const { font: f } = fonts[font];
   return get(f, "className", f);
@@ -25,7 +25,7 @@ export const separateEntries = (obj: Record<string, unknown>) => {
   return { definedEntries, undefinedEntries };
 };
 
-export const stripHtmlTags = (text: string) => {
+export const stripHtmlTags = (text: string | undefined | null) => {
   if (!text) return "";
   return text.replace(/<[^>]*>?/gm, "");
 };
@@ -69,12 +69,3 @@ export const getModelUi = (
 };
 
 export const uuidv4 = () => v4();
-
-/**
- * @description Splits the user's experience description into an array of strings (bullet points).
- */
-export const splitDescription = (user: RouterUser) =>
-  user.experience.map((entry) => ({
-    ...entry,
-    description: entry.description.split("•"),
-  }));

@@ -1,29 +1,29 @@
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Switch } from "~/components/ui/external/Switch";
-import { useGeneratedData } from "~/hooks/useGeneratedData";
-import { useLs } from "~/hooks/useLs";
-import { Events, eventManager } from "~/modules/EventManager";
+import { useSettings } from "~/hooks/useSettings";
+import { CvContextManager } from "~/modules/CvContextManager";
+import { eventManager } from "~/modules/events/EventManager";
+import { Events } from "~/modules/events/types";
 import { api } from "~/utils";
 
 export const MoveToAppliedSwitch = () => {
-  const { generated } = useGeneratedData();
-  const { vacancy } = generated || {};
-
-  const { ls, updateLs } = useLs();
+  const { settings, updateSettings } = useSettings();
   const { mutate: updateVacancy } = api.vacancies.upsert.useMutation();
 
   const [shouldAutoApplied, setShouldAutoApplied] = useState(false);
 
   useEffect(() => {
-    if (ls.shouldAutoApplied === null) return;
-    setShouldAutoApplied(ls.shouldAutoApplied);
-  }, [ls.shouldAutoApplied]);
+    if (settings.shouldAutoApplied === null) return;
+    setShouldAutoApplied(settings.shouldAutoApplied);
+  }, [settings.shouldAutoApplied]);
 
   useEffect(() => {
     if (!shouldAutoApplied) return;
 
     const handler = () => {
+      const vacancy = CvContextManager.getInstance().getVacancy();
+
       void updateVacancy({
         id: vacancy?.id,
         group: "applied",
@@ -31,16 +31,16 @@ export const MoveToAppliedSwitch = () => {
       toast.success("Status changed to ✅ applied");
     };
 
-    eventManager.on(Events.DOWNLOAD_CV_EVENT, handler);
+    eventManager.on(Events.DOWNLOAD_FIRED, handler);
 
     return () => {
-      eventManager.off(Events.DOWNLOAD_CV_EVENT, handler);
+      eventManager.off(Events.DOWNLOAD_FIRED, handler);
     };
   }, [shouldAutoApplied]);
 
   const onClick = () => {
     setShouldAutoApplied(!shouldAutoApplied);
-    updateLs({ shouldAutoApplied: !shouldAutoApplied });
+    updateSettings({ shouldAutoApplied: !shouldAutoApplied });
   };
 
   return (

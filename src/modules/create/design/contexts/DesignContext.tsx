@@ -1,19 +1,24 @@
-import React, {
-  MutableRefObject,
+import {
+  type MutableRefObject,
+  type ReactNode,
+  type RefObject,
   createContext,
   useContext,
   useRef,
   useState,
 } from "react";
-import { Design } from "../types";
+
+import type { Design } from "../types";
+import { type ImperativeHandleRef } from "../base-components/dnd/DndProvider";
 import { Charmander } from "../designs/Charmander";
-import { ImperativeHandleRef } from "../base-components/dnd/DndProvider";
+import { eventManager } from "~/modules/events/EventManager";
+import { Events } from "~/modules/events/types";
 
 const { log } = console;
 
 type DesignContextInput = {
-  children: (a: DesignContextOutput) => React.ReactNode;
-  a4Ref: React.RefObject<HTMLDivElement>;
+  children: (a: DesignContextOutput) => ReactNode;
+  a4Ref: RefObject<HTMLDivElement>;
 };
 
 type DesignContextOutput = {
@@ -39,9 +44,9 @@ export const DesignContext = (props: DesignContextInput) => {
 
   const changeDesign = (newDesign: Design) => {
     if (!imperative.current) return;
-
     setDesign(newDesign);
     imperative.current.updateSections(() => newDesign.sections);
+    eventManager.emit(Events.DESIGN_CHANGED);
   };
 
   const context = {

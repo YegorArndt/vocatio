@@ -1,4 +1,8 @@
+import { useEffect, useState } from "react";
 import { startCase } from "lodash-es";
+
+import type { PartialVacancy, RouterUser } from "../types";
+import { api } from "~/utils";
 import { Settings } from "~/components/icons";
 import {
   Popover,
@@ -6,17 +10,20 @@ import {
   PopoverTrigger,
 } from "~/components/ui/external/Popover";
 import { Switch } from "~/components/ui/external/Switch";
-import { useGeneratedData } from "~/hooks/useGeneratedData";
-import { useLs } from "~/hooks/useLs";
+import { useSettings } from "~/hooks/useSettings";
 import { typedEntries } from "../utils";
 import {
   RadioGroup,
   RadioGroupItem,
 } from "~/components/ui/external/RadioGroup";
-import { FileNameConfig, fileNameSeparators } from "~/utils/ls";
-import { PartialVacancy, RouterUser } from "../types";
+import {
+  FileNameConfig,
+  fileNameSeparators,
+} from "~/modules/settings/settings";
 import { Badge } from "~/components/ui/external/Badge";
-import { useEffect, useState } from "react";
+import { Spinner } from "~/components";
+import { useCvContext } from "~/hooks/useCvContext";
+import { CvContextManager } from "../CvContextManager";
 
 const { log } = console;
 
@@ -62,58 +69,58 @@ export const createFileName = (props: FileNameProps) => {
 
 export const FileName = () => {
   const [fileName, setFileName] = useState("");
+  const { settings, updateSettings } = useSettings();
+  const { data: user } = api.users.get.useQuery();
+  const { vacancy } = useCvContext() || {};
 
-  const { generated, updateGeneratedData } = useGeneratedData();
-  const { ls, updateLs } = useLs();
+  const handler = () => {
+    if (!user || !vacancy) return;
 
-  useEffect(() => {
-    if (generated && !fileName) {
-      setFileName(generated.fileName);
-    }
-  }, [generated]);
+    const newFileName = createFileName({
+      ...settings.fileNameConfig,
+      user,
+      vacancy,
+    });
+    setFileName(newFileName);
+    CvContextManager.getInstance().updateCv({ fileName: newFileName });
+  };
 
-  useEffect(() => {
-    if (generated) {
-      const newFileName = createFileName({
-        ...ls.fileNameConfig,
-        user: generated,
-        vacancy: generated.vacancy,
-      });
-
-      setFileName(newFileName);
-      updateGeneratedData({ ...generated, fileName: newFileName });
-    }
-  }, [generated, ls.fileNameConfig, updateLs]);
+  useEffect(handler, [user, vacancy, updateSettings]);
 
   const handleSwitchChange = (key: keyof FileNameConfig) => {
-    updateLs({
+    updateSettings({
       fileNameConfig: {
-        ...ls.fileNameConfig,
-        [key]: !ls.fileNameConfig[key],
+        ...settings.fileNameConfig,
+        [key]: !settings.fileNameConfig[key],
       },
     });
   };
 
   const handleSeparatorChange = (separator: FileNameConfig["separator"]) => {
-    updateLs({
+    updateSettings({
       fileNameConfig: {
-        ...ls.fileNameConfig,
+        ...settings.fileNameConfig,
         separator,
       },
     });
   };
 
   return (
-    <header className="flex-center h-20 w-full bg-primary">
+    <header className="flex-center relative z-layout h-20 w-full bg-primary">
       <label className="flex-y grow gap-4 whitespace-nowrap">
         File name:
-        {generated && (
+        {fileName ? (
           <input
             type="text"
             name="file-name"
             className="outlined border-bottom w-full whitespace-nowrap bg-transparent pb-1 outline-none transition-all focus:border-weiss"
-            value={generated.fileName}
+            value={fileName}
+            onChange={(e) => setFileName(e.target.value)}
+            spellCheck={false}
+            autoComplete="off"
           />
+        ) : (
+          <Spinner size={10} />
         )}
       </label>
       <Popover>
@@ -124,7 +131,7 @@ export const FileName = () => {
           <h3 className="text-md tracking-normal">Configure file name</h3>
           <p>Include in the file name</p>
           <section className="my-4 flex flex-col gap-3">
-            {typedEntries(ls.fileNameConfig).map(
+            {typedEntries(settings.fileNameConfig).map(
               ([k, v]) =>
                 k !== "separator" && (
                   <label key={k} className="flex-y gap-2">
@@ -143,7 +150,7 @@ export const FileName = () => {
               Symbol separating words in the file name
             </span>
             <RadioGroup
-              defaultValue={ls.fileNameConfig.separator}
+              defaultValue={settings.fileNameConfig.separator}
               onValueChange={handleSeparatorChange}
             >
               {fileNameSeparators.map((s) => (

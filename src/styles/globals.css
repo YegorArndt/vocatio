@@ -344,10 +344,6 @@
     cursor: not-allowed;
   }
 
-  *:disabled:is(button, a):is(.primary, .secondary) {
-    @apply border;
-  }
-
   *:disabled:is(button, a):hover {
     background-color: var(--bg-disabled);
   }
@@ -552,13 +548,6 @@
 
   /* TODO  */
   .bullet-point > *:not(.z-tooltip)::before {
-    content: "•";
-    color: black;
-    padding-right: 11px;
-    margin-left: -1rem;
-  }
-
-  .bullet-point-direct {
     content: "•";
     color: black;
     padding-right: 11px;

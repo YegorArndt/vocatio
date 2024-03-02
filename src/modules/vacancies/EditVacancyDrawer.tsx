@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 import { v4 as uuidv4 } from "uuid";
 import { Vacancy } from "@prisma/client";
 import { startCase } from "lodash-es";
@@ -9,13 +7,10 @@ import {
   Drawer,
   DrawerHandle,
 } from "~/components/ui/external/Drawer";
-import { SaveButton } from "~/components/SaveButton";
-import { LiaEditSolid } from "react-icons/lia";
 import { useForm } from "react-hook-form";
 import { normalizeHookFormValues } from "../settings/me/FormContext";
 import { Textarea } from "~/components/ui/inputs/Textarea";
 import { Text } from "~/components/ui/inputs/Text";
-import { initDraft } from "../init-gen/utils";
 import { api } from "~/utils";
 import { PartialVacancy } from "../types";
 import { useRouter } from "next/router";
@@ -89,11 +84,11 @@ export const EditVacancyDrawer = (props: EditVacancyDrawerProps) => {
   const onCreate = (vacancy: PartialVacancy) => {
     if (!user) return;
 
-    void initDraft({
-      vacancy,
-      user,
-      onComplete: () => router.push(`/create/${vacancy.id}`),
-    });
+    // void tailor({
+    //   vacancy,
+    //   user,
+    //   onComplete: () => router.push(`/create/${vacancy.id}`),
+    // });
   };
 
   return (
@@ -104,7 +99,7 @@ export const EditVacancyDrawer = (props: EditVacancyDrawerProps) => {
         <div className="flex flex-col gap-8 ">
           <header className="flex-between text-xl">
             {heading}
-            <SaveButton
+            {/* <SaveButton
               // isLoading={isLoading}
               // isSuccess={isSuccess}
               frontIcon={<LiaEditSolid />}
@@ -118,7 +113,7 @@ export const EditVacancyDrawer = (props: EditVacancyDrawerProps) => {
               // }
               // reset={reset}
               // onClick={onSubmit}
-            />
+            /> */}
           </header>
           <div className="grid min-h-[500px] grid-cols-2 gap-8 bg-primary  ">
             <section className="flex flex-col gap-5">

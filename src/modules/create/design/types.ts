@@ -3,10 +3,7 @@ import { Rubik, EB_Garamond, Noto_Serif } from "next/font/google";
 import { DndProviderProps } from "./base-components/dnd/DndProvider";
 import { GroupProps } from "./base-components/Group";
 import { AutoresizeProps } from "./base-components/Autoresize";
-import type {
-  GeneratedData,
-  GeneratedExperienceEntry,
-} from "~/modules/init-gen/types";
+import { Cv, CvExperienceEntry } from "~/modules/init-gen/types";
 
 const rubik = Rubik({ subsets: ["latin"] });
 const garamond = EB_Garamond({ subsets: ["latin"] });
@@ -49,14 +46,7 @@ export type Design = {
   background: string;
 };
 
-export type HydrationData =
-  | {
-      generatedSkills: {
-        id: string;
-        name: string;
-      }[];
-    }
-  | GeneratedExperienceEntry[];
+export type HydrationData = Partial<Cv> | CvExperienceEntry | undefined;
 
 export type HydratableComponent = {
   type: BaseComponentType;
@@ -66,7 +56,7 @@ export type HydratableComponent = {
    * Hydratable means it will be hydrated with `user` data or AI generated data.
    * Used for `UserImage`, `Contact`, `Education`, `Experience`, `Skills`, `Languages` components.
    */
-  hydratableProps?: (data: GeneratedData | HydrationData) => DndProviderProps;
+  hydratableProps?: (data: HydrationData) => DndProviderProps;
   /**
    * Hydrated means it doesn't expect any fn to hydrate it.
    * Used for `Group` component.

@@ -7,7 +7,7 @@ import { MessageContainer } from "~/components/MessageContainer";
 
 import { ProgressIncrementer } from "~/components/ProgressIncrementer";
 import { Link } from "~/components/ui/buttons/Link";
-import { useLs } from "~/hooks/useLs";
+import { useSettings } from "~/hooks/useSettings";
 import { useSendMessage } from "~/hooks/useSendMessage";
 import { extensionUrl } from "~/modules/constants";
 import { api } from "~/utils/api";
@@ -17,7 +17,7 @@ const { log } = console;
 const ConnectExtensionPage = () => {
   const { hasSent, sendMessage, isInstalled } = useSendMessage();
   const { data: user } = api.users.get.useQuery();
-  const { updateLs } = useLs();
+  const { updateSettings } = useSettings();
 
   useEffect(() => {
     if (user) sendMessage({ type: "post-user", payload: { user } });
@@ -25,7 +25,7 @@ const ConnectExtensionPage = () => {
 
   useEffect(() => {
     if (hasSent) {
-      updateLs({ hasConnectedExtension: true });
+      updateSettings({ hasConnectedExtension: true });
     }
   }, [hasSent]);
 

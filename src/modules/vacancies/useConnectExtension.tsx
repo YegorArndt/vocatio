@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { LiaExternalLinkAltSolid } from "react-icons/lia";
 import { toast } from "sonner";
 import { Link } from "~/components/ui/buttons/Link";
-import { useLs } from "~/hooks/useLs";
+import { useSettings } from "~/hooks/useSettings";
 import { useSendMessage } from "~/hooks/useSendMessage";
 import { api } from "~/utils";
 import { extensionUrl } from "../constants";
@@ -32,7 +32,7 @@ export const useConnectExtension = () => {
     undefined,
     { retry: false }
   );
-  const { ls, updateLs } = useLs();
+  const { settings, updateSettings } = useSettings();
   const { sendMessage, hasSent, response, isInstalled } = useSendMessage();
   const router = useRouter();
 
@@ -54,7 +54,7 @@ export const useConnectExtension = () => {
 
   useEffect(() => {
     if (errorGettingUser) return handleUserNotFound();
-    const shouldRun = user && ls.hasConnectedExtension === false;
+    const shouldRun = user && settings.hasConnectedExtension === false;
 
     if (!shouldRun) return;
 
@@ -62,9 +62,9 @@ export const useConnectExtension = () => {
     if (!isInstalled) handleNotInstalled();
 
     if (response.success) {
-      updateLs({ hasConnectedExtension: true });
+      updateSettings({ hasConnectedExtension: true });
       toast.dismiss();
       toast.success("Extension connected.");
     }
-  }, [user, response.success, errorGettingUser, isInstalled, ls]);
+  }, [user, response.success, errorGettingUser, isInstalled, settings]);
 };

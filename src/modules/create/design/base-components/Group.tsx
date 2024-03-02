@@ -17,6 +17,7 @@ import {
   PopoverTrigger,
 } from "~/components/ui/external/Popover";
 import { Button } from "~/components/ui/buttons/Button";
+import { stripHtmlTags } from "~/modules/utils";
 
 const { log } = console;
 
@@ -119,8 +120,9 @@ const Icon = (props: IconProps) => {
           )}
           onChange={(e) => setFilter(e.target.value)}
         />
-        <p className="leading-8 h3">
-          You&apos;re choosing an icon for &quot;{value}&quot;
+        <p className="leading-8 h4">
+          You&apos;re choosing an icon for &quot;{stripHtmlTags(value).trim()}
+          &quot;
         </p>
         <section className="flex-y flex-wrap gap-3 overflow-auto">
           {filteredIcons.map((iconEntry, index) => {
@@ -156,7 +158,7 @@ const Icon = (props: IconProps) => {
 };
 
 export const Group = () => {
-  const { type: _type, hydratedProps = {} } = useComponentContext();
+  const { type: initialType, hydratedProps = {} } = useComponentContext();
   const {
     containerClassName,
     image,
@@ -167,7 +169,7 @@ export const Group = () => {
     valueProps,
   } = hydratedProps as GroupProps;
   const [currentIcon, setCurrentIcon] = useState(image);
-  const [type, setType] = useState(_type);
+  const [type, setType] = useState(initialType);
 
   useEffect(() => {
     if (currentIcon === "star") {

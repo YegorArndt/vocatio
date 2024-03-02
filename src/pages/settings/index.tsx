@@ -6,26 +6,26 @@ import { BsKeyboard } from "react-icons/bs";
 import { api } from "~/utils";
 import { Layout } from "~/components/layout/Layout";
 import { Spinner } from "~/components";
-import { useLs } from "~/hooks/useLs";
+import { useSettings } from "~/hooks/useSettings";
 import { ImportWithLinkedInPopover } from "~/modules/settings/me/ImportWithLinkedInPopover";
 import { UploadCvPopover } from "~/modules/settings/me/UploadCvPopover";
 import { Button } from "~/components/ui/buttons/Button";
 
 const settings = () => {
   const router = useRouter();
-  const { ls, updateLs } = useLs();
+  const { settings, updateSettings } = useSettings();
   const { data: user, isSuccess: isUserLoaded } = api.users.get.useQuery();
 
   useEffect(() => {
-    if (ls.hasHydrated) {
+    if (settings.hasHydrated) {
       void router.push("/my-info");
       return;
     }
 
-    if (ls.hasHydrated === null && isUserLoaded) {
-      updateLs({ hasHydrated: false });
+    if (settings.hasHydrated === null && isUserLoaded) {
+      updateSettings({ hasHydrated: false });
     }
-  }, [ls, user]);
+  }, [settings, user]);
 
   return (
     <>
@@ -39,12 +39,12 @@ const settings = () => {
       </Head>
       <Layout>
         <div className="breakout">
-          {(ls.hasHydrated === null || ls.hasHydrated) && (
+          {(settings.hasHydrated === null || settings.hasHydrated) && (
             <section className="flex-y flex-center h-[85vh] gap-3">
               <Spinner size={15} /> Loading settings...
             </section>
           )}
-          {ls.hasHydrated === false && (
+          {settings.hasHydrated === false && (
             <section>
               <h1>Ways to import your profile.</h1>
               <p className="clr-ghost">

@@ -10,6 +10,7 @@ import { DownloadButton } from "./DownloadButton";
 import { FontFamilyButton } from "./FontFamilyButton";
 import { MoveToAppliedSwitch } from "./MoveToAppliedSwitch";
 import { BoldenKeywordsPopover } from "./BoldenKeywordsPopover";
+import { IoLanguage } from "react-icons/io5";
 
 const { log } = console;
 
@@ -43,8 +44,14 @@ export const LeftPanel = () => {
         className={NAV_BUTTON_CN}
         disabled
       />
-      <DownloadButton />
+      <Button
+        frontIcon={<IoLanguage />}
+        text="Translate"
+        className={NAV_BUTTON_CN}
+        disabled
+      />
       <FontFamilyButton />
+      <DownloadButton />
       <footer className="mt-8 flex flex-col gap-3">
         <MoveToAppliedSwitch />
       </footer>

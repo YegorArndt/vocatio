@@ -161,7 +161,9 @@ export const Charmander: Design = {
                   entry?.skills?.join(" ")
                 )?.replace("•", ""),
 
-                valueProps: { className: "bullet" },
+                valueProps: {
+                  className: "bullet",
+                },
               },
             })),
           ],

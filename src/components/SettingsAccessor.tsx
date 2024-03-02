@@ -1,4 +1,5 @@
-import { useCallback, useState, type ReactNode } from "react";
+import { type ReactNode } from "react";
+import { useForceUpdate } from "~/hooks/useForceUpdate";
 import {
   VocatioSettings,
   getSettings,
@@ -13,14 +14,6 @@ type ChildrenProps = {
 type SettingsAccessorProps = {
   fallback?: ReactNode;
   children: (props: ChildrenProps) => ReactNode;
-};
-
-const useForceUpdate = () => {
-  const [, setTick] = useState(0);
-  const update = useCallback(() => {
-    setTick((tick) => tick + 1);
-  }, []);
-  return update;
 };
 
 export const SettingsAccessor = (props: SettingsAccessorProps) => {

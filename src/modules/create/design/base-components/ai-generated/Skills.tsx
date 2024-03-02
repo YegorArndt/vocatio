@@ -37,6 +37,7 @@ import { BUTTON_CN } from "../toolbars/constants";
 import { TooltipProvider } from "~/components/ui/external/Tooltip";
 import { MoveComponentButton } from "../toolbars/shared/MoveComponentButton";
 import { PageBreakButton } from "../toolbars/shared/PageBreakButton";
+import { useForceUpdate } from "~/hooks/useForceUpdate";
 
 const { log } = console;
 
@@ -93,6 +94,7 @@ export const AddSkillsPopover = () => {
   const [activeTab, setActiveTab] = useState<ActiveTab>(0);
   const [search, setSearch] = useState("");
   const [displayOnlyMissing, setDisplayOnlyMissing] = useState(false);
+  const forceUpdate = useForceUpdate();
 
   const groupedSkills = getGroupedSkills(user);
 
@@ -104,6 +106,7 @@ export const AddSkillsPopover = () => {
       skills: [...prev.skills, { name: skill, id: uuidv4() }],
     }));
     eventManager.emit(PopoverEvents.SKILLS_UPDATED);
+    forceUpdate();
   };
 
   const getFilteredSkills = () => {

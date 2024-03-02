@@ -80,7 +80,7 @@ const parseExperience = (gptResponse: string | undefined) => {
 
   const renamed = {
     bullets: json?.mergedTuples
-      ?.filter((x) => x.length > 0)
+      ?.filter((x) => x.length > 5)
       .map((x) => ({
         id: `${uuidv4()}-bullet`,
         text: x,
@@ -98,9 +98,9 @@ export const bulletizeDescriptions = (
   user: RouterUser,
   key: "experience" | "education"
 ): CvExperienceEntry[] => {
+  // @ts-ignore
   return user[key].map((x) => ({
     ...x,
-    skills: [],
     bullets: x.description
       .split("•")
       .slice(1)

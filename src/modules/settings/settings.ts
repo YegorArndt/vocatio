@@ -44,8 +44,8 @@ export const initialSettings: VocatioSettings = {
   shouldAutoApplied: null,
   theme: "dark",
   fileNameConfig: initialFileNameConfig,
-  [PopoverEvents.BOLDEN_SUMMARY]: null,
-  [PopoverEvents.BOLDEN_BULLETS]: null,
+  [PopoverEvents.BOLDEN_SUMMARY]: true,
+  [PopoverEvents.BOLDEN_BULLETS]: true,
   version: 0,
 };
 

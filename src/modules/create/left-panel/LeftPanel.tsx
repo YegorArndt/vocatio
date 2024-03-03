@@ -11,6 +11,7 @@ import { FontFamilyButton } from "./FontFamilyButton";
 import { MoveToAppliedSwitch } from "./MoveToAppliedSwitch";
 import { BoldenKeywordsPopover } from "./BoldenKeywordsPopover";
 import { IoLanguage } from "react-icons/io5";
+import { Badge } from "~/components/ui/external/Badge";
 
 const { log } = console;
 
@@ -40,7 +41,8 @@ export const LeftPanel = () => {
       <BoldenKeywordsPopover />
       <Button
         frontIcon={<IoMdAnalytics />}
-        text="Analyze chances"
+        text="Improve"
+        endIcon={<Badge className="ml-2 rounded-md bg-red clr-white">5</Badge>}
         className={NAV_BUTTON_CN}
         disabled
       />

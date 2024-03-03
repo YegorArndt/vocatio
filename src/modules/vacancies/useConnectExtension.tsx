@@ -3,10 +3,10 @@ import { useEffect } from "react";
 import { LiaExternalLinkAltSolid } from "react-icons/lia";
 import { toast } from "sonner";
 import { Link } from "~/components/ui/buttons/Link";
-import { useSettings } from "~/hooks/useSettings";
 import { useSendMessage } from "~/hooks/useSendMessage";
 import { api } from "~/utils";
 import { extensionUrl } from "../constants";
+import { getSettings, updateSettings } from "../settings/settings";
 
 const { log } = console;
 
@@ -32,7 +32,6 @@ export const useConnectExtension = () => {
     undefined,
     { retry: false }
   );
-  const { settings, updateSettings } = useSettings();
   const { sendMessage, hasSent, response, isInstalled } = useSendMessage();
   const router = useRouter();
 
@@ -46,7 +45,6 @@ export const useConnectExtension = () => {
     if (user) {
       sendMessage({ type: "post-user", payload: { user } });
       toast.loading("Connecting the extension...", {
-        id: "connecting",
         duration: Infinity,
       });
     }
@@ -54,6 +52,7 @@ export const useConnectExtension = () => {
 
   useEffect(() => {
     if (errorGettingUser) return handleUserNotFound();
+    const settings = getSettings();
     const shouldRun = user && settings.hasConnectedExtension === false;
 
     if (!shouldRun) return;
@@ -62,9 +61,22 @@ export const useConnectExtension = () => {
     if (!isInstalled) handleNotInstalled();
 
     if (response.success) {
-      updateSettings({ hasConnectedExtension: true });
+      updateSettings((prev) => ({ ...prev, hasConnectedExtension: true }));
       toast.dismiss();
       toast.success("Extension connected.");
     }
-  }, [user, response.success, errorGettingUser, isInstalled, settings]);
+  }, [user, response.success, errorGettingUser, isInstalled]);
+
+  useEffect(() => {
+    const handler = () => {
+      const settings = getSettings();
+      if (settings.hasConnectedExtension === false) connectExtension();
+    };
+
+    window.onfocus = handler;
+
+    return () => {
+      window.onfocus = null;
+    };
+  }, []);
 };

@@ -1,6 +1,6 @@
 import { RiDraftLine } from "react-icons/ri";
 
-import { BlurImage, Spinner } from "~/components";
+import { Spinner } from "~/components";
 import { Blur } from "~/components/Blur";
 import {
   Drawer,
@@ -15,6 +15,7 @@ import { api, cn } from "~/utils";
 import { Fragment } from "react";
 import { Text } from "~/components/ui/inputs/Text";
 import { useCvContext } from "~/hooks/useCvContext";
+import { CompanyPresentator } from "../../CompanyPresentator";
 
 const { log } = console;
 
@@ -63,16 +64,7 @@ export const CoverLetterDrawer = () => {
                   {/* Handle  */}
                   <DrawerHandle parentCn="!col-span-1" />
 
-                  {/* Company name on the right */}
-                  <span className="flex-y justify-end font-normal">
-                    <BlurImage
-                      src={vacancy?.image}
-                      height={40}
-                      width={40}
-                      className="ml-4 mr-2 shrink-0 rounded-full"
-                    />
-                    <b>{vacancy?.companyName}</b>
-                  </span>
+                  <CompanyPresentator className="justify-end" />
                 </header>
 
                 {/* Editor toolbar and Textarea */}

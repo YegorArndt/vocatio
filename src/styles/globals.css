@@ -454,7 +454,7 @@
     --gap: clamp(1rem, 6vw, 3rem);
     --content-width: 150ch;
     --full: minmax(var(--gap), 1fr);
-    --content: min(var(--content-width), 100% - var(--gap) * 2);
+    --content: max(var(--content-width), 100% - var(--gap) * 2);
     --breakout: minmax(0, 5rem);
 
     grid-column: 2;

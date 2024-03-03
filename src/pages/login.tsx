@@ -17,7 +17,7 @@ const { log } = console;
 
 const PrismaLayer = (props: { clerkUser: UserResource }) => {
   const { clerkUser } = props;
-  const { updateSettings } = useSettings();
+  const { settings, updateSettings } = useSettings();
 
   const {
     data: user,
@@ -35,7 +35,7 @@ const PrismaLayer = (props: { clerkUser: UserResource }) => {
 
   useEffect(() => {
     if (user || successCreating) {
-      successCreating &&
+      settings.hasConnectedExtension === null &&
         updateSettings({
           hasConnectedExtension: false,
           [PopoverEvents.BOLDEN_BULLETS]: true,

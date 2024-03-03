@@ -1,5 +1,3 @@
-//@ts-nocheck
-
 import { FormContext } from "../../FormContext";
 import { Select } from "~/components/ui/inputs/Select";
 import { ArrayFormContext } from "../../ArrayFormContext";

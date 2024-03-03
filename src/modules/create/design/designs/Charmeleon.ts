@@ -86,7 +86,7 @@ export const Charmeleon: Design = {
           groupItemProps: {
             imageSize: 15,
             containerClassName: "gap-2",
-            valueProps: { className: "text-[18px]" },
+            valueProps: { className: "text-[16px] leading-5" },
           },
         }),
         heading1({

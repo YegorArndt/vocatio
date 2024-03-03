@@ -48,7 +48,7 @@ export const PageBreakButton = () => {
     <Tooltip>
       <TooltipTrigger
         className={cn(BUTTON_CN, "p-2", {
-          "bg-green hover:!bg-green": !!element,
+          "bg-blue hover:!bg-blue": !!element,
         })}
         onClick={(e) => {
           if (!document) return;
@@ -132,7 +132,7 @@ export const PageBreakButton = () => {
           }
         }}
       >
-        <ImPageBreak />
+        <ImPageBreak fontSize={19} />
       </TooltipTrigger>
       <TooltipContent>
         {element ? "Push back up" : "Push to next page"}

@@ -3,12 +3,7 @@ import cn from "classnames";
 
 import { Navbar } from "./Navbar";
 import { DarkThemeSwitch, LightThemeSwitch } from "../icons";
-import {
-  TooltipProvider,
-  TooltipContent,
-  Tooltip,
-  TooltipTrigger,
-} from "~/components/ui/external/Tooltip";
+import { TooltipTrigger } from "~/components/ui/external/Tooltip";
 import { eventManager } from "~/modules/events/EventManager";
 import { Events } from "~/modules/events/types";
 import { useSettings } from "~/hooks/useSettings";
@@ -48,14 +43,14 @@ export const Layout = (props: LayoutProps) => {
 
   return (
     <>
-      <header className="flex-center fixed right-5 top-5 z-dropdown gap-2">
+      {/* <header className="flex-center fixed right-5 top-5 z-dropdown gap-2">
         <TooltipProvider>
           <Tooltip>
             <ThemeSwitcher />
             <TooltipContent>Change theme</TooltipContent>
           </Tooltip>
         </TooltipProvider>
-      </header>
+      </header> */}
       <div className={cn("app-container", className)}>
         <Navbar>{toolbar}</Navbar>
         <main className="main-container">{children}</main>

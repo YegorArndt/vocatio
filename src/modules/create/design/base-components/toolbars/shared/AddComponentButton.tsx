@@ -112,7 +112,7 @@ export const AddComponentPopover = () => {
       <Tooltip>
         <TooltipTrigger asChild>
           <PopoverTrigger className={cn(BUTTON_CN, "gap-2 p-2")}>
-            <BsPlusCircleDotted />
+            <BsPlusCircleDotted fontSize={19} />
           </PopoverTrigger>
         </TooltipTrigger>
         <TooltipContent>Add below</TooltipContent>

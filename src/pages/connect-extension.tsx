@@ -40,7 +40,7 @@ const ConnectExtensionPage = () => {
         shouldHide
       />
       <main className="flex-center h-[90vh]">
-        {!isInstalled && (
+        {!isInstalled && !hasSent && (
           <AnimatedDiv className="flex-center flex-col gap-3">
             Coudn&apos;t connect to the extension. Have you installed it?
             <Link

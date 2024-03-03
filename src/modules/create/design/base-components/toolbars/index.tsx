@@ -82,7 +82,7 @@ export const Toolbar = (props: ToolbarProps) => {
                       });
                     }}
                   >
-                    <BiDuplicate />
+                    <BiDuplicate fontSize={19} />
                   </TooltipTrigger>
                   <TooltipContent>Duplicate {startCase(c.type)}</TooltipContent>
                 </RadixTooltip>

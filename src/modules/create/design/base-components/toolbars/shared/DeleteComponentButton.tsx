@@ -42,7 +42,7 @@ export const DeleteComponentButton = () => {
               e.stopPropagation();
             }}
           >
-            <RiDeleteBin2Fill />
+            <RiDeleteBin2Fill fontSize={19} />
           </TooltipTrigger>
           <TooltipContent>Delete item</TooltipContent>
         </>

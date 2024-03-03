@@ -24,14 +24,12 @@ import { RouterUser } from "~/modules/types";
 import { BoxName } from "./types";
 import { UpdateWithExtensionLink } from "./UpdateWithExtensionLink";
 import { typedEntries } from "~/modules/utils";
-import { useSendMessage } from "~/hooks/useSendMessage";
 
 const { log } = console;
 
 type BoxFactoryProps = {
   boxName: BoxName;
-  updateKey: BoxName;
-  className?: string;
+  updateKey: BoxName; // Helps update each box individually with LinkedIn.
 };
 
 type Component =
@@ -89,7 +87,7 @@ const checkIfDataComplete = (data: Partial<RouterUser> | undefined) => {
 };
 
 export const BoxFactory = (props: BoxFactoryProps) => {
-  const { boxName, updateKey, className } = props;
+  const { boxName, updateKey } = props;
 
   const { data: user } = api.users.get.useQuery();
   const { mutate: updateDatabase, isLoading: isUpdating } =
@@ -98,8 +96,6 @@ export const BoxFactory = (props: BoxFactoryProps) => {
   const scrollIntoViewRef = useScrollIntoView({
     shouldScroll: boxName === updateKey,
   });
-
-  const { sendMessage } = useSendMessage();
 
   const { Component, dataKeys } = mapping[boxName];
 
@@ -130,10 +126,7 @@ export const BoxFactory = (props: BoxFactoryProps) => {
       <ResizablePanelGroup direction="horizontal">
         <ResizablePanel defaultSize={70}>
           <AnimatedDiv
-            className={cn(
-              "flex flex-col gap-8 rounded-md border bg-card",
-              className
-            )}
+            className="flex flex-col gap-8 rounded-md border bg-card"
             ref={scrollIntoViewRef}
           >
             <Accordion

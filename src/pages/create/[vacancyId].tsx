@@ -1,6 +1,5 @@
 import Head from "next/head";
 import { RiDeleteBin6Line } from "react-icons/ri";
-import { BlurImage } from "~/components";
 import { Button } from "~/components/ui/buttons/Button";
 import { Badge } from "~/components/ui/external/Badge";
 import {
@@ -10,6 +9,7 @@ import {
 } from "~/components/ui/external/Resizable";
 import { useA4 } from "~/hooks/useA4";
 import { useCvContext } from "~/hooks/useCvContext";
+import { CompanyPresentator } from "~/modules/create/CompanyPresentator";
 import { DesignViewer } from "~/modules/create/DesignViewer";
 import { FileName } from "~/modules/create/FileName";
 import { PageBreak } from "~/modules/create/PageBreak";
@@ -92,8 +92,7 @@ const CvEditorPage = () => {
             <ResizablePanel defaultSize={10} className="z-layout mr-3">
               <header className="flex-y h-20 justify-end gap-3">
                 Applying for
-                <BlurImage src={cvContext?.vacancy?.image} rounded />
-                {cvContext?.vacancy?.companyName}
+                <CompanyPresentator />
               </header>
               <DesignViewer />
             </ResizablePanel>

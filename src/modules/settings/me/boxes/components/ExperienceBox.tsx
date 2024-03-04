@@ -39,8 +39,11 @@ type ExperienceBoxProps = {
   boxName: string;
 };
 
-const ImagePicker = (props: { onClick: (image: string) => void }) => {
-  const { onClick } = props;
+const ImagePicker = (props: {
+  image?: string;
+  onClick: (image: string) => void;
+}) => {
+  const { image, onClick } = props;
   const { data: user } = api.users.get.useQuery();
 
   if (!user) return <Spinner />;
@@ -56,7 +59,13 @@ const ImagePicker = (props: { onClick: (image: string) => void }) => {
         <Tooltip>
           <TooltipTrigger asChild>
             <PopoverTrigger className="clr-ghost primary">
-              <CiImageOn fontSize={40} />
+              <BlurImage
+                src={image}
+                width={100}
+                height={100}
+                className="rounded-md"
+                fallback={<CiImageOn fontSize={40} />}
+              />
             </PopoverTrigger>
           </TooltipTrigger>
           <TooltipContent>Pick an image</TooltipContent>
@@ -132,19 +141,12 @@ export const ExperienceBox = (props: ExperienceBoxProps) => {
                   <Fragment key={field.id}>
                     <AnimatedDiv className="grid grid-cols-[1fr_2fr] gap-4">
                       <section className="flex-y w-full gap-4">
-                        <BlurImage
-                          src={field.image}
-                          width={100}
-                          height={100}
-                          className="rounded-md"
-                          fallback={
-                            <ImagePicker
-                              onClick={(image) => {
-                                setValue(`experience.${index}.image`, image);
-                                updateDefaults(getValues());
-                              }}
-                            />
-                          }
+                        <ImagePicker
+                          image={field.image}
+                          onClick={(image) => {
+                            setValue(`experience.${index}.image`, image);
+                            updateDefaults(getValues());
+                          }}
                         />
                         <div className="flex grow flex-col gap-4">
                           <Text
@@ -225,8 +227,8 @@ export const ExperienceBox = (props: ExperienceBoxProps) => {
           <footer className="border-top flex-between col-span-2 mt-8 w-full gap-3 py-4">
             <div className="clr-ghost flex-y gap-2">
               <Thunder />
-              Vocatio forces the usage of bullet points and helps with
-              optimization.
+              Vocatio automatically streamlines your experience to align with
+              modern best practices.
             </div>
             <Button
               frontIcon={isUpdating && <Spinner size={10} />}

@@ -74,6 +74,7 @@ const mapping: Mapping = {
   languages: {
     Component: LanguagesBox,
     dataKeys: ["languages"],
+    // @ts-ignore
     stubby: { languages: [{ name: "English", value: "Expert" }] },
   },
   experience: {

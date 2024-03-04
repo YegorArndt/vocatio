@@ -1,6 +1,7 @@
 import cn from "classnames";
 import { type MouseEventHandler } from "react";
 import { Control, useController, type FieldValues } from "react-hook-form";
+import { PiCursorClick } from "react-icons/pi";
 import { type Options } from "react-select";
 import CreatableSelect from "react-select/creatable"; // Import CreatableSelect
 
@@ -30,6 +31,12 @@ export const Select = (props: SelectProps) => {
       options={options}
       className={cn("select-wrapper", className)}
       classNamePrefix="my-react-select"
+      formatCreateLabel={(inputValue) => (
+        <div className="flex-y cursor-pointer gap-2">
+          <PiCursorClick />
+          Click here to create &quot;{inputValue}&quot;
+        </div>
+      )}
       isClearable
       {...rest}
       {...field}

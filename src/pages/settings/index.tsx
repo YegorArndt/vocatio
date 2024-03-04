@@ -29,10 +29,14 @@ const SettingsPage = () => {
               <UploadCvPopover />
               <Button
                 frontIcon={
-                  <BlurImage src="/loading-cat.gif" height={25} width={25} />
+                  <BlurImage
+                    src="https://www.gstatic.com/lamda/images/gemini_sparkle_blue_33c17e77c4ebbdd9490b683b9812247e257b6f70.svg"
+                    height={25}
+                    width={20}
+                  />
                 }
                 text="I don't have any data"
-                className="primary sm !justify-start gap-2"
+                className="primary sm !justify-start"
               />
             </div>
           </section>

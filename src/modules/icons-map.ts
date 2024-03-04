@@ -77,7 +77,11 @@ import { DiRedis } from "react-icons/di";
 export const iconsMap = [
   { partial: ["email"], icon: Email },
   { partial: ["phone"], icon: Phone },
-  { partial: ["address", "location"], icon: Location },
+  {
+    partial: ["address", "location"],
+    exact: ["state", "country", "city"],
+    icon: Location,
+  },
   { exact: ["website"], icon: Website },
   { partial: ["linkedin"], icon: Linkedin },
   { partial: ["github"], exact: ["git"], icon: Github },

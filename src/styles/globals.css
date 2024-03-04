@@ -6,7 +6,7 @@
   * Colors persistent across themes.
   */
 :root {
-  --blue: rgba(0, 118, 255, 0.9);
+  --blue: rgb(35, 131, 226);
   --gray: #eaeaea;
   --green: #2da44e;
   --red: #f44336;
@@ -103,11 +103,6 @@
     @apply bg-primary text-default leading-5 clr-primary;
   }
 
-  * {
-    /* Smooth bg and text color transition for all elements except buttons and links  */
-    transition: background-color 0.5s ease;
-  }
-
   /* SUPER IMPORTANT
     This helps prevent cv texts from shifting down
   */
@@ -116,18 +111,18 @@
   }
 
   h1 {
-    @apply h1;
+    @apply text-4xl;
     line-height: 120%;
   }
 
   h2 {
-    @apply h2;
+    @apply text-3xl;
   }
   h3 {
-    @apply h3;
+    @apply text-2xl;
   }
   h4 {
-    @apply h4;
+    @apply text-xl;
   }
 
   /* For WebKit browsers */
@@ -203,30 +198,31 @@
 
   /* Select  */
   .select-wrapper .my-react-select__control {
-    @apply border-2 border-neutral-300 bg-weiss hover:border-neutral-400 dark:border-neutral-700 dark:bg-neutral-700 dark:hover:border-neutral-500;
+    @apply !border-2 !border-neutral-300 !bg-weiss hover:!border-neutral-400 dark:!border-neutral-700 dark:!bg-neutral-700;
   }
 
   .select-wrapper .my-react-select__control--is-focused {
-    @apply border-neutral-500 shadow-none hover:border-neutral-500 dark:border-neutral-400 dark:hover:border-neutral-400;
+    @apply !border-neutral-500 !shadow-none hover:!border-neutral-500 dark:!border-neutral-400 dark:hover:!border-neutral-400;
   }
 
   .select-wrapper .my-react-select__menu {
-    @apply border-2 border-neutral-300 bg-neutral-100 dark:border-neutral-600 dark:bg-neutral-700;
+    @apply !border-2 !border-neutral-300 !bg-neutral-100 dark:!border-neutral-600 dark:!bg-neutral-700;
   }
 
   .select-wrapper .my-react-select__option {
-    @apply bg-neutral-100 text-neutral-600 hover:bg-neutral-200 dark:bg-neutral-700 dark:text-neutral-200 dark:hover:bg-neutral-800;
+    @apply !bg-neutral-100 !text-neutral-600 hover:!bg-neutral-200 dark:!bg-neutral-700 dark:!text-neutral-200 dark:hover:!bg-neutral-800;
   }
 
   .select-wrapper .my-react-select__indicator-separator {
-    @apply bg-neutral-400;
+    @apply !bg-neutral-400;
   }
 
   .select-wrapper .my-react-select__input-container,
   .select-wrapper .my-react-select__placeholder,
   .select-wrapper .my-react-select__single-value {
-    @apply text-neutral-600 dark:text-neutral-200;
+    @apply !text-neutral-600 dark:!text-neutral-200;
   }
+
   /* END Select  */
 }
 
@@ -312,6 +308,19 @@
     @apply px-3 py-1 leading-5;
   }
 
+  .primary-filled {
+    @apply flex-y inline-flex items-center justify-center whitespace-nowrap rounded-md bg-weiss clr-schwarz;
+    transition-property: border-color, background, color, transform, box-shadow,
+      filter;
+    transition-duration: 0.15s;
+    transition-timing-function: ease;
+    cursor: pointer;
+  }
+
+  .primary-filled:hover {
+    filter: brightness(0.8);
+  }
+
   .primary:is(button, a) {
     @apply hover:main-hover inline-flex items-center justify-center whitespace-nowrap rounded-md;
     transition-property: border-color, background, color, transform, box-shadow,
@@ -319,6 +328,19 @@
     transition-duration: 0.15s;
     transition-timing-function: ease;
     cursor: pointer;
+  }
+
+  .blue-button {
+    @apply sm inline-flex items-center justify-center whitespace-nowrap rounded-md bg-blue font-semibold clr-white;
+    transition-property: border-color, background, color, transform, box-shadow,
+      filter;
+    transition-duration: 0.15s;
+    transition-timing-function: ease;
+    cursor: pointer;
+  }
+
+  .blue-button:hover {
+    filter: brightness(1.2);
   }
 
   .outlined:is(button, a) {
@@ -377,7 +399,7 @@
   }
 
   .input-wrapper:not(.outlined) {
-    background: #000;
+    background: var(--bg-primary);
     border: 1px solid #333;
     border-radius: 5px;
     padding: 4px 10px;
@@ -564,5 +586,13 @@
 
   .arial {
     font-family: Arial, sans-serif;
+  }
+
+  .wave-warning {
+    --clr: var(--yellow);
+    text-decoration: underline;
+    text-decoration-style: wavy;
+    text-decoration-color: var(--clr);
+    text-underline-position: under;
   }
 }

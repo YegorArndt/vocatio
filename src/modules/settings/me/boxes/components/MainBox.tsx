@@ -1,7 +1,7 @@
 import { startCase } from "lodash-es";
 import { Text } from "~/components/ui/inputs/Text";
 import { Fragment } from "react";
-import { FormContext } from "../../FormContext";
+import { FormContext } from "../../../../../components/FormContext";
 import { Textarea } from "~/components/ui/inputs/Textarea";
 import { Button } from "~/components/ui/buttons/Button";
 import { Spinner } from "~/components";
@@ -50,7 +50,7 @@ export const MainBox = (props) => {
               frontIcon={isUpdating && <Spinner size={10} />}
               text={isUpdating ? "Updating..." : "Update"}
               onClick={() => void submit(update)}
-              className="primary sm flex-y ml-auto"
+              className="primary-filled sm ml-auto"
               disabled={isUpdating || !formState.isDirty}
             />
           </footer>

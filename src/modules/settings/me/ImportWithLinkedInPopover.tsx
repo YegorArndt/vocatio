@@ -18,7 +18,7 @@ export const ImportWithLinkedInPopover = (props: ButtonProps) => {
   return (
     <Popover>
       <PopoverTrigger className="primary sm !justify-start gap-2">
-        <LinkedinColor fontSize={25} /> {text}
+        <LinkedinColor fontSize={23} /> {text}
       </PopoverTrigger>
       <PopoverContent
         onClick={(e) => e.stopPropagation()}

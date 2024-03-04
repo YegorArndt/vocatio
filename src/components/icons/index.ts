@@ -21,6 +21,7 @@ export { default as Me } from "./Me";
 export { default as PerkCheck } from "./PerkCheck";
 export { default as Phone } from "./Phone";
 export { default as Settings } from "./Settings";
+export { default as Thunder } from "./Thunder";
 export { default as Twitter } from "./Twitter";
 export { default as Upgrade } from "./Upgrade";
 export { default as Vk } from "./Vk";

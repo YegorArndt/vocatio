@@ -8,7 +8,7 @@ import {
   DrawerContent,
   DrawerHandle,
 } from "~/components/ui/external/Drawer";
-import { FormContext } from "~/modules/settings/me/FormContext";
+import { FormContext } from "~/components/FormContext";
 import { TextEditor } from "./TextEditor";
 import { NAV_BUTTON_CN } from "../constants";
 import { api, cn } from "~/utils";
@@ -64,7 +64,10 @@ export const CoverLetterDrawer = () => {
                   {/* Handle  */}
                   <DrawerHandle parentCn="!col-span-1" />
 
-                  <CompanyPresentator className="justify-end" />
+                  <div className="flex-y justify-end gap-3">
+                    Writing cover letter for
+                    <CompanyPresentator />
+                  </div>
                 </header>
 
                 {/* Editor toolbar and Textarea */}

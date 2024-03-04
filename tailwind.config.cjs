@@ -50,9 +50,10 @@ const config = {
         schwarz: "var(--schwarz)",
       },
       fontSize: {
-        md: 'clamp(1rem, 0.9308rem + 0.3077vw, 1.2rem)',
+        md: "clamp(1rem, 0.9308rem + 0.3077vw, 1.2rem)",
         default: "0.875rem",
         sm: "clamp(0.8rem, 0.7654rem + 0.1538vw, 0.9rem)",
+        xs: "clamp(0.7rem, 0.6923rem + 0.1538vw, 0.8rem)",
       },
       zIndex: {
         modal: 50,
@@ -88,24 +89,24 @@ const config = {
         textColorClasses[`.clr-${name}`] = { color };
       }
 
-      // Add heading classes
-      const headingClasses = {};
-      const headingFontSizeLetterSpacingMap = {
-        /* h1 */ "4xl": "-0.049375rem",
-        /* h2 */ "3xl": "-0.020625rem",
-        /* h3 */ "2xl": "-0.029375rem",
-        /* h4 */ xl: "-0.029375rem",
-      };
-      Object.entries(headingFontSizeLetterSpacingMap).forEach(
-        (entry, i) =>
-          (headingClasses[`.h${i + 1}`] = {
-            fontSize: theme(`fontSize.${entry[0]}`),
-            letterSpacing: entry[1],
-            fontWeight: "700",
-          })
-      );
+      // // Add heading classes
+      // const headingClasses = {};
+      // const headingFontSizeLetterSpacingMap = {
+      //   /* h1 */ "4xl": "-0.049375rem",
+      //   /* h2 */ "3xl": "-0.020625rem",
+      //   /* h3 */ "2xl": "-0.029375rem",
+      //   /* h4 */ xl: "-0.029375rem",
+      // };
+      // Object.entries(headingFontSizeLetterSpacingMap).forEach(
+      //   (entry, i) =>
+      //     (headingClasses[`.h${i + 1}`] = {
+      //       fontSize: theme(`fontSize.${entry[0]}`),
+      //       letterSpacing: entry[1],
+      //       fontWeight: "700",
+      //     })
+      // );
 
-      addUtilities({ ...textColorClasses, ...headingClasses });
+      addUtilities(textColorClasses);
     }),
     require("@tailwindcss/aspect-ratio"),
     require("tailwindcss-animate"),

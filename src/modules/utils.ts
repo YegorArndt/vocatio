@@ -3,6 +3,7 @@ import { v4 } from "uuid";
 import { DefaultModel } from "@prisma/client";
 
 import { DesignFont, fonts } from "./create/design/types";
+import { iconsMap } from "./icons-map";
 
 // todo: getFontCn
 export const getFont = (font: DesignFont) => {
@@ -69,3 +70,18 @@ export const getModelUi = (
 };
 
 export const uuidv4 = () => v4();
+
+export const getIcon = (inputString: string) => {
+  const inputLower = inputString.toLowerCase();
+  return (
+    iconsMap.find(
+      (iconEntry) =>
+        (iconEntry.exact &&
+          iconEntry.exact.some((e) => e.toLowerCase() === inputLower)) ||
+        (iconEntry.partial &&
+          iconEntry.partial.some((partial) =>
+            inputLower.includes(partial.toLowerCase())
+          ))
+    )?.icon || null
+  );
+};

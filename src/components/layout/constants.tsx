@@ -6,12 +6,12 @@ export const mainNav = [
   {
     text: "My vacancies",
     to: "/vacancies",
-    frontIcon: <MdDashboardCustomize />,
+    frontIcon: <MdDashboardCustomize fontSize={16} />,
   },
   {
     text: "Settings",
     to: "/settings/me",
-    frontIcon: <IoSettingsOutline />,
+    frontIcon: <IoSettingsOutline fontSize={16} />,
     activeIfIncludes: ["customize-ai", "updateKey", "settings"],
   },
 ].map((props) => (

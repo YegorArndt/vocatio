@@ -41,7 +41,7 @@ export const LeftPanel = () => {
       <BoldenKeywordsPopover />
       <Button
         frontIcon={<IoMdAnalytics />}
-        text="Improve"
+        text="Quickly improve"
         endIcon={<Badge className="ml-2 rounded-md bg-red clr-white">5</Badge>}
         className={NAV_BUTTON_CN}
         disabled

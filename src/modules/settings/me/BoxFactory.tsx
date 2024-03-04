@@ -7,7 +7,7 @@ import {
 } from "~/components/ui/external/Accordion";
 import { isEmpty, isNil, pick, startCase } from "lodash-es";
 import { Checkmark } from "~/components/icons";
-import { api, cn } from "~/utils";
+import { api } from "~/utils";
 import { useScrollIntoView } from "~/hooks/useScrollIntoView";
 import { MainBox } from "./boxes/components/MainBox";
 import { BigEntryBox } from "./boxes/components/BigEntryBox";
@@ -24,6 +24,13 @@ import { RouterUser } from "~/modules/types";
 import { BoxName } from "./types";
 import { UpdateWithExtensionLink } from "./UpdateWithExtensionLink";
 import { typedEntries } from "~/modules/utils";
+import { useState } from "react";
+import { Button } from "~/components/ui/buttons/Button";
+import { BsPlusCircleDotted } from "react-icons/bs";
+import { SkillsBox } from "./boxes/components/SkillsBox";
+import { ContactBox } from "./boxes/components/ContactBox";
+import { LanguagesBox } from "./boxes/components/LanguagesBox";
+import { ExperienceBox } from "./boxes/components/ExperienceBox";
 
 const { log } = console;
 
@@ -40,7 +47,11 @@ type Component =
 
 type Mapping = Record<
   BoxName,
-  { Component: Component; dataKeys: (keyof RouterUser)[] }
+  {
+    Component: Component;
+    dataKeys: (keyof RouterUser)[];
+    stubby?: Partial<RouterUser>;
+  }
 >;
 
 const mapping: Mapping = {
@@ -53,19 +64,20 @@ const mapping: Mapping = {
     dataKeys: ["name", "jobTitle", "professionalSummary"],
   },
   contact: {
-    Component: EntryBox,
+    Component: ContactBox,
     dataKeys: ["contact"],
   },
   skills: {
-    Component: EntryBox,
+    Component: SkillsBox,
     dataKeys: ["skills"],
   },
   languages: {
-    Component: EntryBox,
+    Component: LanguagesBox,
     dataKeys: ["languages"],
+    stubby: { languages: [{ name: "English", value: "Expert" }] },
   },
   experience: {
-    Component: BigEntryBox,
+    Component: ExperienceBox,
     dataKeys: ["experience"],
   },
   education: {
@@ -96,6 +108,8 @@ export const BoxFactory = (props: BoxFactoryProps) => {
   const scrollIntoViewRef = useScrollIntoView({
     shouldScroll: boxName === updateKey,
   });
+
+  const [isAddingManually, setIsAddingManually] = useState(false);
 
   const { Component, dataKeys } = mapping[boxName];
 
@@ -133,7 +147,7 @@ export const BoxFactory = (props: BoxFactoryProps) => {
               type="single"
               collapsible
               defaultValue={
-                boxName === updateKey || !isDataComplete ? "item-1" : undefined
+                boxName === updateKey || isDataComplete ? undefined : "item-1"
               }
             >
               <AccordionItem value="item-1">
@@ -141,11 +155,7 @@ export const BoxFactory = (props: BoxFactoryProps) => {
                   id={boxName}
                   className="hover:main-hover group grid w-full grid-cols-[1fr,20px] gap-5 p-6 text-lg"
                 >
-                  <span
-                    className={cn("flex w-full", {
-                      "justify-between": boxName !== "experience",
-                    })}
-                  >
+                  <span className="flex-between w-full">
                     <h6 className="flex-y gap-2 group-hover:underline">
                       {isDataComplete ? <Checkmark /> : <>❌ </>}
                       {startCase(boxName)}
@@ -153,27 +163,40 @@ export const BoxFactory = (props: BoxFactoryProps) => {
                     <UpdateWithExtensionLink
                       boxName={boxName}
                       linkedinId={user.linkedinId}
-                      className={cn({
-                        "ml-auto": boxName === "experience",
-                      })}
                     />
                   </span>
                 </AccordionTrigger>
                 <AccordionContent className="mt-6 p-6">
-                  {isDataComplete && (
+                  {isDataComplete ? (
                     <Component
                       data={data}
                       update={update}
                       isUpdating={isUpdating}
                       boxName={boxName}
                     />
+                  ) : isAddingManually ? (
+                    <Component
+                      data={mapping[boxName].stubby}
+                      update={update}
+                      isUpdating={isUpdating}
+                      boxName={boxName}
+                    />
+                  ) : (
+                    <div className="flex-center">
+                      <Button
+                        frontIcon={<BsPlusCircleDotted />}
+                        text={`I want to add ${boxName} manually`}
+                        onClick={() => setIsAddingManually(true)}
+                        className="flex-y clr-ghost sm primary"
+                      />
+                    </div>
                   )}
                 </AccordionContent>
               </AccordionItem>
             </Accordion>
           </AnimatedDiv>
         </ResizablePanel>
-        <ResizableHandle withHandle />
+        <ResizableHandle withHandle className="!cursor-col-resize" />
         <ResizablePanel />
       </ResizablePanelGroup>
     )

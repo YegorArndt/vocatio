@@ -11,8 +11,8 @@ const { log } = console;
 export const UploadCvPopover = () => {
   return (
     <Popover>
-      <PopoverTrigger className="primary sm gap-2 whitespace-nowrap">
-        <IoCloudUploadOutline size={25} />
+      <PopoverTrigger className="primary sm gap-3 whitespace-nowrap">
+        <IoCloudUploadOutline size={18} />
         Upload an existing CV
       </PopoverTrigger>
       <PopoverContent onClick={(e) => e.stopPropagation()} side="right">

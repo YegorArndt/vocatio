@@ -9,32 +9,11 @@ import { useRouter } from "next/router";
 import { toast } from "sonner";
 import { api, somethingWentWrong } from "~/utils";
 import { useSettings } from "~/hooks/useSettings";
-import { init } from "~/modules/create/tailor/init";
-import { tailorExperience } from "~/modules/create/tailor/tailorExperience";
-import { tailorSkills } from "~/modules/create/tailor/tailorSkills";
-import { Common } from "~/modules/create/tailor/types";
-import { finish } from "~/modules/create/tailor/finish";
 import { PartialVacancy } from "~/modules/types";
 import { Gen } from "~/modules/init-gen/types";
+import { tailor } from "~/modules/create/tailor";
 
 const { log } = console;
-
-const tailor = async (props: Common) => {
-  init(props);
-
-  const [skills, experience] = await Promise.all([
-    tailorSkills(props),
-    tailorExperience(props),
-  ]);
-
-  const updatedGen = finish({
-    ...skills,
-    ...experience,
-    user: props.user,
-  });
-
-  return updatedGen;
-};
 
 const InitGenerationPage = () => {
   const { sendMessage, hasSent, response } = useSendMessage();

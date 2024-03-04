@@ -47,7 +47,7 @@ const CvEditorPage = () => {
             </ResizablePanel>
 
             {/* A4  */}
-            <section>
+            <section className="pb-16">
               <FileName />
               <div
                 ref={a4Ref}
@@ -81,7 +81,7 @@ const CvEditorPage = () => {
             </section>
 
             {/* Design Viewer */}
-            <ResizableHandle className="z-layout mx-[50px] cursor-col-resize hover:bg-weiss">
+            <ResizableHandle className="z-layout mx-[50px] !cursor-col-resize hover:bg-weiss">
               <div className="flex-evenly h-full flex-col">
                 {Array.from({ length: pages }).map((_, i) => (
                   <Badge key={i}>Resize</Badge>

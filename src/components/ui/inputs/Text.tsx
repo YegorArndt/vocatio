@@ -1,5 +1,5 @@
 import { type FieldValues, type Control, useController } from "react-hook-form";
-import type { MouseEventHandler } from "react";
+import type { MouseEventHandler, ReactNode } from "react";
 import cn from "classnames";
 
 export type TextProps<T extends FieldValues = FieldValues> = {
@@ -12,6 +12,7 @@ export type TextProps<T extends FieldValues = FieldValues> = {
   id?: string;
   className?: string;
   disabled?: boolean;
+  adornment?: ReactNode;
 };
 
 export const Text = (props: TextProps) => {
@@ -23,6 +24,7 @@ export const Text = (props: TextProps) => {
     id = name,
     className,
     disabled,
+    adornment,
   } = props as {
     control: Control<FieldValues>;
   } & TextProps<FieldValues>;
@@ -42,6 +44,7 @@ export const Text = (props: TextProps) => {
         disabled={disabled}
         {...field}
       />
+      {adornment}
     </div>
   );
 };

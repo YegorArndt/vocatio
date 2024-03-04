@@ -14,6 +14,7 @@ import { defaultGroups } from "./constants";
 import { SkeletonButtonStack } from "~/components/Spinner";
 import { Diamond } from "~/components/icons";
 import { typedKeys } from "../utils";
+import { NewVacancyDrawer } from "./NewVacancyDrawer";
 
 const { log } = console;
 
@@ -90,7 +91,7 @@ export const VacanciesPageHeader = () => {
 
   return (
     <header className="flex-between border-bottom sticky top-0 z-layout bg-primary py-2">
-      <section className="flex-y gap-3">
+      <section className="flex-y w-full gap-3">
         {loadingVacancies && <SkeletonButtonStack length={2} />}
         {typedKeys(groupedVacancies).map((groupName) => {
           return (
@@ -154,6 +155,7 @@ export const VacanciesPageHeader = () => {
             </FocusableItem>
           </CustomMenu>
         )}
+        <NewVacancyDrawer />
       </section>
     </header>
   );

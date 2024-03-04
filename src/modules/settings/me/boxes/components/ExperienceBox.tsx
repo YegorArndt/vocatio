@@ -12,24 +12,87 @@ import { Text } from "~/components/ui/inputs/Text";
 import { BiMoveVertical } from "react-icons/bi";
 import { Divider } from "~/components/layout/Divider";
 import { typedKeys } from "~/modules/utils";
+import { ExperienceEntry } from "@prisma/client";
+import { Thunder } from "~/components/icons";
+import { api } from "~/utils";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "~/components/ui/external/Popover";
+import { CiImageOn } from "react-icons/ci";
+import {
+  Tooltip,
+  TooltipTrigger,
+  TooltipProvider,
+} from "@radix-ui/react-tooltip";
+import { TooltipContent } from "~/components/ui/external/Tooltip";
 
 const { log } = console;
 
-//@ts-ignore
-export const BigEntryBox = (props) => {
-  const { data, update, isUpdating, boxName } = props;
+type ExperienceBoxProps = {
+  data: {
+    experience: ExperienceEntry[];
+  };
+  update: (data: any) => void;
+  isUpdating: boolean;
+  boxName: string;
+};
+
+const ImagePicker = (props: { onClick: (image: string) => void }) => {
+  const { onClick } = props;
+  const { data: user } = api.users.get.useQuery();
+
+  if (!user) return <Spinner />;
+
+  const data = user.experience.map((e) => ({
+    image: e.image,
+    company: e.place,
+  }));
+
+  return (
+    <Popover>
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <PopoverTrigger className="clr-ghost primary">
+              <CiImageOn fontSize={40} />
+            </PopoverTrigger>
+          </TooltipTrigger>
+          <TooltipContent>Pick an image</TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+      <PopoverContent className="flex flex-col gap-5">
+        {data.map(
+          ({ image, company }) =>
+            image && (
+              <Button
+                key={company}
+                text={company}
+                frontIcon={<BlurImage src={image} height={50} width={50} />}
+                className="primary lg !justify-start"
+                onClick={() => onClick(image)}
+              />
+            )
+        )}
+      </PopoverContent>
+    </Popover>
+  );
+};
+
+export const ExperienceBox = (props: ExperienceBoxProps) => {
+  const { data, update, isUpdating } = props;
 
   const defaultValues = {
-    [boxName]: data[boxName],
+    experience: data.experience,
   };
 
-  const customUpdate = (data: typeof defaultValues) => {
-    const bigEntryArray = data[boxName];
+  const customUpdate = (data: ExperienceBoxProps["data"]) => {
+    const { experience } = data;
 
-    if (!bigEntryArray) return;
+    if (!experience) return;
 
-    //@ts-ignore
-    const formattedForServer = bigEntryArray.map((e) => {
+    const formattedForServer = experience.map((e) => {
       const { skills } = e;
 
       if (typeof skills !== "string") return e;
@@ -46,7 +109,7 @@ export const BigEntryBox = (props) => {
     });
 
     return update({
-      [boxName]: formattedForServer,
+      experience: formattedForServer,
     });
   };
 
@@ -56,9 +119,13 @@ export const BigEntryBox = (props) => {
         defaultValues,
       }}
     >
-      {({ formState, control, resetField }, submit) => (
+      {(
+        { formState, control, resetField, setValue, getValues },
+        submit,
+        updateDefaults
+      ) => (
         <Fragment>
-          <ArrayFormContext name={boxName}>
+          <ArrayFormContext name="experience">
             {({ form }) => (
               <Fragment>
                 {form.fields.map((field, index) => (
@@ -70,10 +137,18 @@ export const BigEntryBox = (props) => {
                           width={100}
                           height={100}
                           className="rounded-md"
+                          fallback={
+                            <ImagePicker
+                              onClick={(image) => {
+                                setValue(`experience.${index}.image`, image);
+                                updateDefaults(getValues());
+                              }}
+                            />
+                          }
                         />
                         <div className="flex grow flex-col gap-4">
                           <Text
-                            name={`${boxName}.${index}.place`}
+                            name={`experience.${index}.place`}
                             control={control}
                           />
                           <div role="toolbar" className="flex-y gap-4">
@@ -90,7 +165,7 @@ export const BigEntryBox = (props) => {
                                 icon: <TbRestore fontSize={18} />,
                                 onClick: () =>
                                   //@ts-ignore
-                                  resetField(`${boxName}.${index}`),
+                                  resetField(`experience.${index}`),
                               },
                             ].map(({ icon, onClick }, i) => (
                               <Button
@@ -118,7 +193,7 @@ export const BigEntryBox = (props) => {
                           if (!shouldRender) return null;
 
                           const props = {
-                            name: `${boxName}.${index}.${name}`,
+                            name: `experience.${index}.${name}`,
                             control,
                             placeholder: `Missing ${name}`,
                           };
@@ -148,11 +223,16 @@ export const BigEntryBox = (props) => {
             )}
           </ArrayFormContext>
           <footer className="border-top flex-between col-span-2 mt-8 w-full gap-3 py-4">
+            <div className="clr-ghost flex-y gap-2">
+              <Thunder />
+              Vocatio forces the usage of bullet points and helps with
+              optimization.
+            </div>
             <Button
               frontIcon={isUpdating && <Spinner size={10} />}
               text={isUpdating ? "Updating..." : "Update"}
               onClick={() => void submit(customUpdate)}
-              className="primary sm flex-y ml-auto"
+              className="primary-filled sm flex-y ml-auto"
               disabled={isUpdating || !formState.isDirty}
             />
           </footer>

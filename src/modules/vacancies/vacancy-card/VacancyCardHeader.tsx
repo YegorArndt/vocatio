@@ -7,16 +7,13 @@ import {
 } from "~/components/ui/external/Tooltip";
 import { MenuHeader, SubMenu } from "@szhsin/react-menu";
 import { BsThreeDots } from "react-icons/bs";
-import { LiaEditSolid } from "react-icons/lia";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { toast } from "sonner";
 import { BlurImage } from "~/components";
 import { CustomMenu } from "~/components/ui/external/CustomMenu";
 import { CustomMenuButton } from "~/components/ui/external/CustomMenuButton";
 import { CustomMenuItem } from "~/components/ui/external/CustomMenuItem";
-import { DrawerTrigger } from "~/components/ui/external/Drawer";
 import { api, cn } from "~/utils";
-import { EditVacancyDrawer } from "../EditVacancyDrawer";
 import { useVacanciesContext } from "../VacanciesContext";
 import { omit } from "lodash-es";
 import { defaultGroups } from "../constants";
@@ -161,32 +158,7 @@ export const VacancyCardHeader = (props: { vacancy: Vacancy }) => {
       />
       <div className="flex w-full flex-col truncate [&>*]:truncate">
         <section className="flex-between">
-          <EditVacancyDrawer
-            vacancy={vacancy}
-            heading={
-              <span className="flex-y gap-3">
-                {vacancy.companyName}
-                {vacancy.image && (
-                  <BlurImage
-                    src={vacancy.image}
-                    height={30}
-                    width={30}
-                    alt="logo"
-                    className="rounded-full"
-                  />
-                )}
-              </span>
-            }
-            trigger={
-              <DrawerTrigger className="flex-y gap-1 truncate hover:underline">
-                <LiaEditSolid size={20} className="shrink-0" />
-                <h3 className="cursor-pointer truncate text-[1.1rem]">
-                  {vacancy.companyName || "Unknown company"}
-                </h3>
-              </DrawerTrigger>
-            }
-            onClick={() => toast.success("Vacancy updated.")}
-          />
+          <h5 className="text-lg">{vacancy.companyName}</h5>
           {menu}
         </section>
         <TooltipProvider>

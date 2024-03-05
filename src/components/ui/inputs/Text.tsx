@@ -13,6 +13,7 @@ export type TextProps<T extends FieldValues = FieldValues> = {
   className?: string;
   disabled?: boolean;
   adornment?: ReactNode;
+  defaultValue?: string;
 };
 
 export const Text = (props: TextProps) => {
@@ -25,10 +26,11 @@ export const Text = (props: TextProps) => {
     className,
     disabled,
     adornment,
+    defaultValue,
   } = props as {
     control: Control<FieldValues>;
   } & TextProps<FieldValues>;
-  const { field } = useController({ control, name });
+  const { field } = useController({ control, name, defaultValue });
 
   return (
     <div className={cn("input-wrapper", className)}>

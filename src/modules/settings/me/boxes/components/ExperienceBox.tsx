@@ -2,16 +2,9 @@ import { BlurImage, Spinner } from "~/components";
 import { Button } from "~/components/ui/buttons/Button";
 import { FormContext } from "../../../../../components/FormContext";
 import { ArrayFormContext } from "../../ArrayFormContext";
-import { Fragment } from "react";
-import { LuCopyPlus } from "react-icons/lu";
-import { RiDeleteBin6Line } from "react-icons/ri";
-import { TbRestore } from "react-icons/tb";
-import { AnimatedDiv } from "~/components/AnimatedDiv";
-import { Textarea } from "~/components/ui/inputs/Textarea";
-import { Text } from "~/components/ui/inputs/Text";
+import { Fragment, useState } from "react";
 import { BiMoveVertical } from "react-icons/bi";
 import { Divider } from "~/components/layout/Divider";
-import { typedKeys } from "~/modules/utils";
 import { ExperienceEntry } from "@prisma/client";
 import { Thunder } from "~/components/icons";
 import { api } from "~/utils";
@@ -27,6 +20,15 @@ import {
   TooltipProvider,
 } from "@radix-ui/react-tooltip";
 import { TooltipContent } from "~/components/ui/external/Tooltip";
+import { AnimatedDiv } from "~/components/AnimatedDiv";
+import { Text } from "~/components/ui/inputs/Text";
+import { uuidv4 } from "~/modules/utils";
+import { TiTimes } from "react-icons/ti";
+import { BsPlusCircleDotted } from "react-icons/bs";
+import { RiDeleteBin2Fill } from "react-icons/ri";
+import { TbRestore } from "react-icons/tb";
+import { IoNewspaper } from "react-icons/io5";
+import { Textarea } from "~/components/ui/inputs/Textarea";
 
 const { log } = console;
 
@@ -43,7 +45,8 @@ const ImagePicker = (props: {
   image?: string;
   onClick: (image: string) => void;
 }) => {
-  const { image, onClick } = props;
+  const { image: initialImage, onClick } = props;
+  const [image, setImage] = useState<string | undefined>(initialImage);
   const { data: user } = api.users.get.useQuery();
 
   if (!user) return <Spinner />;
@@ -61,17 +64,17 @@ const ImagePicker = (props: {
             <PopoverTrigger className="clr-ghost primary">
               <BlurImage
                 src={image}
-                width={100}
-                height={100}
+                width={50}
+                height={50}
                 className="rounded-md"
-                fallback={<CiImageOn fontSize={40} />}
+                fallback={<CiImageOn fontSize={50} />}
               />
             </PopoverTrigger>
           </TooltipTrigger>
           <TooltipContent>Pick an image</TooltipContent>
         </Tooltip>
       </TooltipProvider>
-      <PopoverContent className="flex flex-col gap-5">
+      <PopoverContent className="flex flex-col gap-5" side="left">
         {data.map(
           ({ image, company }) =>
             image && (
@@ -80,45 +83,60 @@ const ImagePicker = (props: {
                 text={company}
                 frontIcon={<BlurImage src={image} height={50} width={50} />}
                 className="primary lg !justify-start"
-                onClick={() => onClick(image)}
+                onClick={() => {
+                  onClick(image);
+                  setImage(image);
+                }}
               />
             )
         )}
+        <Button
+          text="Remove image"
+          className="clr-red hover:underline"
+          onClick={() => {
+            setImage(undefined);
+            onClick("");
+          }}
+        />
       </PopoverContent>
     </Popover>
   );
 };
 
+type Formatted = ReturnType<typeof formatSkills>;
+
+const formatSkills = (experience: ExperienceEntry[]) => {
+  return experience.map((e) => {
+    const { skills } = e;
+    const formatted = skills.map((x) => ({ id: uuidv4(), value: x }));
+
+    return { ...e, skills: formatted };
+  });
+};
+
+const unformatSkills = (experience: Formatted) => {
+  return experience.map((e) => {
+    const { skills } = e;
+    const formatted = skills.map((x) => x.value);
+
+    return { ...e, skills: formatted };
+  });
+};
+
 export const ExperienceBox = (props: ExperienceBoxProps) => {
   const { data, update, isUpdating } = props;
+  const { data: user } = api.users.get.useQuery();
 
   const defaultValues = {
-    experience: data.experience,
+    experience: formatSkills(data.experience),
   };
 
-  const customUpdate = (data: ExperienceBoxProps["data"]) => {
+  const customUpdate = (data: { experience: Formatted }) => {
     const { experience } = data;
-
     if (!experience) return;
 
-    const formattedForServer = experience.map((e) => {
-      const { skills } = e;
-
-      if (typeof skills !== "string") return e;
-
-      const formattedSkills = (skills as unknown as string)
-        .split(",")
-        .map((s) => s.trim())
-        .filter((skill) => skill.length > 0);
-
-      return {
-        ...e,
-        skills: formattedSkills,
-      };
-    });
-
     return update({
-      experience: formattedForServer,
+      experience: unformatSkills(experience),
     });
   };
 
@@ -128,95 +146,164 @@ export const ExperienceBox = (props: ExperienceBoxProps) => {
         defaultValues,
       }}
     >
-      {(
-        { formState, control, resetField, setValue, getValues },
-        submit,
-        updateDefaults
-      ) => (
+      {({ formState, control, setValue, resetField, watch }, submit) => (
         <Fragment>
           <ArrayFormContext name="experience">
             {({ form }) => (
               <Fragment>
+                <header className="mb-8 mt-5 flex justify-end">
+                  <Button
+                    frontIcon={<BsPlusCircleDotted />}
+                    text="New entry"
+                    className="blue-button"
+                    onClick={() =>
+                      form.prepend({
+                        place: "Company name",
+                        title: user?.jobTitle || "",
+                      })
+                    }
+                  />
+                </header>
                 {form.fields.map((field, index) => (
                   <Fragment key={field.id}>
-                    <AnimatedDiv className="grid grid-cols-[1fr_2fr] gap-4">
-                      <section className="flex-y w-full gap-4">
+                    <AnimatedDiv>
+                      <header className="flex-y w-full gap-5">
                         <ImagePicker
                           image={field.image}
                           onClick={(image) => {
-                            setValue(`experience.${index}.image`, image);
-                            updateDefaults(getValues());
+                            setValue(`experience.${index}.image`, image, {
+                              shouldDirty: true,
+                            });
                           }}
                         />
-                        <div className="flex grow flex-col gap-4">
-                          <Text
-                            name={`experience.${index}.place`}
-                            control={control}
-                          />
-                          <div role="toolbar" className="flex-y gap-4">
-                            {[
-                              {
-                                icon: <RiDeleteBin6Line fontSize={18} />,
-                                onClick: () => form.remove(index),
-                              },
-                              {
-                                icon: <LuCopyPlus fontSize={18} />,
-                                onClick: () => form.insert(index + 1, field),
-                              },
-                              {
-                                icon: <TbRestore fontSize={18} />,
-                                onClick: () =>
-                                  //@ts-ignore
-                                  resetField(`experience.${index}`),
-                              },
-                            ].map(({ icon, onClick }, i) => (
-                              <Button
-                                key={i}
-                                onClick={onClick}
-                                className="flex-y"
-                              >
-                                {icon}
-                              </Button>
-                            ))}
+                        <section className="grid w-full grid-cols-2 gap-11">
+                          <div className="flex flex-col">
+                            <Text
+                              name={`experience.${index}.place`}
+                              control={control}
+                              className="outlined [&>*]:text-lg [&>*]:font-semibold"
+                            />
+                            <Text
+                              name={`experience.${index}.title`}
+                              control={control}
+                              className="outlined [&>*]:italic"
+                            />
                           </div>
-                        </div>
+                          <div className="flex flex-col gap-2">
+                            <Text
+                              name={`experience.${index}.period`}
+                              control={control}
+                              className="outlined [&>*]:font-semibold"
+                            />
+                            <div className="flex-y">
+                              <Button
+                                frontIcon={<RiDeleteBin2Fill />}
+                                text="Delete entry"
+                                className="primary sm"
+                                onClick={() => form.remove(index)}
+                              />
+                              <Button
+                                frontIcon={<TbRestore />}
+                                text="Restore defaults"
+                                className="primary sm"
+                                onClick={() =>
+                                  resetField(`experience.${index}`)
+                                }
+                              />
+                            </div>
+                          </div>
+                        </section>
+                      </header>
+                      <section className="col-span-2 my-5 flex flex-col gap-3">
+                        <ArrayFormContext name={`experience.${index}.skills`}>
+                          {(formattedSkills) => {
+                            const { form: skillsForm } = formattedSkills;
+
+                            return (
+                              <>
+                                <header className="flex-between">
+                                  <div className="flex-y gap-2">
+                                    <Thunder />
+                                    Skills demonstrated at this role
+                                  </div>
+                                  <Button
+                                    frontIcon={<BsPlusCircleDotted />}
+                                    text="New skill"
+                                    className="blue-button"
+                                    onClick={() => {
+                                      skillsForm.prepend({
+                                        id: uuidv4(),
+                                        value: "New skill",
+                                      });
+                                    }}
+                                  />
+                                </header>
+                                <div className="flex flex-wrap gap-2">
+                                  <TooltipProvider>
+                                    {skillsForm.fields.map((field, i) => {
+                                      const name = `experience.${index}.skills.${i}.value`;
+                                      // @ts-ignore
+                                      const value = watch(name);
+
+                                      return (
+                                        <Tooltip key={field.id}>
+                                          <TooltipTrigger asChild>
+                                            <AnimatedDiv className="flex gap-3 rounded-full bg-primary">
+                                              <Text
+                                                name={name}
+                                                control={control}
+                                                className="!rounded-full !bg-transparent"
+                                                adornment={
+                                                  <Tooltip>
+                                                    <TooltipTrigger
+                                                      className="mx-2 w-[15px] hover:clr-white"
+                                                      onClick={() =>
+                                                        skillsForm.remove(i)
+                                                      }
+                                                    >
+                                                      <TiTimes />
+                                                    </TooltipTrigger>
+                                                  </Tooltip>
+                                                }
+                                              />
+                                            </AnimatedDiv>
+                                          </TooltipTrigger>
+                                          {(value as any)?.length > 19 && (
+                                            <TooltipContent>
+                                              {value as any}
+                                            </TooltipContent>
+                                          )}
+                                        </Tooltip>
+                                      );
+                                    })}
+                                  </TooltipProvider>
+                                </div>
+                              </>
+                            );
+                          }}
+                        </ArrayFormContext>
+                        <section className="my-5 flex flex-col gap-4">
+                          <h5 className="flex-y gap-2">
+                            <IoNewspaper />
+                            Role description
+                          </h5>
+                          <Textarea
+                            control={control}
+                            name={`experience.${index}.description`}
+                          />
+                        </section>
                       </section>
-                      <form className="flex flex-col gap-2">
-                        {typedKeys(field).map((name, i) => {
-                          const shouldRender = ![
-                            "place",
-                            "image",
-                            "id",
-                            "createdAt",
-                            "updatedAt",
-                            "userId",
-                          ].includes(name);
-
-                          if (!shouldRender) return null;
-
-                          const props = {
-                            name: `experience.${index}.${name}`,
-                            control,
-                            placeholder: `Missing ${name}`,
-                          };
-
-                          const Component =
-                            name === "description" ? Textarea : Text;
-
-                          return <Component key={name} {...props} />;
-                        })}
-                      </form>
                     </AnimatedDiv>
                     {index < form.fields.length - 1 && (
                       <div className="flex-center py-8">
-                        <Divider />
+                        <Divider className="!h-2 rounded-full" />
                         <Button
                           text="Swap"
                           endIcon={<BiMoveVertical />}
                           onClick={() => form.swap(index, index + 1)!}
                           className="flex-y px-5"
                         />
-                        <Divider />
+                        <Divider className="!h-2 rounded-full" />
                       </div>
                     )}
                   </Fragment>

@@ -32,6 +32,7 @@ const config = {
         tertiary: "var(--clr-tertiary)",
         "border-tertiary": "var(--border-clr-tertiary)",
         grayD: "var(--gray-d)",
+        "dark-blue": "var(--dark-blue)",
       },
       backgroundColor: {
         base: "var(--bg-base)",
@@ -48,6 +49,7 @@ const config = {
         grayD: "var(--gray-d)",
         weiss: "var(--weiss)",
         schwarz: "var(--schwarz)",
+        "dark-blue": "var(--dark-blue)",
       },
       fontSize: {
         md: "clamp(1rem, 0.9308rem + 0.3077vw, 1.2rem)",
@@ -88,23 +90,6 @@ const config = {
       for (const [name, color] of Object.entries(colors)) {
         textColorClasses[`.clr-${name}`] = { color };
       }
-
-      // // Add heading classes
-      // const headingClasses = {};
-      // const headingFontSizeLetterSpacingMap = {
-      //   /* h1 */ "4xl": "-0.049375rem",
-      //   /* h2 */ "3xl": "-0.020625rem",
-      //   /* h3 */ "2xl": "-0.029375rem",
-      //   /* h4 */ xl: "-0.029375rem",
-      // };
-      // Object.entries(headingFontSizeLetterSpacingMap).forEach(
-      //   (entry, i) =>
-      //     (headingClasses[`.h${i + 1}`] = {
-      //       fontSize: theme(`fontSize.${entry[0]}`),
-      //       letterSpacing: entry[1],
-      //       fontWeight: "700",
-      //     })
-      // );
 
       addUtilities(textColorClasses);
     }),

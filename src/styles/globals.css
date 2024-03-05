@@ -7,8 +7,9 @@
   */
 :root {
   --blue: rgb(35, 131, 226);
+  --dark-blue: rgb(40, 69, 108);
   --gray: #eaeaea;
-  --green: #2da44e;
+  --green: rgb(43, 89, 63);
   --red: #f44336;
   --yellow: rgb(245, 184, 28);
   --purple: #7928ca;
@@ -99,6 +100,7 @@
     font-family: ui-sans-serif, -apple-system, "system-ui", "Segoe UI",
       Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji",
       "Segoe UI Symbol";
+    letter-spacing: 0.2px;
 
     @apply bg-primary text-default leading-5 clr-primary;
   }
@@ -439,6 +441,20 @@
     animation: skeleton 8s ease-in-out infinite;
   }
 
+  .gemini-skeleton {
+    background: linear-gradient(
+      33deg,
+      rgb(30, 31, 32),
+      rgb(51, 53, 55),
+      rgb(72, 127, 273),
+      rgb(51, 53, 55),
+      rgb(30, 31, 32)
+    );
+    background-position: 0 0;
+    background-size: 200% 200%;
+    animation: skeleton 3.5s linear 0s infinite;
+  }
+
   .light-skeleton {
     background-color: #a5a5a5;
     animation: skeleton 8s ease-in-out infinite;
@@ -594,5 +610,18 @@
     text-decoration-style: wavy;
     text-decoration-color: var(--clr);
     text-underline-position: under;
+  }
+
+  @keyframes rotate {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+  .rotating {
+    animation: rotate 3s linear infinite;
   }
 }

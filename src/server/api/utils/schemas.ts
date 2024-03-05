@@ -96,7 +96,7 @@ export const ExperienceEntrySchema = z
     place: z.string().optional().nullable(),
     period: z.string().optional().nullable(),
     description: z.string().optional().nullable(),
-    enhancedDescription: z.string().optional().nullable(),
+    bullets: z.array(z.string()).optional().nullable(),
     skills: z.array(z.string()).nullable(),
     image: z.string().optional().nullable(),
     title: z.string().optional().nullable(),

@@ -7,7 +7,7 @@ import { BiMoveVertical } from "react-icons/bi";
 import { Divider } from "~/components/layout/Divider";
 import { ExperienceEntry } from "@prisma/client";
 import { Thunder } from "~/components/icons";
-import { api } from "~/utils";
+import { api, cn } from "~/utils";
 import {
   Popover,
   PopoverContent,
@@ -283,9 +283,23 @@ export const ExperienceBox = (props: ExperienceBoxProps) => {
                           }}
                         </ArrayFormContext>
                         <section className="my-5 flex flex-col gap-4">
-                          <h5 className="flex-y gap-2">
+                          <h5
+                            className={cn("flex-y gap-2", {
+                              "after:ml-2 after:rounded-md after:bg-dark-yellow after:p-1 after:content-['If_left_empty,_the_AI_creates_a_description_based_on_the_vacancy_responsibilities.'] after:clr-white":
+                                !watch(`experience.${index}.description`)
+                                  .length,
+                            })}
+                          >
                             <IoNewspaper />
-                            Role description
+                            <span
+                              className={cn({
+                                "wave-warning": !watch(
+                                  `experience.${index}.description`
+                                ).length,
+                              })}
+                            >
+                              Role description
+                            </span>
                           </h5>
                           <Textarea
                             control={control}

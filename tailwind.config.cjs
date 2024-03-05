@@ -33,6 +33,7 @@ const config = {
         "border-tertiary": "var(--border-clr-tertiary)",
         grayD: "var(--gray-d)",
         "dark-blue": "var(--dark-blue)",
+        "dark-yellow": "var(--dark-yellow)",
       },
       backgroundColor: {
         base: "var(--bg-base)",
@@ -50,6 +51,7 @@ const config = {
         weiss: "var(--weiss)",
         schwarz: "var(--schwarz)",
         "dark-blue": "var(--dark-blue)",
+        "dark-yellow": "var(--dark-yellow)",
       },
       fontSize: {
         md: "clamp(1rem, 0.9308rem + 0.3077vw, 1.2rem)",

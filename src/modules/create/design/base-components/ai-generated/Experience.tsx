@@ -326,7 +326,6 @@ export const ExperienceEntryToolbar = (props: ToolbarProps) => {
               </header>
               <section className="flex-center">
                 <TooltipProvider>
-                  <PageBreakButton />
                   <MoveComponentButton
                     listeners={listeners}
                     attributes={attributes}

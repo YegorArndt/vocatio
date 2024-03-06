@@ -19,6 +19,7 @@ import { BaseComponentType, Design } from "../../../types";
 import { RouterUser } from "~/modules/types";
 import { Gen } from "~/modules/init-gen/types";
 import { useCvContext } from "~/hooks/useCvContext";
+import { HiPlusCircle } from "react-icons/hi2";
 
 const { log } = console;
 
@@ -111,7 +112,7 @@ export const AddComponentPopover = () => {
       <Tooltip>
         <TooltipTrigger asChild>
           <PopoverTrigger className={cn(BUTTON_CN, "gap-2 p-2")}>
-            <BsPlusCircleDotted fontSize={19} />
+            <HiPlusCircle fontSize={19} />
           </PopoverTrigger>
         </TooltipTrigger>
         <TooltipContent>Add below</TooltipContent>

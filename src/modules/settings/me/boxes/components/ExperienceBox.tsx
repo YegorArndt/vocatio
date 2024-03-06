@@ -287,7 +287,7 @@ export const ExperienceBox = (props: ExperienceBoxProps) => {
                             className={cn("flex-y gap-2", {
                               "after:ml-2 after:rounded-md after:bg-dark-yellow after:p-1 after:content-['If_left_empty,_the_AI_creates_a_description_based_on_the_vacancy_responsibilities.'] after:clr-white":
                                 !watch(`experience.${index}.description`)
-                                  .length,
+                                  ?.length,
                             })}
                           >
                             <IoNewspaper />
@@ -295,7 +295,7 @@ export const ExperienceBox = (props: ExperienceBoxProps) => {
                               className={cn({
                                 "wave-warning": !watch(
                                   `experience.${index}.description`
-                                ).length,
+                                )?.length,
                               })}
                             >
                               Role description

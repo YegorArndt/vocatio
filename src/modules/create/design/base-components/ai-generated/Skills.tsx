@@ -37,6 +37,7 @@ import { TooltipProvider } from "~/components/ui/external/Tooltip";
 import { MoveComponentButton } from "../toolbars/shared/MoveComponentButton";
 import { PageBreakButton } from "../toolbars/shared/PageBreakButton";
 import { useForceUpdate } from "~/hooks/useForceUpdate";
+import { HiPlusCircle } from "react-icons/hi2";
 
 const { log } = console;
 
@@ -123,7 +124,7 @@ export const AddSkillsPopover = () => {
   return (
     <Popover>
       <PopoverTrigger className={cn(BUTTON_CN, "gap-2 p-2")}>
-        <BsPlusCircleDotted /> Add skills
+        <HiPlusCircle /> Add skills
       </PopoverTrigger>
 
       <PopoverContent

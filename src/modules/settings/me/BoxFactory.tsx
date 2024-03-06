@@ -30,6 +30,7 @@ import { SkillsBox } from "./boxes/components/SkillsBox";
 import { ContactBox } from "./boxes/components/ContactBox";
 import { LanguagesBox } from "./boxes/components/LanguagesBox";
 import { ExperienceBox } from "./boxes/components/ExperienceBox";
+import { HiPlusCircle } from "react-icons/hi2";
 
 const { log } = console;
 
@@ -184,7 +185,7 @@ export const BoxFactory = (props: BoxFactoryProps) => {
                   ) : (
                     <div className="flex-center">
                       <Button
-                        frontIcon={<BsPlusCircleDotted />}
+                        frontIcon={<HiPlusCircle />}
                         text={`I want to add ${boxName} manually`}
                         onClick={() => setIsAddingManually(true)}
                         className="flex-y clr-ghost sm primary"

@@ -153,8 +153,6 @@ model User {
 
   defaultModel DefaultModel? @default(GPT_3_5)
 
-  enhancementsCount Int @default(0)
-
   professionField ProfessionField?
 
   languages LanguageEntry[]

@@ -46,11 +46,16 @@ export const useUpdateWithExtension = (props: UseUpdateWithExtensionProps) => {
   });
 
   const { data: user } = api.users.get.useQuery();
+  const { mutate: createBullets } =
+    api.users.silentlyCreateBullets.useMutation();
+
   const {
     mutate: updateDatabase,
     isLoading: isUpdating,
     isSuccess: successUpdating,
-  } = api.users.update.useMutation();
+  } = api.users.update.useMutation({
+    onSuccess: void createBullets,
+  });
 
   useEffect(() => {
     if (!updateKey || isExpired || successUpdating) {

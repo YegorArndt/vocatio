@@ -45,6 +45,8 @@ import { useCvContext } from "~/hooks/useCvContext";
 import { RouterUser } from "~/modules/types";
 import { BiPlus } from "react-icons/bi";
 import { AiPicker } from "~/components/AiPicker";
+import { BsPlusCircleDotted } from "react-icons/bs";
+import { HiPlusCircle } from "react-icons/hi2";
 
 const { log } = console;
 
@@ -173,7 +175,7 @@ export const AddBulletPointsPopover = () => {
   return (
     <Popover>
       <PopoverTrigger className={cn(BUTTON_CN, "gap-2 p-2")}>
-        <BsPlusCircleDotted /> Add bullet points
+        <HiPlusCircle /> Add bullet points
       </PopoverTrigger>
       <PopoverContent
         onClick={(e) => {

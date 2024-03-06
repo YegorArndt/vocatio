@@ -336,7 +336,7 @@ export const ExperienceBox = (props: ExperienceBoxProps) => {
                                 const { fields } = bulletsForm;
                                 return (
                                   <section className="flex w-full flex-col gap-3">
-                                    <header>
+                                    <header className="flex-y gap-3">
                                       <Button
                                         frontIcon={<BiCopy />}
                                         text="Copy bullets as text"

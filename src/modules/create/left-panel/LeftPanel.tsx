@@ -34,6 +34,7 @@ export const LeftPanel = () => {
       <BackButton />
       <BackToJobPosting />
       <CoverLetterDrawer />
+      <DownloadButton />
       <BoldenKeywordsPopover />
       {/* <Button
         frontIcon={<IoMdAnalytics />}
@@ -49,7 +50,6 @@ export const LeftPanel = () => {
         disabled
       /> */}
       <FontFamilyButton />
-      <DownloadButton />
       <footer className="mt-8 flex flex-col gap-3">
         <MoveToAppliedSwitch />
       </footer>

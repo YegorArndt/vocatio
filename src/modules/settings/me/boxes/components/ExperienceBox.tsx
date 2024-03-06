@@ -160,7 +160,7 @@ export const ExperienceBox = (props: ExperienceBoxProps) => {
               <Fragment>
                 <header className="mb-8 mt-5 flex justify-end">
                   <Button
-                    frontIcon={<HiPlusCircle />}
+                    frontIcon={<HiPlusCircle fontSize={19} />}
                     text="New entry"
                     className="blue-button"
                     onClick={() =>
@@ -234,7 +234,7 @@ export const ExperienceBox = (props: ExperienceBoxProps) => {
                                     Skills demonstrated at this role
                                   </div>
                                   <Button
-                                    frontIcon={<HiPlusCircle />}
+                                    frontIcon={<HiPlusCircle fontSize={19} />}
                                     text="New skill"
                                     className="blue-button"
                                     onClick={() => {
@@ -353,7 +353,9 @@ export const ExperienceBox = (props: ExperienceBoxProps) => {
                                       />
                                       <Button
                                         text="New bullet"
-                                        frontIcon={<HiPlusCircle />}
+                                        frontIcon={
+                                          <HiPlusCircle fontSize={19} />
+                                        }
                                         className="blue-button"
                                         onClick={() =>
                                           bulletsForm.prepend({

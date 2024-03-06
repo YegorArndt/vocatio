@@ -390,7 +390,7 @@ export const ExperienceBox = (props: ExperienceBoxProps) => {
                             <footer className="flex-y mb-3 mt-8 gap-2">
                               <Thunder />
                               We strongly recommend keeping the bullet points
-                              concise and a maximum of 4 bullet points per role.
+                              concise.
                             </footer>
                           </TabsContent>
                         </Tabs>

@@ -4,14 +4,10 @@ import { NAV_BUTTON_CN } from "./constants";
 import { Link } from "~/components/ui/buttons/Link";
 import { useCvContext } from "~/hooks/useCvContext";
 import { CoverLetterDrawer } from "./cover-letter/CoverLetterDrawer";
-import { IoMdAnalytics } from "react-icons/io";
-import { Button } from "~/components/ui/buttons/Button";
 import { DownloadButton } from "./DownloadButton";
 import { FontFamilyButton } from "./FontFamilyButton";
 import { MoveToAppliedSwitch } from "./MoveToAppliedSwitch";
 import { BoldenKeywordsPopover } from "./BoldenKeywordsPopover";
-import { IoLanguage } from "react-icons/io5";
-import { Badge } from "~/components/ui/external/Badge";
 
 const { log } = console;
 
@@ -39,7 +35,7 @@ export const LeftPanel = () => {
       <BackToJobPosting />
       <CoverLetterDrawer />
       <BoldenKeywordsPopover />
-      <Button
+      {/* <Button
         frontIcon={<IoMdAnalytics />}
         text="Quickly improve"
         endIcon={<Badge className="ml-2 rounded-md bg-red clr-white">5</Badge>}
@@ -51,7 +47,7 @@ export const LeftPanel = () => {
         text="Translate"
         className={NAV_BUTTON_CN}
         disabled
-      />
+      /> */}
       <FontFamilyButton />
       <DownloadButton />
       <footer className="mt-8 flex flex-col gap-3">

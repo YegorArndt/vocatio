@@ -317,7 +317,7 @@ export const ExperienceEntryToolbar = (props: ToolbarProps) => {
       <Tooltip
         id={c.id}
         globalCloseEvents={{ clickOutsideAnchor: true }}
-        className="z-tooltip !p-0"
+        className="z-modal !p-0"
         clickable
         openOnClick
         place="right"

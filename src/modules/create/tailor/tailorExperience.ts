@@ -44,6 +44,7 @@ export const buildExperiencePrompt = (
         4) highlight all hard skills by enclosing them in <span class="font-bold">{hard skill}</span> HTML tags for emphasis.
         5) ensure the sentence transitions smoothly from the responsibility to the detail of my experience.
         6) write in the first person singular and do not mention the name of the company.
+        7) use professional langauge and avoid using the first person pronoun "I" in the bullet points.
   
         Remember: the aim is to craft a narrative that clearly demonstrates how my experience aligns with the specific responsibilities of the vacancy by merging the responsibility and the bullet point into a single, cohesive bullet point.
     

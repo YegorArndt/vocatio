@@ -11,12 +11,11 @@ import { useA4 } from "~/hooks/useA4";
 import { useCvContext } from "~/hooks/useCvContext";
 import { CompanyPresentator } from "~/modules/create/CompanyPresentator";
 import { DesignViewer } from "~/modules/create/DesignViewer";
-import { FileName } from "~/modules/create/FileName";
 import { PageBreak } from "~/modules/create/PageBreak";
 import { DndProvider } from "~/modules/create/design/base-components/dnd/DndProvider";
 import { A4_HEIGHT, A4_WIDTH } from "~/modules/create/design/constants";
 import { DesignContext } from "~/modules/create/design/contexts/DesignContext";
-import { LeftPanel } from "~/modules/create/left-panel/LeftPanel";
+import { EditorToolbar } from "~/modules/create/editor-toolbar/EditorToolbar";
 import { getFont } from "~/modules/utils";
 import { cn } from "~/utils";
 
@@ -42,14 +41,8 @@ const CvEditorPage = () => {
       <DesignContext a4Ref={a4Ref}>
         {(context) => (
           <ResizablePanelGroup direction="horizontal">
-            {/* Main Nav */}
-            <ResizablePanel defaultSize={10}>
-              <LeftPanel />
-            </ResizablePanel>
-
-            {/* A4  */}
-            <section className="pb-16">
-              <FileName />
+            <ResizablePanel defaultSize={60} className="flex-center flex-col">
+              <EditorToolbar />
               <div
                 ref={a4Ref}
                 className={cn(
@@ -79,9 +72,7 @@ const CvEditorPage = () => {
                   />
                 </div>
               )}
-            </section>
-
-            {/* Design Viewer */}
+            </ResizablePanel>
             <ResizableHandle className="z-layout mx-[50px] !cursor-col-resize hover:bg-weiss">
               <div className="flex-evenly h-full flex-col">
                 {Array.from({ length: pages }).map((_, i) => (
@@ -90,7 +81,7 @@ const CvEditorPage = () => {
               </div>
             </ResizableHandle>
 
-            <ResizablePanel defaultSize={10} className="z-layout mr-3">
+            <ResizablePanel defaultSize={20} className="z-layout mr-3">
               <header className="flex-y h-20 justify-end gap-3">
                 Applying for
                 <CompanyPresentator />

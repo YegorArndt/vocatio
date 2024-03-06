@@ -41,7 +41,7 @@ const textLeading = "leading-5";
 
 export const Charmander: Design = {
   id: uuidv4(),
-  name: "Charmander",
+  name: "charmander",
   a4ClassName: `grid-cols-[1fr_250px] bg-[#fff] text-[#000] tracking-tight`,
   image: "charmander.png",
   pokemonImage: "charmander-pokemon.png",

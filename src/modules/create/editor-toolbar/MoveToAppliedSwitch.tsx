@@ -44,7 +44,7 @@ export const MoveToAppliedSwitch = () => {
   };
 
   return (
-    <label className="flex-y max-w-[230px] gap-2">
+    <label className="flex-y gap-2 text-xs">
       <Switch checked={shouldAutoApplied} onClick={onClick} />
       Change status to applied after downloading CV
     </label>

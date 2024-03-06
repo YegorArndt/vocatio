@@ -1,5 +1,3 @@
-import { RiDraftLine } from "react-icons/ri";
-
 import { Spinner } from "~/components";
 import { Blur } from "~/components/Blur";
 import {
@@ -16,6 +14,7 @@ import { Fragment } from "react";
 import { Text } from "~/components/ui/inputs/Text";
 import { useCvContext } from "~/hooks/useCvContext";
 import { CompanyPresentator } from "../../CompanyPresentator";
+import { Gpt } from "~/components/icons";
 
 const { log } = console;
 
@@ -38,7 +37,7 @@ export const CoverLetterDrawer = () => {
         suppressHydrationWarning
         disabled={!!!defaultValues}
       >
-        <Blur element={<RiDraftLine />} />
+        <Blur element={<Gpt />} />
         Generate cover letter
       </DrawerTrigger>
       <DrawerContent className="flex h-screen flex-col gap-5 bg-primary clr-primary">

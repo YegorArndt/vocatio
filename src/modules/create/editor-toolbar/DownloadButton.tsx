@@ -1,7 +1,5 @@
 import { BiDownload } from "react-icons/bi";
-import { Button } from "~/components/ui/buttons/Button";
 import { useDesignContext } from "../design/contexts/DesignContext";
-import { NAV_BUTTON_CN } from "./constants";
 import jsPDF from "jspdf";
 import { RefObject } from "react";
 import { toast } from "sonner";
@@ -12,6 +10,7 @@ import { A4_HEIGHT, A4_WIDTH } from "../design/constants";
 import { CvContextManager } from "~/modules/CvContextManager";
 import html2canvas from "html2canvas";
 import { Cv } from "~/modules/init-gen/types";
+import { Button } from "~/components/ui/buttons/Button";
 
 const { log } = console;
 
@@ -21,8 +20,8 @@ export const DownloadButton = () => {
   return (
     <Button
       frontIcon={<BiDownload />}
-      text="Download PDF"
-      className={NAV_BUTTON_CN}
+      text="Download"
+      className="primary sm"
       onClick={() => void downloadPdf({ a4Ref })}
     />
   );

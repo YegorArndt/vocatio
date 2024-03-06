@@ -1,5 +1,6 @@
 import { Theme } from "~/hooks/useTheme";
 import { PopoverEvents } from "../events/types";
+import { DesignName } from "../create/design/types";
 
 export const fileNameSeparators = ["_", "-", " "] as const;
 
@@ -32,6 +33,7 @@ export type VocatioSettings = {
   [PopoverEvents.BOLDEN_SUMMARY]: boolean | null;
   [PopoverEvents.BOLDEN_BULLETS]: boolean | null;
   version: number;
+  defaultDesign: DesignName;
 };
 
 export const LS_KEY = "vocatio-settings";
@@ -47,6 +49,7 @@ export const initialSettings: VocatioSettings = {
   [PopoverEvents.BOLDEN_SUMMARY]: true,
   [PopoverEvents.BOLDEN_BULLETS]: true,
   version: 0,
+  defaultDesign: "charmander",
 };
 
 export const getSettings = (): VocatioSettings => {

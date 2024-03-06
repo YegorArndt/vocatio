@@ -5,12 +5,25 @@ import { Charmander } from "~/modules/create/design/designs/Charmander";
 import { AnimatedDiv } from "~/components/AnimatedDiv";
 import { useDesignContext } from "./design/contexts/DesignContext";
 import { Charizard } from "./design/designs/Charizard";
+import { capitalize } from "lodash-es";
+import { typedValues } from "../utils";
+import { Design, DesignName } from "./design/types";
+import { IoCheckmarkCircleOutline } from "react-icons/io5";
+import { updateSettings } from "../settings/settings";
 
-const designs = [Charizard, Charmander];
+export const designs: Record<DesignName, Design> = {
+  charizard: Charizard,
+  charmander: Charmander,
+};
 
 export const DesignViewer = () => {
   const [search, setSearch] = useState("");
-  const { changeDesign } = useDesignContext();
+  const { changeDesign, design } = useDesignContext();
+
+  const onDesignChange = (d: Design) => {
+    changeDesign(d);
+    updateSettings((prev) => ({ ...prev, defaultDesign: d.name }));
+  };
 
   return (
     <AnimatedDiv className="border bg-secondary p-5">
@@ -23,30 +36,31 @@ export const DesignViewer = () => {
       />
       <br />
       <br />
-      <div className="card-grid">
-        {designs
+      <div className="flex-y flex-wrap gap-5">
+        {typedValues(designs)
           .filter((d) => d.name.toLowerCase().includes(search.toLowerCase()))
           .map((d) => (
-            <div key={d.name}>
+            <div key={d.name} className="relative">
               <BlurImage
-                onClick={() => {
-                  changeDesign(d);
-                }}
+                onClick={() => onDesignChange(d)}
                 src={`/designs/${d.image}`}
-                height={280}
-                width={200}
-                alt={d.name}
-                className="transform cursor-pointer transition hover:-translate-y-1 motion-reduce:transition-none"
+                fill
+                className="relative h-[250px] w-[200px] transform cursor-pointer transition hover:-translate-y-1 motion-reduce:transition-none"
                 priority
               />
+              {design.name === d.name && (
+                <div className="-z-1 flex-center absolute inset-0 h-[250px] w-[200px] cursor-pointer gap-2 bg-green opacity-80">
+                  <IoCheckmarkCircleOutline size={30} />
+                  Default
+                </div>
+              )}
               <footer className="flex-center clr-ghost mt-2 gap-2">
                 <BlurImage
                   src={`/designs/${d.pokemonImage}`}
                   height={30}
                   width={30}
-                  alt={d.name}
                 />
-                {d.name}
+                {capitalize(d.name)}
               </footer>
             </div>
           ))}

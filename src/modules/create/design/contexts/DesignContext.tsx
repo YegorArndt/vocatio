@@ -6,13 +6,15 @@ import {
   useContext,
   useRef,
   useState,
+  useEffect,
 } from "react";
 
 import type { Design } from "../types";
 import { type ImperativeHandleRef } from "../base-components/dnd/DndProvider";
 import { eventManager } from "~/modules/events/EventManager";
 import { Events } from "~/modules/events/types";
-import { Charizard } from "../designs/Charizard";
+import { getSettings } from "~/modules/settings/settings";
+import { designs } from "../../DesignViewer";
 
 const { log } = console;
 
@@ -38,7 +40,15 @@ export const useDesignContext = () => {
 export const DesignContext = (props: DesignContextInput) => {
   const { children, a4Ref } = props;
 
-  const [design, setDesign] = useState<Design>(Charizard);
+  const [design, setDesign] = useState<Design | null>(null);
+
+  useEffect(() => {
+    const settings = getSettings();
+    const { defaultDesign } = settings;
+    if (defaultDesign) {
+      setDesign(designs[defaultDesign]);
+    }
+  }, []);
 
   const imperative = useRef<ImperativeHandleRef | null>(null);
 
@@ -48,6 +58,8 @@ export const DesignContext = (props: DesignContextInput) => {
     imperative.current.updateSections(() => newDesign.sections);
     eventManager.emit(Events.DESIGN_CHANGED);
   };
+
+  if (!design) return null;
 
   const context = {
     a4Ref,

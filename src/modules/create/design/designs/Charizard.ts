@@ -32,7 +32,7 @@ const textLeading = "leading-5";
 
 export const Charizard: Design = {
   id: uuidv4(),
-  name: "Charizard",
+  name: "charizard",
   a4ClassName: `bg-[#fff] text-[#000]`,
   image: "charizard.png",
   pokemonImage: "charizard-pokemon.png",

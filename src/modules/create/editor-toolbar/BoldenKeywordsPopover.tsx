@@ -27,7 +27,7 @@ export const BoldenKeywordsPopover = () => {
       <PopoverTrigger className={cn(NAV_BUTTON_CN, "gap-2")}>
         <FaBold /> Bolden keywords
       </PopoverTrigger>
-      <PopoverContent side="right" className="flex flex-col gap-3">
+      <PopoverContent className="flex flex-col gap-3">
         {typedEntries(mapping).map(([key, value]) => (
           <label key={key} className="flex-between">
             {value}

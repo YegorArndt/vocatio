@@ -106,14 +106,14 @@ export const FileName = () => {
   };
 
   return (
-    <header className="flex-center relative z-layout h-20 w-full bg-primary">
+    <div className="flex-center min-w-[600px]">
       <label className="flex-y grow gap-4 whitespace-nowrap">
         File name:
         {fileName ? (
           <input
             type="text"
             name="file-name"
-            className="outlined border-bottom w-full whitespace-nowrap bg-transparent pb-1 outline-none transition-all focus:border-weiss"
+            className="outlined border-bottom w-full whitespace-nowrap bg-transparent outline-none transition-all focus:border-weiss"
             value={fileName}
             onChange={(e) => setFileName(e.target.value)}
             spellCheck={false}
@@ -127,7 +127,7 @@ export const FileName = () => {
         <PopoverTrigger className="hover:main-hover ml-2 rounded-md fill-white p-2">
           <Settings fontSize={30} />
         </PopoverTrigger>
-        <PopoverContent>
+        <PopoverContent className="z-modal">
           <h3 className="text-md tracking-normal">Configure file name</h3>
           <p>Include in the file name</p>
           <section className="my-4 flex flex-col gap-3">
@@ -171,6 +171,6 @@ export const FileName = () => {
           </section>
         </PopoverContent>
       </Popover>
-    </header>
+    </div>
   );
 };

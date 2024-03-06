@@ -38,10 +38,11 @@ export const fonts = {
 };
 
 export type DesignFont = keyof typeof fonts;
+export type DesignName = "charmander" | "charizard";
 
 export type Design = {
   id: string;
-  name: string;
+  name: DesignName;
   a4ClassName: string;
   sections: Sections;
   baseComponents: Record<BaseComponentType, BaseComponentProps>;

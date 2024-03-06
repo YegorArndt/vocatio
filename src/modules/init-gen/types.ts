@@ -23,7 +23,7 @@ export type CvEducationEntry = {
   place: string;
   title: string;
   period: string;
-  bullets: BulletPoint[];
+  description: string;
   image: string;
 };
 

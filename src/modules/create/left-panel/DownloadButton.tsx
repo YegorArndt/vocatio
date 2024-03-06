@@ -61,11 +61,7 @@ export const getStructuredCvText = (cv: Cv): string => {
   if (cv.education && cv.education.length > 0) {
     formattedText += `  EDUCATION:\n `;
     cv.education.forEach((entry) => {
-      formattedText += `  University: ${entry.place}, Degree: ${
-        entry.title
-      }, Period: ${entry.period}, description: ${entry.bullets
-        .map((x) => x.value)
-        .join("\n")}\n`;
+      formattedText += `  University: ${entry.place}, Degree: ${entry.title}, Period: ${entry.period}, description: ${entry.description}\n`;
     });
   }
 

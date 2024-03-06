@@ -39,13 +39,12 @@ import { BUTTON_CN } from "../toolbars/constants";
 import { stripHtmlTags, uuidv4 } from "~/modules/utils";
 import { TooltipProvider } from "~/components/ui/external/Tooltip";
 import { MoveComponentButton } from "../toolbars/shared/MoveComponentButton";
-import { PageBreakButton } from "../toolbars/shared/PageBreakButton";
 import { useCvContext } from "~/hooks/useCvContext";
 import { RouterUser } from "~/modules/types";
-import { BiPlus } from "react-icons/bi";
 import { AiPicker } from "~/components/AiPicker";
 import { BsPlusCircleDotted } from "react-icons/bs";
 import { HiPlusCircle } from "react-icons/hi2";
+import { debounce } from "lodash-es";
 
 const { log } = console;
 
@@ -117,7 +116,7 @@ const getChunkedBullets = (
 ) => {
   const rawBullets = {
     0: entry.bullets.map((b) => stripHtmlTags(b.value)),
-    1: originalEntry.bullets.map((x) => x.value),
+    1: originalEntry?.bullets.map((x) => x.value),
   };
 
   const chunkedBullets = rawBullets[activeTab]?.reduce(
@@ -243,6 +242,17 @@ type ToolbarProps = PropsWithChildren<{
 export const ExperienceToolbar = (props: ToolbarProps) => {
   const { dndRef, listeners, attributes, children, className, node, ...rest } =
     props;
+  const [isTyping, setIsTyping] = useState(false);
+
+  useEffect(() => {
+    const handler = () => {
+      debounce(() => setIsTyping(!isTyping), 1000);
+    };
+
+    document.addEventListener("keydown", handler);
+
+    return () => document.removeEventListener("keydown", handler);
+  }, []);
 
   return (
     <li
@@ -256,6 +266,7 @@ export const ExperienceToolbar = (props: ToolbarProps) => {
         id="experience"
         globalCloseEvents={{ clickOutsideAnchor: true }}
         className={cn("!z-tooltip -translate-y-[50px] transform !p-0")}
+        hidden={isTyping}
         clickable
         openOnClick
         place="top"
@@ -270,7 +281,6 @@ export const ExperienceToolbar = (props: ToolbarProps) => {
               </header>
               <div className="flex-center">
                 <TooltipProvider>
-                  <PageBreakButton />
                   <MoveComponentButton
                     listeners={listeners}
                     attributes={attributes}
@@ -372,8 +382,9 @@ export const AddExperiencePopover = () => {
 
   return (
     <Popover>
-      <PopoverTrigger className={cn(BUTTON_CN, "gap-2 p-2")}>
-        <BsPlusCircleDotted /> Add new entry
+      <PopoverTrigger className={cn(BUTTON_CN, "gap-2 p-2 text-default")}>
+        <HiPlusCircle fontSize={19} />
+        Add new entry
       </PopoverTrigger>
       <PopoverContent
         onClick={(e) => {
@@ -384,7 +395,7 @@ export const AddExperiencePopover = () => {
       >
         {user ? (
           <Button
-            frontIcon={<BiPlus />}
+            frontIcon={<HiPlusCircle fontSize={19} />}
             text="Add a blank entry"
             baseCn="flex-y hover:underline"
             onClick={() => addEntry(user)}

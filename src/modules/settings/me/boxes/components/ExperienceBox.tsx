@@ -3,7 +3,7 @@ import { Button } from "~/components/ui/buttons/Button";
 import { FormContext } from "../../../../../components/FormContext";
 import { ArrayFormContext } from "../../ArrayFormContext";
 import { Fragment, useState } from "react";
-import { BiMoveVertical } from "react-icons/bi";
+import { BiCopy, BiMoveVertical } from "react-icons/bi";
 import { Divider } from "~/components/layout/Divider";
 import { ExperienceEntry } from "@prisma/client";
 import { Thunder } from "~/components/icons";
@@ -35,6 +35,7 @@ import {
   TabsContent,
 } from "~/components/ui/external/Tabs";
 import { IoNewspaper } from "react-icons/io5";
+import { toast } from "sonner";
 
 const { log } = console;
 
@@ -291,7 +292,7 @@ export const ExperienceBox = (props: ExperienceBoxProps) => {
 
                         <Tabs
                           defaultValue="original"
-                          className="my-5 flex flex-col items-start gap-3"
+                          className="mt-5 flex flex-col items-start gap-3"
                         >
                           <TabsList className="flex-y gap-4">
                             <h5
@@ -327,17 +328,26 @@ export const ExperienceBox = (props: ExperienceBoxProps) => {
                               name={`experience.${index}.description`}
                             />
                           </TabsContent>
-                          <TabsContent
-                            value="processed"
-                            className="flex w-full flex-col gap-3"
-                          >
+                          <TabsContent value="processed">
                             <ArrayFormContext
                               name={`experience.${index}.bullets`}
                             >
                               {({ form: bulletsForm }) => {
                                 const { fields } = bulletsForm;
                                 return (
-                                  <>
+                                  <section className="flex w-full flex-col gap-3">
+                                    <Button
+                                      frontIcon={<BiCopy />}
+                                      text="Copy bullets as text"
+                                      onClick={() => {
+                                        const bullets = fields
+                                          .map((field) => `• ${field.value}`)
+                                          .join("\n");
+                                        navigator.clipboard.writeText(bullets);
+                                        toast.success("Copied to clipboard");
+                                      }}
+                                      className="primary sm w-min"
+                                    />
                                     {fields.map((field, i) => (
                                       <AnimatedDiv
                                         key={field.id}
@@ -358,11 +368,11 @@ export const ExperienceBox = (props: ExperienceBoxProps) => {
                                         />
                                       </AnimatedDiv>
                                     ))}
-                                  </>
+                                  </section>
                                 );
                               }}
                             </ArrayFormContext>
-                            <footer className="flex-y my-3 gap-2">
+                            <footer className="flex-y mb-3 mt-8 gap-2">
                               <Thunder />
                               We strongly recommend keeping the bullet points
                               concise and a maximum of 4 bullet points per role.

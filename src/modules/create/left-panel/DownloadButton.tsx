@@ -64,7 +64,7 @@ export const getStructuredCvText = (cv: Cv): string => {
       formattedText += `  University: ${entry.place}, Degree: ${
         entry.title
       }, Period: ${entry.period}, description: ${entry.bullets
-        .map((x) => x.text)
+        .map((x) => x.value)
         .join("\n")}\n`;
     });
   }
@@ -78,7 +78,7 @@ export const getStructuredCvText = (cv: Cv): string => {
       formattedText += `  Company name: ${entry.place}, Job title: ${
         entry.title
       }, Period of employment: ${entry.period}, description: ${entry.bullets
-        .map((x) => x.text)
+        .map((x) => x.value)
         .join("\n")}\n`;
     });
   }

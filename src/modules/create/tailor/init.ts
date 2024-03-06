@@ -2,7 +2,6 @@ import { Common } from "./types";
 import { Cv, Gen } from "~/modules/init-gen/types";
 import { PartialVacancy, RouterUser } from "~/modules/types";
 import { uuidv4 } from "~/modules/utils";
-import { bulletizeDescriptions } from "./tailorExperience";
 import { CvContextManager } from "~/modules/CvContextManager";
 import { snakeCase } from "lodash-es";
 import { getSettings } from "~/modules/settings/settings";
@@ -11,20 +10,8 @@ const { log } = console;
 
 const createInitialCv = <T extends Partial<Gen>>(user: RouterUser, gen: T) => {
   const { vacancy } = gen as { vacancy: PartialVacancy };
-
   const jobTitle = vacancy.jobTitle || user.jobTitle || "Software Developer";
-  const experience = bulletizeDescriptions(user, "experience");
-
-  /**
-   * With 0 bullets, loading state will be initially shown.
-   */
   const settings = getSettings();
-  settings.modifiableItems.forEach((id) => {
-    const entry = experience.find((e) => e.id === id);
-    if (entry) entry.bullets = [];
-  });
-
-  const education = bulletizeDescriptions(user, "education");
 
   const cv: Cv = {
     id: uuidv4(),
@@ -33,14 +20,25 @@ const createInitialCv = <T extends Partial<Gen>>(user: RouterUser, gen: T) => {
     jobTitle,
 
     /**
-     * AI generated. Initially empty to show loading state.
+     * AI generated. Initially empty.
      */
     skills: [],
     summary: "",
-    experience,
-    /** */
-
-    education,
+    /**
+     * Trigger loading state with empty array.
+     */
+    // @ts-ignore
+    experience: user.experience.map((x) => {
+      if (settings.modifiableItems.includes(x.id)) {
+        return {
+          ...x,
+          bullets: [],
+        };
+      }
+      return x;
+    }),
+    // @ts-ignore
+    education: user.education,
     languages: user.languages,
     contact: user.contact,
     fileName: `${snakeCase(user.name)}_CV`, // Will be reset later in `FileName.tsx`

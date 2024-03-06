@@ -157,7 +157,7 @@ export const Charmander: Design = {
               type: "bullet",
               hydratedProps: {
                 value: boldKeywords(
-                  bullet.text,
+                  bullet.value,
                   entry?.skills?.join(" ")
                 )?.replace("•", ""),
 

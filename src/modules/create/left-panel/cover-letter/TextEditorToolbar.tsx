@@ -53,8 +53,14 @@ const getPrompt = (gen: Gen, cv: Cv, user: RouterUser) => {
     vacancy.companyName
   }: ${vacancy.description}.
    - Insert my data into the cover letter:
-      My employment history: ${experience
-        .map((x) => stripHtmlTags(`${x.bullets.map((x) => x.text).join("\n")}`))
+      My employment history formatted as bullet points: ${experience
+        .map((x) =>
+          stripHtmlTags(
+            `Company: ${x.place}; Period: ${x.period}; Role: ${
+              x.title
+            }. Main achievements: ${x.bullets.map((x) => x.value).join("\n")}`
+          )
+        )
         .join(", ")}.
       My professional summary: ${summary}.
       My name: ${userName}.

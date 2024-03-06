@@ -8,18 +8,18 @@ import { eventManager } from "~/modules/events/EventManager";
 import { Events } from "~/modules/events/types";
 import { CvContextManager } from "~/modules/CvContextManager";
 
+const { log } = console;
+
 export type ExperienceContext = Gen["experience"][0];
 
-const getBulletPointsToEnhance = (user: RouterUser) => {
-  const { description } = user.experience[0] || {};
-  return description || "";
-};
+// Providing 0 bullets leads to complete tailoring.
 
 export const buildExperiencePrompt = (
   vacancy: PartialVacancy,
   user: RouterUser
 ) => {
-  const bulletPointsToEnhance = getBulletPointsToEnhance(user);
+  const bullets = user.experience[0]?.bullets.map((x) => x.value).join("\n");
+  log(bullets);
 
   // prettier-ignore
   return `We will be tailoring my resume to a specific job posting. Here it is: "${vacancy.description}".
@@ -28,7 +28,7 @@ export const buildExperiencePrompt = (
   
     Step 1. Create an array of the responsibilities the vacancy explicitly or implicitly states. Usually they are found in "What you will do" or "Responsibilities" section of the job posting. Each responsibility must be an active verb or a verb phrase. Here's an example: ["Develop new features", "Write clean, maintainable code"].
     
-    Step 2. I'll give you the information about what I did at my first company. Here it is formatted as bullet points: "${bulletPointsToEnhance}".
+    Step 2. I'll give you the information about what I did at my first company. Here it is formatted as bullet points: "${bullets}".
     
         Map each bullet point to a responsibility that the bullet point covers or relates to. Then create an array of tuples, where the first element is the responsibility a bullet point maps to and the second is the bullet point itself.
   
@@ -83,32 +83,12 @@ const parseExperience = (gptResponse: string | undefined) => {
       ?.filter((x) => x.length > 5)
       .map((x) => ({
         id: `${uuidv4()}-bullet`,
-        text: x,
+        value: x,
       })),
     vacancyResponsibilities: json?.vacancyResponsibilities,
   };
 
   return renamed;
-};
-
-/**
- * TODO: Force bullet format for descriptions from the very beginning.
- */
-export const bulletizeDescriptions = (
-  user: RouterUser,
-  key: "experience" | "education"
-): CvExperienceEntry[] => {
-  // @ts-ignore
-  return user[key].map((x) => ({
-    ...x,
-    bullets: x.description
-      .split("•")
-      .slice(1)
-      .map((point) => ({
-        id: `${uuidv4()}-bullet`,
-        text: point.trim(),
-      })),
-  }));
 };
 
 const swapFirstEntry = (
@@ -128,9 +108,9 @@ export const tailorExperience = async (props: Common) => {
     const prompt = buildExperiencePrompt(vacancy, user);
     const gptResponse = await applyGpt(prompt);
     const parsedExperience = parseExperience(gptResponse);
-    const entriesWithBullets = bulletizeDescriptions(user, "experience");
     const entriesWithSwappedFirst = swapFirstEntry(
-      entriesWithBullets,
+      // @ts-ignore
+      user.experience,
       parsedExperience.bullets || []
     );
 

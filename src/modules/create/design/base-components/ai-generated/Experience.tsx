@@ -117,7 +117,7 @@ const getChunkedBullets = (
   activeTab: ActiveTab
 ) => {
   const rawBullets = {
-    0: entry.bullets.map((b) => stripHtmlTags(b.text)),
+    0: entry.bullets.map((b) => stripHtmlTags(b.value)),
     1:
       originalEntry?.description
         ?.split("•")
@@ -146,7 +146,7 @@ const addBullet = (bullet: string, entryId: string) => {
   CvContextManager.getInstance().updateCv((prev) => {
     const entry = prev.experience.find((e) => e.id === entryId);
     if (!entry) return prev;
-    entry.bullets.push({ id: uuidv4() + "-bullet", text: bullet });
+    entry.bullets.push({ id: uuidv4() + "-bullet", value: bullet });
 
     const newEntries = prev.experience.map((e) => {
       if (e.id === entryId) return entry;
@@ -350,7 +350,7 @@ const addEntry = (user: RouterUser) => {
   const gen = CvContextManager.getInstance().getGen();
 
   const newEntry: CvExperienceEntry = {
-    bullets: [{ id: `${uuidv4()}-bullet`, text: "Bullet point" }],
+    bullets: [{ id: `${uuidv4()}-bullet`, value: "Bullet point" }],
     skills: user.skills,
     id: uuidv4(),
     image: "",

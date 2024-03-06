@@ -26,9 +26,15 @@ import { uuidv4 } from "~/modules/utils";
 import { TiTimes } from "react-icons/ti";
 import { RiDeleteBin2Fill } from "react-icons/ri";
 import { TbRestore } from "react-icons/tb";
-import { IoNewspaper } from "react-icons/io5";
 import { Textarea } from "~/components/ui/inputs/Textarea";
 import { HiPlusCircle } from "react-icons/hi2";
+import {
+  Tabs,
+  TabsList,
+  TabsTrigger,
+  TabsContent,
+} from "~/components/ui/external/Tabs";
+import { IoNewspaper } from "react-icons/io5";
 
 const { log } = console;
 
@@ -282,30 +288,87 @@ export const ExperienceBox = (props: ExperienceBoxProps) => {
                             );
                           }}
                         </ArrayFormContext>
-                        <section className="my-5 flex flex-col gap-4">
-                          <h5
-                            className={cn("flex-y gap-2", {
-                              "after:ml-2 after:rounded-md after:bg-dark-yellow after:p-1 after:content-['If_left_empty,_the_AI_creates_a_description_based_on_the_vacancy_responsibilities.'] after:clr-white":
-                                !watch(`experience.${index}.description`)
-                                  ?.length,
-                            })}
-                          >
-                            <IoNewspaper />
-                            <span
-                              className={cn({
-                                "wave-warning": !watch(
-                                  `experience.${index}.description`
-                                )?.length,
+
+                        <Tabs
+                          defaultValue="original"
+                          className="my-5 flex flex-col items-start gap-3"
+                        >
+                          <TabsList className="flex-y gap-4">
+                            <h5
+                              className={cn("flex-y gap-2", {
+                                "after:ml-2 after:rounded-md after:bg-dark-yellow after:p-1 after:content-['If_left_empty,_the_AI_creates_a_description_based_on_the_vacancy_responsibilities.'] after:clr-white":
+                                  !watch(`experience.${index}.description`)
+                                    ?.length,
                               })}
                             >
-                              Role description
-                            </span>
-                          </h5>
-                          <Textarea
-                            control={control}
-                            name={`experience.${index}.description`}
-                          />
-                        </section>
+                              <IoNewspaper />
+                              <span
+                                className={cn({
+                                  "wave-warning": !watch(
+                                    `experience.${index}.description`
+                                  )?.length,
+                                })}
+                              >
+                                Role description
+                              </span>
+                            </h5>
+                            <div>
+                              <TabsTrigger value="original">
+                                Original
+                              </TabsTrigger>
+                              <TabsTrigger value="processed">
+                                Processed by Vocatio
+                              </TabsTrigger>
+                            </div>
+                          </TabsList>
+                          <TabsContent value="original" className="w-full">
+                            <Textarea
+                              control={control}
+                              name={`experience.${index}.description`}
+                            />
+                          </TabsContent>
+                          <TabsContent
+                            value="processed"
+                            className="flex w-full flex-col gap-3"
+                          >
+                            <ArrayFormContext
+                              name={`experience.${index}.bullets`}
+                            >
+                              {({ form: bulletsForm }) => {
+                                const { fields } = bulletsForm;
+                                return (
+                                  <>
+                                    {fields.map((field, i) => (
+                                      <AnimatedDiv
+                                        key={field.id}
+                                        className="flex gap-3 rounded-full bg-primary"
+                                      >
+                                        <Text
+                                          control={control}
+                                          name={`experience.${index}.bullets.${i}.value`}
+                                          className="!rounded-full !bg-transparent before:mr-2 before:content-['•'] before:clr-weiss"
+                                          adornment={
+                                            <Button
+                                              className="mx-2 w-[15px] hover:clr-white"
+                                              onClick={() => form.remove(i)}
+                                            >
+                                              <TiTimes />
+                                            </Button>
+                                          }
+                                        />
+                                      </AnimatedDiv>
+                                    ))}
+                                  </>
+                                );
+                              }}
+                            </ArrayFormContext>
+                            <footer className="flex-y my-3 gap-2">
+                              <Thunder />
+                              We strongly recommend keeping the bullet points
+                              concise and a maximum of 4 bullet points per role.
+                            </footer>
+                          </TabsContent>
+                        </Tabs>
                       </section>
                     </AnimatedDiv>
                     {index < form.fields.length - 1 && (

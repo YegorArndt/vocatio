@@ -1,5 +1,6 @@
 import { HfInference, TextGenerationArgs } from "@huggingface/inference";
 import { Configuration, OpenAIApi } from "openai";
+import { toast } from "sonner";
 import { Models } from "~/modules/types";
 
 const { log } = console;
@@ -71,26 +72,15 @@ export const toBulletPoints = async (text: string) => {
 export const applyGpt = async (prompt: string, model: Models = "gpt-3.5") => {
   let response;
 
-  if (model === "gpt-3.5") {
+  try {
     response = await openai.createChatCompletion({
       model: "gpt-3.5-turbo",
       messages: [{ role: "user", content: prompt }],
     });
-
-    return response?.data?.choices?.[0]?.message?.content;
-
-    // response = await openai.createChatCompletion({
-    //   model: "gpt-3.5-turbo-0613",
-    //   messages: [{ role: "user", content: prompt }],
-    // });
-
-    // return response?.data?.choices?.[0]?.message?.content;
-  } else if (model === "gpt-4") {
-    response = await openai.createChatCompletion({
-      model: "gpt-4",
-      messages: [{ role: "user", content: prompt }],
-    });
-
-    return response?.data?.choices?.[0]?.message?.content;
+  } catch (e) {
+    toast.error("OpenAI failed to provide a response. Please try again later.");
+    log(e);
   }
+
+  return response?.data?.choices?.[0]?.message?.content;
 };

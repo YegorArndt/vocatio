@@ -86,7 +86,7 @@ const updateBullets = (newSections: Sections) => {
     const newBullets = components.filter((c) => c.id.includes("bullet"));
     const formatted: BulletPoint[] = newBullets.map((b) => ({
       id: b.id,
-      text: b.hydratedProps?.value || "",
+      value: b.hydratedProps?.value || "",
     }));
     const newEntry = { ...target, bullets: formatted };
     const newEntries = entries.map((e) =>

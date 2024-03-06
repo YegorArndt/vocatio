@@ -5,7 +5,7 @@ type Uuidv4 = string;
 
 export type BulletPoint = {
   id: Uuidv4;
-  text: string;
+  value: string;
 };
 
 export type CvExperienceEntry = {

@@ -10,9 +10,9 @@ import {
 
 import type { Design } from "../types";
 import { type ImperativeHandleRef } from "../base-components/dnd/DndProvider";
-import { Charmander } from "../designs/Charmander";
 import { eventManager } from "~/modules/events/EventManager";
 import { Events } from "~/modules/events/types";
+import { Charizard } from "../designs/Charizard";
 
 const { log } = console;
 
@@ -38,7 +38,7 @@ export const useDesignContext = () => {
 export const DesignContext = (props: DesignContextInput) => {
   const { children, a4Ref } = props;
 
-  const [design, setDesign] = useState<Design>(Charmander);
+  const [design, setDesign] = useState<Design>(Charizard);
 
   const imperative = useRef<ImperativeHandleRef | null>(null);
 

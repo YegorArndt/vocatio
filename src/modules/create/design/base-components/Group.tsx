@@ -42,7 +42,7 @@ type IconProps = Pick<GroupProps, "image" | "imageProps" | "imageSize"> & {
 };
 
 const getIcon = (inputString: string) => {
-  const inputLower = inputString.toLowerCase();
+  const inputLower = inputString?.toLowerCase();
   return (
     iconsMap.find(
       (iconEntry) =>
@@ -50,7 +50,7 @@ const getIcon = (inputString: string) => {
           iconEntry.exact.some((e) => e.toLowerCase() === inputLower)) ||
         (iconEntry.partial &&
           iconEntry.partial.some((partial) =>
-            inputLower.includes(partial.toLowerCase())
+            inputLower?.includes(partial.toLowerCase())
           ))
     )?.icon || null
   );
@@ -120,7 +120,7 @@ const Icon = (props: IconProps) => {
           )}
           onChange={(e) => setFilter(e.target.value)}
         />
-        <p className="leading-8 h4">
+        <p className="h4 leading-8">
           You&apos;re choosing an icon for &quot;{stripHtmlTags(value).trim()}
           &quot;
         </p>

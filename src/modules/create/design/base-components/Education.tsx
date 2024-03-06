@@ -13,14 +13,13 @@ export const Education = () => {
 
   if (!user) return <BigEntrySkeleton />;
 
-  const providerProps = {
-    className: design.baseComponents.education.className,
-    /**
-     * Always passed for the `DndProvider` component.
-     */
-    // @ts-ignore
-    ...c.hydratableProps!(user),
-  };
+  const className = design.baseComponents.education.className;
 
-  return <DndProvider {...providerProps} />;
+  return (
+    <DndProvider
+      className={className}
+      // @ts-ignore
+      {...c.hydratableProps!(user)}
+    />
+  );
 };

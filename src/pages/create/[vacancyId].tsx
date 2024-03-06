@@ -38,6 +38,7 @@ const CvEditorPage = () => {
         <meta name="keywords" content="CV, Resume, Job, Vacancy" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+
       <DesignContext a4Ref={a4Ref}>
         {(context) => (
           <ResizablePanelGroup direction="horizontal">

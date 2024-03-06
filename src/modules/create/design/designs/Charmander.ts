@@ -67,7 +67,31 @@ export const Charmander: Design = {
     },
     experience: {
       className:
-        "flex flex-col gap-4 text-[#384347] [&_*.title-container]:!grid-cols-2 [&_*.title-label]:text-[17px] [&_*.title-label]:leading-7 [&_*.title-value]:text-right [&_*.place-container]:!grid-cols-[40px_1fr] [&_*.place-container]:gap-[10px] [&_*.place-value]:text-[17px] [&_*.place-value]:leading-7 [&_*.place-value]:text-[#008cff] [&_*.place-image]:w-[40px] [&_*.place-image]:h-[40px] [&_*.place-image]:rounded-full [&_*.bullet]:text-[13px] [&_*.bullet]:leading-5 [&_*.bullet]:my-1",
+        // prettier-ignore
+        `flex 
+        flex-col 
+        gap-4 
+        text-[#384347] 
+
+        [&_.entry-image]:h-[40px]
+        [&_.entry-image]:w-[40px]
+
+        [&_.place]:text-[17px]
+        [&_.place]:text-[#008cff]
+        [&_.place]:text-left
+        [&_.place]:leading-7
+
+        [&_.title]:text-left
+
+        [&_.period]:text-right
+
+        [&_.entry-container]:!grid-cols-[40px_1fr] 
+        [&_.entry-container]:gap-[10px] 
+        [&_.entry-container]:mb-5
+
+        [&_.bullet]:text-[13px] 
+        [&_.bullet]:leading-5 
+        [&_.bullet]:my-1`,
     },
     languages: {
       className: "flex flex-col gap-1 text-[13px]",
@@ -132,16 +156,14 @@ export const Charmander: Design = {
                 value: // prettier-ignore
                 `<div class="flex justify-between">
                   <section class="flex flex-col">
-                    <span class="font-bold text-left ${expHeading}">${entry.place}</span>
-                    <span class="italic text-left">${entry.title}</span>
+                    <span class="place">${entry.place}</span>
+                    <span class="title">${entry.title}</span>
                   </section>
-                  <span class="font-bold leading-7">${entry.period}</span>
+                  <span class="period">${entry.period}</span>
                 </div>`,
-                containerClassName: "grid-cols-[40px_1fr] gap-[10px] pb-[10px]",
+                containerClassName: "entry-container",
                 imageProps: {
-                  height: 40,
-                  width: 40,
-                  className: "rounded-full",
+                  className: "rounded-full entry-image",
                 },
 
                 labelProps: { className: "title-label" },

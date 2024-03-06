@@ -1,4 +1,4 @@
-import { Rubik, EB_Garamond, Noto_Serif } from "next/font/google";
+import { Rubik, EB_Garamond, Noto_Serif, Inter } from "next/font/google";
 
 import { DndProviderProps } from "./base-components/dnd/DndProvider";
 import { GroupProps } from "./base-components/Group";
@@ -8,6 +8,7 @@ import { Cv, CvExperienceEntry } from "~/modules/init-gen/types";
 const rubik = Rubik({ subsets: ["latin"] });
 const garamond = EB_Garamond({ subsets: ["latin"] });
 const notoSerif = Noto_Serif({ subsets: ["latin"] });
+const inter = Inter({ subsets: ["latin"] });
 
 export const fonts = {
   rubik: {
@@ -29,6 +30,10 @@ export const fonts = {
   arial: {
     name: "Arial",
     font: "arial",
+  },
+  inter: {
+    name: "Inter",
+    font: inter,
   },
 };
 

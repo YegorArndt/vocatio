@@ -114,9 +114,10 @@ export const contact = (
     type: BaseComponentType;
     sectionId: SectionName;
     groupItemProps: Partial<GroupProps>;
+    separator?: string;
   }>
 ) => {
-  const { type, sectionId, groupItemProps } = props || {};
+  const { type, sectionId, groupItemProps, separator } = props || {};
 
   return {
     type: "contact",
@@ -131,7 +132,7 @@ export const contact = (
             type: type || getType(entry),
             hydratedProps: {
               image: defaultIcon(entry),
-              value: entry.value,
+              value: entry.value + (separator || ""),
               ...groupItemProps,
             },
           })),

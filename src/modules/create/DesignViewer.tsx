@@ -3,10 +3,10 @@ import { useState } from "react";
 import { BlurImage } from "../../components/BlurImage";
 import { Charmander } from "~/modules/create/design/designs/Charmander";
 import { AnimatedDiv } from "~/components/AnimatedDiv";
-import { Charmeleon } from "./design/designs/Charmeleon";
 import { useDesignContext } from "./design/contexts/DesignContext";
+import { Charizard } from "./design/designs/Charizard";
 
-const designs = [Charmander, Charmeleon];
+const designs = [Charizard, Charmander];
 
 export const DesignViewer = () => {
   const [search, setSearch] = useState("");

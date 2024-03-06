@@ -80,7 +80,7 @@ export const getIcon = (inputString: string) => {
           iconEntry.exact.some((e) => e.toLowerCase() === inputLower)) ||
         (iconEntry.partial &&
           iconEntry.partial.some((partial) =>
-            inputLower.includes(partial.toLowerCase())
+            inputLower?.includes(partial.toLowerCase())
           ))
     )?.icon || null
   );

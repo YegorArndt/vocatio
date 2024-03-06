@@ -11,7 +11,6 @@ import type { SyntheticListenerMap } from "@dnd-kit/core/dist/hooks/utilities";
 import { Tooltip } from "react-tooltip";
 
 import type { CvExperienceEntry } from "~/modules/init-gen/types";
-import { type ExperienceEntry as PrismaExperienceEntry } from "@prisma/client";
 import { setter, type Imperative } from "./utils";
 import { api, cn } from "~/utils";
 import { useComponentContext } from "../../contexts/ComponentContext";
@@ -113,15 +112,12 @@ type ActiveTab = 0 | 1;
 
 const getChunkedBullets = (
   entry: CvExperienceEntry,
-  originalEntry: PrismaExperienceEntry,
+  originalEntry: RouterUser["experience"][number],
   activeTab: ActiveTab
 ) => {
   const rawBullets = {
     0: entry.bullets.map((b) => stripHtmlTags(b.value)),
-    1:
-      originalEntry?.description
-        ?.split("•")
-        .filter((bullet) => bullet.trim()) || [],
+    1: originalEntry.bullets.map((x) => x.value),
   };
 
   const chunkedBullets = rawBullets[activeTab]?.reduce(

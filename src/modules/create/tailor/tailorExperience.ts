@@ -19,7 +19,6 @@ export const buildExperiencePrompt = (
   user: RouterUser
 ) => {
   const bullets = user.experience[0]?.bullets.map((x) => x.value).join("\n");
-  log(bullets);
 
   // prettier-ignore
   return `We will be tailoring my resume to a specific job posting. Here it is: "${vacancy.description}".

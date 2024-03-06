@@ -77,8 +77,6 @@ const getPrompt = (gen: Gen, cv: Cv, user: RouterUser) => {
    [City, State, Zip Code]".  
     `;
 
-  log("Prompt: ", prompt);
-
   return prompt;
 };
 

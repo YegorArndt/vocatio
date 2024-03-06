@@ -13,6 +13,6 @@ export const CompanyPresentator = (props: { className?: string }) => {
       <p>{vacancy?.companyName}</p>
     </div>
   ) : (
-    <Spinner />
+    <Spinner size={10} />
   );
 };

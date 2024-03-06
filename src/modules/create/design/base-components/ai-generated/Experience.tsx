@@ -9,7 +9,6 @@ import {
 import type { DraggableAttributes } from "@dnd-kit/core";
 import type { SyntheticListenerMap } from "@dnd-kit/core/dist/hooks/utilities";
 import { Tooltip } from "react-tooltip";
-import { BsPlusCircleDotted } from "react-icons/bs";
 
 import type { CvExperienceEntry } from "~/modules/init-gen/types";
 import { type ExperienceEntry as PrismaExperienceEntry } from "@prisma/client";

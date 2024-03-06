@@ -15,11 +15,11 @@ import {
   MenubarContent,
   MenubarItem,
 } from "~/components/ui/external/MenuBar";
-import { BsPlusCircleDotted } from "react-icons/bs";
 import { getIcon } from "~/modules/utils";
 import { RiDeleteBin2Fill } from "react-icons/ri";
 import { BiMoveVertical } from "react-icons/bi";
 import { Divider } from "~/components/layout/Divider";
+import { HiPlusCircle } from "react-icons/hi2";
 
 const { log } = console;
 
@@ -70,7 +70,7 @@ export const ContactBox = (props: EntryBoxProps) => {
                       <Menubar className="clr-card bg-card">
                         <MenubarMenu>
                           <MenubarTrigger className="flex-y sm cursor-pointer gap-2 whitespace-nowrap rounded-md bg-blue font-semibold">
-                            <BsPlusCircleDotted />
+                            <HiPlusCircle />
                             New
                           </MenubarTrigger>
                           <MenubarContent className="max-w-[400px] bg-primary p-3">

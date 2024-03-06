@@ -4,7 +4,6 @@ import {
   PopoverTrigger,
   PopoverContent,
 } from "~/components/ui/external/Popover";
-import { BsPlusCircleDotted } from "react-icons/bs";
 import { api, cn } from "~/utils";
 import { BUTTON_CN } from "../constants";
 import { useDesignContext } from "../../../contexts/DesignContext";

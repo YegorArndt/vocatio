@@ -7,11 +7,11 @@ import { BoxName } from "../../types";
 import { Fragment, useState } from "react";
 import { Text } from "~/components/ui/inputs/Text";
 import { LanguageEntry } from "@prisma/client";
-import { BsPlusCircleDotted } from "react-icons/bs";
 import { RiDeleteBin2Fill } from "react-icons/ri";
 import { BiMoveVertical } from "react-icons/bi";
 import { Divider } from "~/components/layout/Divider";
 import { Thunder } from "~/components/icons";
+import { HiPlusCircle } from "react-icons/hi2";
 
 const { log } = console;
 
@@ -77,7 +77,7 @@ export const LanguagesBox = (props: EntryBoxProps) => {
                         autoFocus
                       />
                       <Button
-                        frontIcon={<BsPlusCircleDotted />}
+                        frontIcon={<HiPlusCircle />}
                         text="New language"
                         onClick={() => {
                           form.prepend({

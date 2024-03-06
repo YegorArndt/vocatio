@@ -7,7 +7,6 @@ import {
 } from "~/components/ui/external/Drawer";
 import { api } from "~/utils";
 import { useRouter } from "next/router";
-import { BsPlusCircleDotted } from "react-icons/bs";
 import { Thunder } from "~/components/icons";
 import { Textarea } from "~/components/ui/inputs/Textarea";
 import { useForm } from "react-hook-form";
@@ -20,6 +19,7 @@ import { MessageContainer } from "~/components/MessageContainer";
 import { useState } from "react";
 import { AnimatedDiv } from "~/components/AnimatedDiv";
 import { Spinner } from "~/components";
+import { HiPlusCircle } from "react-icons/hi2";
 
 const { log } = console;
 
@@ -62,7 +62,7 @@ export const NewVacancyDrawer = () => {
   return (
     <Drawer>
       <DrawerTrigger className="blue-button ml-auto gap-2">
-        <BsPlusCircleDotted />
+        <HiPlusCircle />
         New vacancy
       </DrawerTrigger>
       <DrawerContent className="h-max bg-primary px-10 pb-[150px] pt-5">
@@ -90,7 +90,7 @@ export const NewVacancyDrawer = () => {
               frontIcon={<IoSparklesSharp />}
               text="Tailor my CV to it"
               className="blue-button w-min"
-              disabled={!formState.dirtyFields.description}
+              disabled={!formState.dirtyFields.description || startedTailoring}
               onClick={handleSubmit(onSubmit)}
             />
           </div>

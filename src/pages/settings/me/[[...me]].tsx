@@ -60,7 +60,10 @@ export const MePage = (
     <>
       <Head>
         <title>Me - Vocatio</title>
-        <meta name="description" content="Fine-tune your Vocatio." />
+        <meta
+          name="description"
+          content="Information about you that will be used for CV generation"
+        />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Layout

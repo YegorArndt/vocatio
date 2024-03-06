@@ -3,8 +3,8 @@ import { RouterUser, PartialVacancy } from "~/modules/types";
 
 const { log } = console;
 
-type ExtensionPayload = { user: RouterUser };
-export type ExtensionData = { newVacancy: PartialVacancy; user: RouterUser };
+type ExtensionPayload = { user: RouterUser }; // <- we send
+export type ExtensionData = { newVacancy: PartialVacancy; user: RouterUser }; // <- we receive
 
 type Message = {
   type: "post-user" | "get-user" | "get-vacancy";

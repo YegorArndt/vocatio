@@ -27,7 +27,6 @@ import {
 } from "~/components/ui/external/Popover";
 import { Switch } from "~/components/ui/external/Switch";
 import { BiPlus } from "react-icons/bi";
-import { BsPlusCircleDotted } from "react-icons/bs";
 import { Spinner } from "~/components";
 import { Button } from "~/components/ui/buttons/Button";
 import { Badge } from "~/components/ui/external/Badge";

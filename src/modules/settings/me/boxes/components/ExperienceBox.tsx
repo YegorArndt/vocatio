@@ -24,11 +24,11 @@ import { AnimatedDiv } from "~/components/AnimatedDiv";
 import { Text } from "~/components/ui/inputs/Text";
 import { uuidv4 } from "~/modules/utils";
 import { TiTimes } from "react-icons/ti";
-import { BsPlusCircleDotted } from "react-icons/bs";
 import { RiDeleteBin2Fill } from "react-icons/ri";
 import { TbRestore } from "react-icons/tb";
 import { IoNewspaper } from "react-icons/io5";
 import { Textarea } from "~/components/ui/inputs/Textarea";
+import { HiPlusCircle } from "react-icons/hi2";
 
 const { log } = console;
 
@@ -153,7 +153,7 @@ export const ExperienceBox = (props: ExperienceBoxProps) => {
               <Fragment>
                 <header className="mb-8 mt-5 flex justify-end">
                   <Button
-                    frontIcon={<BsPlusCircleDotted />}
+                    frontIcon={<HiPlusCircle />}
                     text="New entry"
                     className="blue-button"
                     onClick={() =>
@@ -227,7 +227,7 @@ export const ExperienceBox = (props: ExperienceBoxProps) => {
                                     Skills demonstrated at this role
                                   </div>
                                   <Button
-                                    frontIcon={<BsPlusCircleDotted />}
+                                    frontIcon={<HiPlusCircle />}
                                     text="New skill"
                                     className="blue-button"
                                     onClick={() => {

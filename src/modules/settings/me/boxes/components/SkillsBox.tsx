@@ -13,10 +13,10 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "~/components/ui/external/Tooltip";
-import { BsPlusCircleDotted } from "react-icons/bs";
 import { Thunder } from "~/components/icons";
 import { cn } from "~/utils";
 import { SkillEntry } from "@prisma/client";
+import { HiPlusCircle } from "react-icons/hi2";
 
 const { log } = console;
 
@@ -62,7 +62,7 @@ export const SkillsBox = (props: EntryBoxProps) => {
                         autoFocus
                       />
                       <Button
-                        frontIcon={<BsPlusCircleDotted />}
+                        frontIcon={<HiPlusCircle />}
                         text="New skill"
                         onClick={() => {
                           form.prepend({

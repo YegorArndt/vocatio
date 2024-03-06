@@ -10,6 +10,8 @@ import { UserUpdateSchema } from "../utils/schemas";
 
 const { log } = console;
 
+const breakDownIntoBullets = () => {};
+
 export const usersRouter = createTRPCRouter({
   update: publicProcedure
     .input(UserUpdateSchema)

@@ -10,9 +10,12 @@ const { log } = console;
 
 type UseUpdateWithExtensionProps = {
   updateKey: BoxName | "all";
-  expirationToken: string;
+  expirationToken: string; // See `useSendMessage` for more info.
 };
 
+/**
+ * Basically just handles transforming "main" key to the correct keys for the database.
+ */
 const updateKeyToDbKeys = (
   data: ExtensionData,
   updateKey: BoxName,

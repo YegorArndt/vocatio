@@ -26,7 +26,6 @@ import { UpdateWithExtensionLink } from "./UpdateWithExtensionLink";
 import { typedEntries } from "~/modules/utils";
 import { useState } from "react";
 import { Button } from "~/components/ui/buttons/Button";
-import { BsPlusCircleDotted } from "react-icons/bs";
 import { SkillsBox } from "./boxes/components/SkillsBox";
 import { ContactBox } from "./boxes/components/ContactBox";
 import { LanguagesBox } from "./boxes/components/LanguagesBox";

@@ -377,7 +377,9 @@ export const ExperienceBox = (props: ExperienceBoxProps) => {
                                           adornment={
                                             <Button
                                               className="mx-2 w-[15px] hover:clr-white"
-                                              onClick={() => form.remove(i)}
+                                              onClick={() =>
+                                                bulletsForm.remove(i)
+                                              }
                                             >
                                               <TiTimes />
                                             </Button>

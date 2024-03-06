@@ -82,7 +82,7 @@ const CvEditorPage = () => {
             </ResizableHandle>
 
             <ResizablePanel defaultSize={20} className="z-layout mr-3">
-              <header className="flex-y h-20 justify-end gap-3">
+              <header className="flex-y h-20 justify-end gap-3 pr-5">
                 Applying for
                 <CompanyPresentator />
               </header>

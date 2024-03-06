@@ -38,38 +38,38 @@ const BackToJobPosting = () => {
 
 export const EditorToolbar = () => {
   return (
-    <header className="my-6 ml-8 flex w-[95%] flex-col gap-2">
-      <section className="flex-y rounded-md bg-card">
-        <Menubar>
-          <MenubarMenu>
-            <MenubarTrigger className="flex-y hover:main-hover cursor-pointer gap-2">
-              <CiFileOn /> File
-            </MenubarTrigger>
-            <MenubarContent className="flex w-max flex-col items-start gap-5 bg-card p-5">
-              <FileName />
-            </MenubarContent>
-          </MenubarMenu>
-        </Menubar>
+    <header className="flex-y my-6 ml-8 flex w-[95%] flex-wrap gap-x-2 rounded-md bg-card p-1">
+      <Menubar>
+        <MenubarMenu>
+          <MenubarTrigger className="primary sm gap-2">
+            <CiFileOn /> File
+          </MenubarTrigger>
+          <MenubarContent className="flex w-max flex-col items-start gap-5 bg-card p-5">
+            <FileName />
+            <MoveToAppliedSwitch />
+          </MenubarContent>
+        </MenubarMenu>
+      </Menubar>
 
-        <DownloadButton />
-        <BackToJobPosting />
+      <DownloadButton />
+      <BackToJobPosting />
 
-        <CoverLetterDrawer />
-        <BoldenKeywordsPopover />
-        <Link
-          frontIcon={<MdDashboardCustomize />}
-          text="My vacancies"
-          to="/vacancies"
-          className="primary sm"
-        />
-        <Link
-          frontIcon={<IoSettingsOutline />}
-          text="Settings"
-          to="/settings/me"
-          className="primary sm"
-        />
-      </section>
-      <MoveToAppliedSwitch />
+      <CoverLetterDrawer />
+      <BoldenKeywordsPopover />
+      <Link
+        frontIcon={<MdDashboardCustomize />}
+        text="My vacancies"
+        to="/vacancies"
+        className="primary sm"
+        newTab
+      />
+      <Link
+        frontIcon={<IoSettingsOutline />}
+        text="Settings"
+        to="/settings/me"
+        className="primary sm"
+        newTab
+      />
     </header>
   );
 };

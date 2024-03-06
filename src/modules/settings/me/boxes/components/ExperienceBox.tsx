@@ -328,7 +328,7 @@ export const ExperienceBox = (props: ExperienceBoxProps) => {
                               name={`experience.${index}.description`}
                             />
                           </TabsContent>
-                          <TabsContent value="processed">
+                          <TabsContent value="processed" className="w-[80%]">
                             <ArrayFormContext
                               name={`experience.${index}.bullets`}
                             >

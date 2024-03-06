@@ -336,18 +336,33 @@ export const ExperienceBox = (props: ExperienceBoxProps) => {
                                 const { fields } = bulletsForm;
                                 return (
                                   <section className="flex w-full flex-col gap-3">
-                                    <Button
-                                      frontIcon={<BiCopy />}
-                                      text="Copy bullets as text"
-                                      onClick={() => {
-                                        const bullets = fields
-                                          .map((field) => `• ${field.value}`)
-                                          .join("\n");
-                                        navigator.clipboard.writeText(bullets);
-                                        toast.success("Copied to clipboard");
-                                      }}
-                                      className="primary sm w-min"
-                                    />
+                                    <header>
+                                      <Button
+                                        frontIcon={<BiCopy />}
+                                        text="Copy bullets as text"
+                                        onClick={() => {
+                                          const bullets = fields
+                                            .map((field) => `• ${field.value}`)
+                                            .join("\n");
+                                          navigator.clipboard.writeText(
+                                            bullets
+                                          );
+                                          toast.success("Copied to clipboard");
+                                        }}
+                                        className="primary sm w-min"
+                                      />
+                                      <Button
+                                        text="New bullet"
+                                        frontIcon={<HiPlusCircle />}
+                                        className="blue-button"
+                                        onClick={() =>
+                                          bulletsForm.prepend({
+                                            id: uuidv4(),
+                                            value: "Bullet",
+                                          })
+                                        }
+                                      />
+                                    </header>
                                     {fields.map((field, i) => (
                                       <AnimatedDiv
                                         key={field.id}

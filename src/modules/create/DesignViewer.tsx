@@ -49,7 +49,7 @@ export const DesignViewer = () => {
                 priority
               />
               {design.name === d.name && (
-                <div className="-z-1 flex-center absolute inset-0 h-[250px] w-[200px] cursor-pointer gap-2 bg-green opacity-80">
+                <div className="-z-1 flex-center absolute inset-0 h-[250px] w-[200px] cursor-pointer gap-2 bg-green opacity-75">
                   <IoCheckmarkCircleOutline size={30} />
                   Default
                 </div>

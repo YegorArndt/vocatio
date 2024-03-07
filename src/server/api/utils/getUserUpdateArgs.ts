@@ -24,6 +24,15 @@ export const getUserUpdateArgs = async (
     defaultModel,
   } = input;
 
+  let experienceWithoutBullets;
+
+  if (experience) {
+    experienceWithoutBullets = experience?.map((exp) => {
+      const { bullets: b, ...rest } = exp;
+      return rest;
+    });
+  }
+
   const userUpdateArgs = {
     ...(contact && {
       contact: {
@@ -61,15 +70,7 @@ export const getUserUpdateArgs = async (
       education: {
         deleteMany: {},
         createMany: {
-          data: education,
-        },
-      },
-    }),
-    ...(experience && {
-      experience: {
-        deleteMany: {},
-        createMany: {
-          data: experience,
+          data: experienceWithoutBullets,
         },
       },
     }),

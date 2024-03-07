@@ -106,7 +106,7 @@ export const FileName = () => {
   };
 
   return (
-    <div className="flex-center min-w-[600px]">
+    <div className="flex-center min-w-[750px]">
       <label className="flex-y grow gap-4 whitespace-nowrap">
         File name:
         {fileName ? (

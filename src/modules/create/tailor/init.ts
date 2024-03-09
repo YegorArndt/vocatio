@@ -35,7 +35,10 @@ const createInitialCv = <T extends Partial<Gen>>(user: RouterUser, gen: T) => {
           bullets: [],
         };
       }
-      return x;
+      return {
+        ...x,
+        bullets: x.bullets.map((bullet) => ({ value: bullet, id: uuidv4() })),
+      };
     }),
     // @ts-ignore
     education: user.education,

@@ -8,7 +8,6 @@ import {
 import { getUserUpdateArgs } from "../utils/getUserUpdateArgs";
 import { UserUpdateSchema } from "../utils/schemas";
 import { applyGpt } from "../utils/ai";
-import { Bullet } from "@prisma/client";
 
 const { log } = console;
 
@@ -52,7 +51,7 @@ export const usersRouter = createTRPCRouter({
         id: userId,
       },
       include: {
-        experience: { include: { bullets: true } },
+        experience: true,
       },
     });
 
@@ -69,33 +68,19 @@ export const usersRouter = createTRPCRouter({
     const { bullets } = firstExperience;
     if (bullets?.length && bullets.length > 0) return;
 
-    const resultBullets: Pick<Bullet, "entryId" | "value">[] = [];
+    for (const x of experience) {
+      const { description } = x;
+      const parsed = await breakDownIntoBullets(description);
+      if (!parsed) continue;
+      const { bullets: parsedBullets } = parsed;
 
-    await Promise.all(
-      experience.map(async (exp) => {
-        const { description } = exp;
-        if (!description) return exp;
-
-        const parsed = await breakDownIntoBullets(description);
-        if (!parsed) return;
-
-        const { bullets } = parsed;
-        if (!bullets || !bullets.length || !exp.id) return;
-
-        const formattedBullets = bullets.map((bullet) => ({
-          value: bullet,
-          entryId: exp.id!,
-        }));
-
-        resultBullets.push(...formattedBullets);
-      })
-    );
-
-    const result = await ctx.prisma.bullet.createMany({
-      data: resultBullets,
-    });
-
-    return result;
+      await ctx.prisma.experienceEntry.update({
+        where: { id: x.id },
+        data: {
+          bullets: parsedBullets,
+        },
+      });
+    }
   }),
 
   update: publicProcedure
@@ -149,11 +134,7 @@ export const usersRouter = createTRPCRouter({
       },
       include: {
         education: true,
-        experience: {
-          include: {
-            bullets: true,
-          },
-        },
+        experience: true,
         contact: true,
         languages: true,
         skills: true,

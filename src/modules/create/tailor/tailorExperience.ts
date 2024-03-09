@@ -3,7 +3,7 @@ import { PartialVacancy, RouterUser } from "~/modules/types";
 import { applyGpt } from "~/server/api/utils/ai";
 import { Common } from "./types";
 import { uuidv4 } from "~/modules/utils";
-import { BulletPoint, CvExperienceEntry, Gen } from "~/modules/init-gen/types";
+import { Gen } from "~/modules/init-gen/types";
 import { eventManager } from "~/modules/events/EventManager";
 import { Events } from "~/modules/events/types";
 import { CvContextManager } from "~/modules/CvContextManager";
@@ -18,7 +18,7 @@ export const buildExperiencePrompt = (
   vacancy: PartialVacancy,
   user: RouterUser
 ) => {
-  const bullets = user.experience[0]?.bullets.map((x) => x.value).join("\n");
+  const bullets = user.experience[0]?.bullets.join("\n");
 
   // prettier-ignore
   return `We will be tailoring my resume to a specific job posting. Here it is: "${vacancy.description}".
@@ -91,16 +91,6 @@ const parseExperience = (gptResponse: string | undefined) => {
   return renamed;
 };
 
-const swapFirstEntry = (
-  entries: CvExperienceEntry[],
-  bullets: BulletPoint[]
-) => {
-  const [first, ...rest] = entries;
-  if (first?.bullets) first.bullets = bullets;
-
-  return [first, ...rest] as CvExperienceEntry[];
-};
-
 export const tailorExperience = async (props: Common) => {
   const { vacancy, user } = props;
 
@@ -108,18 +98,29 @@ export const tailorExperience = async (props: Common) => {
     const prompt = buildExperiencePrompt(vacancy, user);
     const gptResponse = await applyGpt(prompt);
     const parsedExperience = parseExperience(gptResponse);
-    const entriesWithSwappedFirst = swapFirstEntry(
-      // @ts-ignore
-      user.experience,
-      parsedExperience.bullets || []
-    );
+
+    const instance = CvContextManager.getInstance();
+
+    const experienceWithFormattedBullets = instance
+      .getCv()
+      ?.experience.map((x, i) => {
+        if (i === 0) {
+          return {
+            ...x,
+            bullets: parsedExperience.bullets,
+          };
+        }
+        return x;
+      });
 
     const result = {
       vacancyResponsibilities: parsedExperience.vacancyResponsibilities,
-      experience: entriesWithSwappedFirst,
+      experience: experienceWithFormattedBullets,
     };
 
-    CvContextManager.getInstance().updateCv({ experience: result.experience });
+    CvContextManager.getInstance().updateCv({
+      experience: experienceWithFormattedBullets,
+    });
     eventManager.emit<ExperienceContext>(Events.GEN_UPDATED);
 
     return result;

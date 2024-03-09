@@ -25,6 +25,7 @@ export const finish = (props: FinishProps) => {
 
   const { user, ...withoutUser } = props;
 
+  // @ts-ignore
   const updatedGen: Gen = {
     ...initialGen,
     ...withoutUser,

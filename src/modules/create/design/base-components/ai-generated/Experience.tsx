@@ -116,7 +116,7 @@ const getChunkedBullets = (
 ) => {
   const rawBullets = {
     0: entry.bullets.map((b) => stripHtmlTags(b.value)),
-    1: originalEntry?.bullets.map((x) => x.value),
+    1: originalEntry?.bullets,
   };
 
   const chunkedBullets = rawBullets[activeTab]?.reduce(

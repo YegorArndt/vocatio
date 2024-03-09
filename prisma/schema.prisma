@@ -115,15 +115,7 @@ model EducationEntry {
   userId      String
 }
 
-model Bullet {
-  id        String   @id @default(uuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  value     String
-  entry     ExperienceEntry? @relation(fields: [entryId], references: [id], onDelete: SetNull)
-  entryId   String?
-}
-
+ 
 model ExperienceEntry {
   id                  String   @id @default(uuid())
   createdAt           DateTime @default(now())
@@ -131,7 +123,7 @@ model ExperienceEntry {
   place               String
   period              String
   description         String
-  bullets             Bullet[]  
+  bullets             String[]  
   skills              String[]
   image               String
   title               String

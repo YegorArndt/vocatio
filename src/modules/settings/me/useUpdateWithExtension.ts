@@ -54,7 +54,10 @@ export const useUpdateWithExtension = (props: UseUpdateWithExtensionProps) => {
     isLoading: isUpdating,
     isSuccess: successUpdating,
   } = api.users.update.useMutation({
-    onSuccess: void createBullets,
+    onSuccess: () => {
+      log("i ran");
+      void createBullets();
+    },
   });
 
   useEffect(() => {

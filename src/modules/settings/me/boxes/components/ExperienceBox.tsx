@@ -6,7 +6,7 @@ import { Fragment, useState } from "react";
 import { BiCopy, BiMoveVertical } from "react-icons/bi";
 import { Divider } from "~/components/layout/Divider";
 import { ExperienceEntry } from "@prisma/client";
-import { Thunder } from "~/components/icons";
+import { Gpt, Thunder } from "~/components/icons";
 import { api, cn } from "~/utils";
 import {
   Popover,
@@ -110,23 +110,25 @@ const ImagePicker = (props: {
   );
 };
 
-type Formatted = ReturnType<typeof formatSkills>;
+type Formatted = ReturnType<typeof format>;
 
-const formatSkills = (experience: ExperienceEntry[]) => {
+const format = (experience: ExperienceEntry[]) => {
   return experience.map((e) => {
-    const { skills } = e;
-    const formatted = skills.map((x) => ({ id: uuidv4(), value: x }));
+    const { skills, bullets } = e;
+    const formattedSkills = skills.map((x) => ({ id: uuidv4(), value: x }));
+    const formattedBullets = bullets.map((x) => ({ id: uuidv4(), value: x }));
 
-    return { ...e, skills: formatted };
+    return { ...e, skills: formattedSkills, bullets: formattedBullets };
   });
 };
 
-const unformatSkills = (experience: Formatted) => {
+const unformat = (experience: Formatted) => {
   return experience.map((e) => {
-    const { skills } = e;
-    const formatted = skills.map((x) => x.value);
+    const { skills, bullets } = e;
+    const unformattedSkills = skills.map((x) => x.value);
+    const unformattedBullets = bullets.map((x) => x.value);
 
-    return { ...e, skills: formatted };
+    return { ...e, skills: unformattedSkills, bullets: unformattedBullets };
   });
 };
 
@@ -135,7 +137,7 @@ export const ExperienceBox = (props: ExperienceBoxProps) => {
   const { data: user } = api.users.get.useQuery();
 
   const defaultValues = {
-    experience: formatSkills(data.experience),
+    experience: format(data.experience),
   };
 
   const customUpdate = (data: { experience: Formatted }) => {
@@ -143,7 +145,7 @@ export const ExperienceBox = (props: ExperienceBoxProps) => {
     if (!experience) return;
 
     return update({
-      experience: unformatSkills(experience),
+      experience: unformat(experience),
     });
   };
 
@@ -334,6 +336,16 @@ export const ExperienceBox = (props: ExperienceBoxProps) => {
                             >
                               {({ form: bulletsForm }) => {
                                 const { fields } = bulletsForm;
+
+                                if (!fields.length)
+                                  return (
+                                    <Button
+                                      frontIcon={<Gpt />}
+                                      text="Process"
+                                      className="primary sm"
+                                    />
+                                  );
+
                                 return (
                                   <section className="flex w-full flex-col gap-3">
                                     <header className="flex-y gap-3">

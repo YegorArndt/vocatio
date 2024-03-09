@@ -1,6 +1,5 @@
 import { z } from "zod";
 import type { Prisma } from "@prisma/client";
-
 import { UserUpdateSchema } from "./schemas";
 
 const { log } = console;
@@ -21,17 +20,7 @@ export const getUserUpdateArgs = async (
     linkedinId,
     email,
     image,
-    defaultModel,
   } = input;
-
-  let experienceWithoutBullets;
-
-  if (experience) {
-    experienceWithoutBullets = experience?.map((exp) => {
-      const { bullets: b, ...rest } = exp;
-      return rest;
-    });
-  }
 
   const userUpdateArgs = {
     ...(contact && {
@@ -47,9 +36,7 @@ export const getUserUpdateArgs = async (
     image,
     professionalSummary,
     linkedinId,
-    defaultModel,
     email: email || prevUser.email,
-
     ...(skills && {
       skills: {
         deleteMany: {},
@@ -70,7 +57,15 @@ export const getUserUpdateArgs = async (
       education: {
         deleteMany: {},
         createMany: {
-          data: experienceWithoutBullets,
+          data: education,
+        },
+      },
+    }),
+    ...(experience && {
+      experience: {
+        deleteMany: {},
+        createMany: {
+          data: experience,
         },
       },
     }),

@@ -76,7 +76,10 @@ export const Toolbar = (props: ToolbarProps) => {
                         props: {
                           ...(c.hydratedProps ?? {}),
                           className: cn(
-                            design.baseComponents[c.type]?.className
+                            design.baseComponents[c.type]?.className,
+                            {
+                              bullet: c.type === "bullet",
+                            }
                           ),
                         },
                       });

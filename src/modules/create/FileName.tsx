@@ -10,7 +10,6 @@ import {
   PopoverTrigger,
 } from "~/components/ui/external/Popover";
 import { Switch } from "~/components/ui/external/Switch";
-import { useSettings } from "~/hooks/useSettings";
 import { typedEntries } from "../utils";
 import {
   RadioGroup,
@@ -19,11 +18,13 @@ import {
 import {
   FileNameConfig,
   fileNameSeparators,
+  getSettings,
+  updateSettings,
 } from "~/modules/settings/settings";
 import { Badge } from "~/components/ui/external/Badge";
 import { Spinner } from "~/components";
-import { useCvContext } from "~/hooks/useCvContext";
 import { CvContextManager } from "../CvContextManager";
+import { SettingsAccessor } from "~/components/SettingsAccessor";
 
 const { log } = console;
 
@@ -69,12 +70,15 @@ export const createFileName = (props: FileNameProps) => {
 
 export const FileName = () => {
   const [fileName, setFileName] = useState("");
-  const { settings, updateSettings } = useSettings();
   const { data: user } = api.users.get.useQuery();
-  const { vacancy } = useCvContext() || {};
 
   const handler = () => {
+    const instance = CvContextManager.getInstance();
+    const vacancy = instance.getVacancy();
+
     if (!user || !vacancy) return;
+
+    const settings = getSettings();
 
     const newFileName = createFileName({
       ...settings.fileNameConfig,
@@ -82,27 +86,31 @@ export const FileName = () => {
       vacancy,
     });
     setFileName(newFileName);
-    CvContextManager.getInstance().updateCv({ fileName: newFileName });
+    instance.updateCv({ fileName: newFileName });
   };
 
-  useEffect(handler, [user, vacancy, updateSettings]);
+  useEffect(handler, [user]);
 
   const handleSwitchChange = (key: keyof FileNameConfig) => {
-    updateSettings({
+    updateSettings((prev) => ({
+      ...prev,
       fileNameConfig: {
-        ...settings.fileNameConfig,
-        [key]: !settings.fileNameConfig[key],
+        ...prev.fileNameConfig,
+        [key]: !prev.fileNameConfig[key],
       },
-    });
+    }));
+    handler();
   };
 
   const handleSeparatorChange = (separator: FileNameConfig["separator"]) => {
-    updateSettings({
+    updateSettings((prev) => ({
+      ...prev,
       fileNameConfig: {
-        ...settings.fileNameConfig,
+        ...prev.fileNameConfig,
         separator,
       },
-    });
+    }));
+    handler();
   };
 
   return (
@@ -113,7 +121,7 @@ export const FileName = () => {
           <input
             type="text"
             name="file-name"
-            className="outlined border-bottom w-full whitespace-nowrap bg-transparent outline-none transition-all focus:border-weiss"
+            className="outlined border-bottom w-full whitespace-nowrap bg-transparent pb-1 outline-none transition-all focus:border-weiss"
             value={fileName}
             onChange={(e) => setFileName(e.target.value)}
             spellCheck={false}
@@ -131,43 +139,51 @@ export const FileName = () => {
           <h3 className="text-md tracking-normal">Configure file name</h3>
           <p>Include in the file name</p>
           <section className="my-4 flex flex-col gap-3">
-            {typedEntries(settings.fileNameConfig).map(
-              ([k, v]) =>
-                k !== "separator" && (
-                  <label key={k} className="flex-y gap-2">
-                    <Switch
-                      checked={v as boolean}
-                      onClick={() =>
-                        handleSwitchChange(k as keyof FileNameConfig)
-                      }
-                    />
-                    {startCase(k)}
-                  </label>
+            <SettingsAccessor>
+              {({ settings }) =>
+                typedEntries(settings.fileNameConfig).map(
+                  ([k, v]) =>
+                    k !== "separator" && (
+                      <label key={k} className="flex-y gap-2">
+                        <Switch
+                          checked={v as boolean}
+                          onClick={() =>
+                            handleSwitchChange(k as keyof FileNameConfig)
+                          }
+                        />
+                        {startCase(k)}
+                      </label>
+                    )
                 )
-            )}
+              }
+            </SettingsAccessor>
             <h3 className="mt-5 text-md tracking-normal">Separator</h3>
             <span className="clr-ghost">
               Symbol separating words in the file name
             </span>
-            <RadioGroup
-              defaultValue={settings.fileNameConfig.separator}
-              onValueChange={handleSeparatorChange}
-            >
-              {fileNameSeparators.map((s) => (
-                <div key={s} className="flex items-center space-x-2">
-                  <RadioGroupItem value={s} id={s} />
-                  <label htmlFor={s}>
-                    {s === " " ? (
-                      <div className="flex-y gap-2">
-                        Space <Badge>not recommended</Badge>
-                      </div>
-                    ) : (
-                      s
-                    )}
-                  </label>
-                </div>
-              ))}
-            </RadioGroup>
+            <SettingsAccessor>
+              {({ settings }) => (
+                <RadioGroup
+                  defaultValue={settings.fileNameConfig.separator}
+                  onValueChange={handleSeparatorChange}
+                >
+                  {fileNameSeparators.map((s) => (
+                    <div key={s} className="flex items-center space-x-2">
+                      <RadioGroupItem value={s} id={s} />
+                      <label htmlFor={s}>
+                        {s === " " ? (
+                          <div className="flex-y gap-2">
+                            Space <Badge>not recommended</Badge>
+                          </div>
+                        ) : (
+                          s
+                        )}
+                      </label>
+                    </div>
+                  ))}
+                </RadioGroup>
+              )}
+            </SettingsAccessor>
           </section>
         </PopoverContent>
       </Popover>

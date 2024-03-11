@@ -85,7 +85,6 @@ export const Line = (props: DecoProps) => {
 
   return (
     <div className={cn("flex-y h-5 w-full gap-2", className)}>
-      <div className="skeleton h-3 w-3 rounded-full" />
       <p className="skeleton h-2 w-1/2 rounded-full" />
     </div>
   );

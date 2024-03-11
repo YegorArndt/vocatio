@@ -32,8 +32,8 @@ export type VocatioSettings = {
   fileNameConfig: FileNameConfig;
   [PopoverEvents.BOLDEN_SUMMARY]: boolean | null;
   [PopoverEvents.BOLDEN_BULLETS]: boolean | null;
-  version: number;
   defaultDesign: DesignName;
+  navbarWidth: number;
 };
 
 export const LS_KEY = "vocatio-settings";
@@ -48,8 +48,8 @@ export const initialSettings: VocatioSettings = {
   fileNameConfig: initialFileNameConfig,
   [PopoverEvents.BOLDEN_SUMMARY]: true,
   [PopoverEvents.BOLDEN_BULLETS]: true,
-  version: 0,
   defaultDesign: "charmander",
+  navbarWidth: 15,
 };
 
 export const getSettings = (): VocatioSettings => {

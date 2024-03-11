@@ -63,7 +63,7 @@ export const NewVacancyDrawer = () => {
     <Drawer>
       <DrawerTrigger className="blue-button ml-auto gap-2">
         <HiPlusCircle />
-        New vacancy
+        New
       </DrawerTrigger>
       <DrawerContent className="h-max bg-primary px-10 pb-[150px] pt-5">
         <DrawerHandle />

@@ -69,6 +69,11 @@ const InitGenerationPage = () => {
 
     const vacancy: PartialVacancy = {
       ...gen.vacancy,
+      location: gen.location,
+      requiredSeniority: gen.requiredSeniority,
+      requiredRemote: gen.requiredRemote,
+      salary: gen.salary,
+      employmentType: gen.employmentType,
       responsibilities: gen.vacancyResponsibilities,
       requiredSkills: gen.vacancySkills,
     };

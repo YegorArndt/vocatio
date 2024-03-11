@@ -149,9 +149,7 @@ export const PartialVacancySchema = z.object({
 
   numApplicants: z.string().nullable().optional(),
 
-  salaryMin: z.string().nullable().optional(),
-
-  salaryMax: z.string().nullable().optional(),
+  salary: z.string().nullable().optional(),
 
   isAnnualSalary: z.boolean().nullable().optional(),
 
@@ -159,11 +157,11 @@ export const PartialVacancySchema = z.object({
 
   professionField: ProfessionField.nullable().optional(),
 
-  requiredRemote: Remote.nullable().optional(),
+  requiredRemote: z.string().nullable().optional(),
 
-  requiredSeniority: Seniority.nullable().optional(),
+  requiredSeniority: z.string().nullable().optional(),
 
-  employmentType: EmploymentType.nullable().optional(),
+  employmentType: z.string().nullable().optional(),
 
   requiredYearsMin: z.string().nullable().optional(),
 

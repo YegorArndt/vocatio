@@ -25,24 +25,8 @@ enum SourceName {
   HH
 }
 
-enum Seniority {
-  JUNIOR
-  MIDDLE
-  SENIOR
-  LEAD
-}
-
-enum Remote {
-  HYBRID
-  ON_SITE
-  REMOTE
-}
-
-enum EmploymentType {
-  FULL_TIME
-  PART_TIME
-  CONTRACT
-}
+ 
+ 
 
 enum ProfessionField {
   FRONTEND
@@ -66,11 +50,7 @@ enum ProfessionField {
   SCRUM_MASTER
 }
 
-enum DefaultModel {
-  GPT_3_5
-  GPT_4
-  // MIXTRAL
-}
+ 
 
 model ContactEntry {
   id        String   @id @default(uuid())
@@ -143,8 +123,6 @@ model User {
   email               String?
   professionalSummary String?
 
-  defaultModel DefaultModel? @default(GPT_3_5)
-
   professionField ProfessionField?
 
   languages LanguageEntry[]
@@ -168,10 +146,11 @@ model Vacancy {
   country         String?
   age             DateTime?
   numApplicants   String?
-  salaryMin       String?
-  salaryMax       String?
+  
+  salary       String?
   isAnnualSalary  Boolean?         @default(false)
   salaryCurrency  Currency?        @default(USD)
+
   jobTitle        String?
   professionField ProfessionField?
 
@@ -182,9 +161,9 @@ model Vacancy {
 
   group String?
 
-  requiredRemote    Remote?
-  requiredSeniority Seniority?
-  employmentType    EmploymentType?
+  requiredRemote    String?
+  requiredSeniority String?
+  employmentType    String?
   requiredYearsMin  String?
   requiredYearsMax  String?
   requiredEducation String?

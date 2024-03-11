@@ -1,11 +1,15 @@
 import { BlurImage, Spinner } from "~/components";
 import { useCvContext } from "~/hooks/useCvContext";
 import { cn } from "~/utils";
+import { PartialVacancy } from "../types";
 
-export const CompanyPresentator = (props: { className?: string }) => {
+export const CompanyPresentator = (props: {
+  vacancy?: PartialVacancy;
+  className?: string;
+}) => {
   const { className } = props;
   const { gen } = useCvContext() ?? {};
-  const { vacancy } = gen ?? {};
+  const { vacancy = props.vacancy } = gen ?? {};
 
   return vacancy ? (
     <div className={cn("flex-y gap-3", className)}>

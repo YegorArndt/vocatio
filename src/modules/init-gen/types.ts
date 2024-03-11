@@ -54,6 +54,12 @@ export type Gen = {
   vacancy: PartialVacancy;
   vacancyResponsibilities: string[];
   vacancySkills: string[];
+  salary: string;
+  location: string;
+  requiredRemote: string;
+  requiredSeniority: string;
+  employmentType: string;
+
   /**
    * Generated to be used in cv.
    */

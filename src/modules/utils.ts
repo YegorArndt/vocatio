@@ -1,6 +1,5 @@
 import { assign, get, isNil } from "lodash-es";
 import { v4 } from "uuid";
-import { DefaultModel } from "@prisma/client";
 
 import { DesignFont, fonts } from "./create/design/types";
 import { iconsMap } from "./icons-map";
@@ -45,29 +44,29 @@ export const typedValues = <T extends object>(obj: T): T[keyof T][] => {
   return Object.values(obj) as T[keyof T][];
 };
 
-type AiModels = Record<
-  DefaultModel,
-  { imageSrc: string; badge: string; name: string }
->;
+// type AiModels = Record<
+//   DefaultModel,
+//   { imageSrc: string; badge: string; name: string }
+// >;
 
-export const aiModels: AiModels = {
-  [DefaultModel.GPT_4]: {
-    imageSrc: "/ai/gpt-4.png",
-    badge: "most capable",
-    name: "gpt-4",
-  },
-  [DefaultModel.GPT_3_5]: {
-    imageSrc: "/ai/gpt-3.png",
-    badge: "default",
-    name: "gpt-3.5",
-  },
-};
+// export const aiModels: AiModels = {
+//   [DefaultModel.GPT_4]: {
+//     imageSrc: "/ai/gpt-4.png",
+//     badge: "most capable",
+//     name: "gpt-4",
+//   },
+//   [DefaultModel.GPT_3_5]: {
+//     imageSrc: "/ai/gpt-3.png",
+//     badge: "default",
+//     name: "gpt-3.5",
+//   },
+// };
 
-export const getModelUi = (
-  modelEnum: keyof typeof aiModels | null | undefined
-) => {
-  return aiModels[modelEnum || "GPT_3_5"];
-};
+// export const getModelUi = (
+//   modelEnum: keyof typeof aiModels | null | undefined
+// ) => {
+//   return aiModels[modelEnum || "GPT_3_5"];
+// };
 
 export const uuidv4 = () => v4();
 

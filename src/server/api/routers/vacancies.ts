@@ -46,14 +46,8 @@ export const vacanciesRouter = createTRPCRouter({
 
       const { vacancyId } = input;
 
-      const deletedVacancy = await ctx.prisma.vacancy.update({
-        where: { id: vacancyId },
-        data: {
-          user: {
-            // @ts-ignore
-            disconnect: { id: userId },
-          },
-        },
+      const deletedVacancy = await ctx.prisma.vacancy.delete({
+        where: { id: vacancyId, userId },
       });
 
       return deletedVacancy;

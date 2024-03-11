@@ -4,6 +4,8 @@ import { FaArrowsLeftRight } from "react-icons/fa6";
 import * as ResizablePrimitive from "react-resizable-panels";
 import { cn } from "~/utils";
 
+const { log } = console;
+
 const ResizablePanelGroup = ({
   className,
   ...props

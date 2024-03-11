@@ -56,8 +56,8 @@ export const VacanciesContextProvider = ({
     if (!user || hasAlreadyGrouped) return;
 
     const v = user.vacancies;
-    const initialized = groupVacancies(v);
-    setGroupedVacancies(initialized);
+    const grouped = groupVacancies(v);
+    setGroupedVacancies(grouped);
   }, [user]);
 
   const value: VacanciesContextOutput = {

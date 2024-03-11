@@ -38,6 +38,14 @@ const buildSkillsPrompt = (user: RouterUser, vacancy: PartialVacancy) => {
           2) omit personal pronouns, filler words and colloquial language from the summary to maintain a professional tone. "I" has no place in the summary.
           3) wrap all hard skills from task 1 in <span class="font-bold">{hard skill}</span> HTML tags for emphasis in the professional summary. I'll parse in the HTML tags later.
           4) make sure the summary comprises at least 3 sentences, and max. 5 sentences.
+
+      4. Also identify:
+          1) Salary they pay.
+          2) Location of the job.
+          3) Job setting (remote, hybrid, on-site).
+          4) Required seniority level (junior, mid, senior, lead, etc).
+          5) Required format (full-time, part-time, contract, etc).
+        Conditions for task 4: 1) if not specified, simply output "". 
    
        - Format of your response:
   
@@ -46,6 +54,11 @@ const buildSkillsPrompt = (user: RouterUser, vacancy: PartialVacancy) => {
           "vacancySkills": string[],
           "generatedSkills": string[], <- Remember: the skills inside this array must be a subset of the skills in the vacancy text
           "professionalSummary": string <- enclose all technologies and other hard skills in <span class="font-bold">{hard skill}</span> HTML tags for emphasis.
+          "salary": string, 
+          "location": string,
+          "jobSetting": string,
+          "seniority": string,
+          "format": string
         }
   
         Do not return anything but the JSON object.
@@ -55,12 +68,15 @@ const buildSkillsPrompt = (user: RouterUser, vacancy: PartialVacancy) => {
 export const formatSkills = (skills: string[]) =>
   skills.map((x) => ({ id: uuidv4(), name: x }));
 
-export const parseSkills = (
-  gptResponse: string | undefined
-): Pick<Gen, "vacancySkills" | "skills" | "professionalSummary"> => {
+export const parseSkills = (gptResponse: string | undefined) => {
   let vacancySkills = [] as Gen["vacancySkills"];
   let skills = [] as Gen["skills"];
   let professionalSummary = "";
+  let salary = "";
+  let location = "";
+  let requiredRemote = "";
+  let requiredSeniority = "";
+  let employmentType = "";
 
   try {
     if (!gptResponse) throw new Error("No response from AI");
@@ -69,16 +85,35 @@ export const parseSkills = (
       vacancySkills: vacancy_skills,
       generatedSkills: generated_skills,
       professionalSummary: professional_summary,
+      salary: salary_,
+      location: location_,
+      jobSetting: job_setting,
+      seniority: seniority_,
+      format: format_,
     } = JSON.parse(gptResponse);
 
     vacancySkills = vacancy_skills;
     skills = formatSkills(generated_skills);
     professionalSummary = professional_summary;
+    salary = salary_;
+    location = location_;
+    requiredRemote = job_setting;
+    requiredSeniority = seniority_;
+    employmentType = format_;
   } catch (error) {
     console.error(JSON.stringify(error, null, 2));
   }
 
-  return { vacancySkills, skills, professionalSummary };
+  return {
+    vacancySkills,
+    skills,
+    professionalSummary,
+    salary,
+    location,
+    requiredRemote,
+    requiredSeniority,
+    employmentType,
+  };
 };
 
 export const tailorSkills = async (props: Common) => {
@@ -89,10 +124,20 @@ export const tailorSkills = async (props: Common) => {
     const gptResponse = await applyGpt(prompt);
     const parsed = parseSkills(gptResponse);
 
-    CvContextManager.getInstance().updateCv({
+    const instance = CvContextManager.getInstance();
+
+    instance.updateGen({
+      location: parsed.location,
+      requiredRemote: parsed.requiredRemote,
+      requiredSeniority: parsed.requiredSeniority,
+      employmentType: parsed.employmentType,
+      salary: parsed.salary,
+    });
+    instance.updateCv({
       skills: parsed.skills,
       summary: parsed.professionalSummary,
     });
+
     eventManager.emit(Events.GEN_UPDATED);
 
     return parsed;

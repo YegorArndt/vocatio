@@ -29,13 +29,15 @@ const AccordionTrigger = forwardRef<
       {...props}
     >
       {children}
-      <IoChevronDown
-        className="h-4 w-4 shrink-0 transition-transform duration-200"
-        style={{
-          height: arrowSize,
-          width: arrowSize,
-        }}
-      />
+      {
+        <IoChevronDown
+          className="h-4 w-4 shrink-0 transition-transform duration-200"
+          style={{
+            height: arrowSize,
+            width: arrowSize,
+          }}
+        />
+      }
     </AccordionPrimitive.Trigger>
   </AccordionPrimitive.Header>
 ));

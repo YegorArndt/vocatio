@@ -303,6 +303,10 @@
     cursor: pointer;
   }
 
+  .xs:is(button, a) {
+    @apply h-7 px-2 text-default leading-5;
+  }
+
   .sm:is(button, a) {
     @apply h-8 px-3 text-default leading-5;
   }
@@ -471,87 +475,6 @@
     }
   }
 
-  /* GRIDS  */
-
-  .app-container {
-    --navbar-width: 240px;
-    --main-container: 1fr;
-
-    display: grid;
-    grid-template-columns:
-      var(--navbar-width)
-      var(--main-container);
-
-    @apply py-16;
-  }
-
-  .navbar {
-    grid-column: 1;
-  }
-
-  .main-container {
-    --gap: clamp(1rem, 6vw, 3rem);
-    --content-width: 150ch;
-    --full: minmax(var(--gap), 1fr);
-    --content: max(var(--content-width), 100% - var(--gap) * 2);
-    --breakout: minmax(0, 5rem);
-
-    grid-column: 2;
-    display: grid;
-    grid-template-columns:
-      [full-start] var(--full)
-      [breakout-start] var(--breakout)
-      [content-start] var(--content) [content-end]
-      var(--breakout) [breakout-end]
-      var(--full) [full-end];
-  }
-
-  .content {
-    grid-column: content;
-  }
-
-  .breakout {
-    grid-column: breakout;
-  }
-
-  .full {
-    grid-column: full;
-  }
-
-  /* GRID UTILS  */
-
-  .two-col-grid {
-    --sm-gap: 1.5rem;
-    --gap: clamp(2rem, 12vw, 6rem);
-    --a4: 793px;
-    --right-aside: 1fr;
-
-    grid-column: full;
-    display: grid;
-    grid-template-columns:
-      var(--gap)
-      [a4-start] var(--a4) [a4-end]
-      var(--gap)
-      [right-aside-start] var(--right-aside) [right-aside-end]
-      var(--sm-gap);
-  }
-
-  .main-center {
-    grid-column: a4;
-  }
-
-  .right-aside {
-    grid-column: right-aside;
-  }
-
-  .card-grid {
-    --size: clamp(80px, 30%, 450px);
-
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(var(--size), 1fr));
-    grid-gap: 2rem;
-  }
-
   /* Title & Subtitle combo  */
   *:is(h1, h2, h3) + p {
     margin-block: 0.5rem 2rem;
@@ -624,5 +547,9 @@
 
   .rotating {
     animation: rotate 3s linear infinite;
+  }
+
+  .vacancies-table {
+    @apply grid grid-cols-[220px_200px_210px_200px_1fr];
   }
 }

@@ -2,7 +2,7 @@ import Head from "next/head";
 import { Fragment } from "react";
 import ScrollToTop from "react-scroll-to-top";
 
-import { Lines, CardStack } from "~/components/Spinner";
+import { Lines } from "~/components/Spinner";
 import { Layout } from "~/components/layout/Layout";
 import { VacanciesPageToolbar } from "~/modules/vacancies/VacanciesPageToolbar";
 import { VacanciesContextProvider } from "~/modules/vacancies/VacanciesContext";
@@ -28,22 +28,21 @@ const VacanciesPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <VacanciesContextProvider>
-        {({ loadingVacancies, groupedVacancies, currentGroup }) => {
+        {(output) => {
+          const { loadingVacancies, groupedVacancies, currentGroup } = output;
+
           const hasVacancies =
             groupedVacancies &&
             !!groupedVacancies[currentGroup]?.vacancies.length;
-
-          const showPlaceholder = !loadingVacancies && !hasVacancies;
 
           return (
             <Layout
               toolbar={loadingVacancies ? <Lines /> : <VacanciesPageToolbar />}
             >
-              <div className="content flex flex-col gap-8">
-                <VacanciesPageHeader />
-                {loadingVacancies && <CardStack className="vacancies" />}
+              <main className="mr-8 flex flex-col gap-8">
+                {!loadingVacancies && <VacanciesPageHeader />}
                 {hasVacancies && (
-                  <AnimatedDiv className="card-grid vacancies">
+                  <AnimatedDiv className="flex flex-col gap-4">
                     {groupedVacancies[currentGroup]?.vacancies?.map(
                       (vacancy) => (
                         <VacancyCard key={vacancy.id} vacancy={vacancy} />
@@ -51,8 +50,10 @@ const VacanciesPage = () => {
                     )}
                   </AnimatedDiv>
                 )}
-                {showPlaceholder && <VacanciesPagePlaceholder />}
-              </div>
+                {!loadingVacancies && !hasVacancies && (
+                  <VacanciesPagePlaceholder />
+                )}
+              </main>
             </Layout>
           );
         }}

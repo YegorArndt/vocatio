@@ -41,7 +41,6 @@ import { TooltipProvider } from "~/components/ui/external/Tooltip";
 import { MoveComponentButton } from "../toolbars/shared/MoveComponentButton";
 import { useCvContext } from "~/hooks/useCvContext";
 import { RouterUser } from "~/modules/types";
-import { AiPicker } from "~/components/AiPicker";
 import { BsPlusCircleDotted } from "react-icons/bs";
 import { HiPlusCircle } from "react-icons/hi2";
 import { debounce } from "lodash-es";
@@ -403,10 +402,10 @@ export const AddExperiencePopover = () => {
         ) : (
           <Spinner size={10} />
         )}
-        <div className="flex-y gap-4 whitespace-nowrap">
+        {/* <div className="flex-y gap-4 whitespace-nowrap">
           Or tailor it to job posting. Click on the model to generate
           <AiPicker onModelChange={(model) => null} />
-        </div>
+        </div> */}
       </PopoverContent>
     </Popover>
   );
